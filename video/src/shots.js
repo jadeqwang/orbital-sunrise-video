@@ -16,7 +16,8 @@ async function drawPlate(t, id, tp, o = {}) {
   const { n: dIdx0, tq } = drawClock(t, rate);
   const dIdx = o.fixedSeed ?? dIdx0;
   const tpq = o.hold !== undefined ? o.hold : tp - (t - tq);   // plate advances with the drawing clock
-  const F = await plateF(id, tpq, o.aw ?? 640, o.ah ?? 360, o.ana || {});
+  // auto-exposure lifts dark plates on black paper; white paper keeps the plate's own exposure (snow stays snow)
+  const F = await plateF(id, tpq, o.aw ?? 640, o.ah ?? 360, { ...((o.paper ?? 'night') === 'night' ? {} : { gain: 1 }), ...(o.ana || {}) });
   if (o.matte !== false && F.M === undefined) attachMatte(F, await plateMatte(id, tpq));
   const view = makeView(F, typeof o.view === 'function' ? o.view(tq) : (o.view || {}));
   const night = (o.paper ?? 'night') === 'night';
@@ -51,7 +52,8 @@ async function drawPlate(t, id, tp, o = {}) {
   const mainMask = mm ? (X, Y) => (1 - mm(X, Y)) * (mainMask0 ? mainMask0(X, Y) : 1) : mainMask0;
   const faceMaskM = mm && fmask ? (X, Y) => fmask(X, Y) * (1 - mm(X, Y)) : fmask;
   if (o.hatch !== false) {
-    if (night && !o.lines) hatchField(pen, F, view, { seed: dIdx * 7 + 1, paper: 'night', ...(o.hatch || {}), mask: mainMask });
+    // tonal hatching: long parallel scanline layers (default), or the flow-following stroke cloud for glows (o.cloud)
+    if (night && (o.cloud || Q.has('nightCloud'))) hatchField(pen, F, view, { seed: dIdx * 7 + 1, paper: 'night', ...(o.hatch || {}), mask: mainMask });
     else lineHatch(pen, F, view, { seed: dIdx * 7 + 1, paper: o.paper ?? 'night', ...(o.hatch || {}), ...(o.lines || {}), mask: mainMask });
     pen.flush(L.g, ord);
   }
@@ -63,8 +65,15 @@ async function drawPlate(t, id, tp, o = {}) {
     const caw = Math.round(clamp(src[2] * 1.5, 160, 480)), cah = Math.round(caw * src[3] / src[2]);
     const Fc = analyzePlate(im, caw, cah, { s1: .8, sT: 2.2, sTone: 1 }, src);
     const cv = cropView(view, Fc, fbox);
-    hatchField(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: o.paper ?? 'night', spacing: 5.2, len: [6, 17], w: [1, 1.8], follow: .85, contrast: 1.6, density: .85, ...(o.faceHatch || {}), mask: faceMaskM,
-      region: (() => { const [x0, y0] = view.toScreen(fbox[0], fbox[1]), [x1, y1] = view.toScreen(fbox[2], fbox[3]); return [Math.min(x0, x1), Math.min(y0, y1), Math.max(x0, x1), Math.max(y0, y1)]; })() });
+    const fregion = (() => { const [x0, y0] = view.toScreen(fbox[0], fbox[1]), [x1, y1] = view.toScreen(fbox[2], fbox[3]); return [Math.min(x0, x1), Math.min(y0, y1), Math.max(x0, x1), Math.max(y0, y1)]; })();
+    if (night && (o.cloud || Q.has('nightCloud')))
+      hatchField(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: 'night', spacing: 5.2, len: [6, 17], w: [1, 1.8], follow: .85, contrast: 1.6, density: .85, ...(o.faceHatch || {}), mask: faceMaskM, region: fregion });
+    else { // finer scanline layers for skin
+      const fs = clamp((fregion[2] - fregion[0]) / 700, .6, 1.2);
+      lineHatch(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: o.paper ?? 'night', step: 2.6, len: [12, 30], mask: faceMaskM, region: fregion,
+        layers: [{ ang: -0.72, th: .12, sp: 5.4 * fs, w: 1.05, a: .62 }, { ang: 0.85, th: .34, sp: 5.8 * fs, w: 1.05, a: .62 }, { ang: -1.35, th: .56, sp: 5.2 * fs, w: 1.15, a: .72 }, { ang: 0.1, th: .76, sp: 4.2 * fs, w: 1.3, a: .82, dark: true }],
+        ...(o.faceHatch || {}) });
+    }
     pen.flush(L.g, ord);
     contourField(pen, Fc, cv, { seed: dIdx * 19 + 7, pencil: night ? 'white' : 'graphite', hi: .2, lo: .08, minLen: 8, w: 1.2, alpha: .6, jit: .7, mask: faceMaskM, ...(o.faceContour || {}) });
     pen.flush(L.g, ord);
@@ -78,6 +87,11 @@ async function drawPlate(t, id, tp, o = {}) {
   if (!night) G.globalCompositeOperation = 'multiply';     // pigment on white paper darkens where strokes cross
   G.drawImage(L.c, 0, 0); G.globalAlpha = 1; G.globalCompositeOperation = 'source-over';
   return { F, view, dIdx, tp: tpq };
+}
+// A knockout behind type: strokes thin out inside soft-edged screen rects [x0, y0, x1, y1], as if the artist left room for the words
+function quiet(rects, k = .8, soft = .45) {
+  // rounded (superelliptic) falloff scaled to each rect, so the clearing has no straight edges
+  return (X, Y) => { let m = 1; for (const [x0, y0, x1, y1] of rects) { const hx = (x1 - x0) / 2, hy = (y1 - y0) / 2, d = Math.pow(Math.pow(Math.abs(X - x0 - hx) / hx, 4) + Math.pow(Math.abs(Y - y0 - hy) / hy, 4), .25); m = Math.min(m, 1 - k * smooth(clamp((1 + soft - d) / (2 * soft)))); } return m; };
 }
 // screen position of the plate's sun
 function sunScreen(id, tp, view) { const m = plateMeta(id, tp); if (!m) return null; const [x, y] = view.toScreen(m.sun[0], m.sun[1]); return [x, y, m.sun[2]]; }
@@ -276,8 +290,9 @@ async function initShots() {
       sil: { reveal: clamp(k * 1.8), revealKey: rk },
       under: (pen, F, v) => {
         const sun = sunScreen('hero_sunrise', POSTER_TP, v) || [cx + 250, cy - 40, 1];
-        const e = clamp((k - .55) / .4);
-        if (e > 0) raysFrom(pen, sun[0], sun[1], { n: 520, r0: 14, r1: 1100, energy: easeOut(e), seed: 21, alpha: [.35, .9] });
+        // the sunrise is already burning on the first frame (the thumbnail); the astronaut is drawn into its light
+        const e = .42 + .58 * easeOut(clamp((k - .25) / .55));
+        raysFrom(pen, sun[0], sun[1], { n: 520, r0: 14, r1: 1100, energy: e, seed: 21, alpha: [.35, .9] });
       },
     });
     // title lockup lands when the drawing is ~85% done

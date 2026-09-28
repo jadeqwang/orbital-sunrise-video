@@ -11,7 +11,7 @@ import { createServer } from 'node:http';
 import { mkdirSync, writeFileSync, existsSync, statSync, renameSync, readdirSync, createReadStream } from 'node:fs';
 import { dirname, resolve, extname, join } from 'node:path';
 
-const args = Object.fromEntries(process.argv.slice(2).map(a => { const [k, v] = a.replace(/^--/, '').split('='); return [k, v ?? true]; }));
+const args = Object.fromEntries(process.argv.slice(2).map(a => { const s = a.replace(/^--/, ''), i = s.indexOf('='); return i < 0 ? [s, true] : [s.slice(0, i), s.slice(i + 1)]; }));
 const CHROME = args.chrome || process.env.CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const ROOT = resolve('.');
 // the final mix: the song with its last chord allowed to ring out (tools/extend_ending.py); falls back to the original
@@ -55,8 +55,8 @@ async function openPage(tag = '') {
   await page.setViewport({ width: 1280, height: 720 });
   page.on('console', m => { if (['error', 'warn'].includes(m.type()) || args.verbose) console.log(`[page${tag}]`, m.text()); });
   page.on('pageerror', e => console.log(`[page error${tag}]`, e.message));
-  await page.goto(`http://127.0.0.1:${PORT}/studio.html?render&w=${W}&h=${H}`, { waitUntil: 'load' });
-  await page.waitForFunction('window.ready === true', { timeout: 120000 });
+  await page.goto(`http://127.0.0.1:${PORT}/studio.html?render&w=${W}&h=${H}${args.q ? '&' + args.q : ''}`, { waitUntil: 'load' });
+  await page.waitForFunction('window.ready === true', { timeout: 900000, polling: 500 });
   return page;
 }
 const frameOf = async (page, t, type, q) => {
@@ -66,7 +66,12 @@ const frameOf = async (page, t, type, q) => {
 const times = s => String(s).split(',').map(Number);
 
 try {
-  if (args.sheet) {
+  if (args.list) {
+    const page = await openPage();
+    const shots = await page.evaluate(() => SHOTS.map(s => [s.name, +s.t0.toFixed(3), +s.t1.toFixed(3)]));
+    for (const [n, a, b] of shots) console.log(`${n.padEnd(18)} ${a.toFixed(2).padStart(7)} → ${b.toFixed(2).padStart(7)}  (${(b - a).toFixed(2)} s)`);
+    if (args.out) writeFileSync(args.out, JSON.stringify(shots));
+  } else if (args.sheet) {
     const page = await openPage(), out = args.out || 'out/sheet.jpg'; mkdirSync(dirname(out), { recursive: true });
     const { url, ms } = await page.evaluate((ts, c, w) => window.renderSheet(ts, c, w), times(args.sheet), +(args.cols || 3), +(args.w || 640));
     writeFileSync(out, Buffer.from(url.slice(url.indexOf(',') + 1), 'base64'));
@@ -87,10 +92,17 @@ try {
     console.log(`${todo.length} frames to render (${last - first + 1 - todo.length} already done), ${workers} workers`);
     let next = 0, done = 0; const start = Date.now();
     const work = async w => {
-      const page = await openPage('#' + w);
+      if (next >= todo.length) return;
+      let page = await openPage('#' + w);
       while (next < todo.length) {
         const i = todo[next++], f = `${FRAMES_DIR}/f${String(i).padStart(5, '0')}.jpg`;
-        const buf = await frameOf(page, i / fps, 'image/jpeg', 0.93);
+        let buf;
+        try { buf = await frameOf(page, i / fps, 'image/jpeg', 0.93); }
+        catch (e) { // a crashed or hung page: open a fresh one and retry this frame once
+          console.log(`worker ${w}: frame ${i} failed (${e.message}); reopening page`);
+          try { await page.close(); } catch (e2) { }
+          page = await openPage('#' + w); buf = await frameOf(page, i / fps, 'image/jpeg', 0.93);
+        }
         writeFileSync(f + '.tmp', buf); renameSync(f + '.tmp', f);
         if (++done % 48 === 0 || done === todo.length) {
           const el = (Date.now() - start) / 1000;

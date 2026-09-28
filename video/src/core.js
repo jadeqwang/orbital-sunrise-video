@@ -126,9 +126,11 @@ function buildTooth() {
   TOOTH_LIGHT = c2;
 }
 let TOOTH_LIGHT = null;
+const TOOTH_BOIL = new URLSearchParams(location.search).has('toothBoil');
 function toothIn(L, drawIdx, strength = 1) { // make everything on layer L grainy
   const g = L.g, pat = g.createPattern(TOOTH, 'repeat');
-  const ox = Math.floor(hash(drawIdx * 7 + 1) * TOOTH_N), oy = Math.floor(hash(drawIdx * 7 + 2) * TOOTH_N);
+  // the paper's tooth does not move between drawings (only the strokes boil), unless ?toothBoil
+  const tb = TOOTH_BOIL ? drawIdx : 0, ox = Math.floor(hash(tb * 7 + 1) * TOOTH_N), oy = Math.floor(hash(tb * 7 + 2) * TOOTH_N);
   pat.setTransform(new DOMMatrix([1, 0, 0, 1, ox, oy]));
   g.save(); g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalCompositeOperation = 'destination-in'; g.globalAlpha = 1;

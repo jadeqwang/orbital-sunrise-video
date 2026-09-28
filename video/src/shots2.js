@@ -63,13 +63,13 @@ async function initShots2() {
     paper(G, 'night');
     const { n: d } = drawClock(t, 12), pen = new Pen(), L = layer(1);
     const drift = [Math.sin(lt * .6) * 14, Math.cos(lt * .5) * 10], rot = Math.sin(lt * .4) * .03;
-    const sw = 1000, sh = 640, cx = W / 2 + drift[0], cy = H / 2 + 10 + drift[1];
+    const sw = 1440, sh = 900, cx = W / 2 + drift[0], cy = H / 2 - 20 + drift[1];
     // the sheet: white paper card
     G.save(); G.translate(cx, cy); G.rotate(rot); G.drawImage(PAPER.snow, 400, 200, sw, sh, -sw / 2, -sh / 2, sw, sh);
     G.strokeStyle = 'rgba(0,0,0,.25)'; G.lineWidth = 2; G.strokeRect(-sw / 2, -sh / 2, sw, sh); G.restore();
     // the bands draw themselves across the sheet (Leonov's composition: horizon arc, colored bands, the sun)
     const k = easeOut(clamp(lt / (dur * .8)));
-    const ecx = cx - 40, ecy = cy + 1150, R = 1080;
+    const ecx = cx - 60, ecy = cy + 1500, R = 1420;
     const Ls = layer(2), p2 = new Pen();
     earthDisc(p2, ecx, ecy, R, d * 3 + 1, { lit: .5, spacing: 9 });
     sunriseBands(p2, ecx, ecy, R, -Math.PI / 2 - .5, -Math.PI / 2 + .5 * (2 * k - 1), k, d * 5 + 2, { sunA: -Math.PI / 2 + .12, thick: 70, n: 1500 });
@@ -112,16 +112,16 @@ async function initShots2() {
     await drawPlateIn(t, lt < dur / 2 ? 'valve_bleed' : 'tumble_slow', .8 + (lt % (dur / 2)), [split, 0, W - split, H], { paper: 'night', frame: false, spacing: 6.5, zoom: 1.08 });
     const pen = new Pen(), L = layer(4), d = drawClock(t, 12).n;
     const q = []; for (let y = 0; y <= H; y += 30) q.push([split + (hash2(y, d) - .5) * 3, y]); pen.poly(q, 'lead', 2.2, .9, .02); pen.flush(L.g); G.drawImage(L.c, 0, 0);
-    subtitle(G, lineAt(t), t, { size: 58, col: 'cream', y: H - 90, shadow: 6 });
+    subtitle(G, lineAt(t), t, { size: 58, y: H - 90, shadow: 6, split: { x: split, left: 'graphite', right: 'cream' } });
   });
   shot('B2_float', BR[2].t0 - .05, BR[3].t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'jade_brk', tpSing('jade_brk', t), { remouth: true, paper: 'snow', view: { zoom: 1.02 }, hatch: { spacing: 6.2 } });
+    await drawPlate(t, 'jade_brk', tpSing('jade_brk', t), { remouth: true, paper: 'snow', view: { zoom: 1.02 }, hatch: { spacing: 6.2, mask: quiet([[W / 2 - 760, H - 175, W / 2 + 760, H - 45]], .7) } });
     subtitle(G, lineAt(t), t, { size: 64, col: 'graphite', y: H - 90 });
   });
   shot('B3_never', BR[3].t0 - .05, br1, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'jade_brk', tpSing('jade_brk', t), { remouth: true, paper: 'snow', view: { zoom: 1.08, cy: .45 }, hatch: { spacing: 6.2 } });
+    await drawPlate(t, 'jade_brk', tpSing('jade_brk', t), { remouth: true, paper: 'snow', view: { zoom: 1.08, cy: .45 }, hatch: { spacing: 6.2, mask: quiet([[W / 2 - 760, H - 175, W / 2 + 760, H - 45]], .7) } });
     subtitle(G, lineAt(t), t, { size: 64, col: 'graphite', y: H - 90 });
   });
 
@@ -149,7 +149,7 @@ async function initShots2() {
     await drawPlateIn(t, 'drawing_pencils', 2.5 + lt * .8, [0, 0, half, H], { paper: 'night', frame: false, spacing: 6.2, zoom: 1.15, cy: .6 });
     await drawPlateIn(t, 'jade_hands', 3 + lt * .8, [half, 0, half, H], { paper: 'snow', frame: false, spacing: 6.2, zoom: 1.08 });
     const Lt = typeLayer(); tele(Lt.g, '1965', 40, 70, t, AR[1].t0, { size: 26, weight: 800, col: 'white', instant: true }); tele(Lt.g, 'NOW', half + 40, 70, t, AR[1].t0, { size: 26, weight: 800, col: 'graphite', instant: true }); typeFlush(Lt, 0, .3);
-    subtitle(G, lineAt(t), t, { size: 60, col: 'cream', y: H - 90, shadow: 6 });
+    subtitle(G, lineAt(t), t, { size: 60, y: H - 90, shadow: 6, split: { x: half, left: 'cream', right: 'graphite' } });
   });
 
   // ============================== BUILD · 129.70 → 143.20 ==============================
@@ -231,7 +231,7 @@ async function initShots2() {
   });
   shot('E3_offcourse', D2[0].t0 - .3, d21, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'descent_forest', .5 + lt * .5, { paper: 'snow', view: { zoom: 1.03, rot: Math.sin(lt * .5) * .03 } });
+    await drawPlate(t, 'descent_forest', .5 + lt * .5, { paper: 'snow', lines: { contrast: 2.4, white: .7 }, view: { zoom: 1.03, rot: Math.sin(lt * .5) * .03 } });
     const items = [];
     for (const l of D2) { items.push([l.words[0][0], 'OFF COURSE', W / 2, 560, 240, 'verm']); items.push([l.words[2][0], "(BUT I'M)", W / 2, 520, 150, 'graphite']); items.push([l.words[4][0], 'HOME', W / 2, 600, 300, 'graphite']); }
     chopWords(t, items, { hold: .55 });
@@ -241,7 +241,7 @@ async function initShots2() {
   const [o0, o1] = S('outro').slice(1), OU = linesIn('outro');
   shot('O1_klicks', o0, OU[1].t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'descent_forest', 5 + lt * .5, { paper: 'snow', view: { zoom: 1.12 } });
+    await drawPlate(t, 'descent_forest', 5 + lt * .5, { paper: 'snow', lines: { contrast: 2.4, white: .7 }, hatch: { mask: quiet([[60, 170, 1120, 670]]) }, view: { zoom: 1.12 } });
     const w = OU[0].words;
     lyricStack(t, [
       { s: 'FIFTEEN HUNDRED', t: w[0][0], x: 100, y: 300, size: 150, style: 'rise', col: 'graphite' },
@@ -251,13 +251,13 @@ async function initShots2() {
   });
   shot('O2_overshot', OU[1].t0 - .05, OU[2].t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'treetops', .2 + lt * .5, { paper: 'snow', view: { zoom: 1.05 } });
+    await drawPlate(t, 'treetops', .1 + lt * .35, { paper: 'snow', lines: { contrast: 2.2, white: .6 }, hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 490]]) }, view: { zoom: 1.05 } });
     const w = OU[1].words;
     lyricStack(t, [{ s: 'FIFTEEN HUNDRED KLICKS', t: w[0][0], x: W / 2, y: 260, size: 120, align: 'center', style: 'rise', col: 'graphite' }, { s: 'WE OVERSHOT', t: w[3][0], x: W / 2, y: 460, size: 200, align: 'center', style: 'slam', col: 'verm' }]);
   });
   shot('O3_madeit', OU[2].t0 - .05, o1, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'treetops', 2.4 + lt * .8, { paper: 'snow', rate: 24, view: { zoom: 1.08 } });
+    await drawPlate(t, 'treetops', 1.72 + lt * .48, { paper: 'snow', rate: 24, lines: { contrast: 2.2, white: .62 }, hatch: { mask: quiet([[W / 2 - 330, 180, W / 2 + 330, 720]]) }, view: { zoom: 1.08 } });
     const w = OU[2].words;
     lyricStack(t, [{ s: 'MADE', t: w[0][0], x: W / 2, y: 330, size: 170, align: 'center', col: 'graphite' }, { s: 'IT', t: w[1][0], x: W / 2, y: 500, size: 170, align: 'center', col: 'graphite' }, { s: 'DOWN', t: w[2][0], x: W / 2, y: 700, size: 230, align: 'center', col: 'verm' }]);
   });
@@ -267,7 +267,14 @@ async function initShots2() {
   const HOME1 = OU[3], MADE2 = OU[4], HOME2 = OU[5];
   shot('L1_impact', l0, HOME1.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'treetops', 3.6 + lt * .7, { paper: 'snow', rate: lt < .5 ? 24 : 12, view: { zoom: 1.04 } });
+    const shake = Math.exp(-lt * 5) * 14, dn = drawClock(t, 24).n;
+    await drawPlate(t, 'treetops', 2.66 + lt * .7, { paper: 'snow', rate: lt < .6 ? 24 : 12, lines: { contrast: 2.2, white: .72 },
+      view: { zoom: 1.05 + .06 * Math.exp(-lt * 3), ox: (hash(dn) - .5) * shake, oy: (hash(dn + 7) - .5) * shake },
+      extra: (pen) => {
+        const bx = W * .46, by = H * .86, e1 = Math.exp(-lt * 3.2), e2 = Math.sin(clamp(lt / 1.8) * Math.PI);
+        if (e1 > .04) raysFrom(pen, bx, by, { n: 420, r0: 20, r1: 900, energy: e1, seed: 71 + dn, cols: ['gold', 'orange', 'orange', 'verm'], a0: Math.PI * 1.02, a1: Math.PI * 1.98, w: [1.4, 3], alpha: [.45, .95] });
+        if (e2 > .04) raysFrom(pen, bx, by, { n: 560, r0: 60, r1: 1500, energy: e2, seed: 77 + dn, cols: ['lead', 'graphite', 'sky', 'lead', 'cobalt'], a0: Math.PI * 1.04, a1: Math.PI * 1.96, w: [1.1, 2.4], alpha: [.25, .75] });
+      } });
     if (lt < .25) { G.fillStyle = P.snow; G.globalAlpha = 1 - lt / .25; G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
   });
   shot('L2_home', HOME1.t0 - .05, MADE2.t0 - .05, async (t, lt) => {
@@ -281,40 +288,48 @@ async function initShots2() {
     lyricStack(t, [{ s: 'MADE IT DOWN', t: MADE2.t0, x: W / 2, y: 220, size: 150, align: 'center', col: 'graphite', style: 'rise' }]);
   });
   shot('L4_fire', HOME2.t0 - .05, 206.2, async (t, lt) => {
-    paper(G, 'snow');
-    await drawPlate(t, 'fire_night', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 } });
-    lyricStack(t, [{ s: 'home.', t: HOME2.t0, x: 110, y: H - 120, font: FONT.serif(150), col: 'crimson', style: 'rise' }]);
-    const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · −25 °C', 60, 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'graphite', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .6);
+    paper(G, 'night');
+    const ftp = 2.2 + lt * .55;
+    await drawPlate(t, 'fire_night', ftp, { view: { zoom: 1.03 }, ana: { gain: 1.15 }, lines: {},
+      extra: (pen, F, view, d) => { const s = sunScreen('fire_night', ftp, view); if (s && s[2] > .2) flames(pen, s[0], Math.min(H + 30, s[1] + 90), { size: 330, n: 54, seed: d * 3 + 1 }); } });
+    lyricStack(t, [{ s: 'home.', t: HOME2.t0, x: 110, y: 300, font: FONT.serif(150), col: 'gold', style: 'rise' }]);
+    const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · −25 °C', 60, H - 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'silver', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .4);
   });
   shot('L5_survived', 206.2, 211.2, async (t, lt) => {
-    paper(G, 'snow');
-    await drawPlate(t, 'drawing_survives', .4 + lt * .9, { paper: 'snow', view: { zoom: 1.04 } });
-    const Lt = typeLayer(); tele(Lt.g, 'THE DRAWING SURVIVED', 60, H - 70, t, 207, { size: 30, weight: 800, col: 'graphite', dur: .6 }); typeFlush(Lt, drawClock(t, 12).n, .6);
+    paper(G, 'night');
+    await drawPlate(t, 'drawing_survives', .4 + lt * .9, { view: { zoom: 1.04 }, lines: {} });
+    const Lt = typeLayer(); tele(Lt.g, 'THE DRAWING SURVIVED', 60, H - 70, t, 207, { size: 30, weight: 800, col: 'gold', dur: .6 }); typeFlush(Lt, drawClock(t, 12).n, .4);
   });
   shot('L6_rescue', 211.2, 215.3, async (t, lt) => {
     paper(G, 'snow');
     await drawPlate(t, 'rescue', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 } });
     const Lt = typeLayer(); tele(Lt.g, 'RESCUERS ARRIVE ON SKIS', 60, 64, t, 211.5, { size: 24, weight: 800, col: 'graphite', dur: .6 }); typeFlush(Lt, drawClock(t, 12).n, .6);
   });
-  // what came next: one bar per milestone
+  // what came next: one bar per milestone. [year, line, plate, framing (cx, cy, zoom) inside the right-hand panel]
   const LEG = [
-    ['1965', 'THREE MONTHS LATER, ED WHITE WALKS IN SPACE', 'leg_gemini'],
-    ['1969', 'PEOPLE WALK ON THE MOON', 'leg_moon'],
-    ['1975', 'LEONOV SHAKES HANDS WITH AN AMERICAN IN ORBIT', 'leg_handshake'],
-    ['2000', 'HUMANS HAVE LIVED IN SPACE EVERY DAY SINCE', 'leg_station'],
-    ['2024', 'THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial'],
-    ['2026', 'FOUR PEOPLE FLY AROUND THE MOON AGAIN', 'leg_artemis'],
-    ['NEXT', 'WHOEVER DARES', 'leg_next'],
+    ['1965', 'THREE MONTHS LATER, ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1]],
+    ['1969', 'PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08]],
+    ['1975', 'LEONOV SHAKES HANDS WITH AN AMERICAN IN ORBIT', 'leg_handshake', [.63, .52, 1.3]],
+    ['2000', 'HUMANS HAVE LIVED IN SPACE EVERY DAY SINCE', 'leg_station', [.66, .5, 1.06]],
+    ['2024', 'THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.64, .5, 1.12]],
+    ['2026', 'FOUR PEOPLE FLY AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12]],
+    ['NEXT', 'WHOEVER DARES', 'leg_next', [.62, .5, 1.08]],
   ];
-  const lg0 = 215.3, lgBar = (l1 - lg0) / LEG.length;
+  const lg0 = 215.3, lgBar = (l1 - lg0) / LEG.length, PX = 640;
   shot('L7_legacy', lg0, l1, async (t, lt) => {
-    paper(G, 'snow');
-    const i = clamp(Math.floor(lt / lgBar), 0, LEG.length - 1), [yr, line, plate] = LEG[i], age = lt - i * lgBar;
-    if (PLATES[plate]) await drawPlate(t, plate, 0, { paper: 'snow', hold: 0, view: { zoom: 1.02 + age * .02 } });
+    paper(G, 'night');
+    const i = clamp(Math.floor(lt / lgBar), 0, LEG.length - 1), [yr, line, plate, fr] = LEG[i], age = lt - i * lgBar;
+    if (PLATES[plate]) {
+      // the drawing grows out from the subject over the first beats, then keeps boiling
+      const rv = easeOut(clamp(age / .55)), cx = PX + (W - PX) / 2, cy = H / 2, R0 = Math.hypot(W - PX, H) / 2;
+      const key = (X, Y, h) => clamp(Math.hypot(X - cx, Y - cy) / R0) * .85 + h * .15;
+      await drawPlateIn(t, plate, 0, [PX, 0, W - PX, H], { hold: 0, frame: false, cx: fr[0], cy: fr[1], zoom: fr[2] * (1 + age * .025),
+        spacing: 7.5, lines: { contrast: 1.3, black: .06 }, hatch: { reveal: rv, revealKey: key }, contour: { hi: .24, lo: .1, minLen: 12, reveal: rv, revealKey: key } });
+    }
     const Lt = typeLayer();
-    text(Lt.g, yr, 110, 300, { font: FONT.impact(230), col: i === LEG.length - 1 ? 'verm' : 'graphite', alpha: clamp(age / .1) });
-    tele(Lt.g, line, 116, 380, t, lg0 + i * lgBar + .08, { size: 34, weight: 800, col: 'graphite', dur: .45 });
-    typeFlush(Lt, drawClock(t, 12).n, .6);
+    text(Lt.g, yr, 110, 420, { font: FONT.impact(230), col: i === LEG.length - 1 ? 'verm' : 'white', alpha: clamp(age / .1) });
+    tele(Lt.g, line, 116, 500, t, lg0 + i * lgBar + .08, { size: 30, weight: 800, col: 'white', dur: .45, wrap: 470 });
+    typeFlush(Lt, drawClock(t, 12).n, .3);
   });
 
   // ============================== CODA · 226.55 → end ==============================

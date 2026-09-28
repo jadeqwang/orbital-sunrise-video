@@ -56,9 +56,9 @@ const _anaCanvas = makeCanvas(8, 8), _anaCtx = _anaCanvas.getContext('2d', { wil
 function analyzePlate(img, aw = 640, ah = 360, opt = {}, src = null) {
   _anaCanvas.width = aw; _anaCanvas.height = ah;
   if (src) _anaCtx.drawImage(img, src[0], src[1], src[2], src[3], 0, 0, aw, ah); else _anaCtx.drawImage(img, 0, 0, aw, ah);
-  const d = _anaCtx.getImageData(0, 0, aw, ah).data, N = aw * ah;
+  const d = _anaCtx.getImageData(0, 0, aw, ah).data, N = aw * ah, gain = (opt.gain ?? 1) / 255;
   const R = new Float32Array(N), Gc = new Float32Array(N), B = new Float32Array(N), L = new Float32Array(N);
-  for (let i = 0; i < N; i++) { const r = d[i * 4] / 255, g = d[i * 4 + 1] / 255, b = d[i * 4 + 2] / 255; R[i] = r; Gc[i] = g; B[i] = b; L[i] = .2126 * r + .7152 * g + .0722 * b; }
+  for (let i = 0; i < N; i++) { const r = Math.min(1, d[i * 4] * gain), g = Math.min(1, d[i * 4 + 1] * gain), b = Math.min(1, d[i * 4 + 2] * gain); R[i] = r; Gc[i] = g; B[i] = b; L[i] = .2126 * r + .7152 * g + .0722 * b; }
   const L1 = blurF(L, aw, ah, opt.s1 ?? .9);
   const gx = new Float32Array(N), gy = new Float32Array(N), mag = new Float32Array(N);
   for (let y = 1; y < ah - 1; y++) for (let x = 1; x < aw - 1; x++) {
@@ -336,6 +336,20 @@ function raysFrom(pen, x, y, o = {}) {
     pen.q(x0, y0, (x0 + x1) / 2 + Math.cos(a + 1.57) * len * bend, (y0 + y1) / 2 + Math.sin(a + 1.57) * len * bend, x1, y1, col, lerp(w[0], w[1], h2), lerp(alpha[0], alpha[1], 1 - h3));
   }
 }
+// Flame tongues rising from (x, y): tapered curves that lean together toward the tip; a new seed each drawing = flicker
+function flames(pen, x, y, o = {}) {
+  const n = o.n ?? 40, s = o.size ?? 160, seed = o.seed ?? 3, cols = o.cols ?? ['gold', 'gold', 'orange', 'orange', 'verm', 'white', 'gold'];
+  for (let i = 0; i < n; i++) {
+    const h1 = hash2(i, seed), h2 = hash2(i, seed + 1), h3 = hash2(i, seed + 2);
+    const bx = x + (h1 - .5) * s * .8, hgt = s * (.3 + .85 * h2) * (1 - Math.abs(h1 - .5) * 1.1), lean = (h3 - .5) * s * .3;
+    const pts = [];
+    for (let k = 0; k <= 7; k++) {
+      const u = k / 7;
+      pts.push([bx + (x - bx) * u * .7 + lean * u * u + Math.sin(u * 6 + h3 * 9) * s * .035 * u, y - hgt * u]);
+    }
+    pen.poly(pts, cols[Math.floor(hash2(i, seed + 3) * cols.length)], 1.3 + 2.4 * (1 - h2), .9, .35);
+  }
+}
 // Scribble: looping stroke over a region (panic, smoke, fire)
 function scribble(pen, x, y, rx, ry, o = {}) {
   const n = o.n ?? 60, seed = o.seed ?? 5, col = o.col ?? 'verm', w = o.w ?? 1.6, a = o.alpha ?? .8;
@@ -507,16 +521,20 @@ function drawMouth(pen, g, M, o = {}) {
 // The illustrator's method: long parallel hatch lines, one direction for light tones, cross-hatch for mid,
 // a third direction for the darks. Runs break where the tone falls below the layer's threshold.
 // o: { paper, seed, layers:[{ang, th, sp, w, a}], step, len:[a,b], tone(L,V)->0..1, pencil, mask, region, jitter }
+const _QP = new URLSearchParams(location.search), NL_CONTRAST = _QP.has('nlc') ? +_QP.get('nlc') : 1.7, NL_BLACK = _QP.has('nlb') ? +_QP.get('nlb') : .09, NL_SCALE = _QP.has('nls') ? +_QP.get('nls') : 1.4, BOIL = _QP.has('boil') ? +_QP.get('boil') : .25;
 function lineHatch(pen, F, view, o = {}) {
   const night = (o.paper ?? 'snow') === 'night';
   const seed = o.seed ?? 1, step = o.step ?? 3.2;
-  const toneFn = o.tone ?? (night ? ((L, V) => Math.pow(smooth(clamp((L - .07) / .75)), 1.2))
+  const spK = (o.spacing ?? 7) / 7, reveal = o.reveal ?? 1, rKey = o.revealKey, ls = o.layoutSeed ?? 11, boil = o.boil ?? BOIL;
+  const nb = o.black ?? NL_BLACK, nw = o.white ?? .85, nc = o.contrast ?? NL_CONTRAST;
+  const toneFn = o.tone ?? (night ? ((L, V) => Math.pow(smooth(clamp((L - nb) / (nw - nb))), nc))
                                   : ((L, V) => Math.pow(smooth(clamp(((o.white ?? .82) - (.55 * L + .45 * V)) / ((o.white ?? .82) - .1))), o.contrast ?? 1.3)));
+  const sc = o.scale ?? (night ? NL_SCALE : 1);   // bolder, sparser strokes survive being watched small
   const layers = o.layers ?? [
-    { ang: -0.72, th: .13, sp: 7.5, w: 1.25, a: .6 },
-    { ang: 0.85, th: .36, sp: 8, w: 1.2, a: .6 },
-    { ang: -1.35, th: .58, sp: 7, w: 1.35, a: .7 },
-    { ang: 0.1, th: .78, sp: 5.2, w: 1.6, a: .85, dark: true },
+    { ang: -0.72, th: .13, sp: 7.5 * sc, w: 1.25 * sc, a: .6 },
+    { ang: 0.85, th: .36, sp: 8 * sc, w: 1.2 * sc, a: .6 },
+    { ang: -1.35, th: .58, sp: 7 * sc, w: 1.35 * sc, a: .7 },
+    { ang: 0.1, th: .78, sp: 5.2 * sc, w: 1.6 * sc, a: .85, dark: true },
   ];
   const pick = o.pencil ?? (night ? pencilNight : pencilSnow);
   const [rx0, ry0, rx1, ry1] = o.region ?? [0, 0, W, H];
@@ -527,14 +545,16 @@ function lineHatch(pen, F, view, o = {}) {
   for (const Ly of layers) {
     li++;
     const ca = Math.cos(Ly.ang), sa = Math.sin(Ly.ang), nx = -sa, ny = ca;   // along (ca, sa); lines offset along the normal
-    const phase = hash2(seed, li) * Ly.sp;
-    for (let d = -R + phase, k = 0; d < R; d += Ly.sp, k++) {
-      const jo = (hash3(k, li, seed) - .5) * Ly.sp * (o.jitter ?? .45);
+    // the hatch layout is stable from drawing to drawing (ls); each new drawing only nudges it (boil), so the page shimmers instead of strobing
+    const lsp = Ly.sp * spK, phase = hash2(ls, li) * lsp + (hash2(seed, li) - .5) * lsp * boil;
+    for (let d = -R + phase, k = 0; d < R; d += lsp, k++) {
+      const jo = (hash3(k, li, ls) - .5) * lsp * (o.jitter ?? .45) + (hash3(k, li, seed) - .5) * lsp * boil * .5;
       const ox = cxr + nx * (d + jo), oy = cyr + ny * (d + jo);
-      let run = null, runLen = 0, target = lenA + (lenB - lenA) * hash3(k, li, seed + 1);
+      let run = null, runLen = 0, target = lenA + (lenB - lenA) * hash3(k, li, ls + 1);
       const flush = () => {
         if (!run || run.n < 2) { run = null; return; }
-        const mx = (run.x0 + run.x1) / 2, my = (run.y0 + run.y1) / 2, [px, py] = view.toPlate(mx, my);
+        const mx = (run.x0 + run.x1) / 2, my = (run.y0 + run.y1) / 2;
+        if (reveal < 1 && rKey && rKey(mx, my, hash3(k, li, run.n)) > reveal) { run = null; return; }   // draw-on
         const col = run.col;
         // a slight bow and wobble like a hand-pulled line
         const bow = (hash3(k, run.n, seed + 7) - .5) * 1.6;
@@ -549,16 +569,16 @@ function lineHatch(pen, F, view, o = {}) {
         let t = toneFn(samp(F, F.T, px, py), V(px, py));
         if (mask) t *= mask(X, Y);
         // dither the threshold a little so run ends are ragged, like real hatching
-        const on = t > Ly.th + (hash3(Math.round(X), Math.round(Y), seed + li) - .5) * .12;
+        const on = t > Ly.th + (hash3(Math.round(X), Math.round(Y), ls + li) - .5) * .12;
         if (on) {
           if (!run) {
             const r = samp(F, F.R, px, py), g = samp(F, F.G, px, py), b = samp(F, F.B, px, py);
-            let col = pick(r, g, b, t, o.pencilOpt || {}, hash3(k, Math.round(s), seed + li * 3));
+            let col = pick(r, g, b, t, o.pencilOpt || {}, hash3(k, Math.round(s), ls + li * 3));
             if (Ly.dark && !night) col = ({ lead: 'graphite', sky: 'cobalt', orange: 'brown', gold: 'brown', verm: 'crimson' })[col] || col;
             run = { x0: X, y0: Y, x1: X, y1: Y, n: 1, tmax: t, col };
             runLen = 0;
           } else { run.x1 = X; run.y1 = Y; run.n++; run.tmax = Math.max(run.tmax, t); runLen += step; }
-          if (runLen >= target) { flush(); target = lenA + (lenB - lenA) * hash3(k, Math.round(s), seed + 2); s += step * (1 + Math.floor(hash3(k, Math.round(s), seed + 3) * 2)); }
+          if (runLen >= target) { flush(); target = lenA + (lenB - lenA) * hash3(k, Math.round(s), ls + 2); s += step * (1 + Math.floor(hash3(k, Math.round(s), ls + 3) * 2)); }
           if (!col_ok(run)) flush();
         } else flush();
       }

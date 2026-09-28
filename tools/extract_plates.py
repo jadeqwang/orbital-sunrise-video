@@ -29,7 +29,8 @@ def extract(pid, take=None):
         stamp.write_text(mp4.name)
         n = len(list(out.glob("f*.jpg")))
     mattes = len(list(out.glob("m*.png")))
-    return {"n": n, "fps": FPS, "w": WD, "h": HT, "take": mp4.name, "mattes": mattes >= (n // 2)}
+    st = json.loads((out / "stats.json").read_text()) if (out / "stats.json").exists() else {}
+    return {"n": n, "fps": FPS, "w": WD, "h": HT, "take": mp4.name, "mattes": mattes >= (n // 2), "gain": st.get("gain", 1.0)}
 
 
 if __name__ == "__main__":

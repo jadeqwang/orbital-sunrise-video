@@ -56,7 +56,7 @@ function typeLayer() { return layer(6); }
 function typeFlush(L, drawIdx, grain = .5) {
   if (grain > 0) {
     const g = L.g, pat = g.createPattern(TOOTH_LIGHT, 'repeat');
-    pat.setTransform(new DOMMatrix([1, 0, 0, 1, Math.floor(hash(drawIdx * 3 + 11) * 512), Math.floor(hash(drawIdx * 3 + 12) * 512)]));
+    const tb = TOOTH_BOIL ? drawIdx : 0; pat.setTransform(new DOMMatrix([1, 0, 0, 1, Math.floor(hash(tb * 3 + 11) * 512), Math.floor(hash(tb * 3 + 12) * 512)]));
     g.save(); g.globalCompositeOperation = 'destination-in'; g.globalAlpha = 1; g.fillStyle = pat;
     // blend: draw the tooth partially so grain strength is controllable
     g.fillRect(0, 0, W, H); g.restore();
@@ -98,12 +98,28 @@ function tele(g, s, x, y, t, t0, o = {}) {
   const n = o.instant ? s.length : Math.floor(clamp((t - t0) / dur) * s.length);
   if (n <= 0) return;
   const shown = s.slice(0, n) + (n < s.length && frac(t * 4) < .5 ? '▌' : '');
-  text(g, shown, x, y, { font: FONT.mono(o.size ?? 22, o.weight ?? 400), col: o.col ?? 'silver', alpha: o.alpha ?? .85, ls: o.ls ?? 1.5, align: o.align });
+  const font = FONT.mono(o.size ?? 22, o.weight ?? 400), style = { font, col: o.col ?? 'silver', alpha: o.alpha ?? .85, ls: o.ls ?? 1.5, align: o.align };
+  if (!o.wrap) { text(g, shown, x, y, style); return; }
+  // wrap on the full line's word breaks so the layout does not jump while typing
+  const lines = []; let cur = '';
+  for (const w of s.split(' ')) { const tryL = cur ? cur + ' ' + w : w; if (cur && measure(g, tryL, font, o.ls ?? 1.5) > o.wrap) { lines.push(cur); cur = w; } else cur = tryL; }
+  lines.push(cur);
+  let k = 0;
+  lines.forEach((ln, j) => { const part = shown.slice(k, k + ln.length + (j < lines.length - 1 ? 0 : 2)); k += ln.length + 1; if (part) text(g, part, x, y + j * (o.size ?? 22) * 1.35, style); });
 }
 
 // Subtitle for story passages: serif italic, lower third, word-by-word fade.
 function subtitle(g, line, t, o = {}) {
   if (!line || t < line.t0 - .2 || t > line.t1 + .3) return;
+  if (o.split) { // a line crossing a split page changes pencil where it crosses: graphite on white paper, cream on black
+    const { x: sx, left, right } = o.split;
+    for (const [x0, x1, col] of [[0, sx, left], [sx, W, right]]) {
+      g.save(); g.beginPath(); g.rect(x0, 0, x1 - x0, H); g.clip();
+      subtitle(g, line, t, { ...o, split: null, col, shadow: col === 'graphite' ? 0 : (o.shadow ?? 0) });
+      g.restore();
+    }
+    return;
+  }
   const size = o.size ?? 54, y = o.y ?? H - 96;
   const fade = clamp((t - line.t0 + .2) / .25) * clamp((line.t1 + .3 - t) / .3);
   const words = line.text.split(' ');

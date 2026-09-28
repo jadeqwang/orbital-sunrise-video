@@ -1,7 +1,8 @@
 // plates.js: access to reference frames (Seedance plates extracted to plates/<id>/f0001.jpg at 24 fps).
 // Plates are only ever *read*: analyzePlate() turns a frame into fields for the pencil engine.
 
-let PLATES = {};             // id -> { n, fps, w, h }
+let PLATES = {};             // id -> { n, fps, w, h, gain }
+const GAIN_POW = new URLSearchParams(location.search).has('gainPow') ? +new URLSearchParams(location.search).get('gainPow') : .75;   // soften the per-plate exposure lift
 const _img = new Map(), _ana = new Map();
 const IMG_MAX = 24, ANA_MAX = 16;
 
@@ -20,9 +21,9 @@ async function plateImage(id, tp) {
 }
 // Fields for plate `id` at plate time tp (seconds). aw/ah = analysis resolution.
 async function plateF(id, tp, aw = 640, ah = 360, opt = {}) {
-  const f = plateIndex(id, tp), key = `${id}#${f}#${aw}x${ah}#${opt.s1 ?? ''}${opt.sT ?? ''}`;
+  const f = plateIndex(id, tp), key = `${id}#${f}#${aw}x${ah}#${opt.s1 ?? ''}${opt.sT ?? ''}#${opt.gain ?? ''}`;
   let F = lruGet(_ana, key);
-  if (!F) { F = analyzePlate(await plateImage(id, tp), aw, ah, opt); F.id = id; F.frame = f; lruSet(_ana, key, F, ANA_MAX); }
+  if (!F) { F = analyzePlate(await plateImage(id, tp), aw, ah, { gain: Math.pow(PLATES[id].gain ?? 1, GAIN_POW), ...opt }); F.id = id; F.frame = f; lruSet(_ana, key, F, ANA_MAX); }
   return F;
 }
 function plateDur(id) { const P0 = PLATES[id]; return P0 ? P0.n / P0.fps : 0; }

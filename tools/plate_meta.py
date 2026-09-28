@@ -132,9 +132,25 @@ def measure(path):
             "face": face_of(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))}
 
 
+def stats(pid):
+    """Per-plate exposure gain: the 95th-percentile luminance across the take maps to 0.85 (never darkens)."""
+    d = DST / pid
+    frames = sorted(d.glob("f*.jpg"))
+    pick = frames[::max(1, len(frames) // 12)]
+    p95 = []
+    for f in pick:
+        im = cv2.resize(cv2.imread(str(f)), (320, 180), interpolation=cv2.INTER_AREA).astype(np.float32) / 255
+        L = im[..., 2] * .2126 + im[..., 1] * .7152 + im[..., 0] * .0722
+        p95.append(np.percentile(L, 95))
+    gain = float(np.clip(.85 / max(np.median(p95), 1e-3), 1.0, 2.2))
+    (d / "stats.json").write_text(json.dumps({"p95": round(float(np.median(p95)), 3), "gain": round(gain, 3)}))
+    return gain
+
+
 def run(pid, force=False):
     d = DST / pid
     frames = sorted(d.glob("f*.jpg"))
+    stats(pid)
     out = d / "meta.json"
     if out.exists() and not force:
         try:
