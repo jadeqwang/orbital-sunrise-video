@@ -47,3 +47,29 @@ Shot times: `node video/render.mjs --list` (song seconds). New Seedance plates g
 - New character sheets (`media/chars/jade_v2_*`): DOT's outfit and flowy hair with curtain bangs; photoreal face.
 - Regenerate her remaining singing plates with the v2 sheets: `jade_hook1` (0:32), `jade_studio` (1:09), `jade_brk` (1:54–1:58).
 - Fewer extreme face close-ups: frame her singing medium (waist/chest up); keep hands/notebook shots for intimacy.
+
+## Round 2 plates
+Specs: `tools/plate_specs.py` (round 2 block) and `tools/legacy_stills.py` (`STILLS.update`). Frames, meta, stats, mattes and index entries are in `video/plates/`. Rejected takes are in `media/archive/`.
+
+| id | take | what it shows |
+|---|---|---|
+| `leonov_drawing` | still | the reconstruction (`media/refs/leonov_drawing_reconstruction.png`): small study on a loose white sheet; red→orange→light blue→blue→violet→black over a dark Earth, red sun on the rim, no text |
+| `airlock_struggle` | take1 | top-down at the Volga tube mouth: ballooned suit wedged in the round rim, gloves braced, straining |
+| `valve_bleed` | take2 | close on the suit chest: the gloved hand turns the small blue regulator tap at the solar plexus (not the backpack) |
+| `tube_struggle` | take2 | one shot inside the padded tube: he curls round toward the hatch, ending on his sweating, grimacing face |
+| `drawing_hand` | take1 | top-down hand finishing the reconstruction: orange strokes along the arc, then the red sun on the rim |
+| `leonov_drawing_hand` | take1 | Leonov's bare hand in the cabin, pencils tied to his wrist floating, hatching the blue band; the drawing appears on the pad |
+| `porthole_spin` | take1 | through a porthole while tumbling: Earth / black sweep past, then an orange plasma glow builds on the glass |
+| `reentry_outside` | take2 | wide: the small descent sphere with a pink-orange plasma sheath and a long trail over the dark Earth, black sky above |
+| `hatch_tree` | take2 | the capsule in the taiga with a white birch right in front of the hatch; a gloved hand in the gap (rocking is subtle) |
+| `hatch_free` | take2 | the hatch lies in the snow; Leonov (white suit, no helmet) climbs out and helps Belyayev (no helmet) |
+| `fire_night_v2` | take1 | dusk fire by the capsule: both men in quilted linings tied with cord, fur boots, parachute cloth |
+| `drawing_survives_v2` | take2 | by the fire, Leonov in his quilted lining unfolds the folded sheet (the reconstruction) and smiles |
+| `rescue_v2` | take2 | skiers in sheepskin coats and ushankas arrive with bundles of warm clothes; the cosmonauts in linings and fur boots by the fire |
+| `leg_station` | still | the whole ISS over the limb at orbital sunrise (truss, eight golden array wings, modules) |
+| `leg_commercial` | still | Polaris Dawn: Dragon's nose cone open, suited figure half out of the hatch at Skywalker, umbilical, no backpack, gold visor |
+| `leg_yang_liwei` | still | 2003 Shenzhou 5: Yang Liwei in a white-and-blue suit in a reclined couch, porthole with Earth |
+| `leg_philae` | still | 2014 Philae tilted on the boulder-strewn nucleus of 67P beside a cliff, dust jets |
+| `leg_change4` | still | 2019 Chang'e 4 lander and Yutu-2 rover with tracks on the far side, no Earth in the sky |
+| `leg_chandrayaan3` | still | 2023 Vikram lander near the south pole, Pragyan rolling down its ramp, very low sun |
+| `leg_survivors` | still | Leonov and Belyayev after the rescue in sheepskin coats and fur hats, taiga and fire smoke behind, documentary look |

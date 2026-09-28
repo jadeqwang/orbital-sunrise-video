@@ -186,3 +186,80 @@ PLATES.update({
         "she draws the curved horizon of the Earth, then quick strokes of red, orange, yellow and blue along it — an orbital sunrise. Loose colored pencils around the paper. "
         "Steady overhead camera. Photorealistic, 35mm film, no text."),
 })
+
+# ---------------- round 2 (docs/ROUND2_PLAN.md; facts from docs/FACTS.md) ----------------
+R.update({"DRAW": "media/refs/leonov_drawing_reconstruction.png"})
+LEO2 = "the cosmonaut Alexei Leonov (face and suit exactly as in his reference images)"
+DRAWING = ("the drawing is small and sits in the middle of the sheet with wide blank margins: a curved horizon arc; below it the Earth hatched dark blue and black with no continents; "
+           "above the arc, bands following the curve from bottom to top: bright red, orange, light blue, blue, violet, then velvety black at the top; "
+           "a small red ball of the sun emerging from the blue just above the rim. No text, no stars, no spacecraft, no signature")
+LOOK_TAIGA = ("Photorealistic, shot on 35mm film, documentary realism. March 1965, the Ural taiga of Perm Oblast: dense snow-covered spruce and pale birch forest, waist-deep snow, "
+              "breath steaming at -25 C. A red-orange-and-white parachute hangs snagged in the treetops. Accurate 1965 Soviet details only: no modern clothing or gear, "
+              "no orange coveralls, no helmets. Clear readable subjects, uncluttered frame. No on-screen text, no captions.")
+LININGS = ("they have pulled off the rigid white outer layers of their spacesuits and wear only the soft, pale off-white quilted thermal linings of the suits, "
+           "wrapped round their bodies and tied at the waist, knees and ankles with thin white parachute cord; shaggy fur boots on their feet; "
+           "a piece of red-orange-and-white parachute cloth over their shoulders; bare heads, no helmets, no spacesuits; the linings look like thick soft padded sleeping-bag jackets "
+           "with no metal neck rings, no metal wrist rings, no harness straps, no orange stripes, no patches, no flags")
+PLATES.update({
+    "airlock_struggle": dict(duration=8, refs=["LT", "LF", "SHIP"], prompt=
+        "Exterior in orbit, side view of the open outer end of the Volga airlock (third reference: a pale fabric cylinder sticking out from the spacecraft, with a round metal rim and a hinged hatch lid at its end). "
+        f"{LEO}: his white Berkut suit is ballooned and rigid, puffed tight like a balloon. He is half in the opening: his helmet and shoulders are wedged against the metal rim, which is too narrow for his swollen suit. "
+        "He braces one stiff glove against the rim and heaves, strains, twists his shoulders left and right, pulls back out, then shoves again, his legs kicking behind him, and still cannot get through. "
+        "One continuous shot, no cuts. Close three-quarter view from just outside the rim, about one and a half metres away: his helmet, shoulders, arms and the metal rim fill the lower two thirds of the frame, "
+        "the struggle clearly readable; the upper third of the frame is empty black space, the blue Earth curving along the bottom edge. " + LOOK),
+    "valve_bleed": dict(duration=6, refs=["LT", "LF"], prompt=
+        f"Tight close-up on the chest of {LEO}'s white Berkut spacesuit during the spacewalk. At the centre of the chest, at the solar plexus below the rust-orange harness straps, "
+        "there is a small round blue tap, a pressure-regulator knob the size of a coin, fixed on the suit itself. His right gloved hand comes in, grips the small blue tap and turns it "
+        "one slow, deliberate quarter turn, then lets go. The over-inflated suit visibly slackens: the tight fabric of the chest and sleeve softens and creases, "
+        "the swollen glove fingers go limp at the tips. No gas jets, no hoses being touched, nothing on the backpack. Hard sunlight from the left, black space, "
+        "the blue Earth out of focus at the bottom. Locked-off macro camera. " + LOOK),
+    "tube_struggle": dict(duration=8, refs=["TUBE", "LF", "LT"], prompt=
+        f"Inside the narrow Volga airlock tube (first reference: pale padded fabric walls, metal hoops, two small lamps), barely one metre wide. {LEO2} in his white Berkut suit is crammed inside, "
+        "curling his body round to turn and face the outer hatch: knees and elbows jam against the soft walls, his helmet bumps the fabric, he pushes with his gloves and twists, "
+        "folding himself almost double, slow and exhausting. Behind the clear visor his face is drenched in sweat, the visor fogged at the edges, he breathes hard. "
+        "His face is strained and grimacing with effort, jaw clenched, never smiling. One continuous shot, no cuts. Warm lamp light, cramped close framing on one figure, handheld camera. " + LOOK),
+    "drawing_hand": dict(duration=8, refs=["DRAW"], prompt=
+        "Steady top-down close-up: a hand draws with coloured pencils on a loose sheet of white paper lying on a plain table, soft even daylight. The hand is making the drawing in the reference image, "
+        "which is partly finished: the curved horizon arc and the dark blue-black hatched Earth below it are already there, and the thin red band along the rim. "
+        "Holding an orange pencil, the hand lays short strokes along the arc to build the orange band just above the red; then it picks up a red pencil and fills in the small red ball of the sun "
+        f"sitting on the rim, in a patch of blue. {DRAWING}. A few coloured pencils (red, orange, light blue, blue, violet, black) lie beside the sheet. "
+        "Visible pencil hatching and paper tooth. Only the hand and forearm, no face. Photorealistic, 35mm film. No on-screen text.", faces=False),
+    "leonov_drawing_hand": dict(duration=8, refs=["CAB", "DRAW", "LT"], prompt=
+        f"Inside the cramped Voskhod-2 capsule (first reference), weightless, March 1965. Close-up of the bare right hand of {LEO2}, the white sleeve of his Berkut suit with its rust-orange cuff visible, "
+        "drawing on a small loose sheet of white paper held against a log book on his knee. Four or five short coloured pencils float around his wrist, each tied on a thread to a rubber band round his wrist, "
+        "drifting slowly in zero gravity. With a blue pencil he hatches the blue band above a curved horizon. The picture on the paper is the one in the second reference: "
+        f"{DRAWING}. Warm light from a porthole, the instrument panel soft and out of focus behind. Camera close on hand and paper, the paper clearly readable. " + LOOK),
+    "porthole_spin": dict(duration=6, refs=[], prompt=  # no cabin sheet: it shows the crew and trips the real-person filter
+        "Inside the Voskhod-2 capsule, point of view through a small round porthole whose thick dark metal frame stays steady in the frame. The spacecraft is tumbling: "
+        "through the glass the view sweeps past fast and repeatedly, the blue-white Earth, then black sky, then a hard white flash of the sun, then Earth again, over and over, strobing. "
+        "In the last seconds a soft orange glow of plasma starts to build on the outside of the glass and the spinning slows. No people in frame. " + LOOK, faces=False),
+    "reentry_outside": dict(duration=8, refs=["SHIP"], prompt=
+        "Exterior, re-entry, very wide shot from a distance: the spherical Voskhod-2 descent capsule alone (the ball-shaped cabin from the reference, with no airlock and no equipment module attached; "
+        "its small portholes dark, no people visible) is small in the frame, about one sixth of the frame width, in the lower middle, falling into the upper atmosphere high above the curved dark Earth. "
+        "A pink-orange plasma sheath builds on its leading side and brightens to orange-white; a long glowing trail streams out behind it across the sky. "
+        "The upper half of the frame stays empty black sky. One continuous shot, camera tracks alongside, steady. " + LOOK, faces=False),
+    "hatch_tree": dict(duration=8, refs=["TAIGA", "LT"], prompt=
+        "Deep snow in the Ural taiga, grey late-afternoon light, snow falling. Locked-off medium shot: the scorched dark spherical Voskhod-2 capsule (first reference) lies in deep snow. "
+        "Directly in front of its round hatch stands the thick white trunk of a birch tree with black markings. The round hatch cover, a heavy metal disc, has swung out only a hand's width and is pinned against the white birch trunk. "
+        "From inside the capsule the hatch cover is shoved outward again and again: it knocks against the birch trunk and bounces back, the whole capsule rocks slightly with each heave, snow falls from the branches. "
+        "Through the narrow gap a white spacesuit glove grips the edge of the hatch. One continuous shot, no cuts, the hatch and the birch clearly readable in the centre. " + LOOK_TAIGA),
+    "hatch_free": dict(duration=8, refs=["TAIGA", "LT", "LF", "BF"], prompt=
+        "Deep snow in the Ural taiga, grey late-afternoon light. Beside the round hatch of the scorched spherical Voskhod-2 capsule (first reference) stands a thick white birch trunk. "
+        "The round hatch cover, pinned against the birch, is shoved free with a last heave and drops into the deep snow. "
+        f"{LEO2}, in his white Berkut suit with rust-orange straps, bare-headed with no helmet, climbs out through the round hatch and sinks waist-deep into the soft snow, breath steaming; "
+        "he turns and reaches back to help the commander Pavel Belyayev, also in a white spacesuit and also bare-headed (no helmet, no helmet ring around his head), climb out behind him. Only these two men. "
+        "One continuous medium-wide shot at snow level, no cuts, the capsule on one side, open snow and forest on the other. " + LOOK_TAIGA),
+    "fire_night_v2": dict(duration=8, refs=["TAIGA", "LF", "BF"], prompt=
+        f"Night in the frozen Ural taiga. Beside the dark scorched spherical capsule, whose round hatch opening is empty (the hatch cover lies in the snow), {LEO2} and the commander Pavel Belyayev "
+        f"sit close together at a small fire in a pit dug in the snow. {LININGS}. They hold their hands to the flames, shivering, and talk quietly. "
+        "Sparks rise into falling snow; warm firelight on their faces, black forest behind. Only these two men, no animals. Medium shot, steady camera. " + LOOK_TAIGA),
+    "drawing_survives_v2": dict(duration=6, refs=["LF", "DRAW", "TAIGA"], prompt=
+        f"Night in the snowy Ural taiga, by a small fire. {LEO2} sits in the snow; he is no longer in his spacesuit: {LININGS}. "
+        "He pulls a small folded sheet of white paper from inside the padded lining, unfolds it with stiff cold fingers and looks at it: it is the coloured-pencil drawing in the second reference, "
+        f"{DRAWING}. He smiles. Close-up on his hands and the drawing lit by the fire, then tilt up to his face. One continuous shot, no cuts. " + LOOK_TAIGA),
+    "rescue_v2": dict(duration=8, refs=["TAIGA", "LF", "BF"], prompt=
+        "Morning in the snowy Ural taiga, bright overcast light. Three rescuers on wooden skis, in dark sheepskin coats and fur hats with ear flaps, glide in single file between the spruce trunks, "
+        "carrying bundles of warm clothes: sheepskin coats and felt boots. They reach the two cosmonauts, Alexei Leonov and Pavel Belyayev (reference faces), who stand by a smoking fire and the dark "
+        f"spherical capsule; {LININGS}. The first skier throws a sheepskin coat over Leonov's shoulders; they embrace. No flags, patches or insignia on anyone's clothing. "
+        "One continuous wide shot, no cuts, the skiers coming from the left. " + LOOK_TAIGA),
+})

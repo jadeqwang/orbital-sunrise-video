@@ -302,8 +302,8 @@
   "w": 960,
   "h": 540,
   "take": "still",
-  "mattes": false,
-  "gain": 1.0
+  "mattes": true,
+  "gain": 1.172
  },
  "leg_commercial": {
   "n": 1,
@@ -311,7 +311,7 @@
   "w": 960,
   "h": 540,
   "take": "still",
-  "mattes": false,
+  "mattes": true,
   "gain": 1.0
  },
  "leg_artemis": {
@@ -436,8 +436,161 @@
   "fps": 24,
   "w": 960,
   "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.148
+ },
+ "leonov_drawing": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": true,
+  "gain": 1.0
+ },
+ "leg_yang_liwei": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": true,
+  "gain": 1.083
+ },
+ "leg_philae": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": true,
+  "gain": 1.555
+ },
+ "leg_change4": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": true,
+  "gain": 1.203
+ },
+ "leg_chandrayaan3": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": true,
+  "gain": 1.368
+ },
+ "leg_survivors": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": true,
+  "gain": 1.0
+ },
+ "leonov_drawing_hand": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
   "take": "take1.mp4",
   "mattes": true,
-  "gain": 1.103
+  "gain": 1.266
+ },
+ "fire_night_v2": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.57
+ },
+ "porthole_spin": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 2.006
+ },
+ "tube_struggle": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.0
+ },
+ "reentry_outside": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.514
+ },
+ "hatch_tree": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.396
+ },
+ "hatch_free": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.393
+ },
+ "drawing_survives_v2": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.708
+ },
+ "rescue_v2": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.41
+ },
+ "airlock_struggle": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.191
+ },
+ "drawing_hand": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.178
  }
 }

@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "CAB",
+   "DRAW",
+   "LT"
+  ],
+  "prompt": "Inside the cramped Voskhod-2 capsule (first reference), weightless, March 1965. Close-up of the bare right hand of the cosmonaut Alexei Leonov (face and suit exactly as in his reference images), the white sleeve of his Berkut suit with its rust-orange cuff visible, drawing on a small loose sheet of white paper held against a log book on his knee. Four or five short coloured pencils float around his wrist, each tied on a thread to a rubber band round his wrist, drifting slowly in zero gravity. With a blue pencil he hatches the blue band above a curved horizon. The picture on the paper is the one in the second reference: the drawing is small and sits in the middle of the sheet with wide blank margins: a curved horizon arc; below it the Earth hatched dark blue and black with no continents; above the arc, bands following the curve from bottom to top: bright red, orange, light blue, blue, violet, then velvety black at the top; a small red ball of the sun emerging from the blue just above the rim. No text, no stars, no spacecraft, no signature. Warm light from a porthole, the instrument panel soft and out of focus behind. Camera close on hand and paper, the paper clearly readable. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 191
+}

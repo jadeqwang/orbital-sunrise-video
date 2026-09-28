@@ -1,0 +1,11 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "DRAW"
+  ],
+  "prompt": "Steady top-down close-up: a hand draws with coloured pencils on a loose sheet of white paper lying on a plain table, soft even daylight. The hand is making the drawing in the reference image, which is partly finished: the curved horizon arc and the dark blue-black hatched Earth below it are already there, and the thin red band along the rim. Holding an orange pencil, the hand lays short strokes along the arc to build the orange band just above the red; then it picks up a red pencil and fills in the small red ball of the sun sitting on the rim, in a patch of blue. the drawing is small and sits in the middle of the sheet with wide blank margins: a curved horizon arc; below it the Earth hatched dark blue and black with no continents; above the arc, bands following the curve from bottom to top: bright red, orange, light blue, blue, violet, then velvety black at the top; a small red ball of the sun emerging from the blue just above the rim. No text, no stars, no spacecraft, no signature. A few coloured pencils (red, orange, light blue, blue, violet, black) lie beside the sheet. Visible pencil hatching and paper tooth. Only the hand and forearm, no face. Photorealistic, 35mm film. No on-screen text.",
+  "faces": false
+ },
+ "secs": 1690
+}

@@ -1,0 +1,11 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "SHIP"
+  ],
+  "prompt": "Exterior, re-entry, very wide shot from a distance: the spherical Voskhod-2 descent capsule alone (the ball-shaped cabin from the reference, with no airlock and no equipment module attached; its small portholes dark, no people visible) is small in the frame, about one sixth of the frame width, in the lower middle, falling into the upper atmosphere high above the curved dark Earth. A pink-orange plasma sheath builds on its leading side and brightens to orange-white; a long glowing trail streams out behind it across the sky. The upper half of the frame stays empty black sky. One continuous shot, camera tracks alongside, steady. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions.",
+  "faces": false
+ },
+ "secs": 224
+}
