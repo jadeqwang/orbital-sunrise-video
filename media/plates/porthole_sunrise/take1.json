@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "CAB",
+   "LF",
+   "LT"
+  ],
+  "prompt": "Inside the cramped Voskhod-2 capsule (first reference), close on the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images), helmet still on with the visor raised, exhausted and soaked in sweat, turning to a small round porthole. Through the porthole the orbital sunrise blazes: a white-gold sun on the curved horizon with thin bands of orange and blue. Golden light pours through the window across his face; he closes his eyes in relief. Symmetrical composition centred on the porthole. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 260
+}

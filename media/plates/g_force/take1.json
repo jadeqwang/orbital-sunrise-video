@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "CAB",
+   "LF",
+   "BF"
+  ],
+  "prompt": "Inside the Voskhod-2 capsule during re-entry: the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) and the commander Pavel Belyayev (face and suit exactly as in his reference images) are crushed back into their seats by ten g of deceleration, faces pulled and distorted, teeth clenched, the cabin vibrating violently. Through the small porthole, orange plasma fire roars past, flooding the cabin with flickering orange light. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 440
+}

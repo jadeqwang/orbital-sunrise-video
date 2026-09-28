@@ -1,0 +1,16 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "JT",
+   "JF",
+   "JS"
+  ],
+  "audio": [
+   "media/audio_refs/jade_brk.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Sunset on the same grassy hilltop above San Francisco: the whole sky has turned deep red and orange. the singer (the woman in the first two reference images: long messy dark hair in a loose high ponytail with strands framing her face, oversized heather-grey hoodie) stands facing the sky, singing, then slowly raises one open hand toward the sky as if reaching for something she can't touch. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium close-up, low angle, the red sky behind her, strong rim light. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 187
+}

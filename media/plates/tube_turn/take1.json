@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "TUBE",
+   "LF",
+   "LT"
+  ],
+  "prompt": "Inside the narrow Volga airlock tube (first reference): the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) is crammed inside head first. Claustrophobic close shots: he twists and folds his body to turn around in a space barely wider than his shoulders, face drenched in sweat behind the visor, breathing hard. He finally reaches the outer hatch, grips the handle and pulls it shut; the light from outside narrows to a sliver and goes dark. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 356
+}

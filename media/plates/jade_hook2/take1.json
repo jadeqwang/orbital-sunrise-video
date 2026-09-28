@@ -1,0 +1,16 @@
+{
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "JT",
+   "JF",
+   "JS"
+  ],
+  "audio": [
+   "media/audio_refs/jade_hook2.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Night, a small cluttered room: the singer (the woman in the first two reference images: long messy dark hair in a loose high ponytail with strands framing her face, oversized heather-grey hoodie) sits at a desk by a window, a warm desk lamp beside her, colored pencils and sheets of drawings of a 1960s cosmonaut spread in front of her. She looks up from the drawing toward the dark window and sings softly. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium close-up, warm lamp light, deep shadows. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 286
+}

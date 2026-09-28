@@ -1,0 +1,346 @@
+{
+ "airlock_exit": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true
+ },
+ "glove_cu": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true
+ },
+ "hero_sunrise": {
+  "n": 241,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true
+ },
+ "reach_home": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true
+ },
+ "ship_wide_sunrise": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true
+ },
+ "visor_cu": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true
+ },
+ "visor_sunrise": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true
+ },
+ "camera_reach": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "headfirst": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "porthole_sunrise": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "suit_balloon": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "tumble_slow": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "airlock_jettison": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true
+ },
+ "belyayev_turn": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "capsule_glide": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "capsule_spin": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "descent_forest": {
+  "n": 241,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "drawing_pencils": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "globus": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "helmet_off": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "jade_brk": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "jade_hands": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "jade_hook1": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "jade_hook2": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": false
+ },
+ "jade_hook3": {
+  "n": 289,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": false
+ },
+ "leonov_turn": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "parachute": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "reentry_fire": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "retrofire": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "vzor_manual": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "leg_gemini": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "leg_moon": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "leg_handshake": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "leg_station": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "leg_commercial": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "leg_artemis": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "leg_next": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "drawing_survives": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "fire_night": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "hatch_exit": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "rescue": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "treetops": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ },
+ "two_men_snow": {
+  "n": 169,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false
+ }
+}

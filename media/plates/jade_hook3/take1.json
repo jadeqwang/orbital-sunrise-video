@@ -1,0 +1,16 @@
+{
+ "spec": {
+  "duration": 12,
+  "refs": [
+   "JT",
+   "JF",
+   "JS"
+  ],
+  "audio": [
+   "media/audio_refs/jade_hook3.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Twilight on the grassy hilltop above San Francisco facing the Pacific: far away over the ocean a rocket climbs into the deep blue sky, its exhaust plume spreading into a huge glowing jellyfish-shaped cloud lit by the sun that has already set below the horizon. the singer (the woman in the first two reference images: long messy dark hair in a loose high ponytail with strands framing her face, oversized heather-grey hoodie) stands in the foreground singing with full power, face lifted toward the plume, lit by the cold blue twilight and the faint gold of the plume. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium close-up with the rocket plume behind her, slow push-in. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 329
+}

@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "CAB",
+   "BF",
+   "LF"
+  ],
+  "prompt": "Inside the Voskhod-2 capsule: a red warning lamp on the instrument panel starts flashing, bathing the cramped cabin in pulsing red light. the commander Pavel Belyayev (face and suit exactly as in his reference images) and the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) snap their heads toward the panel, alarmed, then exchange a look. Needles on the dials swing. Tense handheld close-ups. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 259
+}

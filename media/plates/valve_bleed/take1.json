@@ -1,0 +1,11 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "LT",
+   "LF"
+  ],
+  "prompt": "Close-up: the gloved hand of the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) twists a small pressure valve on the sleeve of his white Berkut suit. Fine white wisps of escaping air hiss out into vacuum and vanish. Cut-in to his face behind the visor: sweat on his forehead, jaw clenched, eyes fixed, breathing in slow controlled breaths. Hard sunlight. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 275
+}

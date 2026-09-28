@@ -1,0 +1,11 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "TAIGA",
+   "SHIP"
+  ],
+  "prompt": "High in a pale grey-blue sky above a layer of clouds: the scorched spherical Voskhod-2 capsule swings beneath a huge orange-and-white striped parachute that has just blossomed open, the canopy billowing and snapping full, lines taut, the capsule pendulum-swinging. Camera circles the parachute from below. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 255
+}

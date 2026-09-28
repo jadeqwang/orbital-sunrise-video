@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "TAIGA",
+   "LF",
+   "LT"
+  ],
+  "prompt": "Deep snow in the silent Ural taiga at dusk, the scorched Voskhod-2 capsule (first reference) lying between fir trees. Its round hatch pops open; the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images), helmet off, climbs out and sinks thigh-deep into the snow, breath steaming, looking around at the endless forest. Snow drifting down. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 299
+}

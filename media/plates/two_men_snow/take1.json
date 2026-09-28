@@ -1,0 +1,13 @@
+{
+ "spec": {
+  "duration": 7,
+  "refs": [
+   "TAIGA",
+   "LF",
+   "LT",
+   "BF"
+  ],
+  "prompt": "The Ural taiga at dusk: the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) and the commander Pavel Belyayev (face and suit exactly as in his reference images) stand in deep snow beside the scorched capsule and the parachute draped in the trees, in their white suits, breath steaming. They look up at the darkening sky, then at each other, and laugh with exhausted relief; Leonov claps Belyayev on the shoulder. Snowflakes falling. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 268
+}

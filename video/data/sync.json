@@ -1,0 +1,33 @@
+{
+ "jade_hook1": {
+  "lag": -0.5,
+  "source": "mouth",
+  "mouth_corr": 0.467,
+  "event_score": 0.188,
+  "audio_corr": 0.255,
+  "take": "take1.mp4"
+ },
+ "jade_hook2": {
+  "lag": -0.375,
+  "source": "mouth",
+  "mouth_corr": 0.287,
+  "event_score": 0.201,
+  "audio_corr": 0.631,
+  "take": "take2.mp4"
+ },
+ "jade_brk": {
+  "lag": 0.75,
+  "source": "audio",
+  "mouth_corr": 0.185,
+  "event_score": null,
+  "audio_corr": 0.667,
+  "take": "take1.mp4"
+ },
+ "jade_hook3": {
+  "lag": 0.458,
+  "source": "mouth",
+  "mouth_corr": 0.269,
+  "audio_corr": 0.157,
+  "take": "take1.mp4"
+ }
+}

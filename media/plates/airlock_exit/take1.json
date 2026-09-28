@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "LT",
+   "LF",
+   "SHIP"
+  ],
+  "prompt": "Wide shot outside the Voskhod-2 spacecraft (third reference) in orbit. The outer hatch of the inflatable Volga airlock cylinder is open. the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) emerges from the airlock: first his helmet and shoulders, then he pushes gently off the rim and drifts out into the void, the white umbilical tether uncoiling behind him. The sunlit Earth fills the bottom of the frame, clouds and the Black Sea coast; black sky above. Locked-off camera with a very slow drift. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 516
+}

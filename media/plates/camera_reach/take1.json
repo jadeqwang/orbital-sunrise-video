@@ -1,0 +1,11 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "LT",
+   "LF"
+  ],
+  "prompt": "Medium shot of the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) floating on his tether. He tries to reach down to a camera switch on his thigh, but his ballooned, rigid suit will not let him bend: his arm stops short, he strains, twists, tries again, and fails. The Earth rolls slowly behind him. Handheld documentary feel. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 266
+}

@@ -1,0 +1,17 @@
+{
+ "plate": "jade_hook2",
+ "take": "take2.mp4",
+ "seg_start": 67.4,
+ "frames": 121,
+ "window": [
+  68.7,
+  71.0
+ ],
+ "mouth_lag_s": -0.375,
+ "mouth_corr": 0.287,
+ "event_lag_s": 0.533,
+ "event_score": 0.201,
+ "events": 6,
+ "audio_lag_s": 0.792,
+ "audio_corr": 0.631
+}

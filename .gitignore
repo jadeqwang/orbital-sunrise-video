@@ -1,0 +1,10 @@
+# regenerable / oversized
+video/node_modules/
+video/out/
+video/plates/*/f*.jpg
+video/plates/*/m*.png
+media/plates/*/take*.mp4
+media/**/*.png
+media/audio/*.wav
+__pycache__/
+*.pyc

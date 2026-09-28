@@ -1,0 +1,10 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "SHIP"
+  ],
+  "prompt": "Exterior, low Earth orbit: the empty inflatable Volga airlock cylinder separates from the side of the Voskhod-2 spacecraft (reference) with a small puff of gas, and tumbles slowly away end over end toward the sunrise on the Earth's horizon, catching the golden light. The spacecraft stays in the foreground. Slow camera pan following the airlock. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 256
+}

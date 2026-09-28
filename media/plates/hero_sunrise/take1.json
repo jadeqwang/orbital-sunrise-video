@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 10,
+  "refs": [
+   "LT",
+   "LF",
+   "SHIP"
+  ],
+  "prompt": "the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) floats weightless in open space a few metres from the Voskhod-2 spacecraft (third reference), attached by a long coiled white umbilical tether. Orbital night: the Earth below is a dark disc with a thin glowing blue line along its horizon. After two seconds the sun breaks over the horizon behind him on the right: a blinding white-gold star, a thin layered band of red, orange, gold and blue light spreading along the curve of the atmosphere, and hard golden light sweeping across his suit. He slowly spreads his arms in wonder, drifting and turning a little. Slow steady camera push-in and gentle orbit around him. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 250
+}
