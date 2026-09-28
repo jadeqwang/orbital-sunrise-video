@@ -310,3 +310,15 @@ PLATES.update({
         "across it as she writes, the pencil tip and the graphite line clearly visible, paper texture, the leather cover at the edges of the frame. "
         "Only the hand, wrist and notebook, no face. Steady, locked-off camera slightly above. Photorealistic, shot on 35mm film. No on-screen text, no captions."),
 })
+
+# ---------------- round 2, Jade v4: sheets edited from her own photo (media/chars/jade_v4_*), same scenes as v3 ----------------
+R.update({"J4T": "media/chars/jade_v4_turnaround.png", "J4F": "media/chars/jade_v4_faces.png", "J4H": "media/chars/jade_v4_hero.png"})
+JADE4 = JADE3.replace("an East Asian woman around thirty with a round face and full soft cheeks, ",
+                      "an East Asian woman in her thirties with a broad soft face and full cheeks, visible double eyelid creases, a rounded nose, light freckles, ")
+_V4_REF = {"J3T": "J4T", "J3F": "J4F", "J3H": "J4H"}
+for _v3, _v4 in [("jade_hook1_v3", "jade_hook1_v4"), ("jade_studio", "jade_studio_v4"), ("jade_brk_v3", "jade_brk_v4"),
+                 ("jade_notebook", "jade_notebook_v4"), ("jade_hand_writing", "jade_hand_writing_v4")]:
+    _s = dict(PLATES[_v3])
+    _s["refs"] = [_V4_REF.get(r, r) for r in _s["refs"]]
+    _s["prompt"] = _s["prompt"].replace(JADE3, JADE4)
+    PLATES[_v4] = _s

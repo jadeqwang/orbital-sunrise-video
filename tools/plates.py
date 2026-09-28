@@ -69,7 +69,7 @@ def run_plate(pid, force=False):
             if "PrivacyInformation" in msg and attempt < 3 and refs:
                 # the real-person filter is probabilistic: reshuffle, then drop face close-up sheets (keep turnarounds)
                 if attempt == 1:
-                    refs = [r for r in refs if r not in ("LF", "BF", "JF", "J3F")] or refs
+                    refs = [r for r in refs if r not in ("LF", "BF", "JF", "J3F", "J4F")] or refs
                 refs = refs[1:] + refs[:1]
                 inp["reference_images"] = [ref(r) for r in refs]
                 print(f"[plate] {pid}: privacy filter, retry {attempt+1} with refs {refs}", flush=True)
