@@ -98,7 +98,7 @@
 
   <figure>
     <h2>Reference and drawing</h2>
-    <img src="making_of.jpg" alt="Pairs of frames: on the left the generated reference plate the renderer reads, on the right the colored-pencil frame the film shows" loading="lazy" width="1636" height="1500">
+    <img src="making_of.jpg" alt="Pairs of frames: on the left the generated reference plate the renderer reads, on the right the colored-pencil frame the film shows" loading="lazy" width="1636" height="2988">
     <figcaption>Left, the reference plate as the renderer placed it. Right, the frame the film shows. The renderer only reads tone, color, edges, face landmarks and a subject matte from each plate, then draws every stroke itself.</figcaption>
   </figure>
 </div>
@@ -112,7 +112,7 @@
     const nativeHls = v.canPlayType('application/vnd.apple.mpegurl') !== '';
     const hevcOk = (mse && mse.isTypeSupported && mse.isTypeSupported(HEVC)) || (nativeHls && v.canPlayType('video/mp4; codecs="hvc1"') !== '');
     const src = hevcOk ? 'hevc/index.m3u8' : 'avc/index.m3u8';
-    const label = hevcOk ? 'HEVC 1080p, about 5 Mbps' : 'H.264 720p (this browser does not decode HEVC)';
+    const label = hevcOk ? '1080p (HEVC)' : '720p (H.264, because this browser does not decode HEVC)';
     if (nativeHls) { v.src = src; note.textContent = 'Streaming ' + label + '.'; }
     else if (window.Hls && window.Hls.isSupported()) {
       const hls = new window.Hls({ maxBufferLength: 30 });

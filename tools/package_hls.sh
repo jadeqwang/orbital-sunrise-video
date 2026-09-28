@@ -1,27 +1,30 @@
 #!/usr/bin/env bash
-# Package the rendered frames + final mix as HLS for the watch page (release/web/):
-#   hevc/  1080p24 HEVC ~5.2 Mbps + AAC 128k (fMP4 segments, 4 s)
-#   avc/   720p24  H.264 ~2.5 Mbps + AAC 128k (fallback for browsers without HEVC)
-# Two-pass so the whole set stays under the 256 MB an artifact version may hold.
+# Package the film as HLS for the watch page (release/web/), within the page's 256 MB budget:
+#   hevc/  1080p24 HEVC at ~4.8 Mbps (a dedicated two-pass encode, keyframe at least every 6 s)
+#   avc/   the 720p H.264 release file, cut into segments without re-encoding (fallback for browsers without HEVC)
+# Run tools/encode_release.sh first (for the 720p file).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 FR="$ROOT/video/out/frames/f%05d.jpg"
 AUDIO="$ROOT/media/audio/Orbital_Sunrise_extended.wav"
-WEB="$ROOT/release/web"; mkdir -p "$WEB/hevc" "$WEB/avc"
+REL="$ROOT/release"; WEB="$REL/web"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
-GOP="keyint=96:min-keyint=96:scenecut=0"
-HLS=(-f hls -hls_time 4 -hls_playlist_type vod -hls_segment_type fmp4 -hls_fmp4_init_filename init.mp4)
+rm -rf "$WEB/hevc" "$WEB/avc"; mkdir -p "$WEB/hevc" "$WEB/avc"
+HLS=(-f hls -hls_time 6 -hls_playlist_type vod -hls_segment_type fmp4 -hls_fmp4_init_filename init.mp4)
+VB=${VB:-4800}
+X265="keyint=144:min-keyint=24:aq-mode=3:log-level=error"
 
-ffmpeg -y -loglevel error -stats -framerate 24 -i "$FR" -an -c:v libx265 -preset medium -b:v 5200k \
-  -x265-params "pass=1:stats=$TMP/h.log:$GOP:aq-mode=3:log-level=error" -pix_fmt yuv420p -f null /dev/null
-ffmpeg -y -loglevel error -stats -framerate 24 -i "$FR" -i "$AUDIO" -map 0:v -map 1:a -c:v libx265 -preset medium -b:v 5200k \
-  -x265-params "pass=2:stats=$TMP/h.log:$GOP:aq-mode=3:log-level=error" -tag:v hvc1 -pix_fmt yuv420p -c:a aac -b:a 128k -shortest \
+ffmpeg -y -loglevel error -stats -framerate 24 -i "$FR" -an -c:v libx265 -preset medium -b:v ${VB}k \
+  -x265-params "pass=1:stats=$TMP/h.log:$X265" -pix_fmt yuv420p -f null /dev/null
+ffmpeg -y -loglevel error -stats -framerate 24 -i "$FR" -i "$AUDIO" -map 0:v -map 1:a -c:v libx265 -preset medium -b:v ${VB}k \
+  -x265-params "pass=2:stats=$TMP/h.log:$X265" -tag:v hvc1 -pix_fmt yuv420p -c:a aac -b:a 128k -shortest \
   "${HLS[@]}" -hls_segment_filename "$WEB/hevc/s%03d.mp4" "$WEB/hevc/index.m3u8"
 
-ffmpeg -y -loglevel error -stats -framerate 24 -i "$FR" -an -vf scale=1280:720:flags=lanczos -c:v libx264 -preset slow -b:v 2500k \
-  -g 96 -keyint_min 96 -sc_threshold 0 -pass 1 -passlogfile "$TMP/a" -pix_fmt yuv420p -f null /dev/null
-ffmpeg -y -loglevel error -stats -framerate 24 -i "$FR" -i "$AUDIO" -map 0:v -map 1:a -vf scale=1280:720:flags=lanczos -c:v libx264 -preset slow \
-  -profile:v high -b:v 2500k -g 96 -keyint_min 96 -sc_threshold 0 -pass 2 -passlogfile "$TMP/a" -pix_fmt yuv420p -c:a aac -b:a 128k -shortest \
+ffmpeg -y -loglevel error -i "$REL/Orbital_Sunrise_720p_h264.mp4" -map 0:v -map 0:a -c copy \
   "${HLS[@]}" -hls_segment_filename "$WEB/avc/s%03d.mp4" "$WEB/avc/index.m3u8"
 
-du -sh "$WEB"/*; ls "$WEB/hevc" | wc -l; ls "$WEB/avc" | wc -l
+for d in hevc avc; do
+  n=$(ls "$WEB/$d"/s*.mp4 | wc -l); big=$(ls -S "$WEB/$d"/s*.mp4 | head -1)
+  echo "$d: $n segments, $(du -sh "$WEB/$d" | cut -f1), largest $(du -h "$big" | cut -f1)"
+done
+du -sh "$WEB"
