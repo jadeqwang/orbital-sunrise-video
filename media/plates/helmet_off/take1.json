@@ -1,0 +1,13 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "CAB",
+   "LF",
+   "LT",
+   "BF"
+  ],
+  "prompt": "Inside the Voskhod-2 capsule (first reference): the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) lifts off his white helmet, hair plastered with sweat, and lets it float; beside him the commander Pavel Belyayev (face and suit exactly as in his reference images) grips his shoulder. Warm light from the instrument panel and a porthole. Weightless details: a pencil and a loose cable drift past. Documentary close framing. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 274
+}

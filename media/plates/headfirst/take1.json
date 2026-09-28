@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "LT",
+   "LF",
+   "SHIP"
+  ],
+  "prompt": "From behind and slightly above: the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) dives head first into the narrow round opening of the Volga airlock cylinder, arms stretched ahead, squeezing his swollen suit through the rim, boots kicking, until only his legs remain outside. Hard sunlight, black space, the Earth below. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 431
+}

@@ -1,0 +1,11 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "LT",
+   "LF"
+  ],
+  "prompt": "the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) drifts alone in slow motion, tumbling end over end at the full length of his tether, a lone white figure against the black void and the blue curve of the Earth. Eerie calm, like a slow dance. The camera slowly circles him. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 276
+}

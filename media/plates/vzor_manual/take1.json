@@ -1,0 +1,13 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "CAB",
+   "BF",
+   "LF",
+   "LT"
+  ],
+  "prompt": "Inside the Voskhod-2 capsule, the first manual re-entry: the commander Pavel Belyayev (face and suit exactly as in his reference images) has left his seat and lies stretched across both seats on his side, his face pressed to the round Vzor optical porthole in the floor to line the ship up with the horizon, while the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) braces him and holds him in place with both arms. Sunlight spins slowly across them through the porthole. Cramped, sweaty, concentrated. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 364
+}

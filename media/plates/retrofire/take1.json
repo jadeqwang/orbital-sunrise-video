@@ -1,0 +1,10 @@
+{
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "SHIP"
+  ],
+  "prompt": "Exterior, low Earth orbit, close on the rear of the Voskhod-2 spacecraft (reference, airlock gone): the retro-rocket engine ignites with a violent orange flame and white exhaust plume, the whole spacecraft shudders and begins to fall toward the curved Earth below. Night side of the planet, the flame lighting the hull. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 244
+}

@@ -1,0 +1,443 @@
+{
+ "airlock_exit": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.162
+ },
+ "glove_cu": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.057
+ },
+ "hero_sunrise": {
+  "n": 241,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.38
+ },
+ "reach_home": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.132
+ },
+ "ship_wide_sunrise": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.238
+ },
+ "visor_cu": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.113
+ },
+ "visor_sunrise": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.185
+ },
+ "camera_reach": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.24
+ },
+ "headfirst": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.062
+ },
+ "porthole_sunrise": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.075
+ },
+ "suit_balloon": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.854
+ },
+ "tumble_slow": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 2.2
+ },
+ "airlock_jettison": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.19
+ },
+ "belyayev_turn": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.346
+ },
+ "capsule_glide": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.248
+ },
+ "capsule_spin": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.144
+ },
+ "descent_forest": {
+  "n": 241,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.795
+ },
+ "drawing_pencils": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.282
+ },
+ "globus": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.245
+ },
+ "helmet_off": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.37
+ },
+ "jade_brk": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.344
+ },
+ "jade_hands": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.089
+ },
+ "jade_hook1": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.0
+ },
+ "jade_hook2": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.596
+ },
+ "jade_hook3": {
+  "n": 289,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take3.mp4",
+  "mattes": true,
+  "gain": 1.167
+ },
+ "leonov_turn": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.621
+ },
+ "parachute": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.156
+ },
+ "reentry_fire": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.0
+ },
+ "retrofire": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.021
+ },
+ "vzor_manual": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.458
+ },
+ "leg_gemini": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false,
+  "gain": 1.021
+ },
+ "leg_moon": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false,
+  "gain": 1.155
+ },
+ "leg_handshake": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false,
+  "gain": 1.202
+ },
+ "leg_station": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false,
+  "gain": 1.0
+ },
+ "leg_commercial": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false,
+  "gain": 1.0
+ },
+ "leg_artemis": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false,
+  "gain": 1.139
+ },
+ "leg_next": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false,
+  "gain": 1.472
+ },
+ "drawing_survives": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 2.124
+ },
+ "fire_night": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.851
+ },
+ "hatch_exit": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.898
+ },
+ "rescue": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.184
+ },
+ "treetops": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.668
+ },
+ "two_men_snow": {
+  "n": 169,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.716
+ },
+ "airlock_fail": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.17
+ },
+ "g_force": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.366
+ },
+ "jade_art": {
+  "n": 289,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.454
+ },
+ "red_warning": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.482
+ },
+ "tube_turn": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.343
+ },
+ "valve_bleed": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.103
+ }
+}

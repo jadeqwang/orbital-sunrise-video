@@ -1,0 +1,11 @@
+{
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "LF",
+   "LT"
+  ],
+  "prompt": "Studio portrait in motion: the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images), helmet off, in the white Berkut suit collar ring, turns his head from profile to face the camera and breaks into a warm, confident grin. Pure black background, a single hard key light from the upper left and a thin orange rim light. Centered, symmetrical, like a music-video member introduction. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 249
+}

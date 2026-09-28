@@ -1,0 +1,16 @@
+{
+ "spec": {
+  "duration": 12,
+  "refs": [
+   "JS",
+   "JT",
+   "JF"
+  ],
+  "audio": [
+   "media/audio_refs/jade_art.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Night at her desk by a window where snow is falling outside: the singer (the woman in the first two reference images: long messy dark hair in a loose high ponytail with strands framing her face, oversized heather-grey hoodie) draws with colored pencils on a sheet of white paper, sketching the curved horizon of the Earth and a band of sunrise colors. She sings softly and intimately while drawing, sometimes looking at her hands. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Alternate between a close-up of her face lit by the warm desk lamp and her hands drawing. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 665
+}

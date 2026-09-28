@@ -1,0 +1,16 @@
+{
+ "spec": {
+  "duration": 12,
+  "refs": [
+   "JT",
+   "JF",
+   "JS"
+  ],
+  "audio": [
+   "media/audio_refs/jade_hook3.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Twilight on the grassy hilltop above San Francisco, just after sunset: the sky is deep blue fading to pale gold along the Pacific horizon, the city below calm with evening lights. Far away over the ocean a small rocket climbs on a thin, bright white-gold exhaust trail that arcs high into the sky; high up, still lit by the sun, the exhaust fans out into a delicate, translucent, glowing feather of blue and white light like a comet's tail. Peaceful and awe-inspiring: no explosion, no fireball, no smoke clouds, nothing on fire. the singer (the woman in the first two reference images: long messy dark hair in a loose high ponytail with strands framing her face, oversized heather-grey hoodie) stands in the foreground singing with full power, face lifted toward the rocket's trail, lit by the cool twilight. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium close-up with the rocket trail behind her, slow push-in. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 347
+}

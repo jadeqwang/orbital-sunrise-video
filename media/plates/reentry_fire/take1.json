@@ -1,0 +1,10 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "SHIP"
+  ],
+  "prompt": "Exterior, re-entry: the spherical Voskhod-2 descent capsule (reference) plunges into the upper atmosphere, heat shield first, wrapped in a blazing envelope of orange, gold and white plasma, a long glowing trail of fire and sparks streaming behind it, the dark curve of the Earth below. The capsule shakes and burns like a falling star. Camera tracks with it. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 250
+}

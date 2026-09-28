@@ -1,0 +1,11 @@
+{
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "LF",
+   "LT"
+  ],
+  "prompt": "Extreme close-up on the curved visor of the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images)'s white helmet. The orbital sunrise is reflected in the glass: a burst of white-gold light sweeps across the visor with thin bands of orange and blue; behind the reflection his eyes squint against the blaze and then widen. Golden light floods the helmet rim. Locked-off camera. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 276
+}

@@ -1,0 +1,10 @@
+{
+ "spec": {
+  "duration": 6,
+  "refs": [
+   "SHIP"
+  ],
+  "prompt": "Exterior: the spherical Voskhod-2 descent capsule has separated from the instrument module but is still tethered to it by a bundle of cables; the two pieces whirl around each other, spinning wildly, above the curved Earth, the sun flashing past on every turn. Then the cables burn through and the capsule tumbles free. Dramatic, chaotic motion. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 260
+}
