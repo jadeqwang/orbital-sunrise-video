@@ -9,7 +9,9 @@
 
 A colored-pencil drawing redrawn twelve times a second is about the hardest thing there is to
 compress (fine hatching everywhere, all of it changing), so both files are two-pass encodes sized
-to fit GitHub's 100 MB limit. `tools/encode_release.sh` re-encodes them from the rendered frames.
+to fit GitHub's 100 MB limit. `tools/encode_release.sh` re-encodes them from the rendered frames;
+`tools/package_hls.sh` builds a higher-bitrate (4.8 Mbps HEVC) stream for the private watch page
+(`release/web/index.html`).
 
 > The first artwork ever made in space was a colored-pencil sketch of a sunrise,
 > drawn by a man who almost didn't make it home. This video is drawn the same way.

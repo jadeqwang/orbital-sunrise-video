@@ -63,6 +63,7 @@
       <video id="film" controls playsinline preload="metadata" poster="poster.jpg"></video>
     </div>
     <div class="note" id="note">Loading the stream…</div>
+    <div class="note">Files on GitHub: <a href="https://github.com/jadeqwang/orbital-sunrise-video/blob/claude/funny-cerf-ee10tn/release/Orbital_Sunrise_1080p.mp4">1080p HEVC, 94 MB</a> · <a href="https://github.com/jadeqwang/orbital-sunrise-video/blob/claude/funny-cerf-ee10tn/release/Orbital_Sunrise_720p_h264.mp4">720p H.264, 90 MB</a></div>
   </section>
 
   <section class="meta">
@@ -111,16 +112,29 @@
     const mse = window.ManagedMediaSource || window.MediaSource;
     const nativeHls = v.canPlayType('application/vnd.apple.mpegurl') !== '';
     const hevcOk = (mse && mse.isTypeSupported && mse.isTypeSupported(HEVC)) || (nativeHls && v.canPlayType('video/mp4; codecs="hvc1"') !== '');
-    const src = hevcOk ? 'hevc/index.m3u8' : 'avc/index.m3u8';
+    // The playlists are published as .txt (the host serves no .m3u8); hls.js reads them as text.
+    const src = hevcOk ? 'hevc/index.txt' : 'avc/index.txt';
     const label = hevcOk ? '1080p (HEVC)' : '720p (H.264, because this browser does not decode HEVC)';
-    if (nativeHls) { v.src = src; note.textContent = 'Streaming ' + label + '.'; }
-    else if (window.Hls && window.Hls.isSupported()) {
+    const failed = 'The stream did not load. Reload the page, or use one of the files on GitHub below.';
+    const hlsJs = !!(window.Hls && window.Hls.isSupported());
+    if (hlsJs) {
+      if (window.ManagedMediaSource) v.disableRemotePlayback = true;   // Safari's managed media source needs this (no AirPlay)
       const hls = new window.Hls({ maxBufferLength: 30 });
-      hls.on(window.Hls.Events.ERROR, (e, d) => { if (d.fatal) note.textContent = 'The stream stopped (' + d.details + '). Reload the page to try again.'; });
+      hls.on(window.Hls.Events.ERROR, (e, d) => { if (d.fatal) note.textContent = 'The stream stopped (' + d.details + '). Reload the page, or use one of the files on GitHub below.'; });
       hls.loadSource(src); hls.attachMedia(v);
       note.textContent = 'Streaming ' + label + '.';
+    } else if (nativeHls) {
+      // Older iPhones: hand the native player the playlist as a data: URL, with segment addresses made absolute
+      fetch(src).then(r => r.text()).then(txt => {
+        const base = new URL(src, location.href);
+        const abs = txt.replace(/URI="([^"]+)"/g, (m, u) => 'URI="' + new URL(u, base).href + '"')
+                       .split('\n').map(l => (l && l[0] !== '#') ? new URL(l.trim(), base).href : l).join('\n');
+        v.src = 'data:application/vnd.apple.mpegurl;base64,' + btoa(abs);
+        v.addEventListener('error', () => { note.textContent = failed; });
+        note.textContent = 'Streaming ' + label + '.';
+      }).catch(() => { note.textContent = failed; });
     } else {
-      note.textContent = 'This browser cannot play the stream. Try Chrome, Safari or Edge.';
+      note.textContent = 'This browser cannot play the stream. Use one of the files on GitHub below.';
     }
   })();
 </script>

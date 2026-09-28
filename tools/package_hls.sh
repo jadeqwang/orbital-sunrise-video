@@ -24,6 +24,7 @@ ffmpeg -y -loglevel error -i "$REL/Orbital_Sunrise_720p_h264.mp4" -map 0:v -map 
   "${HLS[@]}" -hls_segment_filename "$WEB/avc/s%03d.mp4" "$WEB/avc/index.m3u8"
 
 for d in hevc avc; do
+  cp "$WEB/$d/index.m3u8" "$WEB/$d/index.txt"   # the artifact host serves no .m3u8; the page loads index.txt
   n=$(ls "$WEB/$d"/s*.mp4 | wc -l); big=$(ls -S "$WEB/$d"/s*.mp4 | head -1)
   echo "$d: $n segments, $(du -sh "$WEB/$d" | cut -f1), largest $(du -h "$big" | cut -f1)"
 done
