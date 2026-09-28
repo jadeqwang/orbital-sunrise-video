@@ -263,3 +263,36 @@ PLATES.update({
         f"spherical capsule; {LININGS}. The first skier throws a sheepskin coat over Leonov's shoulders; they embrace. No flags, patches or insignia on anyone's clothing. "
         "One continuous wide shot, no cuts, the skiers coming from the left. " + LOOK_TAIGA),
 })
+
+# ---------------- round 2, Jade v3: her real likeness (from her photos) with her glasses; sheets media/chars/jade_v3_* ----------------
+R.update({"J3T": "media/chars/jade_v3_turnaround.png", "J3F": "media/chars/jade_v3_faces.png", "J3H": "media/chars/jade_v3_hero.png"})
+JADE3 = ("the singer Jade (exactly the woman in the reference images, same face: an East Asian woman around thirty with a round face and full soft cheeks, "
+         "thick straight dark eyebrows, a soft broad nose, full lips, and her thin black rectangular metal-frame glasses, which she always wears; "
+         "long straight glossy black hair with a centre part and curtain bangs; oversized cropped white flight jacket with orange bands and a small pale-blue dot on the chest, "
+         "black ribbed crop top, navy wide-leg cargo pants with orange straps, orange-foam headphones around her neck)")
+MEDIUM = "Medium shot, framed from the waist or chest up with space around her; her face never fills the frame, no close-up."
+PLATES.update({
+    "jade_hook1_v3": dict(duration=5, refs=["J3T", "J3F", "J3H"], audio=["media/audio_refs/jade_hook1.mp3"], generate_audio=True, prompt=
+        f"Golden hour on a grassy hilltop above San Francisco, the city and the bay far below in soft haze. {JADE3} stands facing the low sun, warm golden light on her face and glasses, "
+        f"wind lifting loose strands of her hair. She sings 'bring me home' up to the sky, lifting her face and eyes to the sky on the last word. {SING} "
+        f"{MEDIUM} Slow, gentle push-in that stays medium. " + LOOK_NOW),
+    "jade_studio": dict(duration=5, refs=["J3T", "J3F", "J3H"], audio=["media/audio_refs/jade_hook2.mp3"], generate_audio=True, prompt=
+        f"A small professional recording studio at night: acoustic foam panels, warm practical lamps, a glowing mixing desk out of focus behind the glass. "
+        f"{JADE3}; in this shot she wears the orange-foam headphones over her ears and keeps her glasses on. She sings into a large-diaphragm studio condenser microphone "
+        f"on a stand with a round black pop filter in front of it, set just below and to one side of her mouth so her whole face stays visible. {SING} "
+        f"{MEDIUM} Three-quarter angle, the microphone and pop filter in the foreground of the frame, steady camera. " + LOOK_NOW),
+    "jade_brk_v3": dict(duration=8, refs=["J3T", "J3F", "J3H"], audio=["media/audio_refs/jade_brk.mp3"], generate_audio=True, prompt=
+        f"Dusk on the grassy hilltop above San Francisco: the whole sky has turned deep red and orange. {JADE3} stands under the red sky, looking up at it and singing, "
+        f"then slowly raises one open hand toward the sky as if reaching for something she can't touch. {SING} "
+        f"{MEDIUM} Low angle, the red sky filling the space behind her, strong warm rim light on her hair and glasses. " + LOOK_NOW),
+    "jade_notebook": dict(duration=6, refs=["J3T", "J3H", "J3F"], prompt=
+        f"Soft daylight from a large window. Over-the-shoulder shot from behind and slightly above her right shoulder: {JADE3} sits at a wooden desk by the window, "
+        "writing lyrics with a graphite pencil in an open leather-bound notebook with cream pages. We see her shoulder and the white sleeve of her jacket, her long black hair, "
+        "the arm of her glasses and the side of her cheek; the notebook and her hand in the middle of the frame, a few lines of handwriting appearing on the page as she writes. "
+        "She pauses, taps the pencil, then writes another line. Calm, intimate, steady camera. Photorealistic, shot on 35mm film, present day. No on-screen text, no captions."),
+    "jade_hand_writing": dict(duration=6, refs=["J3T", "J3H"], prompt=
+        "Soft daylight from a window. Close-up of a woman's right hand (the white nylon cuff of her cropped flight jacket at the wrist, as in the references) writing lyrics "
+        "with a graphite pencil in an open leather-bound notebook with cream paper on a wooden desk. The page fills most of the frame; lines of handwriting in pencil flow "
+        "across it as she writes, the pencil tip and the graphite line clearly visible, paper texture, the leather cover at the edges of the frame. "
+        "Only the hand, wrist and notebook, no face. Steady, locked-off camera slightly above. Photorealistic, shot on 35mm film. No on-screen text, no captions."),
+})
