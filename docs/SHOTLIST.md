@@ -11,7 +11,7 @@ Type sizes: **XL** ≥ 18 % frame height, **L** 10–18 %, **S** subtitle.
 ## Intro · 0.00 – 23.63 · whispered, low-passed
 | t | Shot | Picture | Type |
 |---|---|---|---|
-| 0.00 – 2.93 | **Poster draws itself** | hero_sunrise frame at full sunrise, drawn stroke-by-stroke in 2.5 s: contours → hatching → sun burst | ORBITAL SUNRISE (XL, left) · ОРБИТАЛЬНЫЙ ВОСХОД · 18.03.1965 — THE FIRST SPACEWALK |
+| 0.00 – 2.93 | **Poster draws itself** | frame 1 is already a pencil sunburst with Leonov's silhouette cut out of it (the thumbnail); the drawing grows outward from the sun in 2.5 s: contours → hatching | ORBITAL SUNRISE (XL, left) · ОРБИТАЛЬНЫЙ ВОСХОД · 18.03.1965 — THE FIRST SPACEWALK |
 | 2.93 – 7.99 | Sun sets, page goes dark | P: the Earth's limb as one thin white line; airlock hatch POV opening | typed: ВОСХОД-2 · VOSKHOD-2 ("SUNRISE-2") · 18 MARCH 1965 · A MAN WILL LEAVE HIS SHIP |
 | 7.99 – 13.19 | First man | airlock_exit (tiny figure emerging, drifting on the tether) | FIRST MAN (XL) · FLOATING (letters drift apart) · in the void of space (S, lost in black) · Belyayev: «ЧЕЛОВЕК ВЫШЕЛ В КОСМИЧЕСКОЕ ПРОСТРАНСТВО» |
 | 13.19 – 16.85 | Can't feel his hands | glove_cu | CAN'T FEEL HIS HANDS (L) |
@@ -69,23 +69,23 @@ Type sizes: **XL** ≥ 18 % frame height, **L** 10–18 %, **S** subtitle.
 
 ## Drop 2 · 152.63 – 176.80
 | 152.63 – 158.50 | Parachute | parachute bloom on the drop | — |
-| 158.50 – 164.40 | Off course | P map: planned landing vs. the line running past it | OFF COURSE |
+| 158.50 – 164.40 | Off course | P map (north up): planned zone in the Kazakh steppe south-east of the Urals (dashed track); the actual track runs further west and north to the taiga near Perm | PLANNED LANDING ZONE · ACTUAL: THE TAIGA NEAR PERM |
 | 164.40 – 176.80 | (but I'm) home | descent_forest; paper edges start to whiten | OFF COURSE / (BUT I'M) HOME chops |
 
 ## Outro · 176.80 – 189.64
 | 176.80 – 182.95 | 1500 klicks | descent_forest | FIFTEEN HUNDRED KLICKS · COMING IN HOT |
-| 183.14 – 187.74 | Overshot | treetops (approach) | WE OVERSHOT |
-| 187.74 – 189.64 | Made it down | treetops (rockets fire) | MADE IT DOWN |
+| 183.14 – 187.74 | Overshot | treetops (approach); one continuous fall across O2 → O3 → L1 | WE OVERSHOT |
+| 187.74 – 189.64 | Made it down | treetops, drawn on ones | MADE IT DOWN |
 
 ## Landed · 189.64 – 226.55
-| 189.64 – 193.00 | IMPACT | treetops (impact) — the page turns white | — |
+| 189.64 – 193.00 | IMPACT | treetops: the soft-landing rockets fire on the downbeat (orange rays), a snow burst (graphite/blue rays), white-out, the capsule emerges in the snow | — |
 | 193.00 – 198.72 | home. | hatch_exit | HOME. |
 | 198.72 – 201.24 | Made it down | two_men_snow | MADE IT DOWN |
-| 201.24 – 206.00 | home. | fire_night (wolves' eyes) | — |
-| 206.00 – 211.00 | It survived | drawing_survives | — |
+| 201.24 – 206.00 | home. | fire_night, black paper, flame tongues over the fire | *home.* · TWO NIGHTS IN THE TAIGA · −25 °C |
+| 206.00 – 211.00 | It survived | drawing_survives, black paper | THE DRAWING SURVIVED |
 | 211.00 – 215.00 | Rescue | rescue | — |
-| 215.00 – 226.55 | What came next | P vignettes, one per bar: 1965 Gemini 4 · 1969 Moon · 1975 handshake in orbit · 2000 → people in space every day · 2024 first commercial spacewalk · 2026 around the Moon again · NEXT | years + one line each |
+| 215.30 – 226.55 | What came next | legacy stills on black paper, one per bar, each drawn out from its subject in a right-hand panel: 1965 Gemini 4 · 1969 Moon · 1975 handshake in orbit · 2000 → people in space every day · 2024 first commercial spacewalk · 2026 around the Moon again · NEXT | year (XL) + one mono line each, in the quiet left third |
 
-## Coda · 226.55 – 237.76
+## Coda · 226.55 – 242.20
 | 226.55 – 234.70 | The drawing | P: Leonov's drawing alone on the white page | *He drew the sunrise anyway.* |
-| 234.70 – 237.76 | Title | — | ORBITAL SUNRISE · JADE WANG · credits |
+| 234.70 – 242.20 | Title | — the last chord rings out (extended ending); the picture fades with it | ORBITAL SUNRISE · JADE WANG · credits |
