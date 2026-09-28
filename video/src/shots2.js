@@ -19,6 +19,37 @@ async function idCard(t, lt, dur, o) {
   typeFlush(L, drawClock(t, 12).n, .3);
 }
 
+// Leonov's "Orbital Sunrise", redrawn on white paper from the reconstruction (plate `leonov_drawing`: one still of the whole
+// sheet). It is drawn the way he drew it: short coloured-pencil strokes laid along the bands (a stroke cloud that follows the
+// plate's flow), the colour picked from the plate and the bare sheet left as paper. The pencil box has no violet, so the
+// violet band is ultramarine with a few crimson strokes through it. No contours: the original has no outlines, and no text.
+// k: 0..1 draw-on progress (left → right across the study); view: plate view on screen (the study spans u .26–.74, v .29–.68).
+const DRAW_PENCIL = (r, g, b, t, o, rnd) => {
+  const [h, s, v] = hsv(r, g, b);
+  if (s < .1 && v > .7) return null;                                              // the sheet itself
+  const warmGrey = (h < 50 || h >= 320) && s < .28;                               // graphite fading into the cream sheet at the study's edge
+  if (warmGrey && v > .72) return null;
+  if (v < .17 || warmGrey || (s < .22 && v < .6)) return v < .34 ? (rnd < .15 ? 'lead' : 'graphite') : (rnd < .5 ? 'graphite' : 'lead');
+  if (h >= 245 && h < 320) return rnd < .78 ? 'ultra' : 'crimson';               // violet (top band)
+  if (h < 14 || h >= 320) return 'verm';                                          // the red rim and the red sun
+  if (h < 50) return 'orange';
+  if (h < 170) return 'gold';
+  if (h < 212) return v > .5 ? 'sky' : 'ultra';                                   // light blue (just above the orange)
+  return v > .5 ? 'cobalt' : 'ultra';                                             // blue; the dark Earth below the rim
+};
+// the same pencils for scanline hatching on white paper (plates of the drawing being made): tone from darkness or colour
+const DRAW_LAYERS = [{ ang: -0.25, th: .13, sp: 5.2, w: 1.9, a: .9 }, { ang: 0.85, th: .36, sp: 5.6, w: 1.8, a: .9 }, { ang: -1.35, th: .58, sp: 5, w: 1.8, a: .9 }, { ang: 0.1, th: .8, sp: 4.4, w: 1.9, a: .95, dark: true }];
+const DRAW_TONE = (L, V) => Math.max(Math.pow(smooth(clamp((.84 - (.55 * L + .45 * V)) / .7)), 1.1), V - L > .08 ? .24 + .46 * clamp((V - L - .06) * 3.2) : 0);
+async function leonovDrawing(t, k, view, o = {}) {
+  const z = view.zoom ?? 1, ox = view.ox ?? 0, x0 = W / 2 + ox + (.26 - (view.cx ?? .5)) * W * z, x1 = W / 2 + ox + (.74 - (view.cx ?? .5)) * W * z;
+  const key = (X, Y, h) => clamp((X - x0) / (x1 - x0)) * .88 + h * .12;
+  const d = drawClock(t, o.rate ?? 12).n, j = (hash(d * 3 + 1) - .5) * 1.6, j2 = (hash(d * 3 + 2) - .5) * 1.6;   // the stroke layout boils a little
+  return drawPlate(t, 'leonov_drawing', 0, { hold: 0, rate: o.rate ?? 12, paper: 'snow', view, face: false, hatch: false, contour: false, silhouette: false, matte: false,
+    extra: (pen, F, v) => hatchField(pen, F, v, { paper: 'snow', seed: 5, tone: () => .9, pencil: DRAW_PENCIL, spacing: o.spacing ?? 4.2,
+      len: [12, 28], w: [1.7, 2.3], alpha: [.85, .95], angle: -.22, follow: 1, cross: .8, crossAngle: 1.2, gamma: 1,
+      region: [j, j2, W + j, H + j2], reveal: k, revealKey: key }) });
+}
+
 async function initShots2() {
   try { SYNC = await loadJSON('data/sync.json'); } catch (e) { SYNC = {}; }
   const S = sec => secT(sec);
@@ -58,31 +89,22 @@ async function initShots2() {
     tele(Lt.g, 'PENCILS TIED TO HIS WRIST WITH STRING', 60, H - 60, t, bt(33), { size: 22, weight: 700, col: 'white', dur: .8 });
     typeFlush(Lt, drawClock(t, 12).n, .3);
   });
-  // his drawing, reconstructed on a small sheet floating in the dark cabin
+  // his drawing (the reconstruction) on a small white card floating in the dark cabin; no text on the drawing itself
   shot('D5_the_drawing', bt(48), D1[1].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
-    const { n: d } = drawClock(t, 12), pen = new Pen(), L = layer(1);
+    const { n: d } = drawClock(t, 12);
     const drift = [Math.sin(lt * .6) * 14, Math.cos(lt * .5) * 10], rot = Math.sin(lt * .4) * .03;
-    const sw = 1440, sh = 900, cx = W / 2 + drift[0], cy = H / 2 - 20 + drift[1];
-    // the sheet: white paper card
-    G.save(); G.translate(cx, cy); G.rotate(rot); G.drawImage(PAPER.snow, 400, 200, sw, sh, -sw / 2, -sh / 2, sw, sh);
-    G.strokeStyle = 'rgba(0,0,0,.25)'; G.lineWidth = 2; G.strokeRect(-sw / 2, -sh / 2, sw, sh); G.restore();
-    // the bands draw themselves across the sheet (Leonov's composition: horizon arc, colored bands, the sun)
-    const k = easeOut(clamp(lt / (dur * .8)));
-    const ecx = cx - 60, ecy = cy + 1500, R = 1420;
-    const Ls = layer(2), p2 = new Pen();
-    earthDisc(p2, ecx, ecy, R, 1, { lit: .5, spacing: 9, jseed: d });
-    sunriseBands(p2, ecx, ecy, R, -Math.PI / 2 - .5, -Math.PI / 2 + .5 * (2 * k - 1), k, 2, { sunA: -Math.PI / 2 + .12, thick: 70, n: 1500, jseed: d });
-    raysFrom(p2, ecx + Math.cos(-Math.PI / 2 + .12) * R, ecy + Math.sin(-Math.PI / 2 + .12) * R - 10, { n: 160, r0: 6, r1: 260 * k, energy: k, seed: 9, jseed: d, a0: Math.PI, a1: TAU });
-    p2.flush(Ls.g, ORDER_SNOW);
-    // clip the drawing to the sheet
-    Ls.g.globalCompositeOperation = 'destination-in'; Ls.g.save(); Ls.g.translate(cx, cy); Ls.g.rotate(rot); Ls.g.fillRect(-sw / 2 + 20, -sh / 2 + 20, sw - 40, sh - 40); Ls.g.restore(); Ls.g.globalCompositeOperation = 'source-over';
-    toothIn(Ls, d); G.globalCompositeOperation = 'multiply'; G.drawImage(Ls.c, 0, 0); G.globalCompositeOperation = 'source-over';
+    const sw = 1440, sh = 880, cx = W / 2 + drift[0], cy = H / 2 - 30 + drift[1];
+    const card = g => { g.translate(cx, cy); g.rotate(rot); g.beginPath(); g.rect(-sw / 2, -sh / 2, sw, sh); };
+    // the card: white paper, a soft pencil edge
+    G.save(); card(G); G.clip(); G.rotate(-rot); G.translate(-cx, -cy); paper(G, 'snow'); G.restore();
+    // the drawing draws itself across the card, then boils
+    G.save(); card(G); G.clip(); G.rotate(-rot); G.translate(-cx, -cy);
+    await leonovDrawing(t, easeOut(clamp(lt / (dur * .7))), { zoom: 1.28, ox: drift[0], oy: drift[1] - 30, rot });
+    G.restore();
+    G.save(); card(G); G.strokeStyle = 'rgba(0,0,0,.25)'; G.lineWidth = 2; G.stroke(); G.restore();
     const Lt = typeLayer();
-    Lt.g.save(); Lt.g.translate(cx, cy); Lt.g.rotate(rot);
-    text(Lt.g, 'А. Леонов  18.III.1965', -sw / 2 + 40, -sh / 2 + 60, { font: FONT.serif(40), col: 'graphite', alpha: clamp((lt - .6) / .5) });
-    Lt.g.restore();
-    tele(Lt.g, 'THE FIRST WORK OF ART MADE IN SPACE', W / 2 - 330, H - 70, t, bt(49), { size: 28, weight: 800, col: 'gold', dur: .8 });
+    tele(Lt.g, 'THE FIRST WORK OF ART MADE IN SPACE', W / 2 - 330, H - 44, t, bt(49), { size: 28, weight: 800, col: 'gold', dur: .8 });
     typeFlush(Lt, d, .3);
   });
   // the grid: every beat a panel changes; vocal chops as words
@@ -108,8 +130,11 @@ async function initShots2() {
   shot('B1_split', br0, BR[2].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
     const split = W * lerp(.5, .5, 0);
-    await drawPlateIn(t, 'jade_hands', 1 + lt * .8, [0, 0, split, H], { paper: 'snow', frame: false, spacing: 6.5, zoom: 1.05 });
-    await drawPlateIn(t, lt < dur / 2 ? 'valve_bleed' : 'tumble_slow', .8 + (lt % (dur / 2)), [split, 0, W - split, H], { paper: 'night', frame: false, spacing: 6.5, zoom: 1.08 });
+    // left: a hand finishing the reconstruction in coloured pencil (orange along the arc, then the red sun) on white paper
+    const subClear = quiet([[W / 2 - 780, H - 170, W / 2 + 780, H - 40]], .85);
+    await drawPlateIn(t, 'drawing_hand', .5 + lt, [0, 0, split, H], { paper: 'snow', frame: false, spacing: 6.5, zoom: 1.0, face: false,
+      lines: { tone: DRAW_TONE, pencil: DRAW_PENCIL, layers: DRAW_LAYERS }, hatch: { mask: subClear } });
+    await drawPlateIn(t, lt < dur / 2 ? 'valve_bleed' : 'tumble_slow', .8 + (lt % (dur / 2)), [split, 0, W - split, H], { paper: 'night', frame: false, spacing: 6.5, zoom: 1.08, hatch: { mask: subClear } });
     const pen = new Pen(), L = layer(4), d = drawClock(t, 12).n;
     const q = []; for (let y = 0; y <= H; y += 30) q.push([split + (hash2(y, d) - .5) * 3, y]); pen.poly(q, 'lead', 2.2, .9, .02); pen.flush(L.g); G.drawImage(L.c, 0, 0);
     subtitle(G, lineAt(t), t, { size: 58, y: H - 90, shadow: 6, split: { x: split, left: 'graphite', right: 'cream' } });
@@ -127,26 +152,37 @@ async function initShots2() {
 
   // ============================== ART · 118.00 → 129.70 ==============================
   const [ar0, ar1] = S('art').slice(1), AR = linesIn('art');
-  const snowfall = (t, seed, n = 90) => {
+  const snowfall = (t, seed, n = 90, col = 'lead') => {
     const pen = new Pen(), L = layer(4), d = drawClock(t, 12).n;
     for (let i = 0; i < n; i++) {
       const sp = 40 + 50 * hash2(i, seed), x = (hash2(i, seed + 1) * W + Math.sin(t * .7 + i) * 30) % W, y = (hash2(i, seed + 2) * H + t * sp) % (H + 40) - 20;
       const r = 1.5 + 2.5 * hash2(i, seed + 3);
-      pen.l(x - r, y, x + r, y, 'lead', 1.2, .55); pen.l(x, y - r, x, y + r, 'lead', 1.2, .55);
+      pen.l(x - r, y, x + r, y, col, 1.2, .55); pen.l(x, y - r, x, y + r, col, 1.2, .55);
     }
     pen.flush(L.g); toothIn(L, d); G.drawImage(L.c, 0, 0);
   };
+  // A1 is two halves: Leonov's hand drawing the sunrise in the cabin (black paper), then the singer (white paper).
+  // A1_SPLIT is the cut (a beat in the held note after "in"); A1_B is the second half's plate: when jade_hand_writing is ready,
+  // set A1_B = { id: 'jade_hand_writing', tp: t => t - A1_SPLIT, remouth: false }.
+  const A1_SPLIT = B(328);                                                       // ≈121.62 s
+  const A1_B = { id: 'jade_art', tp: t => tpSing('jade_art', t), remouth: true };
   shot('A1_snow', ar0, AR[1].t0 - .05, async (t, lt) => {
-    paper(G, 'snow');
-    await drawPlate(t, 'jade_art', tpSing('jade_art', t), { remouth: true, paper: 'snow', rate: 8, view: { zoom: 1.02 }, hatch: { spacing: 6.2 } });
-    snowfall(t, 3);
-    const w = AR[0].words;
-    handwrite(t, 'Art is a landing in the snow', W / 2, 190, w[0][0] - .1, w[6][0] + .5, { size: 104, align: 'center', col: 'graphite' });
+    const first = t < A1_SPLIT, clear = quiet([[W / 2 - 800, 80, W / 2 + 800, 240]], .8);
+    if (first) {
+      paper(G, 'night');
+      await drawPlate(t, 'leonov_drawing_hand', .3 + lt, { rate: 8, view: { zoom: 1.02 }, hatch: { spacing: 6.5, mask: clear } });
+    } else {
+      paper(G, 'snow');
+      await drawPlate(t, A1_B.id, A1_B.tp(t), { remouth: A1_B.remouth, paper: 'snow', rate: 8, view: { zoom: 1.02 }, hatch: { spacing: 6.2, mask: clear } });
+    }
+    snowfall(t, 3, 90, first ? 'silver' : 'lead');
+    const w = AR[0].words;   // the line changes pencil at the cut: cream on black paper, graphite on white
+    handwrite(t, 'Art is a landing in the snow', W / 2, 190, w[0][0] - .1, w[6][0] + .5, { size: 104, align: 'center', col: first ? 'cream' : 'graphite' });
   });
   shot('A2_hands', AR[1].t0 - .05, ar1, async (t, lt) => {
     paper(G, 'snow');
     const half = W / 2;
-    await drawPlateIn(t, 'drawing_pencils', 2.5 + lt * .8, [0, 0, half, H], { paper: 'night', frame: false, spacing: 6.2, zoom: 1.15, cy: .6 });
+    await drawPlateIn(t, 'leonov_drawing_hand', 4.2 + lt * .75, [0, 0, half, H], { paper: 'night', frame: false, spacing: 6.2, zoom: 1.08, cx: .52, cy: .55 });
     await drawPlateIn(t, 'jade_hands', 3 + lt * .8, [half, 0, half, H], { paper: 'snow', frame: false, spacing: 6.2, zoom: 1.08 });
     subtitle(G, lineAt(t), t, { size: 60, y: H - 90, shadow: 6, split: { x: half, left: 'cream', right: 'graphite' } });
   });
@@ -156,7 +192,9 @@ async function initShots2() {
   shot('G1_failed', bd0, BD[1].t0 - .05, async (t, lt) => {
     paper(G, 'night');
     const glitch = Math.floor(t * 12) % 7 === 0 ? 1 : 0;
-    await drawPlate(t, lt < 1.5 ? 'red_warning' : 'globus', lt < 1.5 ? .5 + lt : 1 + lt, { view: { zoom: 1.03, ox: glitch * 18 } });
+    // through the porthole while the capsule tumbles: Earth, black, Earth sweep past (plate frames 0–90, before the plasma).
+    // face:false: the plate's face hits are reflections on the glass
+    await drawPlate(t, 'porthole_spin', .1 + lt * 1.2, { face: false, view: { zoom: 1.08, ox: 330 + glitch * 18, rot: Math.sin(lt * 2.2) * .04 } });
     const w = BD[0].words;
     lyricStack(t, [
       { s: 'GUIDANCE', t: w[0][0], x: 110, y: 380, size: 200, col: 'verm', style: 'slam' },
@@ -192,24 +230,28 @@ async function initShots2() {
 
   // ============================== HOOK 3 · 143.20 → 152.63 · re-entry burns through to her ==============================
   const [h30, h31] = S('hook3').slice(1), H3 = linesIn('hook3');
+  // outside: the descent sphere in its plasma sheath over the night side; one continuous take from the burn-through into F2
+  const BURN0 = H3[1].t0 - 1.6, tpRe = t => .6 + (t - BURN0) * 1.1, RE_VIEW = { zoom: 1.04 }, RE_OPT = { cloud: true, face: false };   // the plasma is a glow: flow-following stroke cloud
   shot('F1_reentry', h30, H3[1].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
     await drawPlate(t, 'reentry_fire', .5 + lt, { rate: 24, view: { zoom: 1.04 } });
     const w = H3[0].words, d = drawClock(t, 12).n;
     lyricStack(t, [{ s: 'ORBITAL', t: w[0][0], x: 100, y: 380, size: 220 }, { s: 'SUNRISE', t: w[1][0], x: 100, y: 600, size: 220 }]);
     if (t >= w[2][0]) hatchedText('BURNING GOLD', 106, 800, FONT.impact(170), { cols: ['gold', 'orange', 'verm', 'white'], edge: 'gold', seed: 45, jseed: d, drawIdx: d, alpha: clamp((t - w[2][0]) / .1) });
-    // the page burns through, revealing her world
-    const r = Math.pow(clamp((t - (H3[1].t0 - 1.6)) / 1.6), 2) * 1500;
-    if (r > 0) await burnThrough(t, W * .66, H * .5, r, async () => {
-      paper(G, 'snow');
-      await drawPlate(t, 'jade_hook3', tpSing('jade_hook3', t), { remouth: true, paper: 'snow', view: { zoom: 1.03 } });
+    // the page burns through from the capsule outward, revealing the capsule from outside
+    const r = Math.pow(clamp((t - BURN0) / 1.6), 2) * 1500;
+    if (r > 0) await burnThrough(t, W * .5, H * .56, r, async () => {
+      paper(G, 'night');
+      await drawPlate(t, 'reentry_outside', tpRe(t), { view: RE_VIEW, ...RE_OPT, hatch: { pencilOpt: { warm: 1.8 } } });
     });
   });
   shot('F2_home', H3[1].t0 - .05, h31, async (t, lt) => {
-    paper(G, 'snow');
-    await drawPlate(t, 'jade_hook3', tpSing('jade_hook3', t), { remouth: true, paper: 'snow', view: { zoom: 1.03 } });
+    paper(G, 'night');
+    await drawPlate(t, 'reentry_outside', tpRe(t), { view: RE_VIEW, ...RE_OPT, hatch: { pencilOpt: { warm: 1.8 }, mask: quiet([[60, 70, 1140, 240], [W / 2 - 420, H - 150, W / 2 + 420, H - 40]], .8) } });
     const w = H3[1].words;
-    lyricStack(t, [{ s: 'ORBITAL SUNRISE', t: w[0][0], x: 110, y: 200, size: 120, col: 'graphite', style: 'rise' }, { s: 'bring me home', t: w[2][0], x: 110, y: H - 130, font: FONT.serif(130), col: 'crimson', style: 'rise' }]);
+    // "bring" lands .4 s before the cut to the parachute ("home" is sung after it): a subtitle-sized line, not a hero word
+    lyricStack(t, [{ s: 'ORBITAL SUNRISE', t: w[0][0], x: 110, y: 200, size: 120, col: 'white', style: 'rise' },
+      { s: 'bring me home', t: w[2][0] - .1, x: W / 2, y: H - 80, font: FONT.serif(64), col: 'cream', align: 'center', style: 'rise' }]);
   });
 
   // ============================== DROP 2 · 152.63 → 176.80 ==============================
@@ -276,73 +318,94 @@ async function initShots2() {
       } });
     if (lt < .25) { G.fillStyle = P.snow; G.globalAlpha = 1 - lt / .25; G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
   }, { ones: true });
+  // the round-2 landing plates are blue dusk: lift them and hatch only the real darks, so the snow stays paper
+  const SNOW_DUSK = { ana: { gain: 1.2 }, lines: { contrast: 2.3, white: .64 } };
+  // the hatch is blown against a birch; the men (white suits, no helmets) rock it free
   shot('L2_home', HOME1.t0 - .05, MADE2.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'hatch_exit', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 } });
+    await drawPlate(t, 'hatch_tree', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[W / 2 - 520, 150, W / 2 + 520, 420]], .8) } });
     lyricStack(t, [{ s: 'HOME', t: HOME1.t0, x: W / 2, y: 380, size: 280, align: 'center', col: 'graphite', style: 'rise' }]);
   });
+  // the hatch lies in the snow; Leonov climbs out and helps Belyayev
   shot('L3_madeit', MADE2.t0 - .05, HOME2.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'two_men_snow', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 } });
+    await drawPlate(t, 'hatch_free', 2.2 + lt * 1.3, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[W / 2 - 620, 100, W / 2 + 620, 260]], .8) } });
     lyricStack(t, [{ s: 'MADE IT DOWN', t: MADE2.t0, x: W / 2, y: 220, size: 150, align: 'center', col: 'graphite', style: 'rise' }]);
   });
+  // night by the fire: quilted suit linings, parachute cloth, fur boots. The plate is dusk; here only what the fire lights is drawn
+  // (the hatching falls off with distance from the fire), so the taiga goes to night around it.
   shot('L4_fire', HOME2.t0 - .05, 206.2, async (t, lt) => {
     paper(G, 'night');
-    const ftp = 2.2 + lt * .55;
-    await drawPlate(t, 'fire_night', ftp, { view: { zoom: 1.03 }, ana: { gain: 1.15 }, lines: {},
-      extra: (pen, F, view, d) => { const s = sunScreen('fire_night', ftp, view); if (s && s[2] > .2) flames(pen, s[0], Math.min(H + 30, s[1] + 90), { size: 330, n: 54, seed: d * 3 + 1 }); } });
+    const ftp = 2.2 + lt * .55, z = 1.03, m = plateMeta('fire_night_v2', ftp), fu = m ? m.sun : [.43, .96];
+    const fx = W / 2 + (fu[0] - .5) * W * z, fy = H / 2 + (fu[1] - .5) * H * z;
+    const firelight = (X, Y) => clamp(1.25 - Math.hypot((X - fx) / 1.3, Y - fy) / 950, .14, 1) * quiet([[60, 170, 700, 340]], .85)(X, Y);
+    await drawPlate(t, 'fire_night_v2', ftp, { view: { zoom: z }, ana: { gain: .95 }, lines: { black: .14, contrast: 2.1 }, hatch: { mask: firelight },
+      contour: { mask: (X, Y) => firelight(X, Y) > .35 ? 1 : 0 },
+      extra: (pen, F, view, d) => flames(pen, fx, Math.min(H + 20, fy + 40), { size: 300, n: 54, seed: d * 3 + 1 }) });
     lyricStack(t, [{ s: 'home', t: HOME2.t0, x: 110, y: 300, font: FONT.serif(150), col: 'gold', style: 'rise' }]);
     const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · −25 °C', 60, H - 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'silver', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .4);
   });
+  // by the fire he unfolds the folded sheet (the reconstruction) and smiles; no caption (the line moves to the coda)
   shot('L5_survived', 206.2, 211.2, async (t, lt) => {
     paper(G, 'night');
-    await drawPlate(t, 'drawing_survives', .4 + lt * .9, { view: { zoom: 1.04 }, lines: {} });
-    const Lt = typeLayer(); tele(Lt.g, 'THE DRAWING SURVIVED', 60, H - 70, t, 207, { size: 30, weight: 800, col: 'gold', dur: .6 }); typeFlush(Lt, drawClock(t, 12).n, .4);
+    const tp = 1.0 + lt;
+    await drawPlate(t, 'drawing_survives_v2', tp, { view: { zoom: 1.04 }, lines: {}, face: tp > 4.3 });   // earlier face hits are on the hands
   });
-  shot('L6_rescue', 211.2, 215.3, async (t, lt) => {
+  // skiers in sheepskin coats bring warm clothes; the cosmonauts by the fire in their linings
+  const LEG_BEATS = 3, LEG_END = 610;                                            // the legacy montage ends on beat 610 (≈225.81 s)
+  const LEG = [
+    ['1965', 'ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1]],
+    ['1969', 'PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08]],
+    ['1975', 'LEONOV SHAKES HANDS IN ORBIT', 'leg_handshake', [.63, .52, 1.3]],
+    ['2000', 'FIFTEEN NATIONS, ONE STATION', 'leg_station', [.56, .5, 1.06]],
+    ['2003', "CHINA'S FIRST ASTRONAUT", 'leg_yang_liwei', [.63, .5, 1.1]],
+    ['2014', 'A LANDER ON A COMET', 'leg_philae', [.72, .56, 1.7]],
+    ['2019', 'FIRST LANDING ON THE FAR SIDE', 'leg_change4', [.6, .5, 1.08]],
+    ['2023', "INDIA LANDS NEAR THE MOON'S SOUTH POLE", 'leg_chandrayaan3', [.68, .45, 1.1]],   // Chandrayaan-3 landed at ~69°S: near, not at, the pole
+    ['2024', 'THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.62, .5, 1.12]],
+    ['2026', 'FOUR PEOPLE AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12]],
+  ];
+  const LEG_B0 = LEG_END - LEG.length * LEG_BEATS, lg0 = B(LEG_B0), lg1 = B(LEG_END), PX = 640;
+  shot('L6_rescue', 211.2, lg0, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'rescue', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 } });
+    await drawPlate(t, 'rescue_v2', 2 + lt * 1.4, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[40, 30, 760, 110]], .8) } });
     const Lt = typeLayer(); tele(Lt.g, 'RESCUERS ARRIVE ON SKIS', 60, 64, t, 211.5, { size: 24, weight: 800, col: 'graphite', dur: .6 }); typeFlush(Lt, drawClock(t, 12).n, .6);
   });
-  // what came next: one bar per milestone. [year, line, plate, framing (cx, cy, zoom) inside the right-hand panel]
-  const LEG = [
-    ['1965', 'THREE MONTHS LATER, ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1]],
-    ['1969', 'PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08]],
-    ['1975', 'LEONOV SHAKES HANDS WITH AN AMERICAN IN ORBIT', 'leg_handshake', [.63, .52, 1.3]],
-    ['2000', 'HUMANS HAVE LIVED IN SPACE EVERY DAY SINCE', 'leg_station', [.66, .5, 1.06]],
-    ['2024', 'THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.64, .5, 1.12]],
-    ['2026', 'FOUR PEOPLE FLY AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12]],
-    ['NEXT', 'WHOEVER DARES', 'leg_next', [.62, .5, 1.08]],
-  ];
-  const lg0 = 215.3, lgBar = (l1 - lg0) / LEG.length, PX = 640;
-  shot('L7_legacy', lg0, l1, async (t, lt) => {
+  // team Earth: one milestone every LEG_BEATS beats, on the beat. [year, line (≤ 7 words, docs/FACTS.md §6), plate, framing (cx, cy, zoom) in the right-hand panel]
+  shot('L7_legacy', lg0, lg1, async (t, lt) => {
     paper(G, 'night');
-    const i = clamp(Math.floor(lt / lgBar), 0, LEG.length - 1), [yr, line, plate, fr] = LEG[i], age = lt - i * lgBar;
+    const i = clamp(Math.floor((beatPos(t) + 1e-4 - LEG_B0) / LEG_BEATS), 0, LEG.length - 1), [yr, line, plate, fr] = LEG[i], it0 = B(LEG_B0 + i * LEG_BEATS), age = t - it0;
     if (PLATES[plate]) {
-      // the drawing grows out from the subject over the first beats, then keeps boiling
-      const rv = easeOut(clamp(age / .55)), cx = PX + (W - PX) / 2, cy = H / 2, R0 = Math.hypot(W - PX, H) / 2;
+      // the drawing grows out from the subject over the first beat, then keeps boiling
+      const rv = easeOut(clamp(age / .4)), cx = PX + (W - PX) / 2, cy = H / 2, R0 = Math.hypot(W - PX, H) / 2;
       const key = (X, Y, h) => clamp(Math.hypot(X - cx, Y - cy) / R0) * .85 + h * .15;
       await drawPlateIn(t, plate, 0, [PX, 0, W - PX, H], { hold: 0, frame: false, cx: fr[0], cy: fr[1], zoom: fr[2] * (1 + age * .025),
         spacing: 7.5, lines: { contrast: 1.3, black: .06 }, hatch: { reveal: rv, revealKey: key }, contour: { hi: .24, lo: .1, minLen: 12, reveal: rv, revealKey: key } });
     }
     const Lt = typeLayer();
-    text(Lt.g, yr, 110, 420, { font: FONT.impact(230), col: i === LEG.length - 1 ? 'verm' : 'white', alpha: clamp(age / .1) });
-    tele(Lt.g, line, 116, 500, t, lg0 + i * lgBar + .08, { size: 30, weight: 800, col: 'white', dur: .45, wrap: 470 });
+    text(Lt.g, yr, 110, 420, { font: FONT.impact(230), col: 'white', alpha: clamp(age / .1) });
+    tele(Lt.g, line, 116, 500, t, it0 + .06, { size: 30, weight: 800, col: 'white', dur: .35, wrap: 470 });
     typeFlush(Lt, drawClock(t, 12).n, .3);
   });
 
   // ============================== CODA · 226.55 → end ==============================
   const [c0, c1] = S('coda').slice(1), [e0, e1] = S('end').slice(1);
-  shot('C1_drawing', c0, c1, async (t, lt, dur) => {
+  const CARD1 = B(619);                                                          // ≈229.10 s: the survivors card → the drawing
+  // 3:46 · Leonov and Belyayev after the rescue: white paper (daylight snow), the words in a clearing above them
+  shot('L8_cosmonauts', lg1, CARD1, async (t, lt) => {
     paper(G, 'snow');
-    const { n: d } = drawClock(t, 8), L = layer(2), p2 = new Pen();
-    const cx = W / 2, cy = H / 2 - 40, R = 1100, k = easeOut(clamp(lt / 3));
-    // Leonov's drawing, alone on the page
-    earthDisc(p2, cx, cy + 1250, R + 60, 1, { lit: .45, spacing: 10, jseed: d });
-    sunriseBands(p2, cx, cy + 1250, R + 60, -Math.PI / 2 - .55, -Math.PI / 2 + .55, k, 2, { sunA: -Math.PI / 2 + .08, thick: 80, n: 1700, jseed: d });
-    raysFrom(p2, cx + 90, cy + 1250 - R - 60 - 12, { n: 200, r0: 8, r1: 300 * k, energy: k, seed: 3, jseed: d, a0: Math.PI, a1: TAU });
-    p2.flush(L.g, ORDER_SNOW); toothIn(L, d); G.globalCompositeOperation = 'multiply'; G.drawImage(L.c, 0, 0); G.globalCompositeOperation = 'source-over';
-    handwrite(t, 'He drew the sunrise anyway.', W / 2, 250, c0 + 1.4, c0 + 4.4, { size: 96, align: 'center', col: 'graphite' });
+    await drawPlate(t, 'leg_survivors', 0, { hold: 0, paper: 'snow', rate: 8, view: { zoom: 1.0, oy: 230 },
+      hatch: { mask: quiet([[W / 2 - 700, 40, W / 2 + 700, 520]], .9) }, contour: { mask: quiet([[W / 2 - 700, 40, W / 2 + 700, 520]], .9) } });
+    lyricStack(t, [
+      { s: 'THE COSMONAUTS', t: lg1 + .05, x: W / 2, y: 250, size: 170, align: 'center', col: 'graphite', style: 'rise', ls: 4 },
+      { s: 'SURVIVED', t: B(LEG_END + 2), x: W / 2, y: 480, size: 240, align: 'center', col: 'verm', style: 'slam', ls: 6 },
+    ]);
+  });
+  // 3:51 · the drawing (the reconstruction), alone on the white page
+  shot('C1_drawing', CARD1, e0, async (t, lt, dur) => {
+    paper(G, 'snow');
+    await leonovDrawing(t, easeOut(clamp(lt / 1.6)), { zoom: 1.32, oy: 100 }, { rate: 8 });
+    handwrite(t, 'The cosmonauts and the artwork survived.', W / 2, 200, CARD1 + .6, CARD1 + 3.0, { size: 88, align: 'center', col: 'graphite' });
   });
   shot('Z_title', e0, 999, async (t, lt) => {
     paper(G, 'night');

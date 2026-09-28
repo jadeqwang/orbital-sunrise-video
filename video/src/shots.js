@@ -491,7 +491,9 @@ async function initShots() {
   shot('S3_nofit', B(108), 44.4, async (t, lt) => {
     paper(G, 'night');
     const k = clamp(lt / 4);
-    await drawPlate(t, 'airlock_fail', .6 + lt * 1.1, { view: { zoom: 1.03 }, extra: (pen) => edgePanic(pen, k * .35, drawClock(t, 12).n * 3) });
+    // top-down at the Volga tube mouth: the ballooned suit wedged in the rim (face:false: the plate's face hits are on the CCCP helmet)
+    await drawPlate(t, 'airlock_struggle', .6 + lt * 1.1, { view: { zoom: 1.03 }, face: false, hatch: { mask: quiet([[W / 2 - 330, H - 170, W / 2 + 330, H - 55]], .75) },
+      extra: (pen) => edgePanic(pen, k * .35, drawClock(t, 12).n * 3) });
     evaHud(t);
     const Lt = typeLayer();
     tele(Lt.g, "HE CAN'T GET BACK IN.", W / 2 - 230, H - 100, t, B(109), { size: 40, weight: 800, col: 'white', dur: .7 });
@@ -502,10 +504,12 @@ async function initShots() {
   const PR = linesIn('pre');
   shot('P1_bleed', 44.4, PR[1].t0 - .05, async (t, lt) => {
     paper(G, 'night');
-    await drawPlate(t, 'valve_bleed', .2 + lt, { view: { zoom: 1.05, ox: -260 } });
-    evaHud(t);
     const w = PR[0].words; // So he bleeds the air out, breath by breath
     const late = t >= w[6][0] - .05;
+    // take 2: the gloved hand turns the small blue regulator tap on the chest; the type sits in a clearing on the shoulder
+    await drawPlate(t, 'valve_bleed', .2 + lt, { view: { zoom: 1.05, ox: -260 },
+      hatch: { mask: quiet(late ? [[W - 640, 220, W - 60, 800]] : [[W - 820, 300, W - 60, 620]], .8) } });
+    evaHud(t);
     lyricStack(t, late ? [
       { s: 'BREATH', t: w[6][0], x: W - 100, y: 380, size: 200, align: 'right', style: 'slam' },
       { s: 'BY', t: w[7][0], x: W - 100, y: 560, size: 170, align: 'right', style: 'slam' },
@@ -547,13 +551,15 @@ async function initShots() {
     const k = clamp(lt / dur), roll = clamp((t - 57.2) / (59.5 - 57.2));
     const rate = roll > 0 ? 24 : 12;
     // during the roll, flash between the tube and close-ups every half beat, then every quarter
-    let id = 'tube_turn', tp = .6 + lt * 1.3, vz = { zoom: 1.03 };
+    // tube_struggle: he curls round inside the padded tube toward the hatch, ending on his sweating face (the face is real only from ~5.2 s)
+    let id = 'tube_struggle', tp = 1.6 + lt * 2, vz = { zoom: 1.03 };
     if (roll > 0) {
       const step = roll < .5 ? 2 : 4, n = Math.floor(beatPos(t) * step);
-      const alts = [['tube_turn', 5.5], ['valve_bleed', 3.5], ['visor_cu', 4.5], ['glove_cu', 3], ['suit_balloon', 4]];
+      const alts = [['tube_struggle', 7.2], ['valve_bleed', 3.5], ['visor_cu', 4.5], ['glove_cu', 3], ['suit_balloon', 4]];
       const a = alts[n % alts.length]; id = a[0]; tp = a[1] + frac(beatPos(t) * step) * .3; vz = { zoom: 1.1 + roll * .25 };
     }
-    await drawPlate(t, id, tp, { rate, view: vz, extra: (pen) => edgePanic(pen, .5 + roll * .5, drawClock(t, rate).n * 11) });
+    await drawPlate(t, id, tp, { rate, view: vz, face: id === 'tube_struggle' ? tp > 5.2 : undefined, hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], .75 * (1 - roll)) },
+      extra: (pen) => edgePanic(pen, .5 + roll * .5, drawClock(t, rate).n * 11) });
     evaHud(t);
     const w = PR[3].words; // Ninety minutes inside the airlock door
     lyricStack(t, [
