@@ -194,7 +194,8 @@ function hatchField(pen, F, view, o = {}) {
       if (reveal < 1 && rKey && rKey(X, Y, hash3(gx | 0, gy | 0, 77)) > reveal) continue;
       const [px, py] = view.toPlate(X, Y);
       if (px < 0 || py < 0 || px >= F.aw || py >= F.ah) continue;
-      let t = toneFn(samp(F, F.T, px, py));
+      const fw = o.fill ? o.fill.w(X, Y) : 0;
+      let t = toneFn(fw > 0 ? lerp(samp(F, F.T, px, py), o.fill.T, fw) : samp(F, F.T, px, py));
       let shadowStroke = false;
       if (night && F.M && o.shadow !== false) {       // the subject's shadow side: sparse cool strokes, never the void
         const m = samp(F, F.M, px, py);
@@ -205,7 +206,8 @@ function hatchField(pen, F, view, o = {}) {
       if (t <= .02) continue;
       const pr = Math.pow(t, gam) * dens;
       if (hC > pr) continue;
-      const r = samp(F, F.R, px, py), g = samp(F, F.G, px, py), b = samp(F, F.B, px, py);
+      let r = samp(F, F.R, px, py), g = samp(F, F.G, px, py), b = samp(F, F.B, px, py);
+      if (fw > 0) { r = lerp(r, o.fill.rgb[0], fw); g = lerp(g, o.fill.rgb[1], fw); b = lerp(b, o.fill.rgb[2], fw); }
       const col = shadowStroke ? ((o.shadowCols ?? ['ultra', 'ultra', 'cobalt'])[Math.floor(hash3(gx | 0, gy | 0, seed + 4) * 3)]) : pick(r, g, b, t, pOpt, hash3(gx | 0, gy | 0, seed + 4));
       if (!col) continue;
       const c = samp(F, F.coh, px, py), det = samp(F, F.detail, px, py);
@@ -241,7 +243,7 @@ function contourField(pen, F, view, o = {}) {
   const aw = F.aw, ah = F.ah, E = F.edge;
   const hi = o.hi ?? .16, lo = o.lo ?? .07, minLen = o.minLen ?? 7, seed = o.seed ?? 3;
   const used = new Uint8Array(aw * ah);
-  const col = o.pencil ?? 'white', w = o.w ?? 1.7, a = o.alpha ?? .85, passes = o.passes ?? 2, jit = o.jit ?? 1.1;
+  const col = o.pencil ?? 'white', w = o.w ?? 1.7, a = o.alpha ?? .85, passes = o.passes ?? 2, jit = (o.jit ?? 1.1) * CJIT;
   const mask = o.mask, colorFn = o.colorFn;
   const nbr = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]];
   let chains = 0;
@@ -326,9 +328,10 @@ function raysFrom(pen, x, y, o = {}) {
   const a0 = o.a0 ?? 0, a1 = o.a1 ?? TAU, w = o.w ?? [1.2, 2.6], alpha = o.alpha ?? [.5, .95], energy = o.energy ?? 1;
   for (let i = 0; i < n; i++) {
     const h1 = hash2(i, seed), h2 = hash2(i, seed + 1), h3 = hash2(i, seed + 2), h4 = hash2(i, seed + 3);
-    const a = a0 + (a1 - a0) * h1;
+    // o.jseed: the drawing index; the layout (seed) holds still and each drawing only nudges it
+    const js = o.jseed, a = a0 + (a1 - a0) * h1 + (js !== undefined ? (hash2(i, js * 7 + 3) - .5) * (o.jit ?? .008) : 0);
     const inner = r0 + (r1 - r0) * Math.pow(h2, 1.8) * .35;
-    const len = (r1 - inner) * Math.pow(h3, .7) * energy * (o.lenMul ? o.lenMul(a) : 1);
+    const len = (r1 - inner) * Math.pow(h3, .7) * energy * (o.lenMul ? o.lenMul(a) : 1) * (js !== undefined ? 1 + (hash2(i, js * 7 + 4) - .5) * (o.ljit ?? .14) : 1);
     if (len < 4) continue;
     const bend = (h4 - .5) * .06;
     const x0 = x + Math.cos(a) * inner, y0 = y + Math.sin(a) * inner, x1 = x + Math.cos(a + bend) * (inner + len), y1 = y + Math.sin(a + bend) * (inner + len);
@@ -458,12 +461,22 @@ function silhouette(pen, F, view, o = {}) {
   if (!F._matteF) F._matteF = analyzePlate(F.matteImg, F.aw, F.ah, { s1: 1.2, sT: 2, sTone: 1 });
   return contourField(pen, F._matteF, view, { hi: .22, lo: .08, minLen: 14, w: 2.5, alpha: .95, passes: 2, jit: 1.3, smooth: 5, resample: 3, minStrength: .15, ...o });
 }
+// The matte PNGs are greyscale with no alpha channel; compositing needs the grey level as alpha.
+function matteAlpha(im) {
+  if (im._alpha) return im._alpha;
+  const c = makeCanvas(im.width, im.height), g = c.getContext('2d', { willReadFrequently: true });
+  g.drawImage(im, 0, 0);
+  const d = g.getImageData(0, 0, im.width, im.height), a = d.data;
+  for (let i = 0; i < a.length; i += 4) { a[i + 3] = a[i]; a[i] = a[i + 1] = a[i + 2] = 255; }
+  g.putImageData(d, 0, 0);
+  return (im._alpha = c);
+}
 // Erase a layer where the subject is (for light that passes behind it)
 function behindMatte(L, F, view, strength = 1) {
   if (!F.matteImg) return;
   const g = L.g, m = view.matrix(F.matteImg.width, F.matteImg.height);
   g.save(); g.globalCompositeOperation = 'destination-out'; g.globalAlpha = strength; g.setTransform(m[0], m[1], m[2], m[3], m[4], m[5]);
-  g.drawImage(F.matteImg, 0, 0); g.restore();
+  g.drawImage(matteAlpha(F.matteImg), 0, 0); g.restore();
 }
 
 // ---------------------------------------------------------------- re-mouthing (singer shots)
@@ -521,7 +534,7 @@ function drawMouth(pen, g, M, o = {}) {
 // The illustrator's method: long parallel hatch lines, one direction for light tones, cross-hatch for mid,
 // a third direction for the darks. Runs break where the tone falls below the layer's threshold.
 // o: { paper, seed, layers:[{ang, th, sp, w, a}], step, len:[a,b], tone(L,V)->0..1, pencil, mask, region, jitter }
-const _QP = new URLSearchParams(location.search), NL_CONTRAST = _QP.has('nlc') ? +_QP.get('nlc') : 1.7, NL_BLACK = _QP.has('nlb') ? +_QP.get('nlb') : .09, NL_SCALE = _QP.has('nls') ? +_QP.get('nls') : 1.4, BOIL = _QP.has('boil') ? +_QP.get('boil') : .25;
+const _QP = new URLSearchParams(location.search), NL_CONTRAST = _QP.has('nlc') ? +_QP.get('nlc') : 1.7, NL_BLACK = _QP.has('nlb') ? +_QP.get('nlb') : .09, NL_SCALE = _QP.has('nls') ? +_QP.get('nls') : 1.4, BOIL = _QP.has('boil') ? +_QP.get('boil') : .25, CJIT = _QP.has('cjit') ? +_QP.get('cjit') : 1;
 function lineHatch(pen, F, view, o = {}) {
   const night = (o.paper ?? 'snow') === 'night';
   const seed = o.seed ?? 1, step = o.step ?? 3.2;
@@ -539,7 +552,7 @@ function lineHatch(pen, F, view, o = {}) {
   const pick = o.pencil ?? (night ? pencilNight : pencilSnow);
   const [rx0, ry0, rx1, ry1] = o.region ?? [0, 0, W, H];
   const cxr = (rx0 + rx1) / 2, cyr = (ry0 + ry1) / 2, R = Math.hypot(rx1 - rx0, ry1 - ry0) / 2 + 10;
-  const [lenA, lenB] = o.len ?? [18, 46], mask = o.mask;
+  const [lenA, lenB] = o.len ?? [18, 46], mask = o.mask, fill = o.fill;
   const V = F.R ? (px, py) => Math.max(samp(F, F.R, px, py), samp(F, F.G, px, py), samp(F, F.B, px, py)) : () => 0;
   let li = 0;
   for (const Ly of layers) {
@@ -557,7 +570,7 @@ function lineHatch(pen, F, view, o = {}) {
         if (reveal < 1 && rKey && rKey(mx, my, hash3(k, li, run.n)) > reveal) { run = null; return; }   // draw-on
         const col = run.col;
         // a slight bow and wobble like a hand-pulled line
-        const bow = (hash3(k, run.n, seed + 7) - .5) * 1.6;
+        const bow = (hash3(k, run.n, ls + 7) - .5) * 1.6 + (hash3(k, run.n, seed + 7) - .5) * 3.2 * boil;
         pen.q(run.x0, run.y0, mx + nx * bow, my + ny * bow, run.x1, run.y1, col, Ly.w * (run.tw ?? 1), Ly.a * clamp(.55 + run.tmax));
         run = null;
       };
@@ -566,13 +579,15 @@ function lineHatch(pen, F, view, o = {}) {
         if (X < rx0 || Y < ry0 || X >= rx1 || Y >= ry1) { flush(); continue; }
         const [px, py] = view.toPlate(X, Y);
         if (px < 0 || py < 0 || px >= F.aw || py >= F.ah) { flush(); continue; }
-        let t = toneFn(samp(F, F.T, px, py), V(px, py));
+        const fw = fill ? fill.w(X, Y) : 0;   // inpainting (e.g. under re-drawn lips): continue the surrounding skin
+        let t = fw > 0 ? toneFn(lerp(samp(F, F.T, px, py), fill.T, fw), lerp(V(px, py), fill.V, fw)) : toneFn(samp(F, F.T, px, py), V(px, py));
         if (mask) t *= mask(X, Y);
         // dither the threshold a little so run ends are ragged, like real hatching
         const on = t > Ly.th + (hash3(Math.round(X), Math.round(Y), ls + li) - .5) * .12;
         if (on) {
           if (!run) {
-            const r = samp(F, F.R, px, py), g = samp(F, F.G, px, py), b = samp(F, F.B, px, py);
+            let r = samp(F, F.R, px, py), g = samp(F, F.G, px, py), b = samp(F, F.B, px, py);
+            if (fw > 0) { r = lerp(r, fill.rgb[0], fw); g = lerp(g, fill.rgb[1], fw); b = lerp(b, fill.rgb[2], fw); }
             let col = pick(r, g, b, t, o.pencilOpt || {}, hash3(k, Math.round(s), ls + li * 3));
             if (Ly.dark && !night) col = ({ lead: 'graphite', sky: 'cobalt', orange: 'brown', gold: 'brown', verm: 'crimson' })[col] || col;
             run = { x0: X, y0: Y, x1: X, y1: Y, n: 1, tmax: t, col };

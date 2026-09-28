@@ -7,6 +7,9 @@ async function renderFrame(t) {
   G.setTransform(1, 0, 0, 1, 0, 0); G.globalAlpha = 1; G.globalCompositeOperation = 'source-over';
   const sh = shotAt(t);
   if (!sh) { paper(G, 'night'); return; }
+  // The film is drawn on twos: everything (camera punches, type, pulses) changes on a 12-per-second
+  // clock that restarts at each cut, so cuts stay frame-exact. Impact and panic shots opt into ones.
+  if (!(sh.opts && sh.opts.ones) && !Q.has('ones')) t = sh.t0 + Math.floor((t - sh.t0) * 12 + 1e-6) / 12;
   const lt = t - sh.t0;
   await sh.fn(t, lt, sh.t1 - sh.t0, sh);
   G.setTransform(1, 0, 0, 1, 0, 0); G.globalAlpha = 1; G.globalCompositeOperation = 'source-over';
@@ -21,6 +24,15 @@ function finish(t, sh) {
 window.renderAt = async (t, type = 'image/jpeg', q = .92) => {
   await renderFrame(t);
   return OUT.toDataURL(type, q);
+};
+
+// Making-of: the reference plate(s) behind frame t, placed exactly where the renderer read them (never part of the film)
+window.renderSource = async (t, type = 'image/jpeg', q = .9) => {
+  window._rec = []; await renderFrame(t); const rec = window._rec; window._rec = null;
+  const S = makeCanvas(W, H), g = S.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+  for (const r of rec) { const im = await plateImage(r.id, r.tp); g.setTransform(r.m); g.drawImage(im, 0, 0); }
+  return { url: S.toDataURL(type, q), plates: rec.map(r => [r.id, +r.tp.toFixed(3)]) };
 };
 
 window.renderSheet = async (times, cols = 3, w = 640) => {

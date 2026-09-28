@@ -12,8 +12,8 @@ redraws them; the plates themselves never appear.
 | **Snow** (white paper) | `#f3efe6` → `#e6dfd2` vignette | Earth, the taiga, the singer's world | warm cotton grain, visible everywhere |
 
 Rules: never a flat digital black or white. The tooth texture modulates every stroke
-(pencil only deposits on the peaks of the grain), and it shifts per *drawing* (not per
-frame) so the grain boils with the linework.
+(pencil only deposits on the peaks of the grain). The tooth never moves: it is one sheet
+of paper, and only the strokes on it boil.
 
 ## 2. The pencil box (the only colors allowed)
 
@@ -36,12 +36,23 @@ Orbital-sunrise band (Leonov's drawing, bottom → top): `crimson · vermilion �
 ## 3. Strokes
 
 * **Contour**: 1.2–2.6 px, tapering ends, 5–15 % overshoot, drawn twice with 0.6 px drift.
-* **Hatch**: 10–34 px long, slightly curved along the plate's structure-tensor flow;
-  density follows light on black paper (you draw the light) and darkness on white paper.
+* **Hatch (tonal layers)**: long parallel pencil runs in four fixed directions, like an
+  etching. Each layer switches on above a tone threshold (0.13 / 0.36 / 0.58 / 0.78), so a
+  tone is built from one, two, three or four crossing layers. On black paper the layers
+  draw the *light* with a steep curve (shadows stay bare paper) and 1.4× bolder strokes
+  that still read on a phone; on white paper they draw the *dark* in graphite, with color
+  only where the plate is genuinely colored. Faces get a finer set of layers.
+* **Stroke cloud**: short strokes that follow the plate's structure-tensor flow; kept for
+  glows (sun, atmosphere) where direction matters more than tone.
 * **Radial rays**: the sun and impacts — strokes aimed away from a point, length ∝ energy.
-* **Scribble**: looping stroke for panic, fire, smoke; only in vermilion/orange/crimson.
-* **Boil**: every stroke is re-seeded once per drawing. Drawing rate per section:
-  threes (8/s) for awe, twos (12/s) default, ones (24/s) for panic and impacts.
+* **Flames / scribble**: tapered tongues and looping strokes for fire and panic; only in
+  vermilion/orange/crimson/gold.
+* **Boil**: contours are redrawn every drawing with a little drift; the hatch layout is
+  stable and each drawing only nudges it (±12 % of a line spacing), so the page shimmers
+  instead of strobing. Drawing rate per section: threes (8/s) for awe, twos (12/s)
+  default, ones (24/s) for panic and impacts.
+* **Knockouts**: where big words sit, the drawing thins out in a soft rounded clearing,
+  as if the artist left room for the lettering.
 
 ## 4. Type
 

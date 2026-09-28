@@ -39,7 +39,7 @@ if (args.encode) {
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.webp': 'image/webp', '.bin': 'application/octet-stream' };
 const server = createServer((req, res) => {
   const p = join(ROOT, decodeURIComponent(req.url.split('?')[0]));
-  if (!p.startsWith(ROOT) || !existsSync(p) || statSync(p).isDirectory()) { res.writeHead(404); res.end(); return; }
+  if (!p.startsWith(ROOT) || !existsSync(p) || statSync(p).isDirectory()) { if (args.verbose) console.log('404 ' + req.url); res.writeHead(404); res.end(); return; }
   res.writeHead(200, { 'Content-Type': MIME[extname(p)] || 'application/octet-stream', 'Cache-Control': 'max-age=3600' });
   createReadStream(p).pipe(res);
 });
@@ -76,6 +76,18 @@ try {
     const { url, ms } = await page.evaluate((ts, c, w) => window.renderSheet(ts, c, w), times(args.sheet), +(args.cols || 3), +(args.w || 640));
     writeFileSync(out, Buffer.from(url.slice(url.indexOf(',') + 1), 'base64'));
     console.log(`${out}  ms/frame: ${ms.map(x => x.toFixed(0)).join(' ')}`);
+  } else if (args.source) {
+    // making-of pairs: the reference plate as the renderer placed it | the drawn frame
+    const page = await openPage(), out = args.out || 'out/source'; mkdirSync(out, { recursive: true });
+    const info = {};
+    for (const s of times(args.source)) {
+      const tag = `t${s.toFixed(2).replace('.', '_')}`;
+      const { url, plates } = await page.evaluate(t => window.renderSource(t), s);
+      writeFileSync(`${out}/${tag}_plate.jpg`, Buffer.from(url.slice(url.indexOf(',') + 1), 'base64'));
+      writeFileSync(`${out}/${tag}_drawn.jpg`, await frameOf(page, s, 'image/jpeg', 0.92));
+      info[tag] = plates; console.log(tag, JSON.stringify(plates));
+    }
+    writeFileSync(`${out}/plates.json`, JSON.stringify(info, null, 1));
   } else if (args.stills) {
     const page = await openPage(), out = args.out || 'out/stills'; mkdirSync(out, { recursive: true });
     for (const s of times(args.stills)) {

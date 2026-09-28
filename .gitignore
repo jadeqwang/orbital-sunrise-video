@@ -8,3 +8,5 @@ media/**/*.png
 media/audio/*.wav
 __pycache__/
 *.pyc
+release/web/*
+!release/web/index.html

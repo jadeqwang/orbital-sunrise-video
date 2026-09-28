@@ -104,6 +104,7 @@ function layer(i) { // pooled full-frame layers, cleared on request
 // ---------- paper ----------
 // Tooth: an alpha tile; pencil pigment only sticks to the peaks of the grain.
 const TOOTH_N = 512;
+const TOOTH_MIN = new URLSearchParams(location.search).has('toothMin') ? +new URLSearchParams(location.search).get('toothMin') : 70;   // alpha in the grain's valleys
 let TOOTH = null, TOOTH_FIBER = null;
 function buildTooth() {
   const c = makeCanvas(TOOTH_N, TOOTH_N), g = c.getContext('2d'), im = g.createImageData(TOOTH_N, TOOTH_N);
@@ -112,7 +113,7 @@ function buildTooth() {
     const f = hash2(x, y), m = vnoise(x / 3.1, y / 3.1, 5) * .5 + vnoise((x % TOOTH_N) / 11, (y % TOOTH_N) / 11, 9) * .5;
     let v = .55 * f + .45 * m;
     v = clamp((v - .18) / .6);
-    const i = (y * TOOTH_N + x) * 4; im.data[i] = im.data[i + 1] = im.data[i + 2] = 255; im.data[i + 3] = Math.round(lerp(70, 255, v));
+    const i = (y * TOOTH_N + x) * 4; im.data[i] = im.data[i + 1] = im.data[i + 2] = 255; im.data[i + 3] = Math.round(lerp(TOOTH_MIN, 255, v));
   }
   g.putImageData(im, 0, 0);
   TOOTH = c;

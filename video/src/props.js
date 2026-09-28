@@ -10,7 +10,7 @@ function sunriseBands(pen, cx, cy, R, a0, a1, k, seed, o = {}) {
     const a = lerp(a0, a1, h1);
     const near = Math.exp(-Math.pow((a - sunA) / spread, 2));     // brighter/thicker near the sun
     const band = Math.floor(h2 * BANDS.length);
-    const r = R + (band / BANDS.length) * thick * (.6 + near * .9) + (h3 - .5) * 6;
+    const r = R + (band / BANDS.length) * thick * (.6 + near * .9) + (h3 - .5) * 6 + (o.jseed !== undefined ? (hash2(i, o.jseed * 5 + 1) - .5) * (o.jit ?? 1.6) : 0);
     const len = (18 + 50 * near) * (.5 + h3);
     const da = len / r;
     const col = BANDS[band];
@@ -26,7 +26,8 @@ function earthDisc(pen, cx, cy, R, seed, o = {}) {
   const sp = o.spacing ?? 9, lit = o.lit ?? 0, litA = o.litA ?? -Math.PI / 2;
   const y0 = Math.max(0, cy - R), y1 = Math.min(H, cy + R), x0 = Math.max(0, cx - R), x1 = Math.min(W, cx + R);
   for (let y = y0; y < y1; y += sp) for (let x = x0; x < x1; x += sp) {
-    const X = x + (hash3(x | 0, y | 0, seed) - .5) * sp, Y = y + (hash3(x | 0, y | 0, seed + 1) - .5) * sp;
+    const jx = o.jseed !== undefined ? (hash3(x | 0, y | 0, o.jseed * 3 + 7) - .5) * (o.jit ?? 1.4) : 0, jy = o.jseed !== undefined ? (hash3(x | 0, y | 0, o.jseed * 3 + 8) - .5) * (o.jit ?? 1.4) : 0;
+    const X = x + (hash3(x | 0, y | 0, seed) - .5) * sp + jx, Y = y + (hash3(x | 0, y | 0, seed + 1) - .5) * sp + jy;
     const dx = X - cx, dy = Y - cy, d = Math.hypot(dx, dy) / R; if (d > 1) continue;
     const facing = Math.cos(Math.atan2(dy, dx) - litA) * .5 + .5;
     const l = clamp(lit * facing * (.4 + .6 * d) + (1 - d) * .15);

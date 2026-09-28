@@ -71,9 +71,9 @@ async function initShots2() {
     const k = easeOut(clamp(lt / (dur * .8)));
     const ecx = cx - 60, ecy = cy + 1500, R = 1420;
     const Ls = layer(2), p2 = new Pen();
-    earthDisc(p2, ecx, ecy, R, d * 3 + 1, { lit: .5, spacing: 9 });
-    sunriseBands(p2, ecx, ecy, R, -Math.PI / 2 - .5, -Math.PI / 2 + .5 * (2 * k - 1), k, d * 5 + 2, { sunA: -Math.PI / 2 + .12, thick: 70, n: 1500 });
-    raysFrom(p2, ecx + Math.cos(-Math.PI / 2 + .12) * R, ecy + Math.sin(-Math.PI / 2 + .12) * R - 10, { n: 160, r0: 6, r1: 260 * k, energy: k, seed: d + 9, a0: Math.PI, a1: TAU });
+    earthDisc(p2, ecx, ecy, R, 1, { lit: .5, spacing: 9, jseed: d });
+    sunriseBands(p2, ecx, ecy, R, -Math.PI / 2 - .5, -Math.PI / 2 + .5 * (2 * k - 1), k, 2, { sunA: -Math.PI / 2 + .12, thick: 70, n: 1500, jseed: d });
+    raysFrom(p2, ecx + Math.cos(-Math.PI / 2 + .12) * R, ecy + Math.sin(-Math.PI / 2 + .12) * R - 10, { n: 160, r0: 6, r1: 260 * k, energy: k, seed: 9, jseed: d, a0: Math.PI, a1: TAU });
     p2.flush(Ls.g, ORDER_SNOW);
     // clip the drawing to the sheet
     Ls.g.globalCompositeOperation = 'destination-in'; Ls.g.save(); Ls.g.translate(cx, cy); Ls.g.rotate(rot); Ls.g.fillRect(-sw / 2 + 20, -sh / 2 + 20, sw - 40, sh - 40); Ls.g.restore(); Ls.g.globalCompositeOperation = 'source-over';
@@ -198,7 +198,7 @@ async function initShots2() {
     await drawPlate(t, 'reentry_fire', .5 + lt, { rate: 24, view: { zoom: 1.04 } });
     const w = H3[0].words, d = drawClock(t, 12).n;
     lyricStack(t, [{ s: 'ORBITAL', t: w[0][0], x: 100, y: 380, size: 220 }, { s: 'SUNRISE', t: w[1][0], x: 100, y: 600, size: 220 }]);
-    if (t >= w[2][0]) hatchedText('BURNING GOLD', 106, 800, FONT.impact(170), { cols: ['gold', 'orange', 'verm', 'white'], edge: 'gold', seed: d, drawIdx: d, alpha: clamp((t - w[2][0]) / .1) });
+    if (t >= w[2][0]) hatchedText('BURNING GOLD', 106, 800, FONT.impact(170), { cols: ['gold', 'orange', 'verm', 'white'], edge: 'gold', seed: 45, jseed: d, drawIdx: d, alpha: clamp((t - w[2][0]) / .1) });
     // the page burns through, revealing her world
     const r = Math.pow(clamp((t - (H3[1].t0 - 1.6)) / 1.6), 2) * 1500;
     if (r > 0) await burnThrough(t, W * .66, H * .5, r, async () => {
@@ -260,23 +260,23 @@ async function initShots2() {
     await drawPlate(t, 'treetops', 1.72 + lt * .48, { paper: 'snow', rate: 24, lines: { contrast: 2.2, white: .62 }, hatch: { mask: quiet([[W / 2 - 330, 180, W / 2 + 330, 720]]) }, view: { zoom: 1.08 } });
     const w = OU[2].words;
     lyricStack(t, [{ s: 'MADE', t: w[0][0], x: W / 2, y: 330, size: 170, align: 'center', col: 'graphite' }, { s: 'IT', t: w[1][0], x: W / 2, y: 500, size: 170, align: 'center', col: 'graphite' }, { s: 'DOWN', t: w[2][0], x: W / 2, y: 700, size: 230, align: 'center', col: 'verm' }]);
-  });
+  }, { ones: true });
 
   // ============================== LANDED · 189.64 → 226.55 · the page turns white ==============================
   const [l0, l1] = S('landed').slice(1);
   const HOME1 = OU[3], MADE2 = OU[4], HOME2 = OU[5];
   shot('L1_impact', l0, HOME1.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    const shake = Math.exp(-lt * 5) * 14, dn = drawClock(t, 24).n;
+    const shake = Math.exp(-lt * 5) * 14, dn = drawClock(t, lt < .6 ? 24 : 12).n;
     await drawPlate(t, 'treetops', 2.66 + lt * .7, { paper: 'snow', rate: lt < .6 ? 24 : 12, lines: { contrast: 2.2, white: .72 },
       view: { zoom: 1.05 + .06 * Math.exp(-lt * 3), ox: (hash(dn) - .5) * shake, oy: (hash(dn + 7) - .5) * shake },
       extra: (pen) => {
         const bx = W * .46, by = H * .86, e1 = Math.exp(-lt * 3.2), e2 = Math.sin(clamp(lt / 1.8) * Math.PI);
-        if (e1 > .04) raysFrom(pen, bx, by, { n: 420, r0: 20, r1: 900, energy: e1, seed: 71 + dn, cols: ['gold', 'orange', 'orange', 'verm'], a0: Math.PI * 1.02, a1: Math.PI * 1.98, w: [1.4, 3], alpha: [.45, .95] });
-        if (e2 > .04) raysFrom(pen, bx, by, { n: 560, r0: 60, r1: 1500, energy: e2, seed: 77 + dn, cols: ['lead', 'graphite', 'sky', 'lead', 'cobalt'], a0: Math.PI * 1.04, a1: Math.PI * 1.96, w: [1.1, 2.4], alpha: [.25, .75] });
+        if (e1 > .04) raysFrom(pen, bx, by, { n: 420, r0: 20, r1: 900, energy: e1, seed: 71, jseed: dn, cols: ['gold', 'orange', 'orange', 'verm'], a0: Math.PI * 1.02, a1: Math.PI * 1.98, w: [1.4, 3], alpha: [.45, .95] });
+        if (e2 > .04) raysFrom(pen, bx, by, { n: 560, r0: 60, r1: 1500, energy: e2, seed: 77, jseed: dn, cols: ['lead', 'graphite', 'sky', 'lead', 'cobalt'], a0: Math.PI * 1.04, a1: Math.PI * 1.96, w: [1.1, 2.4], alpha: [.25, .75] });
       } });
     if (lt < .25) { G.fillStyle = P.snow; G.globalAlpha = 1 - lt / .25; G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
-  });
+  }, { ones: true });
   shot('L2_home', HOME1.t0 - .05, MADE2.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
     await drawPlate(t, 'hatch_exit', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 } });
@@ -339,9 +339,9 @@ async function initShots2() {
     const { n: d } = drawClock(t, 8), L = layer(2), p2 = new Pen();
     const cx = W / 2, cy = H / 2 - 40, R = 1100, k = easeOut(clamp(lt / 3));
     // Leonov's drawing, alone on the page
-    earthDisc(p2, cx, cy + 1250, R + 60, d * 3 + 1, { lit: .45, spacing: 10 });
-    sunriseBands(p2, cx, cy + 1250, R + 60, -Math.PI / 2 - .55, -Math.PI / 2 + .55, k, d * 5 + 2, { sunA: -Math.PI / 2 + .08, thick: 80, n: 1700 });
-    raysFrom(p2, cx + 90, cy + 1250 - R - 60 - 12, { n: 200, r0: 8, r1: 300 * k, energy: k, seed: d + 3, a0: Math.PI, a1: TAU });
+    earthDisc(p2, cx, cy + 1250, R + 60, 1, { lit: .45, spacing: 10, jseed: d });
+    sunriseBands(p2, cx, cy + 1250, R + 60, -Math.PI / 2 - .55, -Math.PI / 2 + .55, k, 2, { sunA: -Math.PI / 2 + .08, thick: 80, n: 1700, jseed: d });
+    raysFrom(p2, cx + 90, cy + 1250 - R - 60 - 12, { n: 200, r0: 8, r1: 300 * k, energy: k, seed: 3, jseed: d, a0: Math.PI, a1: TAU });
     p2.flush(L.g, ORDER_SNOW); toothIn(L, d); G.globalCompositeOperation = 'multiply'; G.drawImage(L.c, 0, 0); G.globalCompositeOperation = 'source-over';
     handwrite(t, 'He drew the sunrise anyway.', W / 2, 250, c0 + 1.4, c0 + 4.4, { size: 96, align: 'center', col: 'graphite' });
   });
@@ -352,7 +352,7 @@ async function initShots2() {
     text(g, 'ОРБИТАЛЬНЫЙ ВОСХОД', W / 2, 600, { font: FONT.cyr(48), col: 'verm', align: 'center', alpha: k, ls: 4 });
     text(g, 'JADE WANG', W / 2, 690, { font: FONT.mono(34, 800), col: 'white', align: 'center', alpha: clamp((lt - .3) / .3), ls: 8 });
     text(g, 'lyrics: a found poem from John Green\'s "Orbital Sunrise" (The Anthropocene Reviewed)', W / 2, 900, { font: FONT.serif(30), col: 'silver', align: 'center', alpha: clamp((lt - .6) / .4) });
-    text(g, 'every frame drawn in colored pencil by JavaScript · Claude', W / 2, 950, { font: FONT.mono(20), col: 'silver', align: 'center', alpha: clamp((lt - .8) / .4), ls: 2 });
+    text(g, 'every frame drawn in colored pencil by JavaScript', W / 2, 950, { font: FONT.mono(20), col: 'silver', align: 'center', alpha: clamp((lt - .8) / .4), ls: 2 });
     typeFlush(L, drawClock(t, 12).n, .3);
     // the picture fades with the last ringing note
     const end = TM.durExt ?? TM.dur, f = clamp((t - (end - 2.4)) / 2.2);

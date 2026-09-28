@@ -20,6 +20,7 @@ async function drawPlate(t, id, tp, o = {}) {
   const F = await plateF(id, tpq, o.aw ?? 640, o.ah ?? 360, { ...((o.paper ?? 'night') === 'night' ? {} : { gain: 1 }), ...(o.ana || {}) });
   if (o.matte !== false && F.M === undefined) attachMatte(F, await plateMatte(id, tpq));
   const view = makeView(F, typeof o.view === 'function' ? o.view(tq) : (o.view || {}));
+  if (window._rec) { const m = view.matrix(PLATES[id].w, PLATES[id].h); window._rec.push({ id, tp: tpq, m: G.getTransform().multiply(new DOMMatrix(m)) }); }   // making-of: which plate, where
   const night = (o.paper ?? 'night') === 'night';
   const ord = night ? ORDER_NIGHT : ORDER_SNOW;
   if (o.under) { // procedural light behind the subject (sun rays, glows): own layer, cut out by the matte
@@ -49,12 +50,20 @@ async function drawPlate(t, id, tp, o = {}) {
   const mm = MG ? MG.mask : null;
   const baseMask = o.hatch && o.hatch.mask;
   const mainMask0 = fmask ? (X, Y) => (1 - .8 * fmask(X, Y)) * (baseMask ? baseMask(X, Y) : 1) : baseMask;
-  const mainMask = mm ? (X, Y) => (1 - mm(X, Y)) * (mainMask0 ? mainMask0(X, Y) : 1) : mainMask0;
-  const faceMaskM = mm && fmask ? (X, Y) => fmask(X, Y) * (1 - mm(X, Y)) : fmask;
+  const mainMask = mainMask0, faceMaskM = fmask;
+  // under the re-drawn lips the plate's own mouth is painted out with the surrounding skin (tone + color), so hatching runs on unbroken
+  const skinFill = (FF, vw) => {
+    if (!MG) return undefined;
+    const ca = Math.cos(MG.ang), sa = Math.sin(MG.ang), at = (u, v) => [MG.mx + u * ca - v * sa, MG.my + u * sa + v * ca];
+    const pts = [at(-MG.wid * .95, 0), at(MG.wid * .95, 0), at(0, -MG.faceH * .09), at(-MG.wid * .45, MG.faceH * .15), at(MG.wid * .45, MG.faceH * .15)];
+    let T = 0, V = 0, r = 0, g = 0, b = 0;
+    for (const [X, Y] of pts) { const [px, py] = vw.toPlate(X, Y), rr = samp(FF, FF.R, px, py), gg = samp(FF, FF.G, px, py), bb = samp(FF, FF.B, px, py); T += samp(FF, FF.T, px, py); V += Math.max(rr, gg, bb); r += rr; g += gg; b += bb; }
+    const n = pts.length; return { w: mm, T: T / n, V: V / n, rgb: [r / n, g / n, b / n] };
+  };
   if (o.hatch !== false) {
     // tonal hatching: long parallel scanline layers (default), or the flow-following stroke cloud for glows (o.cloud)
-    if (night && (o.cloud || Q.has('nightCloud'))) hatchField(pen, F, view, { seed: dIdx * 7 + 1, paper: 'night', ...(o.hatch || {}), mask: mainMask });
-    else lineHatch(pen, F, view, { seed: dIdx * 7 + 1, paper: o.paper ?? 'night', ...(o.hatch || {}), ...(o.lines || {}), mask: mainMask });
+    if (night && (o.cloud || Q.has('nightCloud'))) hatchField(pen, F, view, { seed: dIdx * 7 + 1, paper: 'night', ...(o.hatch || {}), mask: mainMask, fill: skinFill(F, view) });
+    else lineHatch(pen, F, view, { seed: dIdx * 7 + 1, paper: o.paper ?? 'night', ...(o.hatch || {}), ...(o.lines || {}), mask: mainMask, fill: skinFill(F, view) });
     pen.flush(L.g, ord);
   }
   if (o.contour !== false) { contourField(pen, F, view, { seed: dIdx * 13 + 5, pencil: night ? 'white' : 'graphite', tint: night, mask: mm ? (X, Y) => 1 - mm(X, Y) : undefined, ...(o.contour || {}) }); pen.flush(L.g, ord); }
@@ -63,14 +72,15 @@ async function drawPlate(t, id, tp, o = {}) {
     const im = await plateImage(id, tpq);
     const pw = im.width, ph = im.height, src = [fbox[0] * pw, fbox[1] * ph, (fbox[2] - fbox[0]) * pw, (fbox[3] - fbox[1]) * ph];
     const caw = Math.round(clamp(src[2] * 1.5, 160, 480)), cah = Math.round(caw * src[3] / src[2]);
-    const Fc = analyzePlate(im, caw, cah, { s1: .8, sT: 2.2, sTone: 1 }, src);
+    const gF = (o.ana && o.ana.gain) ?? (night ? Math.pow(PLATES[id].gain ?? 1, GAIN_POW) : 1);   // same exposure as the body
+    const Fc = analyzePlate(im, caw, cah, { s1: .8, sT: 2.2, sTone: 1, gain: gF }, src);
     const cv = cropView(view, Fc, fbox);
     const fregion = (() => { const [x0, y0] = view.toScreen(fbox[0], fbox[1]), [x1, y1] = view.toScreen(fbox[2], fbox[3]); return [Math.min(x0, x1), Math.min(y0, y1), Math.max(x0, x1), Math.max(y0, y1)]; })();
     if (night && (o.cloud || Q.has('nightCloud')))
-      hatchField(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: 'night', spacing: 5.2, len: [6, 17], w: [1, 1.8], follow: .85, contrast: 1.6, density: .85, ...(o.faceHatch || {}), mask: faceMaskM, region: fregion });
+      hatchField(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: 'night', spacing: 5.2, len: [6, 17], w: [1, 1.8], follow: .85, contrast: 1.6, density: .85, ...(o.faceHatch || {}), mask: faceMaskM, fill: skinFill(Fc, cv), region: fregion });
     else { // finer scanline layers for skin
       const fs = clamp((fregion[2] - fregion[0]) / 700, .6, 1.2);
-      lineHatch(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: o.paper ?? 'night', step: 2.6, len: [12, 30], mask: faceMaskM, region: fregion,
+      lineHatch(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: o.paper ?? 'night', step: 2.6, len: [12, 30], mask: faceMaskM, fill: skinFill(Fc, cv), region: fregion,
         layers: [{ ang: -0.72, th: .12, sp: 5.4 * fs, w: 1.05, a: .62 }, { ang: 0.85, th: .34, sp: 5.8 * fs, w: 1.05, a: .62 }, { ang: -1.35, th: .56, sp: 5.2 * fs, w: 1.15, a: .72 }, { ang: 0.1, th: .76, sp: 4.2 * fs, w: 1.3, a: .82, dark: true }],
         ...(o.faceHatch || {}) });
     }
@@ -243,26 +253,31 @@ function chopWords(t, items, o = {}) {
 
 // A navigator's sketch map of the descent: the planned landing zone and the line running past it.
 function descentMap(t, t0, o = {}) {
+  // North up. The planned landing zone lay in the Kazakh steppe, south-east of the Urals; a late, hand-fired
+  // retro burn on a later orbit (track shifted west) put Voskhod-2 down far to the north-west, west of the Urals, near Perm.
   const pen = new Pen(), d = drawClock(t, 12).n, L = layer(2);
   const k = clamp((t - t0) / (o.dur ?? 4.5));
   // graticule
   for (let i = 0; i <= 8; i++) { const x = 160 + i * 200; pen.l(x + (hash2(i, d) - .5) * 3, 120, x, H - 120, 'lead', 1, .3); }
   for (let j = 0; j <= 4; j++) { const y = 140 + j * 200; pen.l(140, y, W - 140, y + (hash2(j, d) - .5) * 3, 'lead', 1, .3); }
   // the Ural range: a hatched ridge running north-south
-  for (let i = 0; i < 70; i++) { const y = 150 + i * 11, x = 1180 + Math.sin(i * .35) * 30 + (hash2(i, 3) - .5) * 20; pen.l(x - 18, y + 8, x, y - 8, 'graphite', 1.6, .6); pen.l(x, y - 8, x + 18, y + 8, 'graphite', 1.6, .6); }
-  // target (planned) near the southwest; actual far to the north-east, in the forest
-  const tx = 620, ty = 820, ax = 1330, ay = 300;
+  for (let i = 0; i < 64; i++) { const y = 150 + i * 11, x = 1130 + Math.sin(i * .35) * 30 + i * 1.2 + (hash2(i, 3) - .5) * 20; pen.l(x - 18, y + 8, x, y - 8, 'graphite', 1.6, .6); pen.l(x, y - 8, x + 18, y + 8, 'graphite', 1.6, .6); }
+  const tx = 1510, ty = 860, ax = 700, ay = 300;
   const ring = (x, y, r, col, a) => { const q = []; for (let a2 = 0; a2 <= TAU + .1; a2 += .15) q.push([x + Math.cos(a2) * r + (hash2(Math.round(a2 * 10), d) - .5) * 3, y + Math.sin(a2) * r + (hash2(Math.round(a2 * 10), d + 1) - .5) * 3]); pen.poly(q, col, 2.2, a, .02); };
   ring(tx, ty, 70, 'graphite', .9); ring(tx, ty, 8, 'graphite', .9);
-  // ground track: from the southwest, curving north-east, passing the target
-  const path = []; for (let i = 0; i <= 60; i++) { const u = i / 60; path.push([lerp(260, ax, u) + Math.sin(u * 3.1) * 60, lerp(980, ay, Math.pow(u, .9)) - Math.sin(u * 3.1) * 120]); }
-  const n = Math.max(2, Math.floor(path.length * k));
+  // the planned ground track (dashed graphite), from the south-west into the zone
+  for (let i = 0; i < 26; i++) { const u0 = i / 26, u1 = u0 + .5 / 26; const P = u => [lerp(180, tx, u), lerp(1040, ty, u) - Math.sin(u * Math.PI) * 90]; const [x0, y0] = P(u0), [x1, y1] = P(u1); pen.l(x0, y0, x1, y1, 'graphite', 1.6, .55); }
+  // the actual track (vermilion): further west, longer, bending north to the taiga
+  const path = []; for (let i = 0; i <= 60; i++) { const u = i / 60; path.push([lerp(120, ax, u) + Math.sin(u * 2.6) * 90, lerp(930, ay, Math.pow(u, .85))]); }
+  const n = Math.max(2, Math.floor(path.length * k)), head = path[n - 1];
   pen.poly(path.slice(0, n), 'verm', 3.4, .95, .03);
-  if (k > .98) { pen.l(ax - 26, ay - 26, ax + 26, ay + 26, 'verm', 4, .95); pen.l(ax - 26, ay + 26, ax + 26, ay - 26, 'verm', 4, .95); }
+  if (k < .98) { const q = []; for (let a2 = 0; a2 <= TAU + .1; a2 += .5) q.push([head[0] + Math.cos(a2) * 11, head[1] + Math.sin(a2) * 11]); pen.poly(q, 'crimson', 2.6, .95, .02); }   // the capsule
+  if (k > .98) { const s2 = 26 * (1 + .25 * pulse(t, 6)); pen.l(ax - s2, ay - s2, ax + s2, ay + s2, 'verm', 4, .95); pen.l(ax - s2, ay + s2, ax + s2, ay - s2, 'verm', 4, .95); }
   pen.flush(L.g, ORDER_SNOW); toothIn(L, d); G.globalCompositeOperation = 'multiply'; G.drawImage(L.c, 0, 0); G.globalCompositeOperation = 'source-over';
   const Lt = typeLayer();
-  tele(Lt.g, 'PLANNED LANDING ZONE', tx + 90, ty + 10, t, t0 + .3, { size: 24, weight: 700, col: 'graphite', dur: .5 });
-  tele(Lt.g, 'УРАЛ · URALS', 1230, 180, t, t0 + .6, { size: 22, col: 'lead', dur: .4 });
+  tele(Lt.g, 'PLANNED LANDING ZONE', tx - 90, ty + 110, t, t0 + .3, { size: 24, weight: 700, col: 'graphite', dur: .5, align: 'right' });
+  tele(Lt.g, 'KAZAKH STEPPE', tx - 90, ty + 146, t, t0 + .5, { size: 20, col: 'lead', dur: .4, align: 'right' });
+  tele(Lt.g, 'УРАЛ · URALS', 1210, 180, t, t0 + .6, { size: 22, col: 'lead', dur: .4 });
   if (k > .98) { tele(Lt.g, 'ACTUAL: THE TAIGA NEAR PERM', ax + 50, ay - 30, t, t0 + (o.dur ?? 4.5), { size: 28, weight: 800, col: 'verm', dur: .6 }); tele(Lt.g, 'DEEP SNOW · NO ROADS · WOLVES', ax + 50, ay + 10, t, t0 + (o.dur ?? 4.5) + .4, { size: 22, weight: 700, col: 'graphite', dur: .5 }); }
   typeFlush(Lt, d, .3);
 }
@@ -279,20 +294,22 @@ async function initShots() {
   shot('I1_poster', 0, FIRST_BEAT, async (t, lt, dur) => {
     paper(G, 'night');
     const k = clamp(lt / 2.45);                          // drawing progress
-    const view = { zoom: 1.08, ox: 300, oy: 20 };
-    const cx = W / 2 + 300, cy = H / 2;
-    const rk = (X, Y, h) => clamp(Math.hypot(X - cx, Y - cy) / 1500) * .72 + h * .28;
+    const view = { zoom: 1.06, ox: 120, oy: 20 };
+    // the sun (plate meta) in screen space; the drawing grows outward from the sunrise
+    const sm = (META.hero_sunrise || [])[plateIndex('hero_sunrise', POSTER_TP) - 1], su = sm ? sm.sun : [.88, .44];
+    const sun = [W / 2 + view.ox + (su[0] - .5) * W * view.zoom, H / 2 + view.oy + (su[1] - .5) * H * view.zoom];
+    const rk = (X, Y, h) => clamp(Math.hypot(X - sun[0], Y - sun[1]) / 2000) * .75 + h * .25;
     const done = k >= 1;
     const r = await drawPlate(t, 'hero_sunrise', 0, {
       hold: POSTER_TP, view, fixedSeed: done ? undefined : 11,
       contour: { reveal: clamp(k * 1.6), revealKey: rk, hi: .14, lo: .06 },
       hatch: { reveal: clamp((k - .15) * 1.35), revealKey: rk, spacing: 6.5 },
       sil: { reveal: clamp(k * 1.8), revealKey: rk },
-      under: (pen, F, v) => {
-        const sun = sunScreen('hero_sunrise', POSTER_TP, v) || [cx + 250, cy - 40, 1];
-        // the sunrise is already burning on the first frame (the thumbnail); the astronaut is drawn into its light
-        const e = .42 + .58 * easeOut(clamp((k - .25) / .55));
-        raysFrom(pen, sun[0], sun[1], { n: 520, r0: 14, r1: 1100, energy: e, seed: 21, alpha: [.35, .9] });
+      under: (pen, F, v, dI) => {
+        // the sunrise is already burning on the first frame (the thumbnail); everything else is drawn out of its light
+        const e = .75 + .25 * easeOut(clamp((k - .2) / .6));
+        raysFrom(pen, sun[0], sun[1], { n: 1100, r0: 16, r1: 1600, energy: e, seed: 21, jseed: dI, w: [1.5, 3.4], alpha: [.55, 1] });
+        raysFrom(pen, sun[0], sun[1], { n: 700, r0: 0, r1: 240, energy: 1, seed: 23, jseed: dI, cols: ['white', 'gold', 'gold', 'white', 'orange'], w: [2, 4.2], alpha: [.85, 1] });
       },
     });
     // title lockup lands when the drawing is ~85% done
@@ -316,8 +333,8 @@ async function initShots() {
     if (open > 0) {
       const M = layer(2);
       const p2 = new Pen();
-      earthDisc(p2, cx + 120, cy + 1150, 1350, dIdx * 3 + 1, { lit: .9, litA: -Math.PI / 2 - .5, spacing: 8 });
-      sunriseBands(p2, cx + 120, cy + 1150, 1350, -Math.PI / 2 - .7, -Math.PI / 2 + .3, .35, dIdx * 5 + 3, { sunA: -Math.PI / 2 - .5, thick: 30 });
+      earthDisc(p2, cx + 120, cy + 1150, 1350, 1, { lit: .9, litA: -Math.PI / 2 - .5, spacing: 8, jseed: dIdx });
+      sunriseBands(p2, cx + 120, cy + 1150, 1350, -Math.PI / 2 - .7, -Math.PI / 2 + .3, .35, 3, { sunA: -Math.PI / 2 - .5, thick: 30, jseed: dIdx });
       starfield(p2, 4, 160, { region: [cx - R, cy - R, cx + R, cy + R] });
       p2.flush(M.g, ORDER_NIGHT);
       M.g.globalCompositeOperation = 'destination-in'; M.g.beginPath(); M.g.arc(cx, cy, R, 0, TAU); M.g.fill(); M.g.globalCompositeOperation = 'source-over';
@@ -403,7 +420,7 @@ async function initShots() {
       under: (pen, F, v) => {
         const s = sunScreen('hero_sunrise', tpHero(t), v); if (!s) return;
         const burst = expoOut(clamp((t - hk0) / .5));
-        raysFrom(pen, s[0], s[1], { n: 380, r0: 10, r1: 1300, energy: burst * (.75 + .35 * pulse(t, 5)), seed: drawClock(t, 12).n + 31 });
+        raysFrom(pen, s[0], s[1], { n: 380, r0: 10, r1: 1300, energy: burst * (.75 + .35 * pulse(t, 5)), seed: 31, jseed: drawClock(t, 12).n });
       },
     }));
     const w = H1[0].words;
@@ -419,8 +436,8 @@ async function initShots() {
     paper(G, 'night');
     await drawPlate(t, 'visor_sunrise', 1.6 + lt, { view: { zoom: 1.12, ox: 330, oy: 30 }, hatch: { spacing: 6.5 } });
     const w = H1[0].words, d = drawClock(t, 12).n;
-    if (t >= w[2][0]) hatchedText('BURNING', 110, 470, FONT.impact(210), { cols: ['gold', 'orange', 'gold', 'white'], edge: 'gold', seed: d, drawIdx: d, alpha: clamp((t - w[2][0]) / .12) });
-    if (t >= w[3][0]) hatchedText('GOLD', 110, 700, FONT.impact(250), { cols: ['gold', 'gold', 'orange', 'white'], edge: 'orange', seed: d + 5, drawIdx: d, alpha: clamp((t - w[3][0]) / .12) });
+    if (t >= w[2][0]) hatchedText('BURNING', 110, 470, FONT.impact(210), { cols: ['gold', 'orange', 'gold', 'white'], edge: 'gold', seed: 41, jseed: d, drawIdx: d, alpha: clamp((t - w[2][0]) / .12) });
+    if (t >= w[3][0]) hatchedText('GOLD', 110, 700, FONT.impact(250), { cols: ['gold', 'gold', 'orange', 'white'], edge: 'orange', seed: 46, jseed: d, drawIdx: d, alpha: clamp((t - w[3][0]) / .12) });
   });
 
   // H1c · Orbital sunrise (the wide)
@@ -564,8 +581,8 @@ async function initShots() {
     paper(G, 'night');
     await drawPlate(t, 'helmet_off', .4 + lt, { view: { zoom: 1.04, ox: 240 } });
     const w = H2[0].words, d = drawClock(t, 12).n;
-    if (t >= w[2][0]) hatchedText('BURNING', 100, 460, FONT.impact(200), { cols: ['gold', 'orange', 'white'], edge: 'gold', seed: d, drawIdx: d, alpha: clamp((t - w[2][0]) / .12) });
-    if (t >= w[3][0]) hatchedText('GOLD', 100, 690, FONT.impact(240), { cols: ['gold', 'orange', 'gold'], edge: 'orange', seed: d + 3, drawIdx: d, alpha: clamp((t - w[3][0]) / .12) });
+    if (t >= w[2][0]) hatchedText('BURNING', 100, 460, FONT.impact(200), { cols: ['gold', 'orange', 'white'], edge: 'gold', seed: 43, jseed: d, drawIdx: d, alpha: clamp((t - w[2][0]) / .12) });
+    if (t >= w[3][0]) hatchedText('GOLD', 100, 690, FONT.impact(240), { cols: ['gold', 'orange', 'gold'], edge: 'orange', seed: 48, jseed: d, drawIdx: d, alpha: clamp((t - w[3][0]) / .12) });
   });
   shot('K3_jettison', H2[1].t0 - .05, H2[1].words[2][0] - .05, async (t, lt) => {
     paper(G, 'night');

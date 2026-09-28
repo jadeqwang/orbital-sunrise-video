@@ -77,7 +77,8 @@ function hatchedText(s, x, y, font, o = {}) {
   for (let yy = y0; yy < y1; yy += sp) for (let xx = x0; xx < x1; xx += sp) {
     const h = hash3(xx | 0, yy | 0, seed); if (h > (o.density ?? .85)) continue;
     const c = cols[Math.floor(hash3(xx | 0, yy | 0, seed + 1) * cols.length)];
-    const X = xx + (hash3(xx | 0, yy | 0, seed + 2) - .5) * sp, Y = yy + (hash3(xx | 0, yy | 0, seed + 3) - .5) * sp;
+    const js = o.jseed, jx = js !== undefined ? (hash3(xx | 0, yy | 0, js * 5 + 21) - .5) * (o.jit ?? 1.4) : 0, jy = js !== undefined ? (hash3(xx | 0, yy | 0, js * 5 + 22) - .5) * (o.jit ?? 1.4) : 0;
+    const X = xx + (hash3(xx | 0, yy | 0, seed + 2) - .5) * sp + jx, Y = yy + (hash3(xx | 0, yy | 0, seed + 3) - .5) * sp + jy;
     pen.l(X - Math.cos(ang) * L / 2, Y - Math.sin(ang) * L / 2, X + Math.cos(ang) * L / 2, Y + Math.sin(ang) * L / 2, c, o.w ?? 2, o.a ?? .9);
   }
   pen.flush(S.g);

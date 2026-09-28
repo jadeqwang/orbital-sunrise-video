@@ -48,7 +48,7 @@ landing, they are the same drawing.
 | Paper | Black paper for space and the capsule. Warm white paper for Earth, snow and the present day. The switch happens exactly once, at the landing. |
 | Pencils | A fixed Soviet-box palette: white, silver-grey, cobalt, ultramarine, sky, vermilion, orange, cadmium gold, red, graphite, black. Nothing outside the box. |
 | Light | Drawn, never glowed. A sunrise is a storm of radial orange/gold strokes; a rim light is a thin warm hatch along an edge. |
-| Line | Confident contours with overshoot, redrawn every drawing (boil). Hatching follows form (structure-tensor flow of the plate). |
+| Line | Confident contours with overshoot, redrawn every drawing (boil). Tone is etching-style layered hatching; glows use flow-following stroke clouds. |
 | Frame rate of drawing | Threes (8 dwg/s) = awe, stillness. Twos (12) = default. Ones (24) = panic, impact. |
 | Color arc | Monochrome white-on-black → first gold at the first sunrise → red scribble in the airlock → blue orbit → the page goes white in the snow → full color at home. |
 | Type | Heavy condensed sans for impact lyrics (English) with red Cyrillic under-lines; serif italic for the singer's intimate lines; mono telemetry for mission data; pencil handwriting for "Art is a landing in the snow". |
@@ -71,4 +71,4 @@ landing, they are the same drawing.
 | 2:56 – 3:08 | Outro vocals | *Fifteen hundred klicks, coming in hot / we overshot.* Falling into endless forest. |
 | 3:08 | **MADE IT DOWN** | Impact on the drop. The page turns white. Snow. |
 | 3:10 – 3:45 | Instrumental | Two men, a fire, wolves' eyes, rescuers on skis — and then the legacy: the spacewalks, the handshake in orbit, the stations, the Moon again. What was impossible becomes routine. |
-| 3:45 – 3:58 | End | Leonov's drawing, alone on the white page. It survived. Title. |
+| 3:45 – 4:02 | End | Leonov's drawing, alone on the white page. It survived. Title, while the last chord is held and allowed to ring out (the song's final note is extended by ~4.5 s with a spectral freeze, see `tools/extend_ending.py`). |
