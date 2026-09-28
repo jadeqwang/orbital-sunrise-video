@@ -354,8 +354,6 @@ async function initShots() {
     tele(Lt.g, 'ВОСХОД-2 · VOSKHOD-2', 120, 300, t, bt(1), { size: 30, weight: 700, col: 'verm', dur: .4 });
     tele(Lt.g, '«ВОСХОД» MEANS «SUNRISE»', 120, 350, t, bt(2), { size: 24, col: 'silver', dur: .45 });
     tele(Lt.g, 'ORBIT 2 · ALTITUDE ~500 KM', 120, 420, t, bt(3), { size: 24, col: 'silver', dur: .45 });
-    tele(Lt.g, 'FOR THE FIRST TIME,', 120, 520, t, bt(4.5), { size: 34, weight: 800, col: 'white', dur: .4 });
-    tele(Lt.g, 'A HUMAN WILL LEAVE THE SHIP.', 120, 566, t, bt(5.2), { size: 34, weight: 800, col: 'white', dur: .5 });
     typeFlush(Lt, dIdx, .4);
   });
 

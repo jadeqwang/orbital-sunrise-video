@@ -148,7 +148,6 @@ async function initShots2() {
     const half = W / 2;
     await drawPlateIn(t, 'drawing_pencils', 2.5 + lt * .8, [0, 0, half, H], { paper: 'night', frame: false, spacing: 6.2, zoom: 1.15, cy: .6 });
     await drawPlateIn(t, 'jade_hands', 3 + lt * .8, [half, 0, half, H], { paper: 'snow', frame: false, spacing: 6.2, zoom: 1.08 });
-    const Lt = typeLayer(); tele(Lt.g, '1965', 40, 70, t, AR[1].t0, { size: 26, weight: 800, col: 'white', instant: true }); tele(Lt.g, 'NOW', half + 40, 70, t, AR[1].t0, { size: 26, weight: 800, col: 'graphite', instant: true }); typeFlush(Lt, 0, .3);
     subtitle(G, lineAt(t), t, { size: 60, y: H - 90, shadow: 6, split: { x: half, left: 'cream', right: 'graphite' } });
   });
 
@@ -280,7 +279,7 @@ async function initShots2() {
   shot('L2_home', HOME1.t0 - .05, MADE2.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
     await drawPlate(t, 'hatch_exit', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 } });
-    lyricStack(t, [{ s: 'HOME.', t: HOME1.t0, x: W / 2, y: 380, size: 280, align: 'center', col: 'graphite', style: 'rise' }]);
+    lyricStack(t, [{ s: 'HOME', t: HOME1.t0, x: W / 2, y: 380, size: 280, align: 'center', col: 'graphite', style: 'rise' }]);
   });
   shot('L3_madeit', MADE2.t0 - .05, HOME2.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
@@ -292,7 +291,7 @@ async function initShots2() {
     const ftp = 2.2 + lt * .55;
     await drawPlate(t, 'fire_night', ftp, { view: { zoom: 1.03 }, ana: { gain: 1.15 }, lines: {},
       extra: (pen, F, view, d) => { const s = sunScreen('fire_night', ftp, view); if (s && s[2] > .2) flames(pen, s[0], Math.min(H + 30, s[1] + 90), { size: 330, n: 54, seed: d * 3 + 1 }); } });
-    lyricStack(t, [{ s: 'home.', t: HOME2.t0, x: 110, y: 300, font: FONT.serif(150), col: 'gold', style: 'rise' }]);
+    lyricStack(t, [{ s: 'home', t: HOME2.t0, x: 110, y: 300, font: FONT.serif(150), col: 'gold', style: 'rise' }]);
     const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · −25 °C', 60, H - 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'silver', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .4);
   });
   shot('L5_survived', 206.2, 211.2, async (t, lt) => {
@@ -351,8 +350,8 @@ async function initShots2() {
     text(g, 'ORBITAL SUNRISE', W / 2, 520, { font: FONT.impact(200), col: 'white', align: 'center', alpha: k, ls: 6 });
     text(g, 'ОРБИТАЛЬНЫЙ ВОСХОД', W / 2, 600, { font: FONT.cyr(48), col: 'verm', align: 'center', alpha: k, ls: 4 });
     text(g, 'JADE WANG', W / 2, 690, { font: FONT.mono(34, 800), col: 'white', align: 'center', alpha: clamp((lt - .3) / .3), ls: 8 });
-    text(g, 'lyrics: a found poem from John Green\'s "Orbital Sunrise" (The Anthropocene Reviewed)', W / 2, 900, { font: FONT.serif(30), col: 'silver', align: 'center', alpha: clamp((lt - .6) / .4) });
-    text(g, 'every frame drawn in colored pencil by JavaScript', W / 2, 950, { font: FONT.mono(20), col: 'silver', align: 'center', alpha: clamp((lt - .8) / .4), ls: 2 });
+    text(g, 'An homage to \u201cOrbital Sunrise\u201d by John Green', W / 2, 900, { font: FONT.serif(30), col: 'silver', align: 'center', alpha: clamp((lt - .6) / .4) });
+    text(g, 'vlogbrothers video essay \u00b7 also on The Anthropocene Reviewed \u00b7 youtube.com/watch?v=xKfvkE3Xf6M', W / 2, 950, { font: FONT.mono(20), col: 'silver', align: 'center', alpha: clamp((lt - .8) / .4), ls: 2 });
     typeFlush(L, drawClock(t, 12).n, .3);
     // the picture fades with the last ringing note
     const end = TM.durExt ?? TM.dur, f = clamp((t - (end - 2.4)) / 2.2);
