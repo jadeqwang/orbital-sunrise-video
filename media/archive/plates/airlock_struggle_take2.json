@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "LT",
+   "LF",
+   "SHIP"
+  ],
+  "prompt": "Exterior in orbit, side view of the open outer end of the Volga airlock (third reference: a pale fabric cylinder sticking out from the spacecraft, with a round metal rim and a hinged hatch lid at its end). the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images): his white Berkut suit is ballooned and rigid, puffed tight like a balloon. He is half in the opening: his helmet and shoulders are wedged against the metal rim, which is too narrow for his swollen suit. He braces one stiff glove against the rim and heaves, strains, twists his shoulders left and right, pulls back out, then shoves again, his legs kicking behind him, and still cannot get through. One continuous shot, no cuts. Steady camera from the side about three metres away, the whole figure and the rim clearly readable; the upper third of the frame is empty black space, the blue Earth at the bottom. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 229
+}
