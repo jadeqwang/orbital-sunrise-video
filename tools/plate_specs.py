@@ -188,11 +188,16 @@ PLATES.update({
 })
 
 # ---------------- round 2 (docs/ROUND2_PLAN.md; facts from docs/FACTS.md) ----------------
-R.update({"DRAW": "media/refs/leonov_drawing_reconstruction.png"})
+# DRAW is the real drawing (museum photo, white-balanced crop of the card); DRAWPH is the full photo with his pencil kit.
+# Both are gitignored (reference only, not redistributed). The earlier reconstruction (media/refs/leonov_drawing_reconstruction.png) was wrong.
+R.update({"DRAW": "media/refs/leonov_drawing_real_card.jpg", "DRAWPH": "media/refs/leonov_drawing_real_photo.jpg"})
 LEO2 = "the cosmonaut Alexei Leonov (face and suit exactly as in his reference images)"
-DRAWING = ("the drawing is small and sits in the middle of the sheet with wide blank margins: a curved horizon arc; below it the Earth hatched dark blue and black with no continents; "
-           "above the arc, bands following the curve from bottom to top: bright red, orange, light blue, blue, violet, then velvety black at the top; "
-           "a small red ball of the sun emerging from the blue just above the rim. No text, no stars, no spacecraft, no signature")
+DRAWING = ("the drawing is small and loose on a small cream landscape card, with wide blank margins, mostly in the left and middle of the card: one sweeping, slightly curved diagonal band "
+           "rising from the lower left to the upper right, made of soft, loose coloured-pencil strokes that run along the band; from its outer (upper) edge inward: a broad black band, "
+           "a thin light-blue band, a yellow band, a thin orange-red line with a small red ball of the sun sitting on it near the middle of the band, then several layered blues below "
+           "(light blue to deep blue) whose strokes fray out at the lower edge. No Earth disc, no black background, no text, no stars, no spacecraft, no signature")
+PENCILS = ("short Soviet 'Taktika' coloured pencils from a flat blue-and-white cardboard box (as in the full photo reference): each pencil is tied with a thin white cotton thread, "
+           "the threads gathered to a small ring of green-coated wire")
 LOOK_TAIGA = ("Photorealistic, shot on 35mm film, documentary realism. March 1965, the Ural taiga of Perm Oblast: dense snow-covered spruce and pale birch forest, waist-deep snow, "
               "breath steaming at -25 C. A red-orange-and-white parachute hangs snagged in the treetops. Accurate 1965 Soviet details only: no modern clothing or gear, "
               "no orange coveralls, no helmets. Clear readable subjects, uncluttered frame. No on-screen text, no captions.")
@@ -218,17 +223,19 @@ PLATES.update({
         "curling his body round to turn and face the outer hatch: knees and elbows jam against the soft walls, his helmet bumps the fabric, he pushes with his gloves and twists, "
         "folding himself almost double, slow and exhausting. Behind the clear visor his face is drenched in sweat, the visor fogged at the edges, he breathes hard. "
         "His face is strained and grimacing with effort, jaw clenched, never smiling. One continuous shot, no cuts. Warm lamp light, cramped close framing on one figure, handheld camera. " + LOOK),
-    "drawing_hand": dict(duration=8, refs=["DRAW"], prompt=
-        "Steady top-down close-up: a hand draws with coloured pencils on a loose sheet of white paper lying on a plain table, soft even daylight. The hand is making the drawing in the reference image, "
-        "which is partly finished: the curved horizon arc and the dark blue-black hatched Earth below it are already there, and the thin red band along the rim. "
-        "Holding an orange pencil, the hand lays short strokes along the arc to build the orange band just above the red; then it picks up a red pencil and fills in the small red ball of the sun "
-        f"sitting on the rim, in a patch of blue. {DRAWING}. A few coloured pencils (red, orange, light blue, blue, violet, black) lie beside the sheet. "
-        "Visible pencil hatching and paper tooth. Only the hand and forearm, no face. Photorealistic, 35mm film. No on-screen text.", faces=False),
-    "leonov_drawing_hand": dict(duration=8, refs=["CAB", "DRAW", "LT"], prompt=
+    "drawing_hand": dict(duration=8, refs=["DRAW", "DRAWPH"], prompt=
+        "Steady top-down close-up: a hand draws with coloured pencils on a small cream card lying on a plain grey table, soft even daylight. The hand is making the drawing in the first reference image, "
+        "which is partly finished: the layered blues of the lower part of the diagonal band and the thin light-blue band are already there. Holding a black pencil, the hand lays long, loose, "
+        "sweeping strokes along the upper edge of the band, from lower left to upper right, building the broad black band; then it picks up a yellow pencil and sweeps the yellow band in below the light blue; "
+        "then with a red pencil it draws the thin orange-red line and colours the small red ball of the sun sitting on it near the middle. "
+        f"{DRAWING}. Beside the card lie the {PENCILS}. Visible soft pencil strokes and paper tooth. Only the hand and forearm, no face. "
+        "Photorealistic, 35mm film. No on-screen text.", faces=False),
+    "leonov_drawing_hand": dict(duration=8, refs=["CAB", "DRAW", "DRAWPH", "LT"], prompt=
         f"Inside the cramped Voskhod-2 capsule (first reference), weightless, March 1965. Close-up of the bare right hand of {LEO2}, the white sleeve of his Berkut suit with its rust-orange cuff visible, "
-        "drawing on a small loose sheet of white paper held against a log book on his knee. Four or five short coloured pencils float around his wrist, each tied on a thread to a rubber band round his wrist, "
-        "drifting slowly in zero gravity. With a blue pencil he hatches the blue band above a curved horizon. The picture on the paper is the one in the second reference: "
-        f"{DRAWING}. Warm light from a porthole, the instrument panel soft and out of focus behind. Camera close on hand and paper, the paper clearly readable. " + LOOK),
+        f"drawing on a small cream card held against a log book on his knee. His pencils are the {PENCILS}: the green wire ring is round his wrist and four or five short pencils float "
+        "around it on their white threads, drifting slowly in zero gravity. With a yellow pencil he sweeps long loose strokes along the diagonal band, below the black and light-blue bands. "
+        f"The picture on the card is the one in the second reference: {DRAWING}. Warm light from a porthole, the instrument panel soft and out of focus behind. "
+        "Camera close on hand and card, the card clearly readable. " + LOOK),
     "porthole_spin": dict(duration=6, refs=[], prompt=  # no cabin sheet: it shows the crew and trips the real-person filter
         "Inside the Voskhod-2 capsule, point of view through a small round porthole whose thick dark metal frame stays steady in the frame. The spacecraft is tumbling: "
         "through the glass the view sweeps past fast and repeatedly, the blue-white Earth, then black sky, then a hard white flash of the sun, then Earth again, over and over, strobing. "
