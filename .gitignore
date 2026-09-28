@@ -3,8 +3,10 @@ video/node_modules/
 video/out/
 video/plates/*/f*.jpg
 video/plates/*/m*.png
+# Seedance takes: the takes the film uses are committed (force-added); rejected takes stay local
 media/plates/*/take*.mp4
 media/**/*.png
+!media/stills/*.png
 media/audio/*.wav
 __pycache__/
 *.pyc
