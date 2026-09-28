@@ -149,19 +149,23 @@ async function initShots2() {
     const q = []; for (let y = 0; y <= H; y += 30) q.push([split + (hash2(y, d) - .5) * 3, y]); pen.poly(q, 'lead', 2.2, .9, .02); pen.flush(L.g); G.drawImage(L.c, 0, 0);
     subtitle(G, lineAt(t), t, { size: 58, y: H - 90, shadow: 6, split: { x: split, left: 'graphite', right: 'cream' } });
   });
-  // over her shoulder: she writes the line in her leather notebook. The lyric is written in graphite on the notebook's blank
-  // left page (her hand covers the right one), laid along the page as the plate sees it: the lines run with the head edge,
-  // the page recedes along the spine. NB_* are in jade_notebook plate pixels (960×540); the book does not move in the take.
-  const NB_LINES = [[404, 268], [385, 285], [369, 302]], NB_ALONG = [132, 51], NB_DOWN = [-137, 100];
-  shot('B2_float', BR[2].t0 - .05, BR[3].t0 - .05, async (t, lt) => {
+  // She writes the line in her leather notebook: a slow push onto the open book (a page shot, not a face close-up) so the
+  // handwriting reads on a phone. The lyric is written in graphite across the blank left page (her hand covers the right one),
+  // laid along the page as the plate sees it: the lines run with the head edge, the page recedes along the spine.
+  // NB_* are in jade_notebook plate pixels (960×540; the book does not move in the take). The left page: fore-edge
+  // (415,249)→(320,290), spine (540,300)→(390,397); her sleeve covers its lower-left corner. NB_LINES are the baselines' starts.
+  const NB_LINES = [[381, 270], [332, 291], [337, 332]], NB_ALONG = [125, 51], NB_DOWN = [-150, 97], NB_SIZE = 25, NB_AT = [455, 320];
+  shot('B2_float', BR[2].t0 - .05, BR[3].t0 - .05, async (t, lt, dur) => {
     paper(G, 'snow');
-    const { view } = await drawPlate(t, 'jade_notebook', .4 + lt, { paper: 'snow', face: false, view: { zoom: 1.06, cx: .53, cy: .53 }, hatch: { spacing: 6.2 } });
+    const z = lerp(2.3, 2.75, easeInOut(clamp(lt / dur)));
+    const { view } = await drawPlate(t, 'jade_notebook', .4 + lt, { paper: 'snow', face: false, aw: 960, ah: 540,
+      view: { zoom: z, cx: NB_AT[0] / 960, cy: NB_AT[1] / 540 }, hatch: { spacing: 6.2 } });
     const S = (x, y) => view.toScreen(x / 960, y / 540), dir = ([dx, dy]) => { const [x0, y0] = S(500, 300), [x1, y1] = S(500 + dx, 300 + dy), l = Math.hypot(x1 - x0, y1 - y0); return [(x1 - x0) / l, (y1 - y0) / l]; };
-    const [ax, ay] = dir(NB_ALONG), [bx, by] = dir(NB_DOWN), fy = .8;
+    const [ax, ay] = dir(NB_ALONG), [bx, by] = dir(NB_DOWN), fy = .85;
     const w = BR[2].words; // I'll never float where the sky turns red
     [["I'll never float", w[0][0] - .05, w[2][0] + .3], ['where the sky', w[3][0] - .05, w[5][0] + .3], ['turns red', w[6][0] - .05, w[7][0] + .45]].forEach(([s, t0, t1], i) => {
       const [x, y] = S(...NB_LINES[i]);
-      handwrite(t, s, x, y, t0, t1, { size: 38, col: 'graphite', page: [ax, ay, bx * fy, by * fy] });
+      handwrite(t, s, x, y, t0, t1, { size: NB_SIZE * W / 960 * z, col: 'graphite', page: [ax, ay, bx * fy, by * fy] });
     });
   });
   // under the red dusk sky, eyes lifted, one hand raised; chest-up, framed medium. With her head tilted back MediaPipe's mesh
