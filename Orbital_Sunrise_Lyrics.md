@@ -1,5 +1,3 @@
-Orbital Sunrise Lyrics
-
 \[Intro — filtered, low-passed vocal, half-whispered\]  
 First man floating in the void of space  
 Can’t feel his hands, can’t feel his face  
@@ -9,7 +7,7 @@ Can’t feel his hands, can’t feel his face
 \[Pre-Chorus — filter opens, snare roll builds\]  
 So he bleeds the air out, breath by breath  
 Dancing on the edge of a quiet death  
-let out his air through the glove he wore  
+Let his air out through the sleeve he wore  
 Ninety minutes inside the airlock door  
 \[Chorus / Hook\]  
  Orbital sunrise, burning gold  
@@ -23,8 +21,8 @@ Ninety minutes inside the airlock door
  I'll never float where the sky turns red  
  Never see what he saw ahead  
 \[Chorus / Hook\]  
- Orbital sunrise, burning gold  
- Orbital sunrise, bring me home  
+Art is a landing in the snow  
+Can't think can't write but my hands still know  
 \[Build — rising riser, vocal repeats and stacks\]  
  Guidance failed and the capsule spun  
  Doing the math with a spinning sun  
@@ -36,8 +34,8 @@ Ninety minutes inside the airlock door
  Off course… (but I'm) home…  
  Off course… (but I'm) home…  
 \[Outro — decisive ending\]  
- Fifteen hundred miles coming in hot  
- Fifteen hundred miles we overshot  
+ Fifteen hundred klicks coming in hot  
+ Fifteen hundred klicks we overshot  
  Made it down —  
  home.  
  Made it down —  
