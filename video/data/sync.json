@@ -29,5 +29,25 @@
   "mouth_corr": 0.269,
   "audio_corr": 0.157,
   "take": "take1.mp4"
+ },
+ "jade_hook1_v3": {
+  "lag": -0.1,
+  "source": "events",
+  "note": "lips close on the b of 'bring' and the m of 'me' at -0.1 s (mouth-curve peak +0.375 is the 'home' vowel only)",
+  "take": "take1.mp4"
+ },
+ "jade_studio": {
+  "lag": 0.0,
+  "source": "none",
+  "note": "the take holds one wide-open vowel from 0.6 s to 4.8 s: no articulation to sync",
+  "take": "take2.mp4"
+ },
+ "jade_brk_v3": {
+  "lag": 0.583,
+  "source": "mouth",
+  "mouth_corr": 0.503,
+  "audio_lag": 0.667,
+  "audio_corr": 0.845,
+  "take": "take2.mp4"
  }
 }

@@ -4,11 +4,13 @@ Source: the user's notes after watching v1. Facts: `docs/FACTS.md` (read it befo
 Shot times: `node video/render.mjs --list` (song seconds). New Seedance plates go in `tools/plate_specs.py`.
 
 ## Accuracy decisions (from FACTS.md)
-- Leonov's drawing: small loose coloured-pencil study on white paper (does not fill the sheet); curved horizon; Earth below
-  dark blue/black, no continents; bands from the rim up: red → orange → light blue → blue → violet → velvety black;
-  the Sun a red ball emerging from blue; no text, stars, spacecraft or signature. We could not download a photo of the
-  original, so we use a **reconstruction** from Leonov's description (`media/refs/leonov_drawing_reconstruction.png`),
-  and say so in the docs.
+- Leonov's drawing: the film now draws it from a **photo of the original** (a museum press photo, kept locally at
+  `media/refs/leonov_drawing_real_photo.jpg`, not committed), installed as the plate `leonov_drawing` by
+  `tools/install_drawing.py` (card cropped and white-balanced), not from a reconstruction. A small loose coloured-pencil
+  study on a cream landscape card (does not fill it): one sweeping diagonal arc from lower left to upper right; from the
+  outer edge in: black, light blue, yellow, orange-red with a small red sun on it, then layered blues; no Earth disc,
+  continents, text, stars, spacecraft or signature (docs/FACTS.md §4). The earlier reconstruction from Leonov's verbal
+  description (`media/refs/leonov_drawing_reconstruction.png`) is superseded.
 - Suit pressure: a two-mode regulator on the suit (not the backpack), 0.40 → 0.27 atm, one deliberate turn of a small
   tap (one source: blue tap at the solar plexus). Entry orientation is disputed (memoir: head-first; 1965 report:
   feet-first) — show the struggle without making the orientation the point.

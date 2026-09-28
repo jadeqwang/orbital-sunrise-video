@@ -87,8 +87,7 @@ async function drawPlate(t, id, tp, o = {}) {
     pen.flush(L.g, ord);
     contourField(pen, Fc, cv, { seed: dIdx * 19 + 7, pencil: night ? 'white' : 'graphite', hi: .2, lo: .08, minLen: 8, w: 1.2, alpha: .6, jit: .7, mask: faceMaskM, ...(o.faceContour || {}) });
     pen.flush(L.g, ord);
-    faceLines(pen, fm, view, { paper: o.paper ?? 'night', seed: dIdx, lips: !MG, ...(o.faceLines || {}) });
-    pen.flush(L.g, ord);
+    if (o.faceLines !== false) { faceLines(pen, fm, view, { paper: o.paper ?? 'night', seed: dIdx, lips: !MG, ...(o.faceLines || {}) }); pen.flush(L.g, ord); }   // false: unreliable landmarks, edges only
     if (MG) { drawMouth(pen, L.g, MG, { paper: o.paper ?? 'night', seed: dIdx }); pen.flush(L.g, ord); }
   }
   if (o.extra) { o.extra(pen, F, view, dIdx); pen.flush(L.g, ord); }
@@ -228,6 +227,7 @@ const _cc = {};
 function makeCanvasCached(k) { if (!_cc[k]) _cc[k] = makeCanvas(); return _cc[k]; }
 
 // Handwriting write-on: text revealed left→right with a pencil tip, grained like graphite.
+// o.page = [a, b, c, d]: lay the line on a page seen at an angle (text x → screen (a, b), text y → (c, d), about the anchor x, y)
 function handwrite(t, s, x, y, t0, t1, o = {}) {
   const k = clamp((t - t0) / (t1 - t0)); if (k <= 0) return;
   const L = typeLayer(), g = L.g, font = o.font ?? FONT.serif(o.size ?? 110);
@@ -239,7 +239,9 @@ function handwrite(t, s, x, y, t0, t1, o = {}) {
   text(g, s, x0, y, { font, col: o.col ?? 'graphite', alpha: .92, ls: o.ls });
   g.restore();
   if (k < 1) { const tx = x0 + w * k; g.fillStyle = P[o.col ?? 'graphite']; g.globalAlpha = .8; g.beginPath(); g.arc(tx, y - (o.size ?? 110) * .3 + Math.sin(t * 40) * 6, 3, 0, TAU); g.fill(); g.globalAlpha = 1; }
-  typeFlush(L, drawClock(t, 12).n, .8);
+  if (!o.page) { typeFlush(L, drawClock(t, 12).n, .8); return; }
+  const [a, b, c, d] = o.page;
+  G.save(); G.transform(a, b, c, d, x - a * x - c * y, y - b * x - d * y); typeFlush(L, drawClock(t, 12).n, .8); G.restore();
 }
 
 // Vocal-chop word slams: [[time, word, x, y, size, col]] — each word hits hard and fades by the next.
@@ -450,9 +452,10 @@ async function initShots() {
 
   // H1d · bring me home
   // the singer takes every "bring me home": her world is the white page (Earth, home)
+  // golden hour on the hilltop above the Golden Gate; framed medium (waist up), never pushed in on her face
   shot('H1d_home', H1[1].words[2][0] - .05, hk1, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'jade_hook1', tpSing('jade_hook1', t), { remouth: true, paper: 'snow', view: { zoom: 1.04, ox: 120 }, hatch: { spacing: 6.2 } });
+    await singer(t, 'jade_hook1_v3', { view: { zoom: 1.02 }, hatch: { spacing: 6.2, mask: quiet([[60, H - 270, 860, H - 90]], .75) } });
     const w = H1[1].words;
     lyricStack(t, [
       { s: 'bring me home', t: w[2][0], x: 110, y: H - 140, font: FONT.serif(124), col: 'crimson', style: 'rise' },
@@ -597,9 +600,15 @@ async function initShots() {
     tele(Lt.g, 'THE AIRLOCK IS CAST OFF', 60, 64, t, w[0][0] + .3, { size: 22, weight: 700, col: 'silver', dur: .6 });
     typeFlush(Lt, drawClock(t, 12).n, .3);
   });
+  // the recording studio at night: headphones on, singing into the condenser mic; medium shot.
+  // The take is dark and lit warm-red: lift it, hatch only its real darks (the face too, with only its stronger edges), keep
+  // the skin mostly graphite (sat), and let the dark room thin out toward the edges of the page so she and the mic carry the frame.
+  const studioSkin = (L, V) => .72 * Math.pow(smooth(clamp((.66 - (.55 * L + .45 * V)) / .56)), 1.6);   // at most three light layers: shadowed skin stays skin
+  const studioLight = (X, Y) => clamp(1.3 - Math.hypot((X - 1060) / 1.25, Y - 470) / 820, .3, 1) * quiet([[60, H - 270, 860, H - 90]], .75)(X, Y);
   shot('K4_home', H2[1].words[2][0] - .05, h21, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'jade_hook2', tpSing('jade_hook2', t), { remouth: true, paper: 'snow', view: { zoom: 1.05 }, hatch: { spacing: 6.2 } });
+    await singer(t, 'jade_studio', { view: { zoom: 1.02 }, ana: { gain: 1.7 }, lines: { contrast: 2.2, white: .62 },
+      hatch: { spacing: 6.2, mask: studioLight }, faceHatch: { tone: studioSkin, pencilOpt: { sat: .5 } }, faceContour: { hi: .28, lo: .11 } });
     const w = H2[1].words;
     lyricStack(t, [{ s: 'bring me home', t: w[2][0], x: 110, y: H - 140, font: FONT.serif(124), col: 'crimson', style: 'rise' }]);
   });
