@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "DRAW",
+   "DRAWPH"
+  ],
+  "prompt": "Steady top-down close-up: a hand draws with coloured pencils on a small cream card lying on a plain grey table, soft even daylight. The hand is making the drawing in the first reference image, which is partly finished: the layered blues of the lower part of the diagonal band and the thin light-blue band are already there. Holding a black pencil, the hand lays long, loose, sweeping strokes along the upper edge of the band, from lower left to upper right, building the broad black band; then it picks up a yellow pencil and sweeps the yellow band in below the light blue; then with a red pencil it draws the thin orange-red line and colours the small red ball of the sun sitting on it near the middle. the drawing is small and loose on a small cream landscape card, with wide blank margins, mostly in the left and middle of the card: one sweeping, slightly curved diagonal band rising from the lower left to the upper right, made of soft, loose coloured-pencil strokes that run along the band; from its outer (upper) edge inward: a broad black band, a thin light-blue band, a yellow band, a thin orange-red line with a small red ball of the sun sitting on it near the middle of the band, then several layered blues below (light blue to deep blue) whose strokes fray out at the lower edge. No Earth disc, no black background, no text, no stars, no spacecraft, no signature. Beside the card lie the short Soviet 'Taktika' coloured pencils from a flat blue-and-white cardboard box (as in the full photo reference): each pencil is tied with a thin white cotton thread, the threads gathered to a small ring of green-coated wire. Visible soft pencil strokes and paper tooth. Only the hand and forearm, no face. Photorealistic, 35mm film. No on-screen text.",
+  "faces": false
+ },
+ "secs": 155
+}

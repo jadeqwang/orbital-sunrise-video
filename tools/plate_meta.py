@@ -113,7 +113,17 @@ def face_of(rgb):
     return base + [lines]
 
 
-def measure(path):
+def faceless(pid):
+    """Plates specced with faces=False (hands, porthole, capsule) get no face data: stray landmarks there are false positives."""
+    try:
+        sys.path.insert(0, str(ROOT / "tools"))
+        from plate_specs import PLATES
+        return PLATES.get(pid, {}).get("faces", True) is False
+    except Exception:
+        return False
+
+
+def measure(path, faces=True):
     bgr = cv2.imread(str(path))
     im = cv2.resize(bgr, (320, 180), interpolation=cv2.INTER_AREA).astype(np.float32) / 255
     L = im[..., 2] * .2126 + im[..., 1] * .7152 + im[..., 0] * .0722
@@ -129,7 +139,7 @@ def measure(path):
             x, y = xs[sel].mean(), ys[sel].mean()
     return {"sun": [round(float(x) / 320, 4), round(float(y) / 180, 4), round(min(1.0, max(0.0, (peak - .6) / .4)), 3)],
             "lum": round(float(L.mean()), 4), "hot": round(float(hot.mean()), 5),
-            "face": face_of(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))}
+            "face": face_of(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)) if faces else None}
 
 
 def stats(pid):
@@ -159,7 +169,8 @@ def run(pid, force=False):
                 return
         except Exception:
             pass
-    meta = [measure(f) for f in frames]
+    faces = not faceless(pid)
+    meta = [measure(f, faces) for f in frames]
     out.write_text(json.dumps(meta, separators=(",", ":")))
     s = [m["sun"][2] for m in meta]
     nf = sum(1 for m in meta if m["face"])

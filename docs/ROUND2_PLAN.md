@@ -57,8 +57,8 @@ Specs: `tools/plate_specs.py` (round 2 block) and `tools/legacy_stills.py` (`STI
 | `airlock_struggle` | take1 | top-down at the Volga tube mouth: ballooned suit wedged in the round rim, gloves braced, straining |
 | `valve_bleed` | take2 | close on the suit chest: the gloved hand turns the small blue regulator tap at the solar plexus (not the backpack) |
 | `tube_struggle` | take2 | one shot inside the padded tube: he curls round toward the hatch, ending on his sweating, grimacing face |
-| `drawing_hand` | take1 | top-down hand finishing the reconstruction: orange strokes along the arc, then the red sun on the rim |
-| `leonov_drawing_hand` | take1 | Leonov's bare hand in the cabin, pencils tied to his wrist floating, hatching the blue band; the drawing appears on the pad |
+| `drawing_hand` | take2 | the **real** drawing (refs: museum photo, `media/refs/leonov_drawing_real_card.jpg` + `_photo.jpg`, gitignored): top-down hand on a small cream card, sweeps the black band along the diagonal arc, then yellow, then the red sun; the Taktika box with threaded pencils and the green wire ring beside it (take1, the reconstruction, is superseded) |
+| `leonov_drawing_hand` | take4 | the **real** drawing: Leonov's bare hand in the cabin colouring the red sun on the diagonal band (black, light blue, yellow, orange-red, blues); green wire loop on his wrist, Taktika pencils floating on white threads. Animated from a Nano Banana first frame (`media/refs/leonov_drawing_real_cabin_frame.png`, gitignored); takes 2–3 (refs only) drew the wrong picture and are archived |
 | `porthole_spin` | take1 | through a porthole while tumbling: Earth / black sweep past, then an orange plasma glow builds on the glass |
 | `reentry_outside` | take2 | wide: the small descent sphere with a pink-orange plasma sheath and a long trail over the dark Earth, black sky above |
 | `hatch_tree` | take2 | the capsule in the taiga with a white birch right in front of the hatch; a gloved hand in the gap (rocking is subtle) |
@@ -73,3 +73,8 @@ Specs: `tools/plate_specs.py` (round 2 block) and `tools/legacy_stills.py` (`STI
 | `leg_change4` | still | 2019 Chang'e 4 lander and Yutu-2 rover with tracks on the far side, no Earth in the sky |
 | `leg_chandrayaan3` | still | 2023 Vikram lander near the south pole, Pragyan rolling down its ramp, very low sun |
 | `leg_survivors` | still | Leonov and Belyayev after the rescue in sheepskin coats and fur hats, taiga and fire smoke behind, documentary look |
+| `jade_hook1_v3` | take1 | Jade v3 (her real likeness, glasses; sheets `media/chars/jade_v3_*`): golden hour on the hilltop above the Golden Gate and the city, waist-up, sings "bring me home" and lifts her eyes to the sky; song slice as audio ref |
+| `jade_studio` | take2 | Jade v3 in a recording studio at night, orange headphones on her head, singing into a large-diaphragm condenser mic with a pop filter, medium shot; `jade_hook2` slice as audio ref (take1 had the headphones round her neck, archived) |
+| `jade_brk_v3` | take2 | Jade v3 under a red dusk sky, chest-up, eyes lifted to the sky, raises one open hand; `jade_brk` slice as audio ref (take1 was framed wider with her face tilted away: landmarks in 11% of frames, archived) |
+| `jade_notebook` | take1 | over-the-shoulder, daylight by a window: Jade v3 (glasses, white jacket with orange band) writing lines in a leather-bound notebook with a pencil; no audio |
+| `jade_hand_writing` | take1 | close-up of her hand (white elastic cuff, orange band) writing lines in pencil in the leather-bound notebook, warm window light; no audio |

@@ -36,7 +36,7 @@ def run_plate(pid, force=False):
     existing = takes(pid)
     if existing and not force:
         return pid, str(existing[-1]), "exists"
-    n = len(existing) + 1
+    n = max((int(p.stem[4:]) for p in existing), default=0) + 1  # rejects move to media/archive: never reuse a number
     out = OUT / pid / f"take{n}.mp4"
     inp = {
         "prompt": spec["prompt"],

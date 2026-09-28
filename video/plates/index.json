@@ -499,9 +499,9 @@
   "fps": 24,
   "w": 960,
   "h": 540,
-  "take": "take1.mp4",
+  "take": "take4.mp4",
   "mattes": true,
-  "gain": 1.266
+  "gain": 1.0
  },
  "fire_night_v2": {
   "n": 193,
@@ -589,8 +589,53 @@
   "fps": 24,
   "w": 960,
   "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.301
+ },
+ "jade_hook1_v3": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
   "take": "take1.mp4",
   "mattes": true,
-  "gain": 1.178
+  "gain": 1.003
+ },
+ "jade_brk_v3": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.133
+ },
+ "jade_notebook": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.247
+ },
+ "jade_hand_writing": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.106
+ },
+ "jade_studio": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": true,
+  "gain": 1.288
  }
 }

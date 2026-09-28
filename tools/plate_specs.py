@@ -190,7 +190,9 @@ PLATES.update({
 # ---------------- round 2 (docs/ROUND2_PLAN.md; facts from docs/FACTS.md) ----------------
 # DRAW is the real drawing (museum photo, white-balanced crop of the card); DRAWPH is the full photo with his pencil kit.
 # Both are gitignored (reference only, not redistributed). The earlier reconstruction (media/refs/leonov_drawing_reconstruction.png) was wrong.
-R.update({"DRAW": "media/refs/leonov_drawing_real_card.jpg", "DRAWPH": "media/refs/leonov_drawing_real_photo.jpg"})
+R.update({"DRAW": "media/refs/leonov_drawing_real_card.jpg", "DRAWPH": "media/refs/leonov_drawing_real_photo.jpg",
+          # Nano Banana still made from CAB + DRAW + DRAWPH (media/genlog.jsonl tag ff:leonov_drawing_hand); gitignored like the photos it copies
+          "DRAWFF": "media/refs/leonov_drawing_real_cabin_frame.png"})
 LEO2 = "the cosmonaut Alexei Leonov (face and suit exactly as in his reference images)"
 DRAWING = ("the drawing is small and loose on a small cream landscape card, with wide blank margins, mostly in the left and middle of the card: one sweeping, slightly curved diagonal band "
            "rising from the lower left to the upper right, made of soft, loose coloured-pencil strokes that run along the band; from its outer (upper) edge inward: a broad black band, "
@@ -230,12 +232,14 @@ PLATES.update({
         "then with a red pencil it draws the thin orange-red line and colours the small red ball of the sun sitting on it near the middle. "
         f"{DRAWING}. Beside the card lie the {PENCILS}. Visible soft pencil strokes and paper tooth. Only the hand and forearm, no face. "
         "Photorealistic, 35mm film. No on-screen text.", faces=False),
-    "leonov_drawing_hand": dict(duration=8, refs=["CAB", "DRAW", "DRAWPH", "LT"], prompt=
-        f"Inside the cramped Voskhod-2 capsule (first reference), weightless, March 1965. Close-up of the bare right hand of {LEO2}, the white sleeve of his Berkut suit with its rust-orange cuff visible, "
-        f"drawing on a small cream card held against a log book on his knee. His pencils are the {PENCILS}: the green wire ring is round his wrist and four or five short pencils float "
-        "around it on their white threads, drifting slowly in zero gravity. With a yellow pencil he sweeps long loose strokes along the diagonal band, below the black and light-blue bands. "
-        f"The picture on the card is the one in the second reference: {DRAWING}. Warm light from a porthole, the instrument panel soft and out of focus behind. "
-        "Camera close on hand and card, the card clearly readable. " + LOOK),
+    # Animated from a Nano Banana first frame (DRAWFF: the real card on his knee in the cabin). Takes 2-3 were generated from reference images alone
+    # (CAB, DRAW, DRAWPH, LT; prompts in media/archive/plates/leonov_drawing_hand_take*.json) and drew the wrong picture on the card.
+    "leonov_drawing_hand": dict(duration=8, first_frame="DRAWFF", refs=["DRAW", "DRAWPH"], faces=False, prompt=
+        f"Inside the cramped Voskhod-2 capsule, weightless, March 1965: high-angle close-up of the bare right hand of {LEO2} drawing on a small cream card on a log book on his knee, as in the first frame. "
+        f"The card shows the drawing in the first reference and it stays exactly as it is: {DRAWING}. With the short red pencil he colours the small red ball of the sun "
+        "with a few gentle circular strokes, then lifts his hand away a little so the whole drawing is visible. "
+        f"His pencils are the {PENCILS}; the green wire loop is on his bare wrist and the short pencils drift slowly on their white threads in zero gravity. "
+        "Warm light from the porthole, the panel soft and out of focus. Locked-off camera with a very slow drift; the card stays in the centre of the frame. Only his hand, no face. " + LOOK),
     "porthole_spin": dict(duration=6, refs=[], prompt=  # no cabin sheet: it shows the crew and trips the real-person filter
         "Inside the Voskhod-2 capsule, point of view through a small round porthole whose thick dark metal frame stays steady in the frame. The spacecraft is tumbling: "
         "through the glass the view sweeps past fast and repeatedly, the blue-white Earth, then black sky, then a hard white flash of the sun, then Earth again, over and over, strobing. "
@@ -285,13 +289,16 @@ PLATES.update({
         f"{MEDIUM} Slow, gentle push-in that stays medium. " + LOOK_NOW),
     "jade_studio": dict(duration=5, refs=["J3T", "J3F", "J3H"], audio=["media/audio_refs/jade_hook2.mp3"], generate_audio=True, prompt=
         f"A small professional recording studio at night: acoustic foam panels, warm practical lamps, a glowing mixing desk out of focus behind the glass. "
-        f"{JADE3}; in this shot she wears the orange-foam headphones over her ears and keeps her glasses on. She sings into a large-diaphragm studio condenser microphone "
-        f"on a stand with a round black pop filter in front of it, set just below and to one side of her mouth so her whole face stays visible. {SING} "
+        f"{JADE3}. In this shot, unlike the references, her orange-foam headphones are worn ON HER HEAD: the thin silver headband arches over the top of her head and the round "
+        "orange foam pads cover both ears, a thin cable running down from them; nothing around her neck. She keeps her glasses on. She sings into a large-diaphragm studio condenser microphone "
+        f"on a stand, with a round black mesh pop filter clipped between the microphone and her mouth, set just below and to one side of her mouth so her whole face stays visible. {SING} "
         f"{MEDIUM} Three-quarter angle, the microphone and pop filter in the foreground of the frame, steady camera. " + LOOK_NOW),
     "jade_brk_v3": dict(duration=8, refs=["J3T", "J3F", "J3H"], audio=["media/audio_refs/jade_brk.mp3"], generate_audio=True, prompt=
-        f"Dusk on the grassy hilltop above San Francisco: the whole sky has turned deep red and orange. {JADE3} stands under the red sky, looking up at it and singing, "
-        f"then slowly raises one open hand toward the sky as if reaching for something she can't touch. {SING} "
-        f"{MEDIUM} Low angle, the red sky filling the space behind her, strong warm rim light on her hair and glasses. " + LOOK_NOW),
+        f"Dusk on the grassy hilltop above San Francisco: the whole sky has turned deep red and orange. {JADE3} stands under the red sky singing, her eyes lifted up to the sky, "
+        f"her chin raised only a little so her face stays turned three-quarters toward the camera and clearly readable the whole time; "
+        f"she slowly raises one open hand toward the sky as if reaching for something she can't touch. {SING} "
+        "Medium shot from the chest up, her raised hand entering the frame, space around her head; her face never fills the frame. "
+        "Camera at chest height, slightly low, the red sky filling the space behind her, soft warm light on her face, rim light on her hair and glasses. " + LOOK_NOW),
     "jade_notebook": dict(duration=6, refs=["J3T", "J3H", "J3F"], prompt=
         f"Soft daylight from a large window. Over-the-shoulder shot from behind and slightly above her right shoulder: {JADE3} sits at a wooden desk by the window, "
         "writing lyrics with a graphite pencil in an open leather-bound notebook with cream pages. We see her shoulder and the white sleeve of her jacket, her long black hair, "
