@@ -322,3 +322,15 @@ for _v3, _v4 in [("jade_hook1_v3", "jade_hook1_v4"), ("jade_studio", "jade_studi
     _s["refs"] = [_V4_REF.get(r, r) for r in _s["refs"]]
     _s["prompt"] = _s["prompt"].replace(JADE3, JADE4)
     PLATES[_v4] = _s
+# v4 retakes: take1 of studio had bulky ear-defender cups and the pop filter over her mouth; brk tipped her head far back; notebook lost the jacket's orange band
+PLATES["jade_studio_v4"]["prompt"] = PLATES["jade_studio_v4"]["prompt"].replace(
+    "cover both ears, a thin cable",
+    "cover both ears (slim, light on-ear headphones exactly like the pair in the references, small flat foam pads, not bulky ear defenders or earmuffs), a thin cable").replace(
+    "set just below and to one side of her mouth so her whole face stays visible.",
+    "set off to one side of her face at chin level, never in front of her mouth: her lips, chin and whole face stay clear and visible the whole time.")
+PLATES["jade_brk_v4"]["prompt"] = PLATES["jade_brk_v4"]["prompt"].replace(
+    "her chin raised only a little",
+    "her head almost level: she looks up with her eyes and tips her chin up only slightly, never throwing her head back,")
+PLATES["jade_notebook_v4"]["prompt"] = PLATES["jade_notebook_v4"]["prompt"].replace(
+    "We see her shoulder and the white sleeve of her jacket,",
+    "We see her shoulder and the white nylon sleeve of her cropped flight jacket with its bright orange band around the upper arm, in sharp focus,")
