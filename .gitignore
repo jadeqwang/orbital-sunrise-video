@@ -12,3 +12,5 @@ __pycache__/
 *.pyc
 release/web/*
 !release/web/index.html
+# museum press photo of Leonov's drawing: reference only, not redistributed
+media/refs/leonov_drawing_real*

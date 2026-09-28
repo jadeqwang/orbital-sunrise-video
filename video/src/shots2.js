@@ -19,11 +19,12 @@ async function idCard(t, lt, dur, o) {
   typeFlush(L, drawClock(t, 12).n, .3);
 }
 
-// Leonov's "Orbital Sunrise", redrawn on white paper from the reconstruction (plate `leonov_drawing`: one still of the whole
-// sheet). It is drawn the way he drew it: short coloured-pencil strokes laid along the bands (a stroke cloud that follows the
+// Leonov's "Orbital Sunrise", redrawn on white paper from a photo of the original (plate `leonov_drawing`, built by
+// tools/install_drawing.py: the whole card, white-balanced). It is drawn the way he drew it: short coloured-pencil strokes laid along the bands (a stroke cloud that follows the
 // plate's flow), the colour picked from the plate and the bare sheet left as paper. The pencil box has no violet, so the
-// violet band is ultramarine with a few crimson strokes through it. No contours: the original has no outlines, and no text.
-// k: 0..1 draw-on progress (left → right across the study); view: plate view on screen (the study spans u .26–.74, v .29–.68).
+// No contours: the original has no outlines, and no text. Bands from the outer edge in: black, light blue, yellow,
+// orange-red with the red sun, then layered blues.
+// k: 0..1 draw-on progress (left → right across the study); view: plate view on screen (the study spans u .12–.76, v .08–.86).
 const DRAW_PENCIL = (r, g, b, t, o, rnd) => {
   const [h, s, v] = hsv(r, g, b);
   if (s < .1 && v > .7) return null;                                              // the sheet itself
@@ -32,8 +33,8 @@ const DRAW_PENCIL = (r, g, b, t, o, rnd) => {
   if (v < .17 || warmGrey || (s < .22 && v < .6)) return v < .34 ? (rnd < .15 ? 'lead' : 'graphite') : (rnd < .5 ? 'graphite' : 'lead');
   if (h >= 245 && h < 320) return rnd < .78 ? 'ultra' : 'crimson';               // violet (top band)
   if (h < 14 || h >= 320) return 'verm';                                          // the red rim and the red sun
-  if (h < 50) return 'orange';
-  if (h < 170) return 'gold';
+  if (h < 36) return rnd < .7 ? 'orange' : 'verm';
+  if (h < 170) return 'gold';                                                     // the yellow band
   if (h < 212) return v > .5 ? 'sky' : 'ultra';                                   // light blue (just above the orange)
   return v > .5 ? 'cobalt' : 'ultra';                                             // blue; the dark Earth below the rim
 };
@@ -41,12 +42,13 @@ const DRAW_PENCIL = (r, g, b, t, o, rnd) => {
 const DRAW_LAYERS = [{ ang: -0.25, th: .13, sp: 5.2, w: 1.9, a: .9 }, { ang: 0.85, th: .36, sp: 5.6, w: 1.8, a: .9 }, { ang: -1.35, th: .58, sp: 5, w: 1.8, a: .9 }, { ang: 0.1, th: .8, sp: 4.4, w: 1.9, a: .95, dark: true }];
 const DRAW_TONE = (L, V) => Math.max(Math.pow(smooth(clamp((.84 - (.55 * L + .45 * V)) / .7)), 1.1), V - L > .08 ? .24 + .46 * clamp((V - L - .06) * 3.2) : 0);
 async function leonovDrawing(t, k, view, o = {}) {
-  const z = view.zoom ?? 1, ox = view.ox ?? 0, x0 = W / 2 + ox + (.26 - (view.cx ?? .5)) * W * z, x1 = W / 2 + ox + (.74 - (view.cx ?? .5)) * W * z;
+  const z = view.zoom ?? 1, ox = view.ox ?? 0, x0 = W / 2 + ox + (.12 - (view.cx ?? .5)) * W * z, x1 = W / 2 + ox + (.76 - (view.cx ?? .5)) * W * z;
   const key = (X, Y, h) => clamp((X - x0) / (x1 - x0)) * .88 + h * .12;
   const d = drawClock(t, o.rate ?? 12).n, j = (hash(d * 3 + 1) - .5) * 1.6, j2 = (hash(d * 3 + 2) - .5) * 1.6;   // the stroke layout boils a little
   return drawPlate(t, 'leonov_drawing', 0, { hold: 0, rate: o.rate ?? 12, paper: 'snow', view, face: false, hatch: false, contour: false, silhouette: false, matte: false,
-    extra: (pen, F, v) => hatchField(pen, F, v, { paper: 'snow', seed: 5, tone: () => .9, pencil: DRAW_PENCIL, spacing: o.spacing ?? 4.2,
-      len: [12, 28], w: [1.7, 2.3], alpha: [.85, .95], angle: -.22, follow: 1, cross: .8, crossAngle: 1.2, gamma: 1,
+    // light, layered strokes along the arc: density follows how much pigment is on the card
+    extra: (pen, F, v) => hatchField(pen, F, v, { paper: 'snow', seed: 5, tone: L => .3 + .62 * clamp((.95 - L) / .5), pencil: DRAW_PENCIL, spacing: o.spacing ?? 4,
+      len: [16, 36], w: [1.3, 2.1], alpha: [.55, .9], angle: -.45, follow: 1, cross: .88, crossAngle: .5, gamma: 1.1,
       region: [j, j2, W + j, H + j2], reveal: k, revealKey: key }) });
 }
 
@@ -100,7 +102,7 @@ async function initShots2() {
     G.save(); card(G); G.clip(); G.rotate(-rot); G.translate(-cx, -cy); paper(G, 'snow'); G.restore();
     // the drawing draws itself across the card, then boils
     G.save(); card(G); G.clip(); G.rotate(-rot); G.translate(-cx, -cy);
-    await leonovDrawing(t, easeOut(clamp(lt / (dur * .7))), { zoom: 1.28, ox: drift[0], oy: drift[1] - 30, rot });
+    await leonovDrawing(t, easeOut(clamp(lt / (dur * .7))), { zoom: .84, ox: drift[0], oy: drift[1] - 30, rot });
     G.restore();
     G.save(); card(G); G.strokeStyle = 'rgba(0,0,0,.25)'; G.lineWidth = 2; G.stroke(); G.restore();
     const Lt = typeLayer();
@@ -401,10 +403,10 @@ async function initShots2() {
       { s: 'SURVIVED', t: B(LEG_END + 2), x: W / 2, y: 480, size: 240, align: 'center', col: 'verm', style: 'slam', ls: 6 },
     ]);
   });
-  // 3:51 · the drawing (the reconstruction), alone on the white page
+  // 3:51 · the drawing, alone on the white page
   shot('C1_drawing', CARD1, e0, async (t, lt, dur) => {
     paper(G, 'snow');
-    await leonovDrawing(t, easeOut(clamp(lt / 1.6)), { zoom: 1.32, oy: 100 }, { rate: 8 });
+    await leonovDrawing(t, easeOut(clamp(lt / 1.6)), { zoom: .8, ox: 120, oy: 130 }, { rate: 8 });
     handwrite(t, 'The cosmonauts and the artwork survived.', W / 2, 200, CARD1 + .6, CARD1 + 3.0, { size: 88, align: 'center', col: 'graphite' });
   });
   shot('Z_title', e0, 999, async (t, lt) => {

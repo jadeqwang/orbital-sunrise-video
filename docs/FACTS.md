@@ -31,11 +31,19 @@ Network note: WebFetch and curl to Wikipedia, Smithsonian, RussianSpaceWeb, Flic
 
 ## 4. Leonov's real "Orbital Sunrise" drawing
 
-- **Medium [solid]:** **coloured pencils** (Soviet *Taktika* brand, tied on threads, held to his wrist with a rubber band) on a **loose sheet of white paper**. The image is small, **about the length of one pencil**, and **does not fill the sheet**. Traditionally dated **18 March 1965** and said to be drawn aboard Voskhod 2. It is held at the Gagarin Cosmonaut Training Centre museum and was shown at the Science Museum, London, in 2015. Nothing independent documents that it was drawn in orbit rather than soon after [weak]. A separate **post-landing** Leonov drawing also exists (MK, 2016).
-- **Composition [solid in outline, weak in detail]:** a **curved horizon arc** with **Earth below it in dark blue and black**, indicated only by the curve, with no continents. Leonov described the bands above the limb, bottom to top: **bright red → orange → light blue → blue → violet → velvety black.** The **Sun is a red ball emerging from a field of blue.** The top is a deep swathe of black. It is fairly abstract. **No reliable source mentions stars, continents, a spacecraft, or a title, signature or date written on the sheet.** Treat any of those as invented.
-- **Image:** I found no Wikimedia Commons file; it is probably still under copyright. The best-known reproduction is the Gagarin CTC museum photo, reposted on [Flickr](https://www.flickr.com/photos/199284959@N05/54325336951). **The download was blocked** (Flickr and Commons refused by the proxy), so there is no `leonov_drawing_real.jpg`.
-- **On screen:** a small, loose pencil study with white margins, arcs across the sheet, a soft red-orange rim fading through blues into heavy black, a red sun on the rim, and no text.
-- Sources: [ClimateCultures](https://climatecultures.net/museum-of-the-anthropocene/material-culture-inside-the-museum/orbital-sunrise-sketch-alexei-leonov/) · [Hyperallergic](https://hyperallergic.com/the-first-artwork-made-in-outer-space/) · [It's Nice That](https://www.itsnicethat.com/news/first-drawing-in-space-cosmonauts-science-museum) · [TechInsider (Leonov's colour description)](https://www.techinsider.ru/technologies/1564565-pervyy-risunok-v-kosmose-sdelal-sovetskiy-kosmonavt-posmotrite-na-etu-kartinu/) · [Lenta 2015](https://lenta.ru/news/2015/09/01/leonov/) · [MK 2016](https://www.mk.ru/science/2016/04/12/obnarodovan-neizvestnyy-risunok-kosmonavta-leonova-sdelannyy-posle-prizemleniya.html)
+- **Now confirmed from a museum photo of the original** (supplied by the user; kept locally at
+  `media/refs/leonov_drawing_real_photo.jpg`, not committed). A small landscape card of cream paper, not filled. One
+  loose, sweeping diagonal arc rising from lower left to upper right, drawn in soft coloured-pencil strokes that follow
+  the arc. From the outer (upper) edge in: **black**, **light blue**, **yellow**, **orange-red** with a **small red sun**
+  sitting on it near the middle, then several layers of **blue** (light to dark) below. No Earth disc, continents,
+  stars, spacecraft, text or signature on the card.
+- **The pencils:** a Soviet *Taktika* (Тактика) box (blue, with a map pattern), the pencils tied with white threads, and a
+  green wire ring (the loop that held the set to his wrist).
+- Leonov's verbal description (red → orange → light blue → blue → violet → black) roughly matches but the photo is the
+  authority: the film's drawing (`leonov_drawing` plate, `tools/install_drawing.py`) is redrawn from the photo.
+- Held at the Gagarin Cosmonaut Training Centre museum; shown at the Science Museum, London, in 2015. Whether it was drawn
+  in orbit or shortly after is not independently documented [weak].
+- Sources: [ClimateCultures](https://climatecultures.net/museum-of-the-anthropocene/material-culture-inside-the-museum/orbital-sunrise-sketch-alexei-leonov/) · [Hyperallergic](https://hyperallergic.com/the-first-artwork-made-in-outer-space/) · [It's Nice That](https://www.itsnicethat.com/news/first-drawing-in-space-cosmonauts-science-museum) · [TechInsider (Leonov's colour description)](https://www.techinsider.ru/technologies/1564565-pervyy-risunok-v-kosmose-sdelal-sovetskiy-kosmonavt-posmotrite-na-etu-kartinu/)
 
 ## 5. Polaris Dawn EVA suit (12 Sep 2024)
 
