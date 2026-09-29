@@ -1,0 +1,9 @@
+{
+ "spec": {
+  "duration": 6,
+  "faces": false,
+  "first_frame": "media/refs/jade_hand_sleeve_from_take2.jpg",
+  "prompt": "Soft daylight from a window. Close-up of a woman's right hand (the white nylon sleeve of the cropped flight jacket in the reference, with its ribbed white cuff at the wrist) writing lyrics with a graphite pencil in an open leather-bound notebook with cream paper on a wooden desk. The page fills most of the frame; lines of handwriting in pencil flow across it as she writes, the pencil tip and the graphite line clearly visible, paper texture, the leather cover at the edges of the frame. Only the hand, wrist and notebook, no face. Steady, locked-off camera slightly above. Photorealistic, shot on 35mm film. No on-screen text, no captions."
+ },
+ "note": "take 2 rebuilt: first frame recovered from take2.sheet.jpg, no reference image (take 3 with it came out portrait)"
+}
