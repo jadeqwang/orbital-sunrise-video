@@ -487,17 +487,17 @@ async function initShots() {
 
   // H1d · bring me home
   // the singer takes every "bring me home": her world is the white page (Earth, home)
-  // Her kept drawing, animated singing (take 3, approved), laid on the page as it is: no redraw, no re-mouthing. Its lips were
-  // matched to her vocal by ear: song time = 30.9 + 1.15 + take time (docs/HANDOFF_JADE.md).
+  // Her kept drawing, animated singing, never redrawn or re-mouthed; lips matched to her vocal by ear: song time = 30.9 + lag +
+  // take time (jade_loc: lag -0.22; the plain-paper take jade_sing3: 1.15). See docs/HANDOFF_JADE.md.
   shot('H1d_home', H1[1].words[2][0] - .05, hk1, async (t, lt) => {
     paper(G, 'snow');
-    // her drawing with the film's pencil engine going over it at half strength, so she boils like the other shots (her pick, "1B").
-    // Review variants: ?h1d=plain (the drawing alone), ?h1d=js (the engine redraws her completely; loses her face)
-    const exp = new URLSearchParams(location.search).get('h1d') ?? 'over';
-    // ?h1d=loc: on location (the model drew the Hill Country around her, her own face kept; take A, lips +0.58 s);
-    // ?h1d=locfade: the same with everything but her face and hair faded toward the paper (tools/jade_fade.py --head)
+    // On location (her pick): the model drew the Hill Country around her kept drawing, her own face kept, animated singing,
+    // with the film's pencil engine over it at half strength so she boils like the other shots (as in "1B").
+    // Review variants: ?h1d=over (1B: the plain-paper take), ?h1d=plain, ?h1d=js (engine only; loses her face), ?h1d=locfade
+    const exp = new URLSearchParams(location.search).get('h1d') ?? 'loc';
+    // ?h1d=locfade: everything but her face and hair faded toward the paper (tools/jade_fade.py --head); she found it goofy
     const loc = exp === 'loc' || exp === 'locfade', id = loc ? (exp === 'loc' ? 'jade_loc' : 'jade_locfade') : 'jade_sing3';
-    const lag = +(new URLSearchParams(location.search).get('h1dlag') ?? .58);   // review: try lip timings by ear
+    const lag = +(new URLSearchParams(location.search).get('h1dlag') ?? -.22);  // her pick by ear ("G"); ?h1dlag= tries others
     const tp = loc ? t - (30.9 + lag) : t - 32.05;
     if (exp !== 'js') await paperTake(id, tp);
     if (exp !== 'plain') {
