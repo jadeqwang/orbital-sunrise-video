@@ -129,15 +129,34 @@ FIXES = {
         "3) Light her from the front: a soft studio light in front of her and a little to one side, off-camera, so her face is "
         "evenly and softly lit, with only the faint cool glow of the control-room window behind her on her hair. "
         + NO_GLASSES_SHADOW + "No text, no border."),
+    # 1:09 · her second round of notes: glasses shadow still there, headphones still not hers, arm still holding the camera,
+    # the engineer too realistic. image 2 = her drawing with the headphones, image 3 = a photo of the real pair
+    "studio_fix2": ("Edit image 1, keeping it the same drawing, framing, style and lighting, and keeping her face, head size, hair, "
+        "glasses and jacket exactly as they are. Make four changes only. 1) Her headphones must be exactly her real pair, shown "
+        "drawn in image 2 and photographed in image 3 (Sony, matte pale dusty pink): a smooth seamless headband with no padding "
+        "segments, slim arms sliding out of it with a thin copper-coloured ring, and large smooth oval ear cups with no visible "
+        "hinges or screws; the band over the top of her hair, the cups over her ears. 2) Her arm is no longer reaching toward "
+        "the camera: both arms hang relaxed at her sides, below the bottom of the picture, her shoulders level and natural, "
+        "as a singer standing at a microphone. 3) " + NO_GLASSES_SHADOW.replace("Remove that shadow", "Remove that shadow "
+        "completely: no dark band under the lenses") + "4) The sound engineer behind the window is a loose, lo-fi pencil "
+        "sketch: a few quick graphite lines and soft smudged shading, barely any detail, like a rough sketch in the margin, "
+        "clearly less finished than she is. No text, no border."),
+    # her note: "the background can be kept a little bit loose"
+    "loosen": ("Edit image 1, keeping her exactly as she is: her face, head, hair, glasses, headphones, jacket, pose and the light "
+        "on her unchanged. Redraw only the background behind her more loosely, like a quick pencil sketch around a finished "
+        "figure: quicker, freer graphite and coloured-pencil strokes, much less detail, simplified shapes, some bare paper showing "
+        "through, edges left rough. Keep the same composition, places, colours and light direction. She stays the most finished "
+        "thing in the picture. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
 
 
 def fix(edited, prefix, name, extra=None, n=2):
-    """Touch up an existing scene edit (FIXES[name]); extra = a second reference image (e.g. her headphones)."""
+    """Touch up an existing scene edit (FIXES[name]); extra = further reference image(s) (e.g. her headphones)."""
     import concurrent.futures as cf
-    imgs = [cfai.data_uri(edited)] + ([cfai.data_uri(extra)] if extra else [])
+    extra = [] if extra is None else ([extra] if isinstance(extra, str) else list(extra))
+    imgs = [cfai.data_uri(edited)] + [cfai.data_uri(e) for e in extra]
     inp = {"prompt": FIXES[name], "image_input": imgs, "aspect_ratio": "16:9", "output_format": "png", "image_size": "2K"}
     with cf.ThreadPoolExecutor(n) as ex:
         return list(ex.map(lambda i: cfai.gen("google/nano-banana-pro", inp, f"{prefix}_{i}.png", tag="jade_location_fix")[0][0], range(1, n + 1)))
