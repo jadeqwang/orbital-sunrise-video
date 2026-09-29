@@ -296,6 +296,24 @@ FIXES = {
         "becomes the one in image 2: an open platform edge high above a sea of clouds at night, a deep blue sky with small white "
         "stars, long thin support wires running diagonally down across the sky, and the small orange box at the platform's edge. "
         "Keep image 1's loose coloured-pencil style and night light. Do not copy image 2's face or pose. No text, no border."),
+    # her ask: make try 5's face (image 1) more like result 2's face (image 2), redrawn at try 5's own angle, not pasted
+    "rare_face_match": ("Image 2 is a close-up of the same woman as in image 1, and it is her true likeness. Redraw only her face "
+        "in image 1 so it looks like the face in image 2: the same eye shape and the shape of her eyelids, the same nose, the "
+        "same lips and mouth, the same wide heart-shaped face with its tapering chin, the same cheeks and the same two slightly "
+        "different eyebrows, as the same East Asian woman. Keep image 1's head angle, head size and position, her forehead and "
+        "its shape, her hairline and hair, glasses, headphones, expression, the whole body, pose, clothes, the setting, the camera "
+        "and the loose coloured-pencil style exactly as they are. No makeup, no added lines. No text, no border."),
+    # her notes on rare_face_match: say that her eyebrows differ from each other, and that her forehead must be recognisable
+    "rare_face_match2": ("Image 2 is a close-up of the same woman as in image 1, and it is her true likeness. Redraw her face and "
+        "the top of her head in image 1 so she is recognisably the woman in image 2, at image 1's head angle. Two things matter "
+        "most: 1) her eyebrows are slightly different from each other, one a little higher and more arched than the other, "
+        "exactly as in image 2; do not make them symmetrical. 2) her forehead: the same high, broad, rounded forehead as in "
+        "image 2, just as tall above her brows in proportion to her face. Get that height from the full size of her head, "
+        "the top of her head rising higher, with her hair still full and thick on top and at the sides; do not push her "
+        "hairline back or thin her hair, and do not shrink her head. Also match image 2's eye and eyelid shape, nose, lips, "
+        "wide heart-shaped face and tapering chin, as the same East Asian woman. Keep her glasses, headphones, expression, "
+        "the whole body, pose, clothes, setting, camera and the loose coloured-pencil style as in image 1. No makeup, no added "
+        "lines. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
