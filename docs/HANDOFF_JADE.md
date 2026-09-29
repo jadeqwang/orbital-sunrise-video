@@ -149,3 +149,14 @@ and commit. Work on `main`. Commit messages end with the session's Co-Authored-B
 - Her notes that shaped these: light must be consistent (no lamp behind her lighting her face), no selfie arm, headphones
   must be her real pair and not doubled on the neck, backgrounds and props "a little bit loose", no mixing desk visible.
 - 1:51 notebook and 2:02/2:06 hand shots are unchanged (no face).
+
+## Released (2026-09-29)
+
+- Full render and release with her three singing shots on location, the 2:02 writing hand take 4, and the first-HOLD-ON
+  tumble. Watch page https://claude.ai/artifact/TYmS3GPKvHH3f1i45QrjJ5 republished in five batches under 58 MB.
+- Rebuilding a fresh container for a render: `tools/extract_plates.py id:take ...` with explicit ids (never bare: it would
+  squash the 1280x720 / portrait jade_* location plates, and it deletes each folder's committed meta.json/stats.json, so
+  `git checkout -- $(git ls-files --deleted video/plates)` afterwards, and restore index.json); leg_* stills from
+  media/stills; `pip install rembg onnxruntime soundfile`; `tools/plate_masks.py` (~90 min on 4 cores);
+  `tools/install_drawing.py` needs her photo at media/refs/leonov_drawing_real_photo.jpg (not committed);
+  `tools/extend_ending.py`. The container had no ffprobe: a duration-only stand-in at /usr/local/bin/ffprobe was enough.
