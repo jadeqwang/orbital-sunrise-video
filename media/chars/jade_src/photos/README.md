@@ -12,3 +12,7 @@ Shared by Jade for this project (face likeness for the character sheets). The cr
 - `jade_photo_8_threequarter_scarf.jpg`: 3/4, hair pulled back
 - `jade_photo_9_threequarter_hairline.jpg`: 3/4, current, clearest view of her high hairline and forehead
 - `jade_photo_10_threequarter_updo.jpg`: older, 3/4, hair up
+- `jade_photo_11_ah_big.jpg` / `jade_photo_12_ah_soft.jpg`: singing "ah", big and softer, from slightly above, glasses, her real headphones
+- `jade_photo_13_profile_right.jpg` / `jade_photo_14_profile_left.jpg`: profiles (facing right / facing left), glasses, her real headphones
+
+Her actual headphones (use in every scene where she wears headphones): pale dusty-pink matte over-ear headphones with large rounded ear cups and a wide padded headband with a slim sliding arm.
