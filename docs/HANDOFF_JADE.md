@@ -105,3 +105,20 @@ Show her intermediate results early and small; she reads them on her phone.
 To release: full render (`cd video && node render.mjs --frames=0:242.2 --workers=4`), then `tools/encode_release.sh`,
 `tools/package_hls.sh`, republish the watch page (https://claude.ai/artifact/TYmS3GPKvHH3f1i45QrjJ5, in batches under 58 MB)
 and commit. Work on `main`. Commit messages end with the session's Co-Authored-By / Claude-Session lines.
+
+## Update: singing works (0:32 approved)
+
+- **Stills:** the kept drawing itself is the shot, laid on the film's Snow paper by multiply (`tools/jade_keep.py`, review `keep_a`):
+  "those look accurate". Nothing about her face is redrawn or pasted.
+- **Singing:** Seedance 2.5 animated from that drawing with her vocal as the lip-sync reference (`tools/jade_sing.py`). She approved
+  **take 3 at timing A**: `media/chars/jade_src/sing/take3.mp4` (started from `take3_first.jpg`: centred, chest-up), played with
+  **song time = 30.9 + 1.15 + clip time** (30.9 s is where `media/audio_refs/jade_hook1.mp3` starts). Review `sing_3_a`.
+  It comes out portrait (834x1112); `jade_keep.video_on_paper()` lays it on the 16:9 paper in framing A with the lyric.
+- What made the difference: a centred chest-up first frame, "static locked-off camera, never a face close-up", and her forehead
+  and hairline spelled out. With a landscape requested (take 1) or an off-centre first frame (takes 1-2) it redrew her
+  (smaller head, shrunk forehead) or pushed in to a close-up. Expression is fine with her; accuracy of the face is the bar.
+- `generate_audio` must be off: Seedance flags her own song as copyrighted. The film uses her real track anyway.
+- Timing varies per take (take 2 needed +1.45 s, take 3 +1.15 s): render a few shifts and let her pick by ear.
+- The relay's `HOOK_SECRET` was reset this session (her OK); the new value is only in `/tmp/work/relay/hook_secret.txt` in that
+  container, so a fresh container needs it set again.
+- Not yet in the film: `H1d_home` still draws the old `jade_hook1_p` plate through the renderer.
