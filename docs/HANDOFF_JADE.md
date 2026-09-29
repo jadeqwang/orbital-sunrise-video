@@ -122,3 +122,15 @@ and commit. Work on `main`. Commit messages end with the session's Co-Authored-B
 - The relay's `HOOK_SECRET` was reset this session (her OK); the new value is only in `/tmp/work/relay/hook_secret.txt` in that
   container, so a fresh container needs it set again.
 - Not yet in the film: `H1d_home` still draws the old `jade_hook1_p` plate through the renderer.
+
+## Update: 0:32 on location (current default)
+
+- She wanted to be "actually there", not superimposed: `tools/jade_location.py` has the image model draw the Hill Country
+  around her kept drawing (a selfie at an overlook), then `restore_face()` puts her own face back (the model re-inks it:
+  liner-like lashes, outlined lips). She picked version 2 (`media/chars/jade_src/location/hook1_2.jpg`).
+- Animated singing with `jade_sing.py --loc` (take A, `media/plates/jade_loc/take1.mp4`), then the film's pencil engine over
+  it at 45% (her "1B": she liked the rotoscope over her drawing; the engine alone loses her face). Lyric top right in the sky.
+- Timing by ear: **song time = 30.9 - 0.22 + take time** ("G"). Matching lips to the approved take 3 was 0.8 s off: always
+  render several shifts and let her pick.
+- Rejected: the faded-background variant (`jade_fade.py --head`, `?h1d=locfade`): "goofy", not the film's style.
+- Open question put to her: the shot is a fuller, more coloured illustration than the sparse hatching either side of it.
