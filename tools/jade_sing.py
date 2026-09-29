@@ -56,7 +56,10 @@ SCENES = {
                  "little to the sky; her hair and the open cropped jacket stir in the wind; the clouds drift slowly below. Her face "
                  "is as expressive as a singer giving everything in a live performance: brows lifting and drawing together with "
                  "the feeling of the words, eyes squeezing shut on the held note, mouth opening wide and round on 'home', cheeks "
-                 "lifting, her head moving with the phrase. Steady camera, a very slow gentle pull-back."),
+                 "lifting, her head moving with the phrase. Her whole body sings with her, not only her upper body: she shifts her "
+                 "weight from one foot to the other, her knees soften and bend a little as she breathes in, her hips sway, she "
+                 "rises slightly onto the balls of her feet as the note opens on 'home' and settles back, perhaps taking a small "
+                 "step forward. Steady camera, a slow gentle pull-back that keeps her in a medium shot, never tiny in the frame."),
     # 1:09 (her idea): her Rare Earth character in coloured pencil, with her real pink headphones (rare_hp_2), arms spread
     "rare": (ROOT / "media" / "audio_refs" / "jade_hook2.mp3", 5,
              "'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips closing on 'b' "
