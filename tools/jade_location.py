@@ -151,6 +151,10 @@ FIXES = {
     # image 3 = the jacket without headphones
     "loosen_ref": ("Image 2 and image 3 are reference drawings of this same woman: image 2 shows her real pale pink headphones "
         "(round her neck there), image 3 her face, hair, glasses and jacket. " ),
+    # 1:09 · her pick b, "the microphone could be a bit loose too"
+    "loosen_mic": ("Edit image 1, keeping everything exactly as it is, her above all, except the microphone: redraw the "
+        "microphone, its pop filter, shock mount, cable and boom arm more loosely, like the looser background: quicker, freer pencil "
+        "strokes, less detail, rough edges. Keep its position, size, angle and the light on it. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
