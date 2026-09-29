@@ -147,9 +147,18 @@ FIXES = {
         "figure: quicker, freer graphite and coloured-pencil strokes, much less detail, simplified shapes, some bare paper showing "
         "through, edges left rough. Keep the same composition, places, colours and light direction. She stays the most finished "
         "thing in the picture. No text, no border."),
+    # the same, with her two kept drawings as references (her suggestion): image 2 = with her headphones round her neck,
+    # image 3 = the jacket without headphones
+    "loosen_ref": ("Image 2 and image 3 are reference drawings of this same woman: image 2 shows her real pale pink headphones "
+        "(round her neck there), image 3 her face, hair, glasses and jacket. " ),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
+
+
+FIXES["loosen_ref"] += FIXES["loosen"].replace("Edit image 1, keeping her exactly as she is:", "Edit image 1, keeping her exactly as "
+    "she is and matching the references:").replace("headphones, jacket", "headphones (worn on her head, exactly her real pair "
+    "from image 2), jacket")
 
 
 def fix(edited, prefix, name, extra=None, n=2):
