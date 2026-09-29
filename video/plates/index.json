@@ -727,5 +727,20 @@
   "take": "take2.mp4",
   "mattes": true,
   "gain": 1.143
+ },
+ "jade_sing3": {
+  "n": 121,
+  "fps": 24,
+  "w": 810,
+  "h": 1080,
+  "take": "take1.mp4",
+  "mattes": false,
+  "gain": 1.0,
+  "paper": [
+   218,
+   213,
+   201
+  ],
+  "kind": "paper"
  }
 }

@@ -209,6 +209,29 @@ async function drawPlateIn(t, id, tp, rect, o = {}) {
   return r;
 }
 
+// A take that is already a pencil drawing on paper (Jade's kept drawing, animated: tools/jade_sing.py) laid straight onto the
+// page, never redrawn: the take's own paper colour (index "paper") is divided out and the graphite multiplied onto the sheet,
+// as tools/jade_keep.py does for the approved stills. Full height, right of centre (framing A); the cut sleeve fades out.
+const _pt = makeCanvas(8, 8), _ptg = _pt.getContext('2d', { willReadFrequently: true });
+async function paperTake(id, tp, o = {}) {
+  const P0 = PLATES[id];
+  if (!P0) { text(G, `[ plate "${id}" not generated yet ]`, W / 2, H / 2, { font: FONT.mono(28, 700), col: 'verm', align: 'center' }); return; }
+  const im = await plateImage(id, tp), h = o.h ?? H, w = Math.round(P0.w * h / P0.h), x = o.x ?? W - w - Math.round(W * .078);
+  _pt.width = w; _pt.height = h; _ptg.drawImage(im, 0, 0, w, h);
+  const D = _ptg.getImageData(0, 0, w, h), d = D.data, [pr, pg, pb] = P0.paper, fl = (o.fadeLeft ?? .15) * w;
+  for (let i = 0; i < w; i++) {
+    const a = i < fl ? Math.pow(i / fl, 1.5) : 1;
+    for (let j = 0; j < h; j++) {
+      const k = (j * w + i) * 4;
+      d[k] = 255 - (255 - Math.min(255, d[k] * 255 / pr)) * a;
+      d[k + 1] = 255 - (255 - Math.min(255, d[k + 1] * 255 / pg)) * a;
+      d[k + 2] = 255 - (255 - Math.min(255, d[k + 2] * 255 / pb)) * a;
+    }
+  }
+  _ptg.putImageData(D, 0, 0);
+  G.save(); G.setTransform(1, 0, 0, 1, 0, 0); G.globalCompositeOperation = 'multiply'; G.drawImage(_pt, x, o.y ?? 0); G.restore();
+}
+
 // Burn-through: everything outside `inside` stays; a ragged, glowing hole of radius r reveals what `drawInside` paints.
 async function burnThrough(t, cx, cy, r, drawInside, seed = 7) {
   if (r <= 0) return;
@@ -462,11 +485,11 @@ async function initShots() {
 
   // H1d · bring me home
   // the singer takes every "bring me home": her world is the white page (Earth, home)
-  // golden hour on the hilltop above the city and the bay; framed medium (chest up), never pushed in on her face. The take
-  // pushes in slowly and her hair reaches the top of the frame, so the view sits 40 px lower (the plate's top edge is bare sky)
+  // Her kept drawing, animated singing (take 3, approved), laid on the page as it is: no redraw, no re-mouthing. Its lips were
+  // matched to her vocal by ear: song time = 30.9 + 1.15 + take time (docs/HANDOFF_JADE.md).
   shot('H1d_home', H1[1].words[2][0] - .05, hk1, async (t, lt) => {
     paper(G, 'snow');
-    await singer(t, 'jade_hook1_p', { view: { zoom: 1.02, oy: 40 }, hatch: { spacing: 6.2, mask: quiet([[60, H - 270, 860, H - 90]], .75) } });
+    await paperTake('jade_sing3', t - 32.05);
     const w = H1[1].words;
     lyricStack(t, [
       { s: 'bring me home', t: w[2][0], x: 110, y: H - 140, font: FONT.serif(124), col: 'crimson', style: 'rise' },
