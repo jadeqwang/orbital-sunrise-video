@@ -818,19 +818,19 @@
  "airlock_cut": {
   "n": 1,
   "fps": 24,
-  "w": 1280,
-  "h": 720,
-  "take": "still.jpg",
-  "mattes": false,
+  "w": 2560,
+  "h": 1440,
+  "take": "still.jpg, prepared for the night pencil by tools/airlock_stills.py (tones re-laid, subject matte, hand-set face box)",
+  "mattes": true,
   "gain": 1.0
  },
  "airlock_side": {
   "n": 1,
   "fps": 24,
-  "w": 1280,
-  "h": 720,
-  "take": "still.jpg",
-  "mattes": false,
+  "w": 2560,
+  "h": 1440,
+  "take": "still.jpg, prepared for the night pencil by tools/airlock_stills.py (tones re-laid, subject matte, hand-set face box)",
+  "mattes": true,
   "gain": 1.0
  }
 }

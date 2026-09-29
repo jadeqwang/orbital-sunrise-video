@@ -610,17 +610,25 @@ async function initShots() {
     // Her notes: at true scale (Volga: ~1.0 m inside, 2.5 m long; Leonov ~1.9 m in the swollen suit) he lies in it like a hot
     // dog in a bun. Opens on a side cutaway of the sealed tube (airlock_cut, a still drawn by the pencil pass, slow push in to
     // his helmet), then the roll cuts to him from inside with the wall a hand's width above his visor (airlock_side).
-    // Being tuned: ?p4=new shows it; the default is still the previous roomy tube_struggle take (?p4zoom= its framing)
-    const old = new URLSearchParams(location.search).get('p4') !== 'new';
+    // The stills are re-toned for the night pencil by tools/airlock_stills.py (dark ribbed tube, him bright, his face lifted and
+    // warm, subject mattes for a silhouette line). The push ends tight on his helmet, rolled a little so the grimace
+    // (nose, bared teeth) reads the right way up and the ribs tilt into the snare roll; the inside view is framed whole,
+    // rolled so his helmet sits left, below the lyric, and the glove on the wall stands clear of it on the right.
+    // ?p4=old: the previous roomy tube_struggle take (?p4zoom= its framing)
+    const old = new URLSearchParams(location.search).get('p4') === 'old';
     const pz = +(new URLSearchParams(location.search).get('p4zoom') ?? 1.7);
     let id = 'tube_struggle', tp = 1.6 + lt * 2, vz = { zoom: pz, cx: .56, cy: .5 };
-    if (!old) { const e = smooth(clamp(lt / (57.2 - (PR[3].t0 - .05)))); id = 'airlock_cut'; tp = 0; vz = { zoom: 1.02 + e * .3, cx: lerp(.5, .3, e), cy: lerp(.5, .48, e) }; }
+    // push: from the whole tube (sat a little low, under the lyric) to his face at uv (.21, .465), held below the lyric (y≈730)
+    if (!old) { const e = smooth(clamp(lt / (57.2 - (PR[3].t0 - .05)))); id = 'airlock_cut'; tp = 0; vz = { zoom: lerp(1.02, 3.0, e), cx: lerp(.5, .212, e), cy: lerp(.44, .4035, e), rot: e * .3 }; }
     if (roll > 0) {
       const step = roll < .5 ? 2 : 4, n = Math.floor(beatPos(t) * step);
       const alts = [[old ? 'tube_struggle' : 'airlock_side', old ? 7.2 : 0], ['valve_bleed', 3.5], ['visor_cu', 4.5], ['glove_cu', 3], ['suit_balloon', 4]];
-      const a = alts[n % alts.length]; id = a[0]; tp = a[1] + frac(beatPos(t) * step) * .3; vz = { zoom: 1.1 + roll * .25 };
+      const a = alts[n % alts.length]; id = a[0]; tp = a[1] + frac(beatPos(t) * step) * .3; vz = id === 'airlock_side' ? { zoom: 1.2 + roll * .06, rot: .35, ox: 120, oy: 60 } : { zoom: 1.1 + roll * .25 };
     }
-    await drawPlate(t, id, tp, { rate, view: vz, face: id === 'tube_struggle' ? tp > 5.2 : undefined, hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], .75 * (1 - roll)) },
+    // the stills' faces (hand-boxed in their meta) get the face pass, drawn from hatching and edges (no landmarks)
+    const still = id === 'airlock_cut' || id === 'airlock_side';
+    await drawPlate(t, id, tp, { rate, view: vz, face: id === 'tube_struggle' ? tp > 5.2 : still || undefined, ...(still ? { faceLines: false, faceHatch: { white: .66, contrast: 1.3 }, faceContour: { hi: .25, lo: .1 } } : {}), ...(id === 'airlock_cut' ? { aw: 960, ah: 540 } : {}),
+      hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], .75 * (1 - roll)) },
       extra: (pen) => edgePanic(pen, .5 + roll * .5, drawClock(t, rate).n * 11) });
     evaHud(t);
     const w = PR[3].words; // Ninety minutes inside the airlock door
