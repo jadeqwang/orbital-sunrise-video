@@ -7,7 +7,10 @@ const _fr = {};
 function faceRatio(id) { if (_fr[id] === undefined) { const m = META[id]; _fr[id] = m ? m.filter(f => f.face).length / m.length : 0; } return _fr[id]; }
 
 // Redraw a plate in pencil. tp = plate time. Returns {F, view, dIdx}.
+// ?swap=a:b,c:d draws plate b wherever the film uses plate a (pencil previews of candidate stills: tools/pencil_preview.py)
+const SWAP = Object.fromEntries((new URLSearchParams(location.search).get('swap') || '').split(',').filter(Boolean).map(p => p.split(':')));
 async function drawPlate(t, id, tp, o = {}) {
+  if (SWAP[id]) { id = SWAP[id]; o = { ...o, hold: 0 }; }
   if (!PLATES[id]) { // missing plate: a visible placeholder instead of a crash (review builds only)
     text(G, `[ plate "${id}" not generated yet ]`, W / 2, H / 2, { font: FONT.mono(28, 700), col: 'verm', align: 'center' });
     return { F: null, view: null, dIdx: 0, tp };
