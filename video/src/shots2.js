@@ -250,33 +250,117 @@ async function initShots2() {
   // the bottom, the way the Earth sweeps through the plate. Each pass keeps one stroke layout (seed per pass; jseed boils it).
   const SPIN_B0 = 352, SPIN_BEATS = 3, SPIN_LAG = .06, SPIN_HALF = .17;   // pass centre = B(352 + 3k) + lag; half a crossing, s
   const PORT_UV = [486 / 960, 277 / 540], PORT_R = 252 / 960;             // glass opening in plate uv (Hough fit, frames 1–91; the camera holds it)
-  // her note (2:20): the capsule is still tumbling in the g-load shot, so its two cabin portholes keep flashing, the sun
-  // sweeping across one and then the other on the tumble's beat, black glass in between. Discs hand-tracked in the g_force
-  // plate (x, y, r in 960×540 plate px at plate frames 1/50/100/145: the camera drifts and pushes in); the left one sits
-  // behind the first cosmonaut's helmet, so only its top half is lit
+  // her notes (2:20): the capsule is still tumbling in the g-load shot, so the sun and the Earth keep sliding across its two cabin
+  // portholes like they slide across the big one before it (not the glass pulsing): the sun whips across the right port, then
+  // the left, right to left (one spin axis, the windows side by side), black glass between, the Earth's limb curving through
+  // half a turn later. Glass openings (x, y, r in 960×540 plate px) fitted at frame 1 and carried by a SIFT similarity fit of the
+  // wall round each (every 16 frames: the camera drifts and pushes in); the left one sits behind the first cosmonaut's helmet
+  // (occ: his helmet, tracked the same way and cut out soft), so only the sliver above it shows; its sun and Earth run high (top)
   const CAB_PORTS = [
-    { f: [1, 50, 100, 145], x: [705, 682, 743, 762], y: [172, 160, 160, 165], r: [42, 45, 50, 55], lag: 0, top: false },
-    { f: [1, 50, 100, 145], x: [292, 257, 262, 245], y: [150, 145, 140, 128], r: [38, 40, 45, 48], lag: .5, top: true }];
+    { f: [1, 17, 33, 49, 65, 81, 97, 113, 129, 145], x: [707, 712, 718, 724, 732, 742, 748, 758, 766, 776], y: [175, 173, 172, 170, 168, 167, 167, 165, 164, 163], r: [37, 38, 39, 40, 41, 42, 43, 45, 46, 48], lag: 0, top: false },
+    { f: [1, 17, 33, 49, 65, 81, 97, 113, 129, 145], x: [291, 287, 282, 278, 273, 268, 261, 257, 252, 248], y: [162, 160, 159, 157, 154, 152, 152, 150, 147, 149], r: [41, 42, 43, 44, 45, 46, 48, 49, 50, 51], lag: .3, top: true,
+      occ: [{ x: [292, 288, 283, 279, 274, 269, 261, 258, 249, 244], y: [190, 189, 188, 187, 184, 183, 183, 180, 178, 177], r: [45, 46, 47, 49, 50, 52, 54, 56, 58, 59] }] }];   // his helmet
+  // G2_math (her note, 2:13): the round porthole behind the commander's head in vzor_manual turns with the same tumble. Glass and
+  // the two helmets in front of it (occ: cut out soft) carried from frame 12 by SIFT fits of the wall / each helmet (every 8 frames)
+  const VZ_F = [12, 20, 28, 36, 44, 52, 60, 68, 76, 84];
+  const VZ_PORTS = [{ f: VZ_F, x: [506, 509, 513, 516, 519, 524, 528, 530, 534, 536], y: [98, 95, 94, 91, 90, 94, 96, 99, 100, 101], r: [56, 58, 59, 61, 63, 63, 65, 66, 68, 69], lag: .65, top: false,
+    occ: [{ x: [454, 455, 457, 459, 459, 462, 464, 465, 466, 467], y: [156, 154, 153, 154, 155, 156, 159, 161, 163, 165], r: [87, 90, 93, 96, 99, 103, 105, 108, 111, 114] },
+      { x: [574, 579, 584, 590, 595, 601, 608, 613, 619, 623], y: [180, 180, 181, 182, 184, 187, 191, 194, 196, 198], r: [73, 75, 77, 79, 81, 83, 85, 87, 91, 93] }] }];
   const track = (fs, vs, f) => { let i = 0; while (i < fs.length - 2 && f > fs[i + 1]) i++; return lerp(vs[i], vs[i + 1], clamp((f - fs[i]) / (fs[i + 1] - fs[i]))); };
-  function cabinPorts(t, view, pf) {
-    for (const P0 of CAB_PORTS) {
-      const x = track(P0.f, P0.x, pf), y = track(P0.f, P0.y, pf), r = track(P0.f, P0.r, pf);
-      const [cx, cy] = view.toScreen(x / 960, y / 540), [ex, ey] = view.toScreen((x + r) / 960, y / 540), R = Math.hypot(ex - cx, ey - cy);
-      // where the sun is in the tumble: a pass every SPIN_BEATS beats, this port half a turn after the other
-      const bp = (beatPos(t) - SPIN_B0) / SPIN_BEATS - P0.lag, ph = bp - Math.round(bp);
-      const f = Math.exp(-Math.pow(ph / .16, 2));                     // 1 as the sun crosses this port, 0 facing black space
-      // soft-edged, never clipped: a hard disc that doesn't sit exactly on the drawn glass reads as a stray shape (her note).
-      // The left port's light is centred up on its visible top half, clear of the helmet
-      const gx = cx, gy = P0.top ? cy - R * .45 : cy, gR = P0.top ? R * .8 : R * 1.05;
-      G.save(); G.globalCompositeOperation = 'multiply';                // dark glass facing space
-      const dk = G.createRadialGradient(gx, gy, 0, gx, gy, gR); const d = .7 * (1 - f);
-      dk.addColorStop(0, `rgba(${Math.round(255 - 235 * d)},${Math.round(255 - 235 * d)},${Math.round(255 - 230 * d)},1)`); dk.addColorStop(.55, `rgba(${Math.round(255 - 180 * d)},${Math.round(255 - 180 * d)},${Math.round(255 - 175 * d)},1)`); dk.addColorStop(1, 'rgba(255,255,255,1)');
-      G.fillStyle = dk; G.fillRect(gx - gR, gy - gR, 2 * gR, 2 * gR); G.restore();
-      if (f > .03) {                                                     // the sun crossing: a glow that spills into the cabin
+  // where a line (base + u·(ca, sa)) is inside circle (ox, oy, r): [u0, u1] or null
+  const chord = (bx, by, ca, sa, ox, oy, r) => { const qx = bx - ox, qy = by - oy, b = qx * ca + qy * sa, c = qx * qx + qy * qy - r * r, D = b * b - c; return D > 0 ? [-b - Math.sqrt(D), -b + Math.sqrt(D)] : null; };
+  // the sun crossing a porthole, in pencil (portholeSun, cabinPorts): washed-out hatching densest round it, its smear back up
+  // the path, the sunburst. (cx, cy, R) the glass on screen, (sx, sy) the sun, (dx, dy) its travel, f the flare, vis how far
+  // in; sc scales the strokes down for a small window (1 = the big porthole, stroke for stroke as it was)
+  function sunStrokes(pen, cx, cy, R, sx, sy, dx, dy, f, vis, seed, d, sc = 1) {
+    const ls = sc < 1 ? Math.max(.3, sc) : 1, ws = sc < 1 ? .6 + .4 * sc : 1;
+    const ang = -.62, ca = Math.cos(ang), sa = Math.sin(ang), sp = sc < 1 ? 4 : 6.5;
+    for (let i = -Math.ceil(R / sp); i <= R / sp; i++) {
+      const off = i * sp, half = Math.sqrt(Math.max(0, R * R - off * off));
+      for (let s = -half, j = 0; s < half; j++) {
+        const h1 = hash2(i * 97 + j, seed), h2 = hash2(i * 97 + j, seed + 1), len = (26 + 70 * h1) * ls;
+        const u = s + len / 2, x = cx - sa * off + ca * u, y = cy + ca * off + sa * u;
+        s += len + 3 * ls + 10 * h2 * ls;
+        const near = Math.exp(-Math.hypot(x - sx, y - sy) / (R * (.45 + .5 * f))), dens = vis * Math.min(1, f * 1.05 + .12) * (.5 + .5 * near);
+        if (h2 > dens) continue;
+        const jx = (hash2(i * 97 + j, d * 3 + 1) - .5) * 2.2, jy = (hash2(i * 97 + j, d * 3 + 2) - .5) * 2.2;
+        const col = near > .55 || (f > .6 && h1 < .45) ? 'white' : near > .25 || f > .6 ? (h1 < .55 ? 'cream' : 'gold') : (h1 < .6 ? 'gold' : 'orange');
+        pen.l(x - ca * len / 2 + jx, y - sa * len / 2 + jy, x + ca * len / 2 + jx, y + sa * len / 2 + jy, col, (1.7 + 1.4 * near + f) * ws, clamp(.3 + .45 * f + .3 * near));
+      }
+    }
+    // smear: the disc's track back up the path it came down
+    for (let i = 0; i < 46; i++) {
+      const h1 = hash2(i, seed + 5), h2 = hash2(i, seed + 6), o = (h1 - .5) * 150 * (.6 + .4 * f) * sc, len = R * (.35 + .6 * h2) * vis;
+      const x0 = sx - dy * o, y0 = sy + dx * o, x1 = x0 - dx * len, y1 = y0 - dy * len, bend = (hash2(i, d + 90) - .5) * 10 * ls;
+      pen.q(x0, y0, (x0 + x1) / 2 + bend, (y0 + y1) / 2, x1, y1, h2 < .4 ? 'white' : h2 < .75 ? 'gold' : 'orange', (1.6 + 2 * (1 - Math.abs(h1 - .5) * 2)) * ws, .5 + .4 * (1 - h2));
+    }
+    // the sunburst (same pencils as the sunrise): long rays stretched along the whip, then the white-gold core
+    const along = Math.atan2(dy, dx), nr = sc < 1 ? .45 : 1;
+    raysFrom(pen, sx, sy, { n: 520 * nr, r0: 14 * ls, r1: R * 1.5, energy: vis * (.55 + .45 * f), seed: seed + 11, jseed: d, w: [1.4 * ws, 3.2 * ws], alpha: [.5, .95],
+      lenMul: a => .55 + .9 * Math.abs(Math.cos(a - along)) });
+    raysFrom(pen, sx, sy, { n: 620 * nr, r0: 0, r1: (150 + 90 * f) * ls, energy: vis, seed: seed + 13, jseed: d, cols: ['white', 'gold', 'gold', 'white', 'orange'], w: [2 * ws, 4.2 * ws], alpha: [.85, 1] });
+  }
+  // the Earth sliding through a small window: blue hatching inside its disc (ex, ey, ER), a pale limb along the edge
+  function earthStrokes(pen, cx, cy, R, ex, ey, ER, seed, d) {
+    const ang = -.62, ca = Math.cos(ang), sa = Math.sin(ang), sp = 3.6;
+    for (let i = -Math.ceil(R / sp); i <= R / sp; i++) {
+      const off = i * sp, bx = cx - sa * off, by = cy + ca * off, A = chord(bx, by, ca, sa, cx, cy, R), E = chord(bx, by, ca, sa, ex, ey, ER);
+      if (!A || !E) continue;
+      const u0 = Math.max(A[0], E[0]), u1 = Math.min(A[1], E[1]);
+      for (let s = u0, j = 0; s < u1; j++) {
+        const h1 = hash2(i * 89 + j, seed), h2 = hash2(i * 89 + j, seed + 1), len = Math.min(10 + 16 * h1, u1 - s);
+        const u = s + len / 2, x = bx + ca * u, y = by + sa * u; s += len + 2 + 4 * h2;
+        const rim = clamp(1 - (ER - Math.hypot(x - ex, y - ey)) / (R * .5));   // 1 at the limb, fading inward
+        const cloud = vnoise((x - ex) / 12, (y - ey) / 12, seed) > .64;
+        const col = cloud ? 'white' : rim > .6 ? 'sky' : h1 < .5 ? 'cobalt' : h1 < .8 ? 'ultra' : 'sky';
+        const jx = (hash2(i * 89 + j, d * 3 + 1) - .5) * 1.6, jy = (hash2(i * 89 + j, d * 3 + 2) - .5) * 1.6;
+        pen.l(x - ca * len / 2 + jx, y - sa * len / 2 + jy, x + ca * len / 2 + jx, y + sa * len / 2 + jy, col, 1.4 + .8 * rim, .55 + .35 * rim);
+      }
+    }
+    // the limb: a few light passes along the arc inside the glass
+    const a0 = Math.atan2(cy - ey, cx - ex);
+    for (let k = 0; k < 5; k++) {
+      const r = ER + (k - 1) * 1.6 + (hash2(k, d + seed) - .5) * 1.4, pts = [];
+      for (let a = a0 - Math.PI; a < a0 + Math.PI; a += .01) { const x = ex + Math.cos(a) * r, y = ey + Math.sin(a) * r; if (Math.hypot(x - cx, y - cy) < R) pts.push([x, y]); else if (pts.length > 1) break; else pts.length = 0; }
+      if (pts.length > 1) pen.poly(pts, k < 2 ? 'white' : 'sky', 2.2 - k * .3, .8 - k * .1);
+    }
+  }
+  function cabinPorts(t, view, pf, ports = CAB_PORTS) {
+    const d = drawClock(t, 12).n, cyc = SPIN_BEATS * TM.beat / SPIN_HALF;   // one turn of the tumble in half-crossings
+    const disc = (P, o) => { const x = track(P.f, o.x, pf), y = track(P.f, o.y, pf), r = track(P.f, o.r, pf), [cx, cy] = view.toScreen(x / 960, y / 540), [ex, ey] = view.toScreen((x + r) / 960, y / 540); return [cx, cy, Math.hypot(ex - cx, ey - cy)]; };
+    for (const P0 of ports) {
+      const [cx, cy, R0] = disc(P0, P0), R = R0 * .96;
+      // where the sun is in the tumble: a pass every SPIN_BEATS beats, the left port a little after the right
+      const bp = (beatPos(t) - SPIN_B0) / SPIN_BEATS - P0.lag, k = Math.round(bp), p = (bp - k) * cyc;
+      // right to left with a slight fall (the same axis for both windows), a little different each turn
+      const lean = .16 + (hash(k * 7 + 1) - .5) * .12, dx = -Math.cos(lean), dy = Math.sin(lean), nx = -dy, ny = dx;   // n: across the path, up
+      const side = (hash(k * 7 + 2) - .5) * .3 * R + (P0.top ? .7 * R : 0);   // the left port's sun runs high, clear of the helmet
+      const sx = cx + dx * p * R * 1.28 + nx * side, sy = cy + dy * p * R * 1.28 + ny * side;
+      const f = Math.exp(-Math.pow(p / .5, 2)), vis = clamp((1.2 - Math.abs(p)) / .35);
+      // the Earth half a turn off the sun: its limb comes in behind the sun and the next one's leaves ahead of it
+      const pe = p > 0 ? p - cyc / 2 : p + cyc / 2, ER = R * 2.6, eo = R * 1.9 - (P0.top ? R * .5 : 0);
+      const ex = cx + dx * pe * R * 1.28 - nx * eo, ey = cy + dy * pe * R * 1.28 - ny * eo;
+      const earth = Math.hypot(ex - cx, ey - cy) < ER + R;
+      const L = layer(3), M = layer(5), pen = new Pen(), sc = R / 544;
+      if (earth) earthStrokes(pen, cx, cy, R, ex, ey, ER, 700 + k * 13, d);
+      if (vis > 0) sunStrokes(pen, cx, cy, R, sx, sy, dx, dy, f, vis, 640 + k * 37 + P0.lag * 100, d, sc);
+      pen.flush(L.g, ORDER_NIGHT); toothIn(L, d);
+      // the glass: black space (the plate's lit window put out), a little less under the glare, then the strokes; all masked soft
+      // to inside the drawn rim (a hard-edged fill that misses the glass reads as a stray shape: her note)
+      paper(M.g, 'night', .85 - .25 * f * vis); M.g.drawImage(L.c, 0, 0);
+      M.g.globalCompositeOperation = 'destination-in';
+      const mk = M.g.createRadialGradient(cx, cy, 0, cx, cy, R); mk.addColorStop(0, '#000'); mk.addColorStop(.8, '#000'); mk.addColorStop(1, 'rgba(0,0,0,0)');
+      M.g.fillStyle = mk; M.g.fillRect(cx - R, cy - R, 2 * R, 2 * R);
+      M.g.globalCompositeOperation = 'destination-out';   // helmets in front of the glass
+      for (const o of P0.occ || []) { const [hx, hy, hr] = disc(P0, o), hg = M.g.createRadialGradient(hx, hy, 0, hx, hy, hr * 1.04); hg.addColorStop(0, '#000'); hg.addColorStop(.93, '#000'); hg.addColorStop(1, 'rgba(0,0,0,0)'); M.g.fillStyle = hg; M.g.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
+      M.g.globalCompositeOperation = 'source-over';
+      G.drawImage(M.c, cx - R, cy - R, 2 * R, 2 * R, cx - R, cy - R, 2 * R, 2 * R);
+      if (f * vis > .03) {   // the light it throws into the cabin, from where the sun is on the glass
+        const gx = clamp(sx, cx - R * .8, cx + R * .8), gy = P0.top ? cy - R * .5 : clamp(sy, cy - R * .8, cy + R * .8), gR = R * 3, a = f * vis;
         G.save(); G.globalCompositeOperation = 'lighter';
-        const gr = G.createRadialGradient(gx, gy, 0, gx, gy, gR * 2.6);
-        gr.addColorStop(0, `rgba(255,236,200,${.85 * f})`); gr.addColorStop(.3, `rgba(255,190,120,${.4 * f})`); gr.addColorStop(1, 'rgba(255,160,90,0)');
-        G.fillStyle = gr; G.fillRect(gx - gR * 2.6, gy - gR * 2.6, gR * 5.2, gR * 5.2); G.restore();
+        const gr = G.createRadialGradient(gx, gy, 0, gx, gy, gR);
+        gr.addColorStop(0, `rgba(255,236,200,${.45 * a})`); gr.addColorStop(.3, `rgba(255,190,120,${.22 * a})`); gr.addColorStop(1, 'rgba(255,160,90,0)');
+        G.fillStyle = gr; G.fillRect(gx - gR, gy - gR, 2 * gR, 2 * gR); G.restore();
       }
     }
   }
@@ -298,33 +382,8 @@ async function initShots2() {
     const vis = clamp((1.2 - Math.abs(p)) / .35);                            // rays reach in before the disc does
     // wash: the plate's hatching burns out under the glare
     G.save(); circle(G); G.clip(); paper(G, 'night', clamp(.25 + f * .8) * vis); G.restore();
-    const L = layer(3), pen = new Pen(), seed = 600 + k * 37;
-    // washed-out hatching: long pale strokes laid across the glass, densest round the sun
-    const ang = -.62, ca = Math.cos(ang), sa = Math.sin(ang), sp = 6.5;
-    for (let i = -Math.ceil(R / sp); i <= R / sp; i++) {
-      const off = i * sp, half = Math.sqrt(Math.max(0, R * R - off * off));
-      for (let s = -half, j = 0; s < half; j++) {
-        const h1 = hash2(i * 97 + j, seed), h2 = hash2(i * 97 + j, seed + 1), len = 26 + 70 * h1;
-        const u = s + len / 2, x = cx - sa * off + ca * u, y = cy + ca * off + sa * u;
-        s += len + 3 + 10 * h2;
-        const near = Math.exp(-Math.hypot(x - sx, y - sy) / (R * (.45 + .5 * f))), dens = vis * Math.min(1, f * 1.05 + .12) * (.5 + .5 * near);
-        if (h2 > dens) continue;
-        const jx = (hash2(i * 97 + j, d * 3 + 1) - .5) * 2.2, jy = (hash2(i * 97 + j, d * 3 + 2) - .5) * 2.2;
-        const col = near > .55 || (f > .6 && h1 < .45) ? 'white' : near > .25 || f > .6 ? (h1 < .55 ? 'cream' : 'gold') : (h1 < .6 ? 'gold' : 'orange');
-        pen.l(x - ca * len / 2 + jx, y - sa * len / 2 + jy, x + ca * len / 2 + jx, y + sa * len / 2 + jy, col, 1.7 + 1.4 * near + f, clamp(.3 + .45 * f + .3 * near));
-      }
-    }
-    // smear: the disc's track back up the path it came down
-    for (let i = 0; i < 46; i++) {
-      const h1 = hash2(i, seed + 5), h2 = hash2(i, seed + 6), o = (h1 - .5) * 150 * (.6 + .4 * f), len = R * (.35 + .6 * h2) * vis;
-      const x0 = sx - dy * o, y0 = sy + dx * o, x1 = x0 - dx * len, y1 = y0 - dy * len, bend = (hash2(i, d + 90) - .5) * 10;
-      pen.q(x0, y0, (x0 + x1) / 2 + bend, (y0 + y1) / 2, x1, y1, h2 < .4 ? 'white' : h2 < .75 ? 'gold' : 'orange', 1.6 + 2 * (1 - Math.abs(h1 - .5) * 2), .5 + .4 * (1 - h2));
-    }
-    // the sunburst (same pencils as the sunrise): long rays stretched along the whip, then the white-gold core
-    const along = Math.atan2(dy, dx);
-    raysFrom(pen, sx, sy, { n: 520, r0: 14, r1: R * 1.5, energy: vis * (.55 + .45 * f), seed: seed + 11, jseed: d, w: [1.4, 3.2], alpha: [.5, .95],
-      lenMul: a => .55 + .9 * Math.abs(Math.cos(a - along)) });
-    raysFrom(pen, sx, sy, { n: 620, r0: 0, r1: 150 + 90 * f, energy: vis, seed: seed + 13, jseed: d, cols: ['white', 'gold', 'gold', 'white', 'orange'], w: [2, 4.2], alpha: [.85, 1] });
+    const L = layer(3), pen = new Pen();
+    sunStrokes(pen, cx, cy, R, sx, sy, dx, dy, f, vis, 600 + k * 37, d);
     pen.flush(L.g, ORDER_NIGHT); toothIn(L, d);
     L.g.save(); L.g.globalCompositeOperation = 'destination-in'; circle(L.g); L.g.fill(); L.g.restore();   // only through the glass
     G.drawImage(L.c, 0, 0);
@@ -347,7 +406,8 @@ async function initShots2() {
   shot('G2_math', BD[1].t0 - .05, BD[2].t0 - .05, async (t, lt) => {
     paper(G, 'night');
     const spin = lt * .35;
-    await drawPlate(t, 'vzor_manual', .5 + lt, { view: { zoom: 1.1, rot: Math.sin(spin) * .06 } });
+    const { view } = await drawPlate(t, 'vzor_manual', .5 + lt, { view: { zoom: 1.1, rot: Math.sin(spin) * .06 } });
+    if (view) cabinPorts(t, view, (.5 + lt) * 24, VZ_PORTS);
     // hand-written orbital arithmetic circling the frame
     const Lt = typeLayer(), eq = ['Δv = 106 m/s', 't = 22 s', 'θ ≈ 90°', 'ОРИЕНТАЦИЯ — РУЧНАЯ', 'h = 497 km', '±1°'];
     eq.forEach((s, i) => { const a = spin + i / eq.length * TAU, r = 430; text(Lt.g, s, W / 2 + Math.cos(a) * r * 1.6, H / 2 + Math.sin(a) * r * .8, { font: FONT.serif(46), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * .9, align: 'center', rot: Math.sin(a) * .2 }); });
