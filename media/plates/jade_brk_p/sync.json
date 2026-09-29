@@ -1,0 +1,14 @@
+{
+ "plate": "jade_brk_p",
+ "take": "take1.mp4",
+ "seg_start": 110.4,
+ "frames": 193,
+ "window": [
+  114.5,
+  118.0
+ ],
+ "mouth_lag_s": 0.583,
+ "mouth_corr": 0.366,
+ "audio_lag_s": 0.625,
+ "audio_corr": 0.637
+}
