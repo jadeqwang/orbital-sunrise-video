@@ -16,3 +16,4 @@ Shared by Jade for this project (face likeness for the character sheets). The cr
 - `jade_photo_13_profile_right.jpg` / `jade_photo_14_profile_left.jpg`: profiles (facing right / facing left), glasses, her real headphones
 
 Her actual headphones (use in every scene where she wears headphones): pale dusty-pink matte over-ear headphones with large rounded ear cups and a wide padded headband with a slim sliding arm.
+- `jade_drawing_robot_2026-09-25.jpg`: a line portrait of her drawn by a pen-plotter robot (signed, 2026-09-25); a reference for how her face reads in line work
