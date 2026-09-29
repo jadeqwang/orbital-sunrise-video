@@ -134,7 +134,7 @@ function lyricStack(t, items, o = {}) {
       text(L.g, it.s, it.x, it.y, { font, col: it.col ?? 'white', align: it.align, ls: it.ls, sx: s, sy: s, alpha: a * alpha });
     } else if (style === 'rise') {
       const e = expoOut(k);
-      text(L.g, it.s, it.x, it.y + (1 - e) * (it.size ?? 190) * .35, { font, col: it.col ?? 'white', align: it.align, ls: it.ls, alpha: e * alpha });
+      text(L.g, it.s, it.x, it.y + (1 - e) * (it.size ?? 190) * .35, { font, col: it.col ?? 'white', align: it.align, ls: it.ls, alpha: e * alpha, stroke: it.stroke, strokeCol: it.strokeCol });
     } else if (style === 'type') {
       const n = Math.ceil(it.s.length * clamp((t - it.t) / (it.dur ?? .4)));
       text(L.g, it.s.slice(0, n), it.x, it.y, { font, col: it.col ?? 'white', align: it.align, ls: it.ls, alpha });
@@ -674,7 +674,7 @@ async function initShots() {
     }
     const w = H2[1].words;
     lyricStack(t, [{ s: 'bring me home', t: w[2][0], x: W - 110, y: new URLSearchParams(location.search).get('k4') === 'old' ? H - 140 : 190,
-      font: FONT.serif(124), col: 'crimson', align: 'right', style: 'rise' }]);   // new take: top right, clear of the mic stand
+      font: FONT.serif(124), col: 'crimson', align: 'right', style: 'rise', stroke: 18, strokeCol: 'white' }]);   // new take: top right, clear of the mic stand; a paper-cream halo lifts it off the foam
   });
 
   if (typeof initShots2 === 'function') await initShots2();
