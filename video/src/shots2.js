@@ -1,15 +1,13 @@
 // shots2.js: drop 1 → end.
 let SYNC = {};                                     // lip-sync lags per singer plate (tools/lipsync.py → data/sync.json)
-const lagOf = id => LAGQ[id] !== undefined ? LAGQ[id] : (SYNC[id] && SYNC[id].use !== false ? (SYNC[id].lag ?? 0) : 0);
+const lagOf = id => (SYNC[id] && SYNC[id].use !== false ? (SYNC[id].lag ?? 0) : 0);
 // singer plates (Jade v4): song time where the audio slice each was generated with starts (tools/plate_specs.py: media/audio_refs/*.mp3)
 const SEG = { jade_hook1_v4: 30.9, jade_studio_v4: 67.4, jade_brk_v4: 110.4 };
-// Re-mouthing vs the plate's own mouth (compared on full-res stills every 0.25 s across each shot): hook1_v4 articulates
-// the line and its own lips (shifted by the lag in data/sync.json) read more natural than the synthetic ones, which sit low
-// under her lip line; studio_v4 is seen three-quarter-on with the jaw dropped for the held "home": the frontal synthetic
-// mouth looks pasted on there, so her own open mouth is kept too; brk_v4 TBD
+// Re-mouthing vs the plate's own mouth (compared on full-res stills every 0.25 s across each shot): all three v4 takes keep
+// their own lips, shifted by the lag in data/sync.json. hook1_v4 articulates the line, and the synthetic lips sit low under
+// her own lip line; studio_v4 is seen three-quarter-on with the jaw dropped for the held "home", where the frontal synthetic
+// mouth looks pasted on; on brk_v4 the face mesh slips as she looks up, which drops the synthetic mouth onto her chin.
 const REMOUTH = { jade_hook1_v4: false, jade_studio_v4: false, jade_brk_v4: false };
-{ const q = new URLSearchParams(location.search).get('remouth'); if (q) for (const kv of q.split(',')) { const [k, v] = kv.split(':'); REMOUTH[k] = v === '1'; } }   // TEMP test override
-const LAGQ = {}; { const q = new URLSearchParams(location.search).get('lag'); if (q) for (const kv of q.split(',')) { const [k, v] = kv.split(':'); LAGQ[k] = +v; } }   // TEMP
 // re-mouthed, the plate's own lip timing no longer matters; drawn with its own mouth, the plate is shifted by its measured lag
 const tpSing = (id, t) => t - SEG[id] + (REMOUTH[id] ? 0 : lagOf(id));
 // a singing shot on white paper: the plate at song time, re-mouthed or not (REMOUTH)
@@ -153,12 +151,13 @@ async function initShots2() {
     subtitle(G, lineAt(t), t, { size: 58, y: H - 90, shadow: 6, split: { x: split, left: 'graphite', right: 'cream' } });
   });
   // She writes the line in her leather notebook: a slow push onto the open book (a page shot, not a face close-up) so the
-  // handwriting reads on a phone. The lyric is written in graphite across the blank left page (her hand works on the right one),
+  // handwriting reads on a phone. The lyric is written in graphite across the blank left page (her hand writes on the right one),
   // laid along the page as the plate sees it: the lines run with the head edge, the page recedes along the gutter.
-  // NB_* are in jade_notebook_v4 plate pixels (960×540; the book does not move in the take). The left page (curled up off the
-  // gutter): head edge (330,275)→(500,318), gutter (500,318)→(405,440); her sleeve cuts across its lower-left from (300,300)
-  // to (405,440), so each line starts further in. NB_LINES are the baselines' starts.
-  const NB_LINES = (Q.get('nbl') || '337,287;322,311;342,339').split(';').map(s => s.split(',').map(Number)), NB_ALONG = [120, 18], NB_DOWN = [-80, 100], NB_SIZE = +(Q.get('nbs') ?? 18), NB_AT = (Q.get('nbat') || '400,320').split(',').map(Number);   // TEMP Q
+  // NB_* are in jade_notebook_v4 plate pixels (960×540; the book does not move in the take). The left page: outer head corner
+  // (342,271), head edge flat to ~(440,282) then curling down into the gutter at (502,316); gutter (502,316)→(415,425). Her
+  // sleeve cuts across its lower-left, from (305,310) to (410,422) at its widest (plate 0.4 s), so each line starts further in
+  // and the lines stay on the flat part of the page, clear of the curl. NB_LINES are the baselines' starts.
+  const NB_LINES = [[337, 287], [322, 311], [342, 339]], NB_ALONG = [120, 18], NB_DOWN = [-80, 100], NB_SIZE = 18, NB_AT = [400, 320];
   shot('B2_float', BR[2].t0 - .05, BR[3].t0 - .05, async (t, lt, dur) => {
     paper(G, 'snow');
     const z = lerp(2.3, 2.75, easeInOut(clamp(lt / dur)));
@@ -172,8 +171,8 @@ async function initShots2() {
       handwrite(t, s, x, y, t0, t1, { size: NB_SIZE * W / 960 * z, col: 'graphite', page: [ax, ay, bx * fy, by * fy] });
     });
   });
-  // under the red dusk sky, eyes lifted, one hand raised; chest-up, framed medium. With her head tilted back MediaPipe's mesh
-  // slips (irises on her cheek, a mouth on her chin), so the face is drawn from the plate's own edges only (faceLines: false)
+  // under the red-orange dusk sky over the bay, eyes lifted, one hand raised; chest-up, framed medium. As she looks up MediaPipe's
+  // mesh still slips on some frames (a mouth on her chin), so the face is drawn from the plate's own edges only (faceLines: false)
   shot('B3_never', BR[3].t0 - .05, br1, async (t, lt) => {
     paper(G, 'snow');
     await singer(t, 'jade_brk_v4', { view: { zoom: 1.02 }, faceLines: false, hatch: { spacing: 6.2, mask: quiet([[W / 2 - 760, H - 175, W / 2 + 760, H - 45]], .7) } });
@@ -193,9 +192,10 @@ async function initShots2() {
   };
   // A1 is two halves: Leonov's hand drawing the sunrise in the cabin (black paper), then the singer's hand writing lyrics
   // in her notebook (white paper). A1_SPLIT is the cut (a beat in the held note after "in"); A1_B is the second half's plate.
-  // face:false on both hand plates: any face hits there are knuckles.
-  const A1_SPLIT = B(328);                                                       // ≈121.62 s
-  const A1_B = { id: 'jade_hand_writing_v4', tp: t => t - A1_SPLIT };
+  // face:false on both hand plates: any face hits there are knuckles. jade_hand_writing_v4 opens on the bare notebook, her hand
+  // entering and the camera settling closer (frames 1–10), so the half starts at plate .45 s with the hand already writing.
+  const A1_SPLIT = B(328), A1_B0 = .45;                                          // ≈121.62 s
+  const A1_B = { id: 'jade_hand_writing_v4', tp: t => A1_B0 + t - A1_SPLIT };
   shot('A1_snow', ar0, AR[1].t0 - .05, async (t, lt) => {
     const first = t < A1_SPLIT, clear = quiet([[W / 2 - 800, 80, W / 2 + 800, 240]], .8);
     if (first) {
@@ -213,8 +213,8 @@ async function initShots2() {
     paper(G, 'snow');
     const half = W / 2;
     await drawPlateIn(t, 'leonov_drawing_hand', 4.2 + lt * .75, [0, 0, half, H], { paper: 'night', frame: false, spacing: 6.2, zoom: 1.08, cx: .52, cy: .55, face: false });
-    // her hand keeps writing where A1 left it (A1 ends at plate ≈3.3 s)
-    await drawPlateIn(t, 'jade_hand_writing_v4', 3.3 + lt * .55, [half, 0, half, H], { paper: 'snow', frame: false, spacing: 6.2, zoom: 1.08, cx: .58, face: false });
+    // her hand keeps writing where A1 left it (A1 ends at plate ≈3.75 s); slowed so the 6 s take lasts to the end of the shot
+    await drawPlateIn(t, 'jade_hand_writing_v4', A1_B.tp(AR[1].t0 - .05) + lt * .47, [half, 0, half, H], { paper: 'snow', frame: false, spacing: 6.2, zoom: 1.08, cx: .58, face: false });
     subtitle(G, lineAt(t), t, { size: 60, y: H - 90, shadow: 6, split: { x: half, left: 'cream', right: 'graphite' } });
   });
 

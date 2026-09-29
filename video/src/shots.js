@@ -600,16 +600,17 @@ async function initShots() {
     tele(Lt.g, 'THE AIRLOCK IS CAST OFF', 60, 64, t, w[0][0] + .3, { size: 22, weight: 700, col: 'silver', dur: .6 });
     typeFlush(Lt, drawClock(t, 12).n, .3);
   });
-  // the recording studio at night: headphones on, singing into the condenser mic; medium shot.
-  // The take is dark and lit warm-red: lift it, hatch only its real darks (the face too, with only its stronger edges), keep
-  // the skin mostly graphite (sat), and let the dark room thin out toward the edges of the page so she and the mic carry the frame.
+  // the recording studio at night: headphones on, singing into the condenser mic seen side-on; medium shot (waist up).
+  // The take is dark and lit warm-red: lift it a little (more and her black hair goes to bare paper), hatch only its real darks
+  // (the face too, with only its stronger edges), keep the skin mostly graphite (sat: the red light reads as a rash in colour),
+  // and let the dark foam room thin out away from her and the mic (she stands left of centre), so they carry the frame.
+  // The line sits bottom right, in a clearing over the empty foam wall.
   const studioSkin = (L, V) => .72 * Math.pow(smooth(clamp((.66 - (.55 * L + .45 * V)) / .56)), 1.6);   // at most three light layers: shadowed skin stays skin
-  const K4C = [+(Q.get('k4x') ?? 760), +(Q.get('k4y') ?? 420)];   // TEMP
-  const studioLight = (X, Y) => clamp(1.3 - Math.hypot((X - K4C[0]) / 1.25, Y - K4C[1]) / 820, .3, 1) * quiet([[W - 860, H - 270, W - 60, H - 90]], .75)(X, Y);
+  const studioLight = (X, Y) => clamp(1.3 - Math.hypot((X - 760) / 1.25, Y - 420) / 820, .3, 1) * quiet([[W - 860, H - 270, W - 60, H - 90]], .75)(X, Y);
   shot('K4_home', H2[1].words[2][0] - .05, h21, async (t, lt) => {
     paper(G, 'snow');
-    await singer(t, 'jade_studio_v4', { view: { zoom: 1.02 }, ana: { gain: +(Q.get('k4g') ?? 1.1) }, lines: { contrast: +(Q.get('k4c') ?? 2.2), white: +(Q.get('k4w') ?? .62) },
-      hatch: { spacing: 6.2, mask: studioLight }, faceHatch: Q.has('k4skin0') ? {} : { tone: studioSkin, pencilOpt: { sat: .5 } }, faceContour: { hi: +(Q.get('k4fh') ?? .28), lo: +(Q.get('k4fl') ?? .11) } });
+    await singer(t, 'jade_studio_v4', { view: { zoom: 1.02 }, ana: { gain: 1.1 }, lines: { contrast: 2.2, white: .62 },
+      hatch: { spacing: 6.2, mask: studioLight }, faceHatch: { tone: studioSkin, pencilOpt: { sat: .5 } }, faceContour: { hi: .28, lo: .11 } });
     const w = H2[1].words;
     lyricStack(t, [{ s: 'bring me home', t: w[2][0], x: W - 110, y: H - 140, font: FONT.serif(124), col: 'crimson', align: 'right', style: 'rise' }]);
   });
