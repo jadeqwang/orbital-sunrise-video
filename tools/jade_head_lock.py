@@ -163,7 +163,7 @@ def base_matte(b):
     return np.asarray(Image.open(p).convert("L").resize(b.size), dtype=np.float32) / 255
 
 
-def paste_onto(target_path, which="head"):
+def paste_onto(target_path, which="head", o_strength=.6):
     b = Image.open(BASE).convert("RGB"); t = Image.open(target_path).convert("RGB")
     eb, et = eyes(b), eyes(t)
     if eb is None or et is None:
@@ -183,11 +183,13 @@ def paste_onto(target_path, which="head"):
     Lw = cv2.warpAffine(np.asarray(b, dtype=np.float32), M, (W, H), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)
     mw = cv2.warpAffine(m, M, (W, H))[..., None]
     G = np.asarray(t, dtype=np.float32)
+    # take on the scene's light, gently: scale by the colour of the model's highlights on her, not its whole tone curve
+    # (a full per-channel match turned her face flat salmon under the red dusk); her own drawing keeps its values
     sel = mw[..., 0] > .9
-    for c in range(3):
-        lo_a, hi_a = np.percentile(Lw[..., c][sel], [3, 97]); lo_b, hi_b = np.percentile(G[..., c][sel], [3, 97])
-        Lw[..., c] = (Lw[..., c] - lo_a) * (hi_b - lo_b) / max(hi_a - lo_a, 1) + lo_b
-    print(f"  eye scale {s:.3f}")
+    gain = np.float32([np.percentile(G[..., c][sel], 95) / max(np.percentile(Lw[..., c][sel], 95), 1) for c in range(3)])
+    gain = gain / max(gain.max(), 1e-3) * min(gain.max(), 1.0)
+    Lw *= 1 + (gain - 1) * float(o_strength)
+    print(f"  eye scale {s:.3f}, light {np.round(gain, 2)}")
     return Image.fromarray(np.clip(G * (1 - mw) + Lw * mw, 0, 255).astype(np.uint8))
 
 
