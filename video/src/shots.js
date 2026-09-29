@@ -74,7 +74,10 @@ async function drawPlate(t, id, tp, o = {}) {
   if (fbox) {
     const im = await plateImage(id, tpq);
     const pw = im.width, ph = im.height, src = [fbox[0] * pw, fbox[1] * ph, (fbox[2] - fbox[0]) * pw, (fbox[3] - fbox[1]) * ph];
-    const caw = Math.round(clamp(src[2] * 1.5, 160, 480)), cah = Math.round(caw * src[3] / src[2]);
+    // ?fineface (experiment): hatch the face at the source's own resolution, about twice as dense and finer, and draw its
+    // features from the image's edges only (the landmark lines pull eyes, brows and lips toward an average face)
+    const FINE = Q.has('fineface') || o.fineFace;
+    const caw = Math.round(clamp(src[2] * 1.5, 160, FINE ? 1100 : 480)), cah = Math.round(caw * src[3] / src[2]);
     const gF = (o.ana && o.ana.gain) ?? (night ? Math.pow(PLATES[id].gain ?? 1, GAIN_POW) : 1);   // same exposure as the body
     const Fc = analyzePlate(im, caw, cah, { s1: .8, sT: 2.2, sTone: 1, gain: gF }, src);
     const cv = cropView(view, Fc, fbox);
@@ -82,16 +85,20 @@ async function drawPlate(t, id, tp, o = {}) {
     if (night && (o.cloud || Q.has('nightCloud')))
       hatchField(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: 'night', spacing: 5.2, len: [6, 17], w: [1, 1.8], follow: .85, contrast: 1.6, density: .85, ...(o.faceHatch || {}), mask: faceMaskM, fill: skinFill(Fc, cv), region: fregion });
     else { // finer scanline layers for skin
-      const fs = clamp((fregion[2] - fregion[0]) / 700, .6, 1.2);
+      const fs = clamp((fregion[2] - fregion[0]) / 700, .6, 1.2) * (FINE ? .48 : 1), fw = FINE ? .62 : 1;
       lineHatch(pen, Fc, cv, { seed: dIdx * 17 + 3, paper: o.paper ?? 'night', step: 2.6, len: [12, 30], mask: faceMaskM, fill: skinFill(Fc, cv), region: fregion,
-        layers: [{ ang: -0.72, th: .12, sp: 5.4 * fs, w: 1.05, a: .62 }, { ang: 0.85, th: .34, sp: 5.8 * fs, w: 1.05, a: .62 }, { ang: -1.35, th: .56, sp: 5.2 * fs, w: 1.15, a: .72 }, { ang: 0.1, th: .76, sp: 4.2 * fs, w: 1.3, a: .82, dark: true }],
+        layers: [{ ang: -0.72, th: .12, sp: 5.4 * fs, w: 1.05 * fw, a: .62 }, { ang: 0.85, th: .34, sp: 5.8 * fs, w: 1.05 * fw, a: .62 }, { ang: -1.35, th: .56, sp: 5.2 * fs, w: 1.15 * fw, a: .72 }, { ang: 0.1, th: .76, sp: 4.2 * fs, w: 1.3 * fw, a: .82, dark: true }],
+        // fine: graphite on the skin (colour hatching reads as blotches), and lit skin left as bare paper, like a portrait
+        // drawing: the strokes go into the features and the shadows, not across the cheeks
+        ...(FINE ? { step: 1.6, len: [8, 22], white: .72, contrast: 1.7, pencil: (r, g, b, tt, oo, rnd) => { const [h, sa] = hsv(r, g, b); return (h < 12 || h > 340) && sa > .35 && rnd < .3 ? 'crimson' : rnd < .55 ? 'graphite' : 'lead'; } } : {}),
         ...(o.faceHatch || {}) });
     }
     pen.flush(L.g, ord);
-    contourField(pen, Fc, cv, { seed: dIdx * 19 + 7, pencil: night ? 'white' : 'graphite', hi: .2, lo: .08, minLen: 8, w: 1.2, alpha: .6, jit: .7, mask: faceMaskM, ...(o.faceContour || {}) });
+    contourField(pen, Fc, cv, { seed: dIdx * 19 + 7, pencil: night ? 'white' : 'graphite', hi: .2, lo: .08, minLen: 8, w: 1.2, alpha: .6, jit: .7, mask: faceMaskM,
+      ...(FINE ? { hi: .14, lo: .05, minLen: 5, w: .85, alpha: .75, jit: .35 } : {}), ...(o.faceContour || {}) });
     pen.flush(L.g, ord);
-    if (o.faceLines !== false) { faceLines(pen, fm, view, { paper: o.paper ?? 'night', seed: dIdx, lips: !MG, ...(o.faceLines || {}) }); pen.flush(L.g, ord); }   // false: unreliable landmarks, edges only
-    if (MG) { drawMouth(pen, L.g, MG, { paper: o.paper ?? 'night', seed: dIdx }); pen.flush(L.g, ord); }
+    if (o.faceLines !== false && !FINE) { faceLines(pen, fm, view, { paper: o.paper ?? 'night', seed: dIdx, lips: !MG, ...(o.faceLines || {}) }); pen.flush(L.g, ord); }   // false: unreliable landmarks, edges only
+    if (MG) { drawMouth(pen, L.g, MG, { paper: o.paper ?? 'night', seed: dIdx, mono: FINE }); pen.flush(L.g, ord); }
   }
   if (o.extra) { o.extra(pen, F, view, dIdx); pen.flush(L.g, ord); }
   toothIn(L, dIdx);

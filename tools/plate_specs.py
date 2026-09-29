@@ -375,8 +375,10 @@ PLATES.update({
         "flight jacket with its bright orange band around the upper arm, her half-up hair, the arm of her glasses and the side of her cheek; the notebook and her hand in the "
         "middle of the frame, a few lines of handwriting appearing as she writes. She pauses, taps the pencil, then writes another line. Calm, intimate, steady camera. "
         "Photorealistic, shot on 35mm film, present day. No on-screen text, no captions."),
-    "jade_hand_writing_p": dict(duration=6, refs=["JP_OUTFIT"], faces=False, prompt=
-        "Soft daylight from a window. Close-up of a woman's right hand (the white nylon cuff of the cropped flight jacket in the reference at the wrist) writing lyrics "
+    # take2: first frame = take1's first frame with the terry wristband and bare forearm edited into her jacket sleeve
+    # (media/refs/jade_hand_sleeve_1.png), so the book stays where A1's lyric calibration (HW_*) expects it
+    "jade_hand_writing_p": dict(duration=6, refs=["JP_OUTFIT"], faces=False, first_frame="media/refs/jade_hand_sleeve_1.png", prompt=
+        "Soft daylight from a window. Close-up of a woman's right hand (the white nylon sleeve of the cropped flight jacket in the reference, with its ribbed white cuff at the wrist) writing lyrics "
         "with a graphite pencil in an open leather-bound notebook with cream paper on a wooden desk. The page fills most of the frame; lines of handwriting in pencil flow "
         "across it as she writes, the pencil tip and the graphite line clearly visible, paper texture, the leather cover at the edges of the frame. "
         "Only the hand, wrist and notebook, no face. Steady, locked-off camera slightly above. Photorealistic, shot on 35mm film. No on-screen text, no captions."),

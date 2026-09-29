@@ -197,7 +197,6 @@ async function initShots2() {
   // the frame, where the line sits in the first half, so after the cut the line is written on her notebook's blank left page
   // instead, in perspective like B2: HW_* in plate pixels (960×540, the book does not move): head edge (10,367)→(293,252),
   // gutter (293,252)→(627,460). "Art is a landing" is already on the page at the cut; "in the snow" is written from the cut.
-  // view: the take has a white terry band on a bare forearm; framed so the band runs off the right edge and reads as her sleeve
   const A1_SPLIT = B(328), A1_B0 = .45;                                          // ≈121.62 s
   const A1_B = { id: 'jade_hand_writing_p', tp: t => A1_B0 + t - A1_SPLIT };
   const HW_LINES = [[118, 442], [190, 477]], HW_ALONG = [283, -115], HW_DOWN = [334, 208], HW_SIZE = 46;
@@ -210,7 +209,7 @@ async function initShots2() {
       handwrite(t, 'Art is a landing in the snow', W / 2, 190, w[0][0] - .1, w[6][0] + .5, { size: 104, align: 'center', col: 'cream' });
     } else {
       paper(G, 'snow');
-      const { view } = await drawPlate(t, A1_B.id, A1_B.tp(t), { paper: 'snow', rate: 8, view: { zoom: 1.12, cx: .49 }, face: false, hatch: { spacing: 6.2 } });
+      const { view } = await drawPlate(t, A1_B.id, A1_B.tp(t), { paper: 'snow', rate: 8, view: { zoom: 1.02 }, face: false, hatch: { spacing: 6.2 } });
       snowfall(t, 3, 90, 'lead');
       const S = (x, y) => view.toScreen(x / 960, y / 540), dir = ([dx, dy]) => { const [x0, y0] = S(300, 300), [x1, y1] = S(300 + dx, 300 + dy), l = Math.hypot(x1 - x0, y1 - y0); return [(x1 - x0) / l, (y1 - y0) / l]; };
       const [ax, ay] = dir(HW_ALONG), [bx, by] = dir(HW_DOWN), fy = .85;

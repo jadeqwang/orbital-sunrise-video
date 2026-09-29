@@ -46,14 +46,38 @@
   </header>
   <p class="lede">Every change from your notes, as stills from the final round-2 cut. Tap a picture to see it full screen. <em>Your scenes are new</em>, made from your photos.</p>
 
-  <section class="shot" id="firsts">
-    <h2>New: opening stills for your scenes</h2>
-    <p class="did">Made by editing your own photo (the one your Google pencil portrait came from) into each scene, with flattering light and a camera at or above eye level. If you approve, each scene gets animated starting from exactly this frame, so your face stays like this. Tell me which to keep, redo, or drop.</p>
+  <section class="shot" id="drawn">
+    <h2>New: which drawing of you works?</h2>
+    <p class="did">Your hunch about stroke density is part of it. Our renderer hatches the whole face evenly at video resolution, so smooth skin turns into texture, and it draws your eyes and lips from a face-tracking mesh, which pulls them toward an average face. Your Google portrait does the opposite: bare paper on the skin, fine dense lines in the eyes, brows and lips. Left to right: your Google portrait, the film's renderer now, a finer graphite version of the renderer, and Nano Banana drawing the hilltop still in the style of your portrait (the model-drawn route you suggested; the film would then trace and animate it).</p>
     <div class="grid2">
-      <div class="shot"><div class="head"><span class="t">0:32</span><span class="note">hilltop, "bring me home"</span></div><button class="img" type="button"><img src="first_hook1.jpg" alt="Opening still: hilltop, "bring me home"" loading="lazy" width="1920" height="1072"></button></div>
-      <div class="shot"><div class="head"><span class="t">1:09</span><span class="note">studio, your headphones on</span></div><button class="img" type="button"><img src="first_studio.jpg" alt="Opening still: studio, your headphones on" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">ref</span><span class="note">your Google pencil portrait</span></div><button class="img" type="button"><img src="cmp_google.jpg" alt="Google pencil portrait" loading="lazy" width="520" height="520"></button></div>
+      <div class="shot"><div class="head"><span class="t">A</span><span class="note">renderer now</span></div><button class="img" type="button"><img src="cmp_now.jpg" alt="Face drawn by the current renderer" loading="lazy" width="520" height="520"></button></div>
+      <div class="shot"><div class="head"><span class="t">B</span><span class="note">renderer, finer graphite face</span></div><button class="img" type="button"><img src="cmp_fine.jpg" alt="Face drawn by the finer renderer" loading="lazy" width="520" height="520"></button></div>
+      <div class="shot"><div class="head"><span class="t">C</span><span class="note">model-drawn in your portrait's style</span></div><button class="img" type="button"><img src="cmp_model.jpg" alt="Face drawn by the model" loading="lazy" width="520" height="520"></button></div>
+    </div>
+    <div class="shot"><div class="head"><span class="t">C</span><span class="note">the whole model drawing (hilltop, 0:32)</span></div><button class="img" type="button"><img src="pdraw_hook1.jpg" alt="Model pencil drawing of the hilltop still" loading="lazy" width="1920" height="1072"></button></div>
+  </section>
+  <section class="shot" id="firsts">
+    <h2>New: opening stills, with the film's pencil drawing of each</h2>
+    <p class="did">Your real face from your photos, placed into each scene (lined up, relit and blended; only a very light skin and eye touch-up, no shapes changed). Eye size now measures the same as in your photos. Under each still: how the current renderer would draw it in its shot. The red-sky one looks at the camera, not up (none of your photos looks up).</p>
+    <div class="grid2">
+      <div class="shot"><div class="head"><span class="t">0:32</span><span class="note">hilltop, “bring me home”</span></div><button class="img" type="button"><img src="first_hook1.jpg" alt="Opening still: hilltop" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">0:32</span><span class="note">drawn by the film</span></div><button class="img" type="button"><img src="pencil_hook1.jpg" alt="Pencil preview: hilltop" loading="lazy" width="1920" height="1080"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:09</span><span class="note">studio, your headphones on</span></div><button class="img" type="button"><img src="first_studio.jpg" alt="Opening still: studio" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:09</span><span class="note">drawn by the film</span></div><button class="img" type="button"><img src="pencil_studio.jpg" alt="Pencil preview: studio" loading="lazy" width="1920" height="1080"></button></div>
       <div class="shot"><div class="head"><span class="t">1:55</span><span class="note">red sky</span></div><button class="img" type="button"><img src="first_brk.jpg" alt="Opening still: red sky" loading="lazy" width="1920" height="1072"></button></div>
-      <div class="shot"><div class="head"><span class="t">1:51</span><span class="note">writing in the notebook</span></div><button class="img" type="button"><img src="first_notebook.jpg" alt="Opening still: writing in the notebook" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:55</span><span class="note">drawn by the film</span></div><button class="img" type="button"><img src="pencil_brk.jpg" alt="Pencil preview: red sky" loading="lazy" width="1920" height="1080"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:51</span><span class="note">writing in the notebook</span></div><button class="img" type="button"><img src="first_notebook.jpg" alt="Opening still: notebook" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:51</span><span class="note">drawn by the film (full frame; the film zooms onto the page)</span></div><button class="img" type="button"><img src="pencil_notebook.jpg" alt="Pencil preview: notebook" loading="lazy" width="1920" height="1080"></button></div>
+    </div>
+  </section>
+  <section class="shot" id="fixes">
+    <h2>New: fixes (in the next render)</h2>
+    <div class="grid2">
+      <div class="shot"><div class="head"><span class="t">2:02</span><span class="note">your jacket sleeve on the writing hand (was a cuff on a bare arm)</span></div><button class="img" type="button"><img src="new_sleeve.jpg" alt="Hand writing with the jacket sleeve" loading="lazy" width="1280" height="720"></button></div>
+      <div class="shot"><div class="head"><span class="t">2:15</span><span class="note">first HOLD ON: the capsule already tumbling</span></div><button class="img" type="button"><img src="new_hold1.jpg" alt="First hold on" loading="lazy" width="1280" height="720"></button></div>
+      <div class="shot"><div class="head"><span class="t">2:17</span><span class="note">second: through the porthole, the sun still sweeping past</span></div><button class="img" type="button"><img src="new_hold2.jpg" alt="Second hold on" loading="lazy" width="1280" height="720"></button></div>
+      <div class="shot"><div class="head"><span class="t">2:19</span><span class="note">third: pressed into the seats</span></div><button class="img" type="button"><img src="new_hold3.jpg" alt="Third hold on" loading="lazy" width="1280" height="720"></button></div>
     </div>
   </section>
   <section class="shot" id="scenes">

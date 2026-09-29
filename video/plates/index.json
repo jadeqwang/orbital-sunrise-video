@@ -724,8 +724,8 @@
   "fps": 24,
   "w": 960,
   "h": 540,
-  "take": "take1.mp4",
+  "take": "take2.mp4",
   "mattes": true,
-  "gain": 1.1
+  "gain": 1.143
  }
 }

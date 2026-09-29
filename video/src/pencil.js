@@ -520,7 +520,7 @@ function drawMouth(pen, g, M, o = {}) {
     if (!night) {
       g.save(); g.beginPath(); poly.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.clip();
       const p2 = new Pen(), x0 = M.mx - M.wid, x1 = M.mx + M.wid, y0 = M.my - M.gap, y1 = M.my + M.gap * 1.2;
-      for (let y = y0; y < y1; y += 2.6) for (let x = x0; x < x1; x += 3) { if (hash3(x | 0, y | 0, seed) < .8) p2.l(x, y, x + 7, y - 5, hash3(x | 0, y | 0, seed + 1) < .3 ? 'crimson' : 'graphite', 1.4, .85); }
+      for (let y = y0; y < y1; y += 2.6) for (let x = x0; x < x1; x += 3) { if (hash3(x | 0, y | 0, seed) < .8) p2.l(x, y, x + 7, y - 5, hash3(x | 0, y | 0, seed + 1) < (o.mono ? 0 : .3) ? 'crimson' : 'graphite', o.mono ? 1 : 1.4, o.mono ? .6 : .85); }
       p2.flush(g); g.restore();
     } else {
       const n = M.iu.length; pen.poly(jit(M.iu.slice(2, n - 2).map(([x, y]) => [x, y + M.gap * .12])), 'silver', 1.1 * k, .5, .2);
