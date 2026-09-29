@@ -163,8 +163,25 @@ def base_matte(b):
     return np.asarray(Image.open(p).convert("L").resize(b.size), dtype=np.float32) / 255
 
 
-def paste_onto(target_path, which="head", o_strength=.6):
-    b = Image.open(BASE).convert("RGB"); t = Image.open(target_path).convert("RGB")
+def sim_from_eyes(ea, eb):
+    """Similarity transform taking eye pair ea onto eye pair eb."""
+    va, vb = ea[1] - ea[0], eb[1] - eb[0]
+    s = np.hypot(*vb) / np.hypot(*va); ang = np.arctan2(vb[1], vb[0]) - np.arctan2(va[1], va[0])
+    R = s * np.float32([[np.cos(ang), -np.sin(ang)], [np.sin(ang), np.cos(ang)]])
+    return np.hstack([R, (eb.mean(0) - R @ ea.mean(0))[:, None]]).astype(np.float32)
+
+
+def src_matte(b, src):
+    p = pathlib.Path(src).with_name(pathlib.Path(src).stem + "_matte.png")
+    if not p.exists():
+        from rembg import remove, new_session
+        remove(b, session=new_session("isnet-general-use"), only_mask=True).save(p)
+    return np.asarray(Image.open(p).convert("L").resize(b.size), dtype=np.float32) / 255
+
+
+def paste_onto(target_path, which="head", o_strength=.6, src=None):
+    """src: paste from this image instead of the base trace (e.g. her photo); the polygons are carried over by the eyes."""
+    b = Image.open(src or BASE).convert("RGB"); t = Image.open(target_path).convert("RGB")
     eb, et = eyes(b), eyes(t)
     if eb is None or et is None:
         print("  no face found"); return None
@@ -173,12 +190,15 @@ def paste_onto(target_path, which="head", o_strength=.6):
     s = np.hypot(*vt) / np.hypot(*vb); ang = np.arctan2(vt[1], vt[0]) - np.arctan2(vb[1], vb[0])
     R = s * np.float32([[np.cos(ang), -np.sin(ang)], [np.sin(ang), np.cos(ang)]])
     M = np.hstack([R, (et.mean(0) - R @ eb.mean(0))[:, None]]).astype(np.float32)
-    k = b.width / 900
+    base = Image.open(BASE); k = base.width / 900
     poly = [(x * k, y * k) for x, y in (HEAD if which == "head" else FACE)]
+    if src:
+        Mb = sim_from_eyes(eyes(base.convert("RGB")), eb)
+        poly = [tuple(Mb @ np.float32([x, y, 1])) for x, y in poly]
     m = Image.new("L", b.size, 0); ImageDraw.Draw(m).polygon(poly, fill=255)
     m = np.asarray(m.filter(ImageFilter.MinFilter(9)).filter(ImageFilter.GaussianBlur(10 * k)), dtype=np.float32) / 255
     if which == "head":
-        m = m * np.clip(base_matte(b) * 1.3, 0, 1)
+        m = m * np.clip((base_matte(b) if not src else src_matte(b, src)) * 1.3, 0, 1)
     W, H = t.size
     Lw = cv2.warpAffine(np.asarray(b, dtype=np.float32), M, (W, H), flags=cv2.INTER_LANCZOS4, borderMode=cv2.BORDER_REPLICATE)
     mw = cv2.warpAffine(m, M, (W, H))[..., None]
