@@ -489,7 +489,14 @@ async function initShots() {
   // matched to her vocal by ear: song time = 30.9 + 1.15 + take time (docs/HANDOFF_JADE.md).
   shot('H1d_home', H1[1].words[2][0] - .05, hk1, async (t, lt) => {
     paper(G, 'snow');
-    await paperTake('jade_sing3', t - 32.05);
+    // review experiments (?h1d=js: the film's pencil engine redraws the take; ?h1d=over: her drawing with the engine's strokes on top)
+    const exp = new URLSearchParams(location.search).get('h1d');
+    if (exp !== 'js') await paperTake('jade_sing3', t - 32.05);
+    if (exp === 'js' || exp === 'over') {
+      G.save(); if (exp === 'over') G.globalAlpha = .45;
+      await drawPlate(t, 'jade_sing3_169', t - 32.05, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
+      G.restore();
+    }
     const w = H1[1].words;
     lyricStack(t, [
       { s: 'bring me home', t: w[2][0], x: 110, y: H - 140, font: FONT.serif(124), col: 'crimson', style: 'rise' },

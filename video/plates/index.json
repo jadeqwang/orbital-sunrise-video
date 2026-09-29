@@ -742,5 +742,14 @@
    201
   ],
   "kind": "paper"
+ },
+ "jade_sing3_169": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false,
+  "gain": 1.0
  }
 }

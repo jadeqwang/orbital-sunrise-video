@@ -46,6 +46,18 @@ def place(sheet, layer, scale, x, y, fade_left=0.0):
     return sheet
 
 
+def backdrop(path, cx=.755, cy=.42, rx=.2, ry=.66, soft=.16, strength=.9):
+    """A pencil landscape (drawn on its own paper) as a multiply layer on the sheet, with a soft clearing around her so no
+    line of it runs over her face, hair or jacket: like a sketchbook page where the drawing thins out round the figure."""
+    a = np.asarray(Image.open(path).convert("RGB").resize((W, H), Image.LANCZOS), float)
+    paper = np.percentile(a.reshape(-1, 3), 90, axis=0)
+    L = np.clip(a / paper, 0, 1)
+    y, x = np.mgrid[0:H, 0:W]
+    d = np.hypot((x / W - cx) / rx, (y / H - cy) / ry)
+    m = np.clip((d - 1) / soft, 0, 1)[..., None] * strength
+    return 1 - (1 - L) * m
+
+
 def lyric(img, text="bring me home", size=124, x=110, y=H - 140):
     d = ImageDraw.Draw(img)
     d.text((x, y), text, font=ImageFont.truetype(str(FONT), size), fill=CRIMSON, anchor="ls")
@@ -75,7 +87,7 @@ if __name__ == "__main__":
     main(pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "media" / "refs")
 
 
-def video_on_paper(src, out, audio_from=None, lag=0.0, size=(1280, 720), text=True):
+def video_on_paper(src, out, audio_from=None, lag=0.0, size=(1280, 720), text=True, bg=None):
     """A pencil-on-paper take (any aspect) laid on Snow paper like framing A, with the song from `audio_from` shifted by `lag`
     (song time = 30.9 + lag + clip time; 30.9 s is where media/audio_refs/jade_hook1.mp3 starts in the song)."""
     import subprocess, cv2
@@ -88,6 +100,8 @@ def video_on_paper(src, out, audio_from=None, lag=0.0, size=(1280, 720), text=Tr
         fs.append(cv2.cvtColor(f, cv2.COLOR_BGR2RGB).astype(float))
     paper = np.median(np.concatenate([f[:20].reshape(-1, 3) for f in fs[::12]]), axis=0)
     base = snow_paper()
+    if bg is not None:
+        base = base * backdrop(bg)
     h, w = fs[0].shape[:2]
     s = H / h
     x = W - round(w * s) - 150
