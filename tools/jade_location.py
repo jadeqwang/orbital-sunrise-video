@@ -228,6 +228,21 @@ FIXES = {
         "drawn. Only blend the head into the picture: give her full, thick dark hair on the crown of her head that flows "
         "continuously into the long hair blowing out behind her, so there is no visible seam or halo around her head, and match "
         "the pencil strokes and night light around it. Keep everything else in image 1 exactly as it is. No text, no border."),
+    # 1:09 from her approved still (image 1): her head untouched, pose/hair/trousers/wires from the pose study (image 2)
+    "rare_pose_keep_head": ("Image 1 is her approved portrait: her head is exactly right. Keep her head, face, forehead, "
+        "hairline, glasses and pale pink headphones exactly as in image 1: the same size, the same place in the frame, the same "
+        "angle, the same pencil lines; do not redraw or move them, and keep the camera exactly where it is in image 1. Change "
+        "everything below and around her head to match image 2: her arms spread wide out to the sides, palms open; her full, "
+        "long dark hair blowing out behind her in the wind; loose grey-blue cargo trousers with a black belt and a long orange "
+        "strap; the open platform without railings, the cables, the diagonal support wires, the orange light, the clouds and the "
+        "night sky. Draw her body in proportion to her head as it is in image 1. Keep her black mock-neck crop top with bare "
+        "midriff and white cropped jacket with orange bands, and the loose coloured-pencil style. No text, no border."),
+    # her hairline sits too low after the pose change; image 2 (result 2) has her real high forehead
+    "rare_hairline": ("Edit image 1 only at her hairline: her forehead should be taller, like in image 2. Move her hairline "
+        "and the centre parting up so there is a high, broad forehead above her brows, exactly as high as in image 2, with her "
+        "dark hair swept back from it on both sides under the headphones. Keep her face below the brows, glasses, headphones, "
+        "head size and position, the long hair blowing behind her, her pose, clothes and the whole setting exactly as in image 1. "
+        "No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
