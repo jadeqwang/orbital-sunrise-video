@@ -314,6 +314,15 @@ FIXES = {
         "wide heart-shaped face and tapering chin, as the same East Asian woman. Keep her glasses, headphones, expression, "
         "the whole body, pose, clothes, setting, camera and the loose coloured-pencil style as in image 1. No makeup, no added "
         "lines. No text, no border."),
+    # her notes on the sp_2 takes: no stars in the sky; the trousers should be real work cargo pants for a launch platform
+    "rare_stars_pants": ("Edit image 1. Do not change the camera, the framing or her: her head, face, hair, glasses, pale pink "
+        "headphones, jacket, crop top, pose and body angle stay exactly as drawn. Change only two things: 1) fill the deep blue "
+        "night sky with stars: many small white stars and a few brighter four-pointed ones, drawn in white pencil, thickest high "
+        "in the sky and thinning towards the clouds. 2) make her trousers rugged utility work trousers of the kind crew wear on a "
+        "rocket launch platform: heavy, durable grey-blue canvas, a straight loose fit, big bellows cargo pockets on the thighs "
+        "with button flaps, reinforced knee panels, double stitching, a tool loop and a hammer loop, a sturdy black work belt; "
+        "keep the long orange strap hanging from the belt. Keep everything else exactly as in image 1, in the same loose "
+        "coloured-pencil style. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
