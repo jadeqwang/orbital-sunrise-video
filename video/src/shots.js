@@ -669,10 +669,13 @@ async function initShots() {
       await singer(t, 'jade_studio_p', { view: { zoom: 1.02 }, ana: { gain: 1.1 }, lines: { contrast: 2.2, white: .62 },
         hatch: { spacing: 6.2, mask: studioLight }, faceHatch: { tone: studioSkin, pencilOpt: { sat: .5 } }, faceContour: { hi: .28, lo: .11 } });
     } else {
-      const tp = t - (67.4 + +(new URLSearchParams(location.search).get('k4lag') ?? .7));
-      await paperTake('jade_studio_loc', tp);
+      // her Rare Earth nod: on the open tower platform above the clouds at night, arms spreading as she sings (take F, lips by
+      // ear: her "A", song time = 67.4 + 0.5 + take time). ?k4=studio: the vocal-booth take (lag 0.7).
+      const studio = new URLSearchParams(location.search).get('k4') === 'studio', id = studio ? 'jade_studio_loc' : 'jade_rare_her';
+      const tp = t - (67.4 + +(new URLSearchParams(location.search).get('k4lag') ?? (studio ? .7 : .5)));
+      await paperTake(id, tp);
       G.save(); G.globalAlpha = .45;
-      await drawPlate(t, 'jade_studio_loc', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
+      await drawPlate(t, id, tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
       G.restore();
     }
     const w = H2[1].words;
