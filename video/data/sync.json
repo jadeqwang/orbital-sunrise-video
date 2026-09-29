@@ -49,5 +49,41 @@
   "audio_lag": 0.667,
   "audio_corr": 0.845,
   "take": "take2.mp4"
+ },
+ "jade_hook1_v4": {
+  "lag": -0.375,
+  "source": "mouth",
+  "window": [
+   31.5,
+   34.3
+  ],
+  "mouth_corr": 0.798,
+  "audio_lag": -0.792,
+  "audio_corr": 0.566,
+  "note": "mouth curve vs vocal envelope over the part H1d uses: lips part on 'bring' at -0.375 s (whole-take best -0.75 is pulled by the 'sunrise' tail; event fit hit the search edge)",
+  "take": "take1.mp4"
+ },
+ "jade_studio_v4": {
+  "lag": 0.083,
+  "source": "mouth",
+  "window": [
+   68.5,
+   70.9
+  ],
+  "mouth_corr": 0.828,
+  "audio_lag": -0.792,
+  "audio_corr": 0.304,
+  "note": "the take opens on 'bring' and then holds one wide-open vowel to the end: the lag only places the onset",
+  "take": "take3.mp4"
+ },
+ "jade_brk_v4": {
+  "lag": 0.708,
+  "source": "audio",
+  "mouth_corr": 0.304,
+  "mouth_lag": 0.708,
+  "audio_lag": 0.708,
+  "audio_corr": 0.715,
+  "note": "whole-take mouth curve and the clip's audio placement agree on +0.708 s; inside B3's window alone (114.5-118) the mouth fit is weak (r .25)",
+  "take": "take2.mp4"
  }
 }
