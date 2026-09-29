@@ -311,14 +311,17 @@ async function initShots2() {
     lyricStack(t, [{ s: 'DOING THE MATH', t: w[0][0], x: W / 2, y: 520, size: 150, align: 'center', style: 'rise' }, { s: 'WITH A SPINNING SUN', t: w[3][0], x: W / 2, y: 640, size: 110, align: 'center', style: 'rise', col: 'gold' }]);
   });
   const HO = BD[2].words; // hold on ×3
-  const holds = [[HO[0][0], 'retrofire', .3, 170], [HO[2][0], 'capsule_spin', .4, 240], [HO[4][0], 'g_force', .6, 330]];
+  // already tumbling on the first HOLD ON (outside), then through the porthole with the sun still sweeping past, then the g-load
+  const holds = [[HO[0][0], 'capsule_spin', .4, 170, { rate: 1.5, roll: .13, zoom: .16 }], [HO[2][0], 'porthole_spin', .1, 240, { face: false, rate: 1.2, sun: true }], [HO[4][0], 'g_force', .6, 330]];
   shot('G3_hold', BD[2].t0 - .05, bd1, async (t, lt, dur) => {
     paper(G, 'night');
     let cur = holds[0]; for (const h of holds) if (t >= h[0] - .05) cur = h;
     const riser = clamp((t - 139.5) / (bd1 - 139.5));
     const shake = 6 + riser * 22;
-    await drawPlate(t, cur[1], cur[2] + (t - cur[0]), { rate: riser > .3 ? 24 : 12, view: { zoom: 1.05 + riser * .15, ox: (hash(Math.floor(t * 24)) - .5) * shake, oy: (hash(Math.floor(t * 24) + 7) - .5) * shake },
+    const ho = cur[4] || {};
+    const { view } = await drawPlate(t, cur[1], cur[2] + (t - cur[0]) * (ho.rate || 1), { face: ho.face, rate: riser > .3 ? 24 : 12, view: { zoom: 1.05 + (ho.zoom || 0) + riser * .15, rot: ho.roll ? -ho.roll + (t - cur[0]) * ho.roll * 1.1 : 0, ox: (hash(Math.floor(t * 24)) - .5) * shake, oy: (hash(Math.floor(t * 24) + 7) - .5) * shake },
       extra: (pen) => edgePanic(pen, .35 + riser * .65, drawClock(t, 24).n * 13) });
+    if (ho.sun && view) portholeSun(t, view);
     const idx = holds.indexOf(cur);
     lyricStack(t, [{ s: 'HOLD ON', t: cur[0], x: W / 2, y: H / 2 + cur[3] * .35, size: cur[3], align: 'center', style: 'slam', col: idx === 2 ? 'gold' : 'white' }]);
     if (t > bd1 - .12) { G.fillStyle = P.cream; G.globalAlpha = clamp((t - (bd1 - .12)) / .12); G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
