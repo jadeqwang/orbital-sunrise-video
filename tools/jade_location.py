@@ -323,6 +323,27 @@ FIXES = {
         "with button flaps, reinforced knee panels, double stitching, a tool loop and a hammer loop, a sturdy black work belt; "
         "keep the long orange strap hanging from the belt. Keep everything else exactly as in image 1, in the same loose "
         "coloured-pencil style. No text, no border."),
+    "rare_stars_anime_pants": ("Edit image 1. Do not change the camera, the framing or her: her head, face, hair, glasses, pale "
+        "pink headphones, jacket, crop top, pose and body angle stay exactly as drawn. Change only two things: 1) fill the deep "
+        "blue night sky with stars: many small white stars and a few brighter four-pointed ones, drawn in white pencil, thickest "
+        "high in the sky and thinning towards the clouds. 2) make her trousers loose, baggy cargo trousers like the ones in image "
+        "2: very dark, between navy blue and black, a wide relaxed fit with big cargo pockets on the thighs, a black belt, and "
+        "the long orange strap hanging down the front from the belt. Use image 2 only for the trousers, belt and strap; do not "
+        "copy image 2's face, pose or framing. Keep everything else exactly as in image 1, in the same loose coloured-pencil "
+        "style. No text, no border."),
+    # as rare_stars_anime_pants, but image 2 = the owner's trousers-only crop (pants_ref2, cut above the knee so the model
+    # keeps the hip-level framing); very baggy parachute/jogger cargo trousers, near-black navy, cinched at the ankle
+    "rare_stars_baggy_pants": ("Edit image 1. Do not change the camera, the framing or her: her head, face, hair, glasses, pale "
+        "pink headphones, jacket, crop top, pose and body angle stay exactly as drawn, with her arms down at her sides. The "
+        "picture still ends at her upper thighs exactly as in image 1: do not zoom out, do not show her knees or feet. Change "
+        "only two things: 1) fill the deep blue night sky with stars: many small white stars and a few brighter four-pointed "
+        "ones, drawn in white pencil, thickest high in the sky and thinning towards the clouds. 2) make her trousers like the "
+        "trousers in image 2, but near-black navy whatever their colour in image 2: very baggy parachute/jogger-style cargo "
+        "trousers, loose and billowy through the hip and thigh, with side cargo pockets, soft matte fabric with deep drape "
+        "folds (they are gathered and cinched at the ankle, below the bottom edge of the picture); a black belt, and the long "
+        "orange strap still hanging down the front from the belt. Only copy the trousers from image 2; do not copy anything "
+        "else from it. Keep everything else exactly as in image 1, in the same loose coloured-pencil style. No text, no "
+        "border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
