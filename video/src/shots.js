@@ -489,8 +489,9 @@ async function initShots() {
   // matched to her vocal by ear: song time = 30.9 + 1.15 + take time (docs/HANDOFF_JADE.md).
   shot('H1d_home', H1[1].words[2][0] - .05, hk1, async (t, lt) => {
     paper(G, 'snow');
-    // review experiments (?h1d=js: the film's pencil engine redraws the take; ?h1d=over: her drawing with the engine's strokes on top)
-    const exp = new URLSearchParams(location.search).get('h1d');
+    // her drawing with the film's pencil engine going over it at half strength, so she boils like the other shots (her pick, "1B").
+    // Review variants: ?h1d=plain (the drawing alone), ?h1d=js (the engine redraws her completely; loses her face)
+    const exp = new URLSearchParams(location.search).get('h1d') ?? 'over';
     if (exp !== 'js') await paperTake('jade_sing3', t - 32.05);
     if (exp === 'js' || exp === 'over') {
       G.save(); if (exp === 'over') G.globalAlpha = .45;
