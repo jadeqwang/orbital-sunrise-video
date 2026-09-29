@@ -619,16 +619,19 @@ async function initShots() {
     const pz = +(new URLSearchParams(location.search).get('p4zoom') ?? 1.7);
     let id = 'tube_struggle', tp = 1.6 + lt * 2, vz = { zoom: pz, cx: .56, cy: .5 };
     // push: from the whole tube (sat a little low, under the lyric) to his face at uv (.21, .465), held below the lyric (y≈730)
-    if (!old) { const e = smooth(clamp(lt / (57.2 - (PR[3].t0 - .05)))); id = 'airlock_cut'; tp = 0; vz = { zoom: lerp(1.02, 3.0, e), cx: lerp(.5, .212, e), cy: lerp(.44, .4035, e), rot: e * .3 }; }
+    // he reaches (airlock_cut is the still animated: one arm slides up the wall past his helmet until the glove presses flat on
+    // the hatch, 5 s played in the push's first 1.9 s, so the glove is flat on the hatch while it is still in frame and stays there as the push closes on his face); ?p4arm=0: the still
+    const armT = new URLSearchParams(location.search).get('p4arm') !== '0', pushDur = 57.2 - (PR[3].t0 - .05);
+    if (!old) { const e = smooth(clamp(lt / pushDur)); id = armT ? 'airlock_cut' : 'airlock_cut_still'; tp = armT ? lerp(.3, 5, clamp(lt / (pushDur * .72))) : 0; vz = { zoom: lerp(1.02, 3.0, e), cx: lerp(.5, .212, e), cy: lerp(.44, .4035, e), rot: e * .3 }; }
     if (roll > 0) {
       const step = roll < .5 ? 2 : 4, n = Math.floor(beatPos(t) * step);
       const alts = [[old ? 'tube_struggle' : 'airlock_side', old ? 7.2 : 0], ['valve_bleed', 3.5], ['visor_cu', 4.5], ['glove_cu', 3], ['suit_balloon', 4]];
       const a = alts[n % alts.length]; id = a[0]; tp = a[1] + frac(beatPos(t) * step) * .3; vz = id === 'airlock_side' ? { zoom: 1.2 + roll * .06, rot: .35, ox: 120, oy: 60 } : { zoom: 1.1 + roll * .25 };
     }
     // the stills' faces (hand-boxed in their meta) get the face pass, drawn from hatching and edges (no landmarks)
-    const still = id === 'airlock_cut' || id === 'airlock_side';
-    await drawPlate(t, id, tp, { rate, view: vz, face: id === 'tube_struggle' ? tp > 5.2 : still || undefined, ...(still ? { faceLines: false, faceHatch: { white: .66, contrast: 1.3 }, faceContour: { hi: .25, lo: .1 } } : {}), ...(id === 'airlock_cut' ? { aw: 960, ah: 540 } : {}),
-      hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], .75 * (1 - roll)) },
+    const still = id === 'airlock_cut' || id === 'airlock_cut_still' || id === 'airlock_side';
+    await drawPlate(t, id, tp, { rate, view: vz, face: id === 'tube_struggle' ? tp > 5.2 : still || undefined, ...(still ? { faceLines: false, faceHatch: { white: .66, contrast: 1.3 }, faceContour: { hi: .25, lo: .1 } } : {}), ...(id.startsWith('airlock_cut') ? { aw: 960, ah: 540 } : {}),
+      hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], (id === 'airlock_cut' ? .5 : .75) * (1 - roll)) },   // the reaching arm passes under the words: a lighter clearing
       extra: (pen) => edgePanic(pen, .5 + roll * .5, drawClock(t, rate).n * 11) });
     evaHud(t);
     const w = PR[3].words; // Ninety minutes inside the airlock door

@@ -816,11 +816,11 @@
   "gain": 1.0
  },
  "airlock_cut": {
-  "n": 1,
+  "n": 121,
   "fps": 24,
-  "w": 2560,
-  "h": 1440,
-  "take": "still.jpg, prepared for the night pencil by tools/airlock_stills.py (tones re-laid, subject matte, hand-set face box)",
+  "w": 1920,
+  "h": 1080,
+  "take": "take1.mp4 (Seedance 2.5 from still.jpg: he slides one arm up the wall to the hatch), registered onto the still and prepared for the night pencil by tools/airlock_stills.py (tones re-laid, per-frame matte with the moving arm, hand-set face box)",
   "mattes": true,
   "gain": 1.0
  },
@@ -830,6 +830,15 @@
   "w": 2560,
   "h": 1440,
   "take": "still.jpg, prepared for the night pencil by tools/airlock_stills.py (tones re-laid, subject matte, hand-set face box)",
+  "mattes": true,
+  "gain": 1.0
+ },
+ "airlock_cut_still": {
+  "n": 1,
+  "fps": 24,
+  "w": 2560,
+  "h": 1440,
+  "take": "still.jpg (airlock_cut), prepared for the night pencil by tools/airlock_stills.py (tones re-laid, subject matte, hand-set face box)",
   "mattes": true,
   "gain": 1.0
  }
