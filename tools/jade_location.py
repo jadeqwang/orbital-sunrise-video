@@ -252,6 +252,50 @@ FIXES = {
         "becomes the one in image 2: an open platform edge high above a sea of clouds at night, a deep blue sky with stars, long "
         "thin diagonal support wires running down across the sky, and the small orange box at the platform's edge. Keep image 1's "
         "loose coloured-pencil style. Do not copy image 2's face. No text, no border."),
+    # rare_one_edit copied the anime body's angle, mirrored against her head; turn her body back the way result 2 has it
+    "rare_body_turn": ("Edit image 1. Her body is turned the wrong way for her head. Turn her torso, shoulders and hips to the "
+        "same angle as in image 2: her body turned the same way her head and face are turned, towards the left of the frame, her "
+        "right shoulder (on the left of the picture) further from the camera, exactly the three-quarter body angle of image 2. "
+        "Keep her arms spread wide and palms open (adjust them naturally to the turned body), and keep her head exactly the same "
+        "size, place and angle, her face, glasses, hair, headphones, jacket, crop top, cargo trousers, the camera and the whole "
+        "setting exactly as in image 1. No text, no border."),
+    # the same turn in words only (with result 2 as a reference the model brought its scaffolding back)
+    "rare_body_turn_text": ("Edit image 1. Her body is turned the wrong way for her head. Turn her torso, shoulders and hips a "
+        "little so her body faces the same way as her face, towards the left of the frame, in a relaxed three-quarter angle. "
+        "Keep her arms spread wide with palms open (adjusted naturally to the turned body). Keep her head exactly the same size, "
+        "place and angle, her face, glasses, hair, headphones, jacket, crop top and cargo trousers, and keep the camera and the "
+        "whole setting exactly as in image 1: the open platform edge, clouds, starry sky, the thin diagonal support wires and "
+        "the orange box. Do not add any railings, posts, beams or scaffolding. No text, no border."),
+    # rare_one_edit, but her body keeps image 1's angle (the anime body came out mirrored against her head)
+    "rare_one_edit_body": ("Edit image 1. Do not change the camera: same framing, same zoom, her head exactly the same size, "
+        "place and angle, her face, hair, glasses and pale pink headphones exactly as drawn. Her torso, shoulders and hips stay "
+        "at exactly the same three-quarter angle as in image 1, turned the same way as her face; only her arms move. Make only "
+        "these changes: 1) from her shoulders, she spreads her arms wide out to the sides, palms open; her hands may go past "
+        "the edges of the frame. 2) her trousers become the loose grey-blue cargo trousers with a black belt and a long orange "
+        "strap from image 2. 3) remove the scaffolding: the metal frame, beams, posts and the thick diagonal girder. 4) the setting "
+        "becomes the one in image 2: an open platform edge high above a sea of clouds at night, a deep blue sky with stars, long "
+        "thin diagonal support wires running down across the sky, and the small orange box at the platform's edge. Keep image 1's "
+        "loose coloured-pencil style. Do not copy image 2's face or body angle. No text, no border."),
+    # the same edit in words only: with the anime drawing as an input the model copies its wide framing and shrinks her head
+    "rare_one_edit_words": ("Edit image 1. Do not change the camera: same framing, same zoom, her head exactly the same size, "
+        "place and angle, her face, hair, glasses and pale pink headphones exactly as drawn. Her torso stays at the same "
+        "three-quarter angle, turned the same way as her face; only her arms and trousers change. 1) From her shoulders she spreads "
+        "her arms wide out to the sides at shoulder height, palms open, like a singer holding a big note; her hands may go past "
+        "the edges of the frame. 2) Her trousers become loose grey-blue cargo trousers with side pockets, a black belt and a long "
+        "orange strap hanging down the front. 3) Remove all the scaffolding: the metal frame, beams, posts, cables and the thick "
+        "diagonal girder, and the grated floor. 4) She stands at the open edge of a high platform above a sea of clouds at night: "
+        "a deep blue sky full of small white stars, a few long thin support wires running diagonally down across the sky from "
+        "high above, and a small orange box at the platform's edge by her feet. Keep image 1's loose coloured-pencil style and "
+        "night light. No text, no border."),
+    # arms stay down in the still (Seedance spreads them as she sings): only the setting and trousers change, so the model keeps
+    # her head; spreading the arms in the still made it zoom out to fit her hands in
+    "rare_setting_pants": ("Edit image 1. Do not change the camera: same framing, same zoom, and keep her exactly as she is: her "
+        "head, face, hair, glasses, pale pink headphones, jacket, crop top, pose, arms and body angle exactly as drawn. Change "
+        "only: 1) her trousers become the loose grey-blue cargo trousers with a black belt and a long orange strap from image 2. "
+        "2) remove the scaffolding: the metal frame, beams, posts, the thick diagonal girder and the grated floor. 3) the setting "
+        "becomes the one in image 2: an open platform edge high above a sea of clouds at night, a deep blue sky with small white "
+        "stars, long thin support wires running diagonally down across the sky, and the small orange box at the platform's edge. "
+        "Keep image 1's loose coloured-pencil style and night light. Do not copy image 2's face or pose. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
