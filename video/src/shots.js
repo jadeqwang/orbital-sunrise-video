@@ -497,7 +497,8 @@ async function initShots() {
     // ?h1d=loc: on location (the model drew the Hill Country around her, her own face kept; take A, lips +0.58 s);
     // ?h1d=locfade: the same with everything but her face and hair faded toward the paper (tools/jade_fade.py --head)
     const loc = exp === 'loc' || exp === 'locfade', id = loc ? (exp === 'loc' ? 'jade_loc' : 'jade_locfade') : 'jade_sing3';
-    const tp = loc ? t - (30.9 + .58) : t - 32.05;
+    const lag = +(new URLSearchParams(location.search).get('h1dlag') ?? .58);   // review: try lip timings by ear
+    const tp = loc ? t - (30.9 + lag) : t - 32.05;
     if (exp !== 'js') await paperTake(id, tp);
     if (exp !== 'plain') {
       G.save(); if (exp !== 'js') G.globalAlpha = .45;
@@ -506,7 +507,8 @@ async function initShots() {
     }
     const w = H1[1].words;
     lyricStack(t, [
-      { s: 'bring me home', t: w[2][0], x: 110, y: H - 140, font: FONT.serif(124), col: 'crimson', style: 'rise' },
+      loc ? { s: 'bring me home', t: w[2][0], x: W - 110, y: 190, font: FONT.serif(124), col: 'crimson', style: 'rise', align: 'right' }   // on location: the open sky, top right
+          : { s: 'bring me home', t: w[2][0], x: 110, y: H - 140, font: FONT.serif(124), col: 'crimson', style: 'rise' },
     ]);
   });
 
