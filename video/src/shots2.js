@@ -265,15 +265,18 @@ async function initShots2() {
       // where the sun is in the tumble: a pass every SPIN_BEATS beats, this port half a turn after the other
       const bp = (beatPos(t) - SPIN_B0) / SPIN_BEATS - P0.lag, ph = bp - Math.round(bp);
       const f = Math.exp(-Math.pow(ph / .16, 2));                     // 1 as the sun crosses this port, 0 facing black space
-      G.save(); G.beginPath(); G.arc(cx, cy, R, 0, TAU); G.clip(); if (P0.top) { G.beginPath(); G.rect(cx - R, cy - R, 2 * R, R * .95); G.clip(); }
-      paper(G, 'night', clamp(.85 * (1 - f)));                        // dead black glass between passes
-      G.globalCompositeOperation = 'lighter';
-      const gr = G.createRadialGradient(cx, cy, 0, cx, cy, R); gr.addColorStop(0, `rgba(255,236,200,${.9 * f})`); gr.addColorStop(.7, `rgba(255,190,120,${.55 * f})`); gr.addColorStop(1, 'rgba(255,160,90,0)');
-      G.fillStyle = gr; G.fillRect(cx - R, cy - R, 2 * R, 2 * R); G.restore();
-      if (f > .05) {                                                  // the flash spills into the cabin round the rim
+      // soft-edged, never clipped: a hard disc that doesn't sit exactly on the drawn glass reads as a stray shape (her note).
+      // The left port's light is centred up on its visible top half, clear of the helmet
+      const gx = cx, gy = P0.top ? cy - R * .45 : cy, gR = P0.top ? R * .8 : R * 1.05;
+      G.save(); G.globalCompositeOperation = 'multiply';                // dark glass facing space
+      const dk = G.createRadialGradient(gx, gy, 0, gx, gy, gR); const d = .7 * (1 - f);
+      dk.addColorStop(0, `rgba(${Math.round(255 - 235 * d)},${Math.round(255 - 235 * d)},${Math.round(255 - 230 * d)},1)`); dk.addColorStop(.55, `rgba(${Math.round(255 - 180 * d)},${Math.round(255 - 180 * d)},${Math.round(255 - 175 * d)},1)`); dk.addColorStop(1, 'rgba(255,255,255,1)');
+      G.fillStyle = dk; G.fillRect(gx - gR, gy - gR, 2 * gR, 2 * gR); G.restore();
+      if (f > .03) {                                                     // the sun crossing: a glow that spills into the cabin
         G.save(); G.globalCompositeOperation = 'lighter';
-        const sp = G.createRadialGradient(cx, cy, R * .8, cx, cy, R * 3); sp.addColorStop(0, `rgba(255,190,120,${.28 * f})`); sp.addColorStop(1, 'rgba(255,190,120,0)');
-        G.fillStyle = sp; G.fillRect(cx - R * 3, cy - R * 3, R * 6, R * 6); G.restore();
+        const gr = G.createRadialGradient(gx, gy, 0, gx, gy, gR * 2.6);
+        gr.addColorStop(0, `rgba(255,236,200,${.85 * f})`); gr.addColorStop(.3, `rgba(255,190,120,${.4 * f})`); gr.addColorStop(1, 'rgba(255,160,90,0)');
+        G.fillStyle = gr; G.fillRect(gx - gR * 2.6, gy - gR * 2.6, gR * 5.2, gR * 5.2); G.restore();
       }
     }
   }
