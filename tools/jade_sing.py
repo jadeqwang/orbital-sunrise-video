@@ -65,10 +65,9 @@ SCENES = {
                  "'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips closing on 'b' "
                  "and 'm', opening round and wide on 'home'", "pink headphones on her head",
                  " She stands on a high platform above the clouds at night, under a sky full of white stars that stay in the "
-                 "sky the whole time. She wears very baggy parachute/jogger-style cargo trousers in near-black navy, loose and "
-                 "billowy through the thigh and calf, with side cargo pockets, gathered and cinched at the ankle with hems that "
-                 "puff over her shoes, soft matte fabric that drapes and folds, a black belt and a long orange strap hanging "
-                 "down the front. As she sings she slowly lifts and spreads her arms wide, her face lifting a "
+                 "sky the whole time. She wears very baggy near-black navy parachute cargo trousers, wide and loose from hip to hem, soft "
+                 "matte fabric in deep drape folds, the hems breaking loosely over her sneakers with at most a slight gather "
+                 "right at the ankle, side cargo pockets, a black belt and a long orange strap hanging down the front. As she sings she slowly lifts and spreads her arms wide, her face lifting a "
                  "little to the sky; her hair and the open cropped jacket stir in the wind; the clouds drift slowly below. Her face "
                  "is as expressive as a singer giving everything in a live performance: brows lifting and drawing together with "
                  "the feeling of the words, eyes squeezing shut on the held note, mouth opening wide and round on 'home', cheeks "
@@ -86,7 +85,7 @@ SCENES = {
 }
 
 
-def main(first, out, bg=False, avatar=True, loc=False, scene=None):
+def main(first, out, bg=False, avatar=True, loc=False, scene=None, refs=()):
     prompt, audio, dur = PROMPT + (BG if bg else "") + (LOC if loc else ""), AUDIO, 5
     if scene == "rare":   # her Rare Earth character: an illustrated character, not her likeness (no glasses)
         audio, dur, words, wear, where = SCENES[scene]
@@ -103,9 +102,14 @@ def main(first, out, bg=False, avatar=True, loc=False, scene=None):
     inp = {"prompt": prompt, "duration": dur, "resolution": "720p", "aspect_ratio": "16:9",
            "generate_audio": False, "image": cfai.data_uri(first), "reference_audios": [cfai.data_uri(audio)],
            "use_virtual_avatar": avatar}
+    if refs:   # e.g. a trousers-only crop: seedance reference_images, used for the clothing only
+        inp["reference_images"] = [cfai.data_uri(r) for r in refs]
+        inp["prompt"] += (" The reference image shows only her trousers: dress her in exactly those trousers; take nothing "
+                          "else from it.")
     return cfai.gen("bytedance/seedance-2.5", inp, out, tag="jade_sing", timeout=1800)
 
 
 if __name__ == "__main__":
     sc = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--scene=")), None)
-    main(sys.argv[1], sys.argv[2], "--bg" in sys.argv, "--no-avatar" not in sys.argv, "--loc" in sys.argv, sc)
+    refs = [a.split("=", 1)[1] for a in sys.argv if a.startswith("--ref=")]
+    main(sys.argv[1], sys.argv[2], "--bg" in sys.argv, "--no-avatar" not in sys.argv, "--loc" in sys.argv, sc, refs)
