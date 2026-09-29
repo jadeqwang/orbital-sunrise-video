@@ -199,6 +199,11 @@ FIXES = {
         "jacket, colours, background and night light) except two things. 1) Her arm on the left side of the picture, which now "
         "reaches forward toward the camera, hangs straight down relaxed at her side instead, her hand by her hip, the sleeve of "
         "the cropped jacket falling naturally. 2) " + NO_GLASSES_SHADOW + "No text, no border."),
+    # 1:09, her note: "maybe no railings like in the reference illustration" (image 2 = the Rare Earth wide shot)
+    "rare_no_rail": ("Edit image 1, keeping her exactly as she is (face, glasses, hair, headphones, mock-neck crop top, jacket, pose, "
+        "colours, light) and the loose coloured-pencil style. Change only the platform: remove all the railings and the posts "
+        "around it, so the platform's edge is open straight onto the sea of clouds below, like the open tower platform in image 2. "
+        "Keep the steel cables rising from the platform and the small orange warning light at its edge. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
