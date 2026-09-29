@@ -1,0 +1,18 @@
+{
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "JP_FRONT",
+   "JP_34",
+   "JP_AH",
+   "JP_OUTFIT",
+   "JP_HP"
+  ],
+  "audio": [
+   "media/audio_refs/jade_hook1.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Golden hour on a grassy hilltop above San Francisco, the city and the bay far below in soft haze. the singer Jade: exactly the real woman in the first three reference photos, with her real face unchanged (a broad, soft East Asian face with full cheeks, a high rounded hairline and a large, fully visible forehead, straight dark brows, a rounded nose, full lips, a small mole near her upper lip) and her own thin dark rectangular glasses; long straight black hair swept back from her forehead and falling past her shoulders, no bangs, nothing covering her forehead. She wears the outfit in the fourth reference image (cropped white flight jacket with orange bands and a pale-blue dot on the chest, black ribbed crop top, navy wide-leg cargo pants with orange straps) and, around her neck, the pale dusty-pink over-ear headphones in the fifth reference image. She stands facing the low sun, warm golden light on her face and glasses, wind lifting loose strands of her hair. She sings 'bring me home' up to the sky, lifting her face and eyes to the sky on the last word. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium shot, framed from the waist up with space around her; her face never fills the frame. Slow, gentle push-in that stays medium. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 322
+}

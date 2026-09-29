@@ -336,3 +336,48 @@ PLATES["jade_brk_v4"]["prompt"] = PLATES["jade_brk_v4"]["prompt"].replace(
 PLATES["jade_notebook_v4"]["prompt"] = PLATES["jade_notebook_v4"]["prompt"].replace(
     "We see her shoulder and the white sleeve of her jacket,",
     "We see her shoulder and the white nylon sleeve of her cropped flight jacket with its bright orange band around the upper arm, in sharp focus,")
+
+# ---------------- round 2, Jade from her real photos (no generated sheets): her face straight from media/chars/jade_src/photos ----------------
+# Weighted to photos from the same day (consistent hair and look): front, grin, profile. Hair: her hairstyle that day, half-up half-down.
+R.update({"JP_FRONT": "media/chars/jade_src/photos/jade_photo_5_front_hair.jpg",
+          "JP_GRIN": "media/chars/jade_src/photos/jade_photo_6_grin.jpg",
+          "JP_PROF": "media/chars/jade_src/photos/jade_photo_14_profile_left.jpg",
+          "JP_34": "media/chars/jade_src/photos/jade_photo_9_threequarter_hairline.jpg",
+          "JP_OUTFIT": "media/refs/jade_outfit.jpg", "JP_HP": "media/refs/jade_headphones.jpg"})
+JP_REFS = ["JP_FRONT", "JP_GRIN", "JP_PROF", "JP_OUTFIT", "JP_HP"]
+JADE_P = ("the singer Jade: exactly the real woman in the first three reference photos, her real face unchanged and looking her best (a broad, soft East Asian face "
+          "with full cheeks, clear smooth skin, a high rounded hairline and a large, fully visible forehead, straight dark brows, a rounded nose, full lips, a small mole "
+          "near her upper lip) wearing her own thin dark rectangular glasses. Her hair exactly as in those photos: long straight black hair worn half-up, half-down, "
+          "the top section swept back from her forehead and gathered at the back of her head, the rest falling loose past her shoulders, with one loose face-framing "
+          "section falling beside her face on one side; no bangs. She wears the outfit in the fourth reference image (cropped white flight jacket with orange bands "
+          "and a pale-blue dot on the chest, black ribbed crop top, navy wide-leg cargo pants with orange straps)")
+HP_NECK = "the pale dusty-pink over-ear headphones from the fifth reference image resting around her neck"
+HP_HEAD = ("the pale dusty-pink over-ear headphones from the fifth reference image worn ON her head, the wide padded band over the top of her head "
+           "and the large rounded cups over her ears")
+CHEST = "Medium shot framed from the chest up, her face clear and well lit, about a quarter of the frame height, with space around her head; not a close-up."
+PLATES.update({
+    "jade_hook1_p": dict(duration=5, refs=JP_REFS, audio=["media/audio_refs/jade_hook1.mp3"], generate_audio=True, prompt=
+        f"Golden hour on a grassy hilltop above San Francisco, the city and the bay far below in soft haze. {JADE_P}, with {HP_NECK}. The low sun is off to one side, "
+        f"lighting her face warmly (not behind her), wind lifting loose strands of her hair. She sings 'bring me home' toward the sky, lifting her eyes on the last word. {SING} "
+        f"{CHEST} Slow, gentle push-in. " + LOOK_NOW),
+    "jade_studio_p": dict(duration=5, refs=JP_REFS, audio=["media/audio_refs/jade_hook2.mp3"], generate_audio=True, prompt=
+        f"A small professional recording studio at night: acoustic foam panels, warm practical lamps, a glowing mixing desk out of focus behind the glass. {JADE_P}, with {HP_HEAD}. "
+        "She keeps her glasses on. She sings into a large-diaphragm studio condenser microphone on a stand; the microphone and its round pop filter sit off to one side of her face "
+        f"at chin level, never in front of her mouth, so her lips and whole face stay visible. {SING} {CHEST} Three-quarter angle, steady camera. " + LOOK_NOW),
+    "jade_brk_p": dict(duration=8, refs=JP_REFS, audio=["media/audio_refs/jade_brk.mp3"], generate_audio=True, prompt=
+        f"Dusk on the grassy hilltop above San Francisco: the whole sky has turned deep red and orange. {JADE_P}, with {HP_NECK}. She stands under the red sky singing, "
+        "her head almost level: she looks up with her eyes and tips her chin up only slightly, never throwing her head back, her face three-quarters toward the camera "
+        f"and clearly readable the whole time; she slowly raises one open hand toward the sky as if reaching for something she can't touch. {SING} "
+        "Medium shot from the chest up, her raised hand entering the frame, space around her head. Warm light on her face, rim light on her hair and glasses. " + LOOK_NOW),
+    "jade_notebook_p": dict(duration=6, refs=JP_REFS, prompt=
+        f"Soft daylight from a large window. Over-the-shoulder shot from behind and slightly above her right shoulder: {JADE_P}, with {HP_NECK}. She sits at a wooden desk "
+        "by the window, writing lyrics with a graphite pencil in an open leather-bound notebook with cream pages. We see her shoulder and the white nylon sleeve of her cropped "
+        "flight jacket with its bright orange band around the upper arm, her half-up hair, the arm of her glasses and the side of her cheek; the notebook and her hand in the "
+        "middle of the frame, a few lines of handwriting appearing as she writes. She pauses, taps the pencil, then writes another line. Calm, intimate, steady camera. "
+        "Photorealistic, shot on 35mm film, present day. No on-screen text, no captions."),
+    "jade_hand_writing_p": dict(duration=6, refs=["JP_OUTFIT"], faces=False, prompt=
+        "Soft daylight from a window. Close-up of a woman's right hand (the white nylon cuff of the cropped flight jacket in the reference at the wrist) writing lyrics "
+        "with a graphite pencil in an open leather-bound notebook with cream paper on a wooden desk. The page fills most of the frame; lines of handwriting in pencil flow "
+        "across it as she writes, the pencil tip and the graphite line clearly visible, paper texture, the leather cover at the edges of the frame. "
+        "Only the hand, wrist and notebook, no face. Steady, locked-off camera slightly above. Photorealistic, shot on 35mm film. No on-screen text, no captions."),
+})
