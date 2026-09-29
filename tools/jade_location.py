@@ -81,7 +81,20 @@ SCENES = {
 }
 
 
-def restore_lines(src, edited, out, sigma=None, grow=1.08, feather=18):
+def cheek_mask(L, w, h, feather):
+    """Her cheeks under the glasses, where the drawing carries the shadow her glasses cast from the closet's overhead light."""
+    import cv2
+    P = lambda i: np.array([L[i].x * w, L[i].y * h])
+    m = np.zeros((h, w), np.float32)
+    for lid, nose, edge in ((145, 129, 234), (374, 358, 454)):
+        top, bot = P(lid)[1] + (P(2)[1] - P(lid)[1]) * .12, P(2)[1]
+        x0, x1 = sorted([P(nose)[0], P(edge)[0]])
+        c = ((x0 + x1) / 2, (top + bot) / 2); ax = ((x1 - x0) / 2 * .95, (bot - top) / 2)
+        cv2.ellipse(m, (int(c[0]), int(c[1])), (int(ax[0]), int(ax[1])), 0, 0, 360, 1.0, -1)
+    return cv2.GaussianBlur(m, (0, 0), feather)[..., None]
+
+
+def restore_lines(src, edited, out, sigma=None, grow=1.08, feather=18, skip_cheeks=False):
     """Relit scenes: keep the model's light on her face but her own pencil lines. Inside her face oval the picture is the
     edit's low-frequency light and colour times the original's line detail (original / blurred original), so every line of
     her face is hers while the shading follows the scene. Same geometry is required (the model must not move her)."""
@@ -95,11 +108,39 @@ def restore_lines(src, edited, out, sigma=None, grow=1.08, feather=18):
     pts = np.array([[L[i].x * w, L[i].y * h] for i in FACE_OVAL]); c = pts.mean(0); pts = c + (pts - c) * grow
     m = np.zeros((h, w), np.uint8); cv2.fillPoly(m, [pts.astype(np.int32)], 255)
     m = cv2.GaussianBlur(m.astype(float) / 255, (0, 0), feather)[..., None]
+    if skip_cheeks:   # leave the model's cheeks (lit by the scene, no closet glasses-shadow)
+        m = m * (1 - cheek_mask(L, w, h, feather))
     ga = A.mean(2); detail = np.clip((ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sigma) + 1), 0, 1.15)[..., None]
     light = cv2.GaussianBlur(B, (0, 0), sigma)
     C = light * detail * m + B * (1 - m)
     Image.fromarray(np.clip(C, 0, 255).astype(np.uint8)).save(out, quality=94)
     return out
+
+
+NO_GLASSES_SHADOW = ("The shadow her glasses cast on her cheeks just under the lenses comes from an overhead light in the original "
+    "photo; there is no overhead light in this scene. Remove that shadow: her cheeks under her glasses are lit by the same light "
+    "as the rest of her face. ")
+FIXES = {
+    # 1:09 · her notes on studio2_2: headphones changed style; the lamp behind her makes no sense as the light on her face
+    "studio_fix": ("Edit image 1, keeping it the same drawing, framing and style, and keeping her face, head size, hair, glasses, "
+        "jacket and pose exactly as they are. Make three changes only. 1) Her headphones must be exactly the pale dusty-pink "
+        "over-ear headphones from image 2 (same shape, colour and design), worn on her head: band over the top of her hair, cups "
+        "over her ears. 2) Remove the lamp completely; that side of the booth is grey acoustic foam panels like the rest. "
+        "3) Light her from the front: a soft studio light in front of her and a little to one side, off-camera, so her face is "
+        "evenly and softly lit, with only the faint cool glow of the control-room window behind her on her hair. "
+        + NO_GLASSES_SHADOW + "No text, no border."),
+    "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
+        "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
+}
+
+
+def fix(edited, prefix, name, extra=None, n=2):
+    """Touch up an existing scene edit (FIXES[name]); extra = a second reference image (e.g. her headphones)."""
+    import concurrent.futures as cf
+    imgs = [cfai.data_uri(edited)] + ([cfai.data_uri(extra)] if extra else [])
+    inp = {"prompt": FIXES[name], "image_input": imgs, "aspect_ratio": "16:9", "output_format": "png", "image_size": "2K"}
+    with cf.ThreadPoolExecutor(n) as ex:
+        return list(ex.map(lambda i: cfai.gen("google/nano-banana-pro", inp, f"{prefix}_{i}.png", tag="jade_location_fix")[0][0], range(1, n + 1)))
 
 
 def main(first, prefix, n=2, scene="hook1"):
