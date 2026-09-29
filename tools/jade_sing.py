@@ -1,9 +1,10 @@
 """Jade singing, animated straight from her kept drawing (tools/jade_keep.py framing A) with her own vocal as the audio reference.
 
-    python3 tools/jade_sing.py <first_frame.jpg> <out.mp4> [--bg]
+    python3 tools/jade_sing.py <first_frame.jpg> <out.mp4> [--bg] [--no-avatar]
 
 The first frame is the approved drawing on the film's paper, so the model starts from her real face; the prompt asks it to
-keep the drawing as it is and move only what singing needs. --bg lets it sketch a generic landscape in behind her.
+keep the drawing as it is. --bg lets it sketch a generic landscape in behind her. Take 1 (--bg, avatar mode) ignored the
+first frame and redrew her smaller-headed and narrower; --no-avatar drops the avatar mode to keep the frame.
 """
 import sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -25,12 +26,12 @@ BG = (" Behind her, in soft light pencil lines on the paper, a quiet generic lan
       "wide sky, drawn lightly so she stays the clear subject.")
 
 
-def main(first, out, bg=False):
+def main(first, out, bg=False, avatar=True):
     inp = {"prompt": PROMPT + (BG if bg else ""), "duration": 5, "resolution": "720p", "aspect_ratio": "16:9",
            "generate_audio": False, "image": cfai.data_uri(first), "reference_audios": [cfai.data_uri(AUDIO)],
-           "use_virtual_avatar": True}
+           "use_virtual_avatar": avatar}
     return cfai.gen("bytedance/seedance-2.5", inp, out, tag="jade_sing", timeout=1800)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], "--bg" in sys.argv)
+    main(sys.argv[1], sys.argv[2], "--bg" in sys.argv, "--no-avatar" not in sys.argv)
