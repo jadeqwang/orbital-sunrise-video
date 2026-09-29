@@ -1,4 +1,9 @@
-"""Let the song's last chord ring out instead of being cut off at 237.76 s.
+"""WARNING: this rebuilds the ending from Orbital_Sunrise.mp3, which still sings "sleeve". The release mix is the committed
+media/audio/Orbital_Sunrise_extended.m4a ("through the SUIT he wore", tools/suit_splice.py --apply). To rebuild the WAV for a
+render, decode that m4a instead (ffmpeg -i ..._extended.m4a -ar 48000 ..._extended.wav); only run this script if you then
+re-apply the suit splice.
+
+Let the song's last chord ring out instead of being cut off at 237.76 s.
 
 The final hit (≈234.5 s, an A chord: A1/A2 + E2) decays to about −46 dB and the file stops while it is
 still ringing. This builds a natural tail:

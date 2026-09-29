@@ -18,6 +18,22 @@ SNOW = NIGHT.replace("on black paper", "on warm cream paper").replace("light col
          "on cream paper").replace("the black paper left bare in the dark", "bare paper in the lights")
 
 
+HEADPHONES = ("Edit image 1, keeping it the same coloured-pencil drawing: same character, face, hair, pose, outfit, platform, sky, "
+    "composition and pencil style. Change one thing: her orange headphones become her real headphones, shown drawn in image 2 and "
+    "photographed in image 3: matte pale dusty-pink Sony over-ear headphones with a smooth seamless headband, slim arms with a thin "
+    "copper-coloured ring, and large smooth oval ear cups, worn on her head. Drawn in coloured pencil like the rest. No orange "
+    "headphones anywhere. No text, no border.")
+
+
+def headphones(still, prefix, n=2):
+    ROOT = pathlib.Path(__file__).resolve().parent.parent
+    imgs = [cfai.data_uri(still), cfai.data_uri(str(ROOT / "media/chars/jade_src/jade_trace_jacket_hp_1.jpg")),
+            cfai.data_uri(str(ROOT / "media/refs/jade_headphones.jpg"))]
+    inp = {"prompt": HEADPHONES, "image_input": imgs, "aspect_ratio": "16:9", "output_format": "png", "image_size": "2K"}
+    with cf.ThreadPoolExecutor(n) as ex:
+        return list(ex.map(lambda i: cfai.gen("google/nano-banana-pro", inp, f"{prefix}_{i}.png", tag="rare_earth_hp")[0][0], range(1, n + 1)))
+
+
 def main(frame, prefix, n=2, snow=False):
     inp = {"prompt": SNOW if snow else NIGHT, "image_input": [cfai.data_uri(frame)], "aspect_ratio": "16:9",
            "output_format": "png", "image_size": "2K"}

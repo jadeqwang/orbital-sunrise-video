@@ -46,12 +46,26 @@ SCENES = {
                " She is singing into the studio microphone beside her in a vocal booth. Everything stays as drawn in the first "
                "frame: the microphone and pop filter beside her face, never in front of her mouth; the window behind her with the "
                "sketched engineer; the soft light on her face."),
+    # 1:09 (her idea): her Rare Earth character in coloured pencil, with her real pink headphones (rare_hp_2), arms spread
+    "rare": (ROOT / "media" / "audio_refs" / "jade_hook2.mp3", 5,
+             "'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips closing on 'b' "
+             "and 'm', opening round and wide on 'home'", "pale pink headphones on her head",
+             " She stands on a high platform above the clouds at night, arms spread wide, eyes closed, singing out to the sky; her "
+             "long hair and the jacket stir in the wind; the clouds drift slowly below. Keep the coloured-pencil drawing style and "
+             "her character design exactly as in the first frame. A very slow pull-back of the camera."),
 }
 
 
 def main(first, out, bg=False, avatar=True, loc=False, scene=None):
     prompt, audio, dur = PROMPT + (BG if bg else "") + (LOC if loc else ""), AUDIO, 5
-    if scene:
+    if scene == "rare":   # her Rare Earth character: an illustrated character, not her likeness (no glasses)
+        audio, dur, words, wear, where = SCENES[scene]
+        prompt = ("A coloured-pencil drawing on cream paper comes to life, still a coloured-pencil drawing in every frame: the same "
+                  "pencil strokes, paper and colours as the first frame. The illustrated young woman in the drawing (long dark hair, "
+                  "her pale dusty-pink over-ear headphones, white cropped jacket with orange bands) sings the words " + words + ". She sings with feeling, "
+                  "eyes closed, head lifting a little. Her character design, face, proportions and outfit stay exactly as drawn in "
+                  "the first frame." + where + " No text, no captions.")
+    elif scene:
         audio, dur, words, wear, where = SCENES[scene]
         prompt = (PROMPT.replace("'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips "
                                  "closing on 'b' and 'm', opening round and wide on 'home'", words)
