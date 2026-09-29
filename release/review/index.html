@@ -46,8 +46,22 @@
   </header>
   <p class="lede">Every change from your notes, as stills from the final round-2 cut. Tap a picture to see it full screen. <em>Your scenes are new</em>, made from your photos.</p>
 
+  <section class="shot" id="traced">
+    <h2>Newest: drawn by tracing your photo (same pose as your portrait)</h2>
+    <p class="did">First a control: the model traced the photo your Google portrait came from, changing nothing and told: no makeup, no beautifying, keep the eyebrows' small difference. It lands close to your Google portrait. Then each scene is an edit of that drawing: only the clothes, headphones and background change, so the face, pose and hair are the traced ones in all six. Pick one per scene (or none). If these pass, the next step is animating the chosen drawings and having the film trace them.</p>
+    <div class="grid2">
+      <div class="shot"><div class="head"><span class="t">ref</span><span class="note">your Google portrait</span></div><button class="img" type="button"><img src="ft_google.jpg" alt="Google pencil portrait" loading="lazy" width="900" height="1233"></button></div>
+      <div class="shot"><div class="head"><span class="t">base</span><span class="note">the model's trace of the same photo</span></div><button class="img" type="button"><img src="ft_control.jpg" alt="Model trace of the photo" loading="lazy" width="900" height="1200"></button></div>
+      <div class="shot"><div class="head"><span class="t">0:32 · 1</span><span class="note">hilltop</span></div><button class="img" type="button"><img src="ft_hook1_1.jpg" alt="Hilltop option 1" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">0:32 · 2</span><span class="note">hilltop</span></div><button class="img" type="button"><img src="ft_hook1_2.jpg" alt="Hilltop option 2" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:09 · 1</span><span class="note">studio</span></div><button class="img" type="button"><img src="ft_studio_1.jpg" alt="Studio option 1" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:09 · 2</span><span class="note">studio</span></div><button class="img" type="button"><img src="ft_studio_2.jpg" alt="Studio option 2" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:55 · 1</span><span class="note">red sky</span></div><button class="img" type="button"><img src="ft_brk_1.jpg" alt="Red sky option 1" loading="lazy" width="1920" height="1072"></button></div>
+      <div class="shot"><div class="head"><span class="t">1:55 · 2</span><span class="note">red sky</span></div><button class="img" type="button"><img src="ft_brk_2.jpg" alt="Red sky option 2" loading="lazy" width="1920" height="1072"></button></div>
+    </div>
+  </section>
   <section class="shot" id="drawn">
-    <h2>New: which drawing of you works?</h2>
+    <h2>Earlier: which drawing of you works?</h2>
     <p class="did">Your hunch about stroke density is part of it. Our renderer hatches the whole face evenly at video resolution, so smooth skin turns into texture, and it draws your eyes and lips from a face-tracking mesh, which pulls them toward an average face. Your Google portrait does the opposite: bare paper on the skin, fine dense lines in the eyes, brows and lips. Left to right: your Google portrait, the film's renderer now, a finer graphite version of the renderer, and Nano Banana drawing the hilltop still in the style of your portrait (the model-drawn route you suggested; the film would then trace and animate it).</p>
     <div class="grid2">
       <div class="shot"><div class="head"><span class="t">ref</span><span class="note">your Google pencil portrait</span></div><button class="img" type="button"><img src="cmp_google.jpg" alt="Google pencil portrait" loading="lazy" width="520" height="520"></button></div>
@@ -58,7 +72,7 @@
     <div class="shot"><div class="head"><span class="t">C</span><span class="note">the whole model drawing (hilltop, 0:32)</span></div><button class="img" type="button"><img src="pdraw_hook1.jpg" alt="Model pencil drawing of the hilltop still" loading="lazy" width="1920" height="1072"></button></div>
   </section>
   <section class="shot" id="firsts">
-    <h2>New: opening stills, with the film's pencil drawing of each</h2>
+    <h2>Earlier: opening stills, with the film's pencil drawing of each</h2>
     <p class="did">Your real face from your photos, placed into each scene (lined up, relit and blended; only a very light skin and eye touch-up, no shapes changed). Eye size now measures the same as in your photos. Under each still: how the current renderer would draw it in its shot. The red-sky one looks at the camera, not up (none of your photos looks up).</p>
     <div class="grid2">
       <div class="shot"><div class="head"><span class="t">0:32</span><span class="note">hilltop, “bring me home”</span></div><button class="img" type="button"><img src="first_hook1.jpg" alt="Opening still: hilltop" loading="lazy" width="1920" height="1072"></button></div>
