@@ -213,6 +213,21 @@ FIXES = {
         "above a sea of clouds at night under a deep blue starry sky, with long thin diagonal support wires running down across "
         "the frame from above, and small details like the orange box at the platform's edge. Keep image 1's loose coloured-pencil "
         "drawing style and night light; do not copy image 2's anime face or character design. No text, no border."),
+    # 1:09, her notes on new B: forehead shortened, head smaller, much less hair than in real life, pants don't match the anime
+    "rare_b_fix": ("Edit image 1, keeping its pose (arms spread wide), camera angle, platform, cables, orange light, night light "
+        "and loose coloured-pencil style. Fix her: make her head larger, about 25% bigger than in image 1, with a high forehead "
+        "(a tall forehead above her brows, the centre parting starting high on her head). Give her the full, thick, long dark hair "
+        "she has in image 3: much more hair, a big volume of long hair blowing out behind her and over her shoulders in the wind. "
+        "Change her trousers to the ones in image 2: loose grey-blue cargo trousers with a black belt and a long orange strap "
+        "hanging down the front. Add long thin diagonal support wires running down across the sky from above, like in image 2. "
+        "Keep her glasses, pale pink headphones on her head, black mock-neck crop top with bare midriff and white cropped jacket "
+        "with orange bands. Do not add any lines to her face. No text, no border."),
+    # after pasting her full-size head (from result 2) onto rare_b_fix: blend it in without shrinking it
+    "rare_head_blend": ("Clean up image 1 without changing its composition. Her head is the right size: keep her head exactly "
+        "this size and in exactly this place, and keep her face, forehead, hairline, glasses and pale pink headphones exactly as "
+        "drawn. Only blend the head into the picture: give her full, thick dark hair on the crown of her head that flows "
+        "continuously into the long hair blowing out behind her, so there is no visible seam or halo around her head, and match "
+        "the pencil strokes and night light around it. Keep everything else in image 1 exactly as it is. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
