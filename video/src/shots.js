@@ -607,11 +607,17 @@ async function initShots() {
     // tube_struggle: he curls round inside the padded tube toward the hatch, ending on his sweating face (the face is real only from ~5.2 s)
     // Kenton: the tube read as roomy (the round hatch filled the frame, him small inside it); framed tight on him so the
     // padded walls crowd the edges, as in the real ~1 m airlock. ?p4zoom= to try others
+    // Her notes: at true scale (Volga: ~1.0 m inside, 2.5 m long; Leonov ~1.9 m in the swollen suit) he lies in it like a hot
+    // dog in a bun. Opens on a side cutaway of the sealed tube (airlock_cut, a still drawn by the pencil pass, slow push in to
+    // his helmet), then the roll cuts to him from inside with the wall a hand's width above his visor (airlock_side).
+    // Being tuned: ?p4=new shows it; the default is still the previous roomy tube_struggle take (?p4zoom= its framing)
+    const old = new URLSearchParams(location.search).get('p4') !== 'new';
     const pz = +(new URLSearchParams(location.search).get('p4zoom') ?? 1.7);
     let id = 'tube_struggle', tp = 1.6 + lt * 2, vz = { zoom: pz, cx: .56, cy: .5 };
+    if (!old) { const e = smooth(clamp(lt / (57.2 - (PR[3].t0 - .05)))); id = 'airlock_cut'; tp = 0; vz = { zoom: 1.02 + e * .3, cx: lerp(.5, .3, e), cy: lerp(.5, .48, e) }; }
     if (roll > 0) {
       const step = roll < .5 ? 2 : 4, n = Math.floor(beatPos(t) * step);
-      const alts = [['tube_struggle', 7.2], ['valve_bleed', 3.5], ['visor_cu', 4.5], ['glove_cu', 3], ['suit_balloon', 4]];
+      const alts = [[old ? 'tube_struggle' : 'airlock_side', old ? 7.2 : 0], ['valve_bleed', 3.5], ['visor_cu', 4.5], ['glove_cu', 3], ['suit_balloon', 4]];
       const a = alts[n % alts.length]; id = a[0]; tp = a[1] + frac(beatPos(t) * step) * .3; vz = { zoom: 1.1 + roll * .25 };
     }
     await drawPlate(t, id, tp, { rate, view: vz, face: id === 'tube_struggle' ? tp > 5.2 : undefined, hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], .75 * (1 - roll)) },

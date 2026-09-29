@@ -814,5 +814,23 @@
   "take": "take1.mp4",
   "mattes": false,
   "gain": 1.0
+ },
+ "airlock_cut": {
+  "n": 1,
+  "fps": 24,
+  "w": 1280,
+  "h": 720,
+  "take": "still.jpg",
+  "mattes": false,
+  "gain": 1.0
+ },
+ "airlock_side": {
+  "n": 1,
+  "fps": 24,
+  "w": 1280,
+  "h": 720,
+  "take": "still.jpg",
+  "mattes": false,
+  "gain": 1.0
  }
 }
