@@ -2,7 +2,7 @@
 
     python3 tools/jade_head_lock.py hook1 studio brk [--n=2] [--only-composite]
 
-The base is the model's faithful trace of photo 3 (media/refs/jade_trace_control_1.png; she approved it as accurate).
+The base is the model's faithful trace of photo 3 (media/chars/jade_src/jade_trace_base.jpg; she approved it as accurate).
 Scene edits that redraw her head normalise it (smaller, narrower, rounder chin, narrower glasses, less hair), so:
   1. the base is laid into a 16:9 frame at medium framing, right of centre   -> media/refs/jade_hl_layout.png
   2. Nano Banana redraws only her clothes, headphones and the background      -> media/refs/jade_hl_<scene>_<i>_gen.png
@@ -17,7 +17,7 @@ from PIL import Image, ImageDraw, ImageFilter
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 REF = ROOT / "media" / "refs"
-BASE = REF / "jade_trace_control_1.png"
+BASE = ROOT / "media" / "chars" / "jade_src" / "jade_trace_base.jpg"
 CW, CH = 2752, 1536                 # canvas (Nano Banana's 16:9 2K size)
 HFRAC, CX = .74, .64                # base height as a fraction of the frame; her centre, as a fraction of the width
 PAPER = (246, 240, 226)
@@ -156,7 +156,7 @@ def eyes(img):
 
 
 def base_matte(b):
-    p = REF / "jade_trace_control_1_matte.png"
+    p = REF / "jade_trace_base_matte.png"
     if not p.exists():
         from rembg import remove, new_session
         remove(b, session=new_session("isnet-general-use"), only_mask=True).save(p)

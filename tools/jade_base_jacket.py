@@ -2,7 +2,7 @@
 
     python3 tools/jade_base_jacket.py            -> media/refs/jade_bj_{plain,hp}_{1,2}.png (+ _hl: traced head pasted back)
 
-Nano Banana edits media/refs/jade_trace_control_1.png at its own framing: the jacket is fitted to her body as posed
+Nano Banana edits media/chars/jade_src/jade_trace_base.jpg at its own framing: the jacket is fitted to her body as posed
 (turned slightly to the side, one arm reaching toward the camera), the closet becomes plain cream paper. Then her
 traced head is pasted back unchanged (tools/jade_head_lock.py, aligned by the eyes).
 """
@@ -11,7 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 import cfai, jade_head_lock as J
 
-BASE = ROOT / "media/refs/jade_trace_control_1.png"; OH = ROOT / "media/refs/jade_outfit_hp.jpg"
+BASE = ROOT / "media/chars/jade_src/jade_trace_base.jpg"; OH = ROOT / "media/refs/jade_outfit_hp.jpg"
 PROMPT = ("Edit image 1, a graphite pencil drawing, keeping it the same drawing in exactly the same technique, framing and size. Keep her head, face, glasses, eyebrows, "
           "hair, neck, pose, shoulders and body angle exactly as drawn, line for line: her body is turned slightly to the side and one arm reaches toward the viewer. "
           "Change only two things: (1) her clothes: replace the lace top with the white cropped nylon flight jacket with the bright orange band from the left of image 2, "

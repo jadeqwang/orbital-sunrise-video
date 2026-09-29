@@ -1,0 +1,104 @@
+# Handoff: drawing Jade (read this first)
+
+The film is done and released except for one open problem: **how Jade (the singer, the repo owner) appears in her own
+scenes.** Everything else below is context for that. Written at the end of a long session so a fresh one can take over.
+
+## The open problem, in her words
+
+- Kenton (a friend) watched the release: "The rendering of you is a bit odd. I parse the face shape as a lot less attractive
+  than the real you." Jade's rule: **use her Google Photos pencil portrait as the bar** (`media/chars/jade_src/photos/jade_photo_4_pencil_full.jpg`,
+  a drawing of `jade_photo_3_full.jpg`, a no-makeup closet selfie). **If she can't look as good as that, take her out of
+  the video entirely** (replace her shots with Leonov / drawing / space imagery).
+- Every generated version so far has been "weird", "demented", "misshapen", or "someone else". Her diagnosis: image models
+  pull her face toward a *really average, unattractive* face, not even a generically pretty one; they add makeup cues
+  (liner, lined lips, contour) while losing what makes her face hers.
+
+## Her face and look (facts she gave; do not "correct" them)
+
+- **Unusually large head** (hard to find hats / bike helmets); **heart-shaped ("melon seed") face with a tapering chin**;
+  **wide face** (almost no glasses frames fit); **high forehead**; the **two eyebrows are slightly different**.
+- Glasses on. No makeup. Doesn't visibly age before 50: never add lines, spots, texture.
+- Hair: **centre-parted, symmetrical half-up, with wispy face-framing pieces** (sometimes tucked behind an ear, sometimes
+  falling forward), long and straight. As in the closet selfie / Google portrait. (This replaced an earlier "half-up with one
+  face-framing piece" note.)
+- Wardrobe: white cropped nylon flight jacket with a bright orange band (`media/refs/jade_outfit.jpg`), black top; her real
+  **pale dusty-pink over-ear headphones** (`media/refs/jade_headphones.jpg`) in headphone scenes.
+- Framing: medium (chest-up or wider), no extreme face close-ups. "Best version of myself" is fine; inventing flaws is not.
+- She is an **Austin** person (not San Francisco): e.g. Pennybacker (360) Bridge overlook, Lady Bird Lake / Congress Ave
+  bridge / downtown skyline. A studio must make sense: vocal booth with the mic; the mixing desk is in the control room
+  behind glass, not next to the mic.
+- Put new review items at the **top** of the review page; she reviews on her phone.
+
+## Her scenes in the film (song seconds; `node video/render.mjs --list` from `video/`)
+
+| time | shot | now uses plate | content |
+|---|---|---|---|
+| 0:32 | `H1d_home` | `jade_hook1_p` | "bring me home", outdoors at golden hour, singing (re-mouthed from the vocal) |
+| 1:09 | `K4_home` | `jade_studio_p` | singing in a studio, headphones on |
+| 1:51 | `B2_float` | `jade_notebook_p` | over-the-shoulder writing lyrics in a notebook (zoomed onto the page) |
+| 1:55 | `B3_never` | `jade_brk_p` | red dusk sky, "never see what he saw ahead" |
+| 2:02, 2:06 | `A1_snow`, `A2_hands` | `jade_hand_writing_p` | her hand writing (fine; take 2 has her jacket sleeve) |
+
+The `_p` plates are Seedance clips generated from her photos; those are the ones Kenton found unattractive.
+
+## What was tried (all on the review page, newest at the top) and how it failed
+
+Review page: https://claude.ai/artifact/DY53es5zrPfPBkhejat4VX (source `release/review/index.html`; publish with the
+Artifact tool, `root=release/review`, listing the new image files).
+
+1. Seedance clips from generated character sheets, then from her real photos (`_p` plates): generic / unattractive.
+2. First-frame stills with her real face composited in (`jade_first_*`): the face was pasted onto generated bodies at
+   another angle: "demented", lopsided head.
+3. The film's own renderer on her face (`?fineface` experiment in `video/src/shots.js`): even hatching over the skin reads as
+   texture/age; features drawn from MediaPipe landmarks look averaged; low resolution (plates are 960x540).
+4. Nano Banana pencil drawings "in the style of her portrait": prettier but made-up and not her.
+5. **What she approved:** Nano Banana *tracing* photo 3 with nothing changed, told no makeup / no beautifying / keep the
+   brows' difference: `media/chars/jade_src/jade_trace_base.jpg` ("base is good and accurate").
+6. Scene edits of that trace: the model normalised her head (smaller, narrower, rounder chin, narrower glasses, less hair).
+7. Pasting the traced head back onto scenes (`tools/jade_head_lock.py`, eye-aligned): "monsters" except two near-misses.
+8. The base with only the jacket (+ headphones) and plain paper background (`tools/jade_base_jacket.py`, review `bj_*`):
+   **"all of those are pretty good!"** This is the best result so far.
+9. That figure cut out over Austin backgrounds (`tools/jade_scene_bg.py`): "superimposed on a postcard"; headphones drawn
+   on her head made her head look smaller.
+10. The model redrawing each whole scene with her in it, traced head pasted back (`tools/jade_integrate.py`): "the angles
+    and the relative size are off".
+11. Photo edits of the real selfie (jacket, headphones, plain backdrop), real face pasted back (`tools/jade_photo_edit.py`,
+    review `pe_*`): "all of them are weird, and I can't figure out why".
+
+Untested hypotheses for 9–11 (the previous session's, not conclusions): the pasted face keeps the selfie's lens
+perspective and lighting (a phone at arm's length: wide-angle, close, from slightly below/front), while the model redraws
+the body, headphones and scene for a normal camera distance, so head, body and scene disagree about where the camera is;
+the head paste also freezes the original's light direction; in 1–2 of the photo edits the model re-posed the body.
+
+## Directions not yet tried
+
+- Keep **everything** from the approved figure (#8) and design each scene *for a selfie*: she is holding the phone, so a
+  selfie-perspective background (close, wide, slightly from below/front) fits her pose instead of fighting it.
+- Ask her for a new real photo per scene (in the jacket, in the right light/pose), traced like #5. Tracing her real photos is
+  the one thing that has worked every time.
+- Drop the singing close-ups: keep her only in shots that don't need her face (hands, notebook over the shoulder, back view,
+  silhouette), or take her out entirely per her rule.
+
+Show her intermediate results early and small; she reads them on her phone.
+
+## Tools and setup
+
+- Image/video generation: `tools/cfai.py` (`gen(model, inp, out, tag)`), Cloudflare AI via the proxy (no keys needed);
+  `google/nano-banana-pro` takes at most **3** `image_input`s; `bytedance/seedance-2.5` takes `image` (first frame),
+  `reference_images`, `reference_audios`. Seedance specs live in `tools/plate_specs.py`, run with `tools/plates.py <id>`.
+  The gateway once ran out of credit ("Insufficient balance"); she tops it up.
+- Face tools: `tools/jade_head_lock.py` (`eyes()`: MediaPipe eye centres with window search for small faces;
+  `paste_onto(target, "head"|"face", src=...)`), rembg mattes. MediaPipe model: `/tmp/work/models/face_landmarker.task`
+  (may need re-downloading in a fresh container).
+- Pencil previews of a still in its film shot: `tools/pencil_preview.py <still>:<shot>:<t> [--hires] [--q=fineface]`.
+- Plate pipeline after a new take: `tools/extract_plates.py <id>:<take>`, `tools/plate_meta.py <id> --force`,
+  `tools/plate_masks.py <id>`. Generated PNGs under `media/` are gitignored; commit what must survive as JPEG.
+
+## Done but not yet in a release
+
+- "Hold on" (2:15–2:23): the capsule already tumbles on the first HOLD ON (`G3_hold` in `video/src/shots2.js`).
+- Her writing hand (2:02) now has her jacket sleeve (`jade_hand_writing_p` take 2).
+
+To release: full render (`cd video && node render.mjs --frames=0:242.2 --workers=4`), then `tools/encode_release.sh`,
+`tools/package_hls.sh`, republish the watch page (https://claude.ai/artifact/TYmS3GPKvHH3f1i45QrjJ5, in batches under 58 MB)
+and commit. Work on `main`. Commit messages end with the session's Co-Authored-By / Claude-Session lines.

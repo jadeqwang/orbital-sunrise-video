@@ -1,7 +1,7 @@
-"""Scene drawings made by editing the faithful trace (media/refs/jade_trace_control_1.png): only clothes, headphones and background change. Run from the repo root."""
+"""Scene drawings made by editing the faithful trace (media/chars/jade_src/jade_trace_base.jpg): only clothes, headphones and background change. Run from the repo root."""
 import sys, concurrent.futures as cf; sys.path.insert(0, 'tools')
 import cfai
-T = "media/refs/jade_trace_control_1.png"; OH = "media/refs/jade_outfit_hp.jpg"
+T = "media/chars/jade_src/jade_trace_base.jpg"; OH = "media/refs/jade_outfit_hp.jpg"
 BASE = ("Edit image 1, a graphite pencil drawing, into a wide landscape picture, keeping it one single pencil drawing in exactly the same technique. Keep her face, glasses, "
         "eyebrows (they are slightly different from each other: keep that), hair (long, straight, centre-parted, falling down over her shoulders) and head angle EXACTLY as drawn, line for line, "
         "and keep her pose and the size of her head; she stands right of centre. Do not redraw, beautify, add makeup to or re-pose her face. Change only: her clothes become the "
