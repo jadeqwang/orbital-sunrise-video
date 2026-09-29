@@ -212,7 +212,9 @@ async function initShots2() {
   // gutter (293,252)→(627,460). "Art is a landing" is already on the page at the cut; "in the snow" is written from the cut.
   const A1_SPLIT = B(328), A1_B0 = .45;                                          // ≈121.62 s
   const A1_B = { id: 'jade_hand_writing_p', tp: t => A1_B0 + t - A1_SPLIT };
-  const HW_LINES = [[118, 442], [190, 477]], HW_ALONG = [283, -115], HW_DOWN = [334, 208], HW_SIZE = 46;
+  // HW_* were measured on take 2; take 4 (take 2 rebuilt from its first frame) has the book 3 px left and 16 px higher (phase
+  // correlation of the book region against take 2's contact sheet, steady over the whole take)
+  const HW_OFF = [-3, -16], HW_LINES = [[118, 442], [190, 477]].map(([x, y]) => [x + HW_OFF[0], y + HW_OFF[1]]), HW_ALONG = [283, -115], HW_DOWN = [334, 208], HW_SIZE = 46;
   shot('A1_snow', ar0, AR[1].t0 - .05, async (t, lt) => {
     const first = t < A1_SPLIT, clear = quiet([[W / 2 - 800, 80, W / 2 + 800, 240]], .8), w = AR[0].words;
     if (first) {   // the line in cream pencil across the top of his black paper
