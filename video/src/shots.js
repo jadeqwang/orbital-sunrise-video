@@ -494,10 +494,14 @@ async function initShots() {
     // her drawing with the film's pencil engine going over it at half strength, so she boils like the other shots (her pick, "1B").
     // Review variants: ?h1d=plain (the drawing alone), ?h1d=js (the engine redraws her completely; loses her face)
     const exp = new URLSearchParams(location.search).get('h1d') ?? 'over';
-    if (exp !== 'js') await paperTake('jade_sing3', t - 32.05);
-    if (exp === 'js' || exp === 'over') {
-      G.save(); if (exp === 'over') G.globalAlpha = .45;
-      await drawPlate(t, 'jade_sing3_169', t - 32.05, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
+    // ?h1d=loc: on location (the model drew the Hill Country around her, her own face kept; take A, lips +0.58 s);
+    // ?h1d=locfade: the same with everything but her face and hair faded toward the paper (tools/jade_fade.py --head)
+    const loc = exp === 'loc' || exp === 'locfade', id = loc ? (exp === 'loc' ? 'jade_loc' : 'jade_locfade') : 'jade_sing3';
+    const tp = loc ? t - (30.9 + .58) : t - 32.05;
+    if (exp !== 'js') await paperTake(id, tp);
+    if (exp !== 'plain') {
+      G.save(); if (exp !== 'js') G.globalAlpha = .45;
+      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
       G.restore();
     }
     const w = H1[1].words;

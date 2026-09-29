@@ -751,5 +751,23 @@
   "take": "take1.mp4",
   "mattes": false,
   "gain": 1.0
+ },
+ "jade_loc": {
+  "n": 121,
+  "fps": 24,
+  "w": 1280,
+  "h": 720,
+  "take": "take1.mp4",
+  "mattes": false,
+  "gain": 1.0
+ },
+ "jade_locfade": {
+  "n": 121,
+  "fps": 24,
+  "w": 1280,
+  "h": 720,
+  "take": "take1.mp4",
+  "mattes": false,
+  "gain": 1.0
  }
 }
