@@ -54,7 +54,9 @@ Artifact tool, `root=release/review`, listing the new image files).
 4. Nano Banana pencil drawings "in the style of her portrait": prettier but made-up and not her.
 5. **What she approved:** Nano Banana *tracing* photo 3 with nothing changed, told no makeup / no beautifying / keep the
    brows' difference: `media/chars/jade_src/jade_trace_base.jpg` ("base is good and accurate"). At handoff she said
-   **"you can keep the one that's 'base'"**: this trace is the one to build from; treat everything after it as discarded.
+   **"you can keep the one that's 'base'" "and the pencil drawings with the jacket and headphones around the neck"**:
+   the keepers are the base and the two figures from #8 with the headphones round her neck,
+   `media/chars/jade_src/jade_trace_jacket_hp_{1,2}.jpg` (review `bj_hp_1`, `bj_hp_2`). Build from these; treat the rest as discarded.
 6. Scene edits of that trace: the model normalised her head (smaller, narrower, rounder chin, narrower glasses, less hair).
 7. Pasting the traced head back onto scenes (`tools/jade_head_lock.py`, eye-aligned): "monsters" except two near-misses.
 8. The base with only the jacket (+ headphones) and plain paper background (`tools/jade_base_jacket.py`, review `bj_*`):
