@@ -452,10 +452,11 @@ async function initShots() {
 
   // H1d · bring me home
   // the singer takes every "bring me home": her world is the white page (Earth, home)
-  // golden hour on the hilltop above the Golden Gate; framed medium (waist up), never pushed in on her face
+  // golden hour on the hilltop above the city and the bay; framed medium (chest up), never pushed in on her face. The take
+  // pushes in slowly and her hair reaches the top of the frame, so the view sits 40 px lower (the plate's top edge is bare sky)
   shot('H1d_home', H1[1].words[2][0] - .05, hk1, async (t, lt) => {
     paper(G, 'snow');
-    await singer(t, 'jade_hook1_v4', { view: { zoom: 1.02 }, hatch: { spacing: 6.2, mask: quiet([[60, H - 270, 860, H - 90]], .75) } });
+    await singer(t, 'jade_hook1_p', { view: { zoom: 1.02, oy: 40 }, hatch: { spacing: 6.2, mask: quiet([[60, H - 270, 860, H - 90]], .75) } });
     const w = H1[1].words;
     lyricStack(t, [
       { s: 'bring me home', t: w[2][0], x: 110, y: H - 140, font: FONT.serif(124), col: 'crimson', style: 'rise' },
@@ -600,16 +601,16 @@ async function initShots() {
     tele(Lt.g, 'THE AIRLOCK IS CAST OFF', 60, 64, t, w[0][0] + .3, { size: 22, weight: 700, col: 'silver', dur: .6 });
     typeFlush(Lt, drawClock(t, 12).n, .3);
   });
-  // the recording studio at night: headphones on, singing into the condenser mic seen side-on; medium shot (waist up).
-  // The take is dark and lit warm-red: lift it a little (more and her black hair goes to bare paper), hatch only its real darks
-  // (the face too, with only its stronger edges), keep the skin mostly graphite (sat: the red light reads as a rash in colour),
-  // and let the dark foam room thin out away from her and the mic (she stands left of centre), so they carry the frame.
-  // The line sits bottom right, in a clearing over the empty foam wall.
+  // the recording studio at night: headphones on, singing past the condenser mic and its pop filter; medium shot (waist up).
+  // The take is dark: lift it a little (more and her black hair goes to bare paper), hatch only its real darks (the face too,
+  // with only its stronger edges), keep the skin mostly graphite (sat), and let the dark foam walls thin out well away from her
+  // and the mic (she stands left of centre, the mic just right of her face), so they carry the frame.
+  // The line sits bottom right, in a clearing over the foam wall and the mic stand.
   const studioSkin = (L, V) => .72 * Math.pow(smooth(clamp((.66 - (.55 * L + .45 * V)) / .56)), 1.6);   // at most three light layers: shadowed skin stays skin
-  const studioLight = (X, Y) => clamp(1.3 - Math.hypot((X - 760) / 1.25, Y - 420) / 820, .3, 1) * quiet([[W - 860, H - 270, W - 60, H - 90]], .75)(X, Y);
+  const studioLight = (X, Y) => clamp(1.3 - Math.hypot((X - 900) / 1.25, Y - 440) / 640, .12, 1) * quiet([[W - 860, H - 270, W - 60, H - 90]], .75)(X, Y);
   shot('K4_home', H2[1].words[2][0] - .05, h21, async (t, lt) => {
     paper(G, 'snow');
-    await singer(t, 'jade_studio_v4', { view: { zoom: 1.02 }, ana: { gain: 1.1 }, lines: { contrast: 2.2, white: .62 },
+    await singer(t, 'jade_studio_p', { view: { zoom: 1.02 }, ana: { gain: 1.1 }, lines: { contrast: 2.2, white: .62 },
       hatch: { spacing: 6.2, mask: studioLight }, faceHatch: { tone: studioSkin, pencilOpt: { sat: .5 } }, faceContour: { hi: .28, lo: .11 } });
     const w = H2[1].words;
     lyricStack(t, [{ s: 'bring me home', t: w[2][0], x: W - 110, y: H - 140, font: FONT.serif(124), col: 'crimson', align: 'right', style: 'rise' }]);

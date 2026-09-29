@@ -85,5 +85,47 @@
   "audio_corr": 0.715,
   "note": "whole-take mouth curve and the clip's audio placement agree on +0.708 s; inside B3's window alone (114.5-118) the mouth fit is weak (r .25)",
   "take": "take2.mp4"
+ },
+ "jade_hook1_p": {
+  "lag": 0.575,
+  "source": "phoneme-events",
+  "window": [
+   32.3,
+   34.3
+  ],
+  "mouth_lag": 0.583,
+  "mouth_corr": 0.311,
+  "event_score": 0.329,
+  "audio_corr": 0.004,
+  "note": "inside H1d's window the mouth curve (+0.583) and the phoneme events (+0.575) agree; whole-take fit is weak (r .16). The take holds a rounded 'oo' with no b/m closures",
+  "take": "take1.mp4"
+ },
+ "jade_studio_p": {
+  "lag": -0.592,
+  "source": "phoneme-events",
+  "window": [
+   68.7,
+   70.9
+  ],
+  "event_score": 0.377,
+  "mouth_lag": 0.292,
+  "mouth_corr": 0.266,
+  "audio_lag": -0.708,
+  "audio_corr": 0.853,
+  "note": "events and the clip's own audio placement agree (-0.59 / -0.71): lips closed on 'bring me', opening on 'home'; the window mouth fit (+0.29, r .27) holds the open vowel over every word",
+  "take": "take1.mp4"
+ },
+ "jade_brk_p": {
+  "lag": 0.583,
+  "source": "mouth",
+  "window": [
+   114.5,
+   118.0
+  ],
+  "mouth_corr": 0.366,
+  "audio_lag": 0.625,
+  "audio_corr": 0.637,
+  "note": "B3-window mouth curve (+0.583) and clip audio placement (+0.625) agree; the last ~0.14 s of B3 holds the take's final frame",
+  "take": "take1.mp4"
  }
 }
