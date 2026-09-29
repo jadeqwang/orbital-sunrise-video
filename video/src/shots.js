@@ -212,11 +212,13 @@ async function drawPlateIn(t, id, tp, rect, o = {}) {
 // A take that is already a pencil drawing on paper (Jade's kept drawing, animated: tools/jade_sing.py) laid straight onto the
 // page, never redrawn: the take's own paper colour (index "paper") is divided out and the graphite multiplied onto the sheet,
 // as tools/jade_keep.py does for the approved stills. Full height, right of centre (framing A); the cut sleeve fades out.
+// A take without a "paper" entry is a full 16:9 frame (on location) and is drawn as it is.
 const _pt = makeCanvas(8, 8), _ptg = _pt.getContext('2d', { willReadFrequently: true });
 async function paperTake(id, tp, o = {}) {
   const P0 = PLATES[id];
   if (!P0) { text(G, `[ plate "${id}" not generated yet ]`, W / 2, H / 2, { font: FONT.mono(28, 700), col: 'verm', align: 'center' }); return; }
   const im = await plateImage(id, tp), h = o.h ?? H, w = Math.round(P0.w * h / P0.h), x = o.x ?? W - w - Math.round(W * .078);
+  if (!P0.paper) { G.save(); G.setTransform(1, 0, 0, 1, 0, 0); G.drawImage(im, 0, 0, W, H); G.restore(); return; }   // a full-frame take (on location): as it is
   _pt.width = w; _pt.height = h; _ptg.drawImage(im, 0, 0, w, h);
   const D = _ptg.getImageData(0, 0, w, h), d = D.data, [pr, pg, pb] = P0.paper, fl = (o.fadeLeft ?? .15) * w;
   for (let i = 0; i < w; i++) {

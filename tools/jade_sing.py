@@ -1,6 +1,6 @@
 """Jade singing, animated straight from her kept drawing (tools/jade_keep.py framing A) with her own vocal as the audio reference.
 
-    python3 tools/jade_sing.py <first_frame.jpg> <out.mp4> [--bg] [--no-avatar]
+    python3 tools/jade_sing.py <first_frame.jpg> <out.mp4> [--bg] [--no-avatar] [--loc]
 
 The first frame is the approved drawing on the film's paper, so the model starts from her real face; the prompt asks it to
 keep the drawing as it is. --bg lets it sketch a generic landscape in behind her. Take 1 (--bg, avatar mode) ignored the
@@ -24,16 +24,19 @@ PROMPT = ("A graphite and coloured-pencil drawing on cream paper comes to life, 
           "centre parting stay at the same height above her brows in every frame, never lowered, and the top of her head stays in frame. "
           "Static locked-off camera, no zoom or push-in: she stays framed chest-up exactly as in the first frame, never a face close-up. "
           "No text, no captions.")
+LOC = (" She is on location at a hilltop overlook in the Texas Hill Country at golden hour, filmed by someone holding the camera "
+       "in front of her. The landscape behind her stays exactly as drawn in the first frame: the grass and the oak leaves stir "
+       "a little in the wind, the low sun stays where it is, the warm rim light stays on her hair and shoulder.")
 BG = (" Behind her, in soft light pencil lines on the paper, a quiet generic landscape at golden hour: gentle hills, grass and a "
       "wide sky, drawn lightly so she stays the clear subject.")
 
 
-def main(first, out, bg=False, avatar=True):
-    inp = {"prompt": PROMPT + (BG if bg else ""), "duration": 5, "resolution": "720p", "aspect_ratio": "16:9",
+def main(first, out, bg=False, avatar=True, loc=False):
+    inp = {"prompt": PROMPT + (BG if bg else "") + (LOC if loc else ""), "duration": 5, "resolution": "720p", "aspect_ratio": "16:9",
            "generate_audio": False, "image": cfai.data_uri(first), "reference_audios": [cfai.data_uri(AUDIO)],
            "use_virtual_avatar": avatar}
     return cfai.gen("bytedance/seedance-2.5", inp, out, tag="jade_sing", timeout=1800)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], "--bg" in sys.argv, "--no-avatar" not in sys.argv)
+    main(sys.argv[1], sys.argv[2], "--bg" in sys.argv, "--no-avatar" not in sys.argv, "--loc" in sys.argv)
