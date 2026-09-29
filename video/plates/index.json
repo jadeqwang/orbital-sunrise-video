@@ -682,5 +682,50 @@
   "take": "take1.mp4",
   "mattes": true,
   "gain": 1.131
+ },
+ "jade_hook1_p": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.02
+ },
+ "jade_studio_p": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.374
+ },
+ "jade_brk_p": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.203
+ },
+ "jade_notebook_p": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.124
+ },
+ "jade_hand_writing_p": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.1
  }
 }
