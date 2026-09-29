@@ -41,6 +41,12 @@ const ORDER_NIGHT = c => ({ ultra: 0, crimson: 1, cobalt: 2, verm: 3, lead: 3, b
 const ORDER_SNOW = c => ({ sky: 0, gold: 1, orange: 2, silver: 2, cobalt: 3, verm: 4, green: 4, brown: 5, lead: 5, ultra: 6, crimson: 6, graphite: 7 })[c] ?? 4;
 
 // ---------------------------------------------------------------- image fields
+// Style experiments (Kenton: "could be confused for a cheap video filter"; the edges read as computed). Off by default.
+//   ?simp=k  simplify: blur the plate k times more before finding edges, raise the edge thresholds, keep only longer outlines
+//   ?press=1 pressure: strong edges bold and dark, weak ones thin and faint (a wider weight range), like a hand pressing harder
+//   ?sparse=k hatch only the darker tones (thresholds raised toward 1), wider and longer strokes: the lights left as bare paper
+const _SQ = new URLSearchParams(location.search), SIMP = _SQ.has('simp') ? +_SQ.get('simp') : 1, PRESS = _SQ.has('press') ? +_SQ.get('press') : 0,
+  SPARSE = _SQ.has('sparse') ? +_SQ.get('sparse') : 0;
 function blurF(src, w, h, sigma) { // separable gaussian on Float32Array
   if (sigma <= 0) return src.slice();
   const r = Math.max(1, Math.ceil(sigma * 2.5)), k = new Float32Array(2 * r + 1);
@@ -59,7 +65,7 @@ function analyzePlate(img, aw = 640, ah = 360, opt = {}, src = null) {
   const d = _anaCtx.getImageData(0, 0, aw, ah).data, N = aw * ah, gain = (opt.gain ?? 1) / 255;
   const R = new Float32Array(N), Gc = new Float32Array(N), B = new Float32Array(N), L = new Float32Array(N);
   for (let i = 0; i < N; i++) { const r = Math.min(1, d[i * 4] * gain), g = Math.min(1, d[i * 4 + 1] * gain), b = Math.min(1, d[i * 4 + 2] * gain); R[i] = r; Gc[i] = g; B[i] = b; L[i] = .2126 * r + .7152 * g + .0722 * b; }
-  const L1 = blurF(L, aw, ah, opt.s1 ?? .9);
+  const L1 = blurF(L, aw, ah, (opt.s1 ?? .9) * SIMP);
   const gx = new Float32Array(N), gy = new Float32Array(N), mag = new Float32Array(N);
   for (let y = 1; y < ah - 1; y++) for (let x = 1; x < aw - 1; x++) {
     const i = y * aw + x;
@@ -241,7 +247,7 @@ function strokeAlong(pen, F, view, X, Y, ang, L, col, w, a, follow, s) {
 // Chain thinned edges into polylines and draw them as confident, slightly doubled pencil lines.
 function contourField(pen, F, view, o = {}) {
   const aw = F.aw, ah = F.ah, E = F.edge;
-  const hi = o.hi ?? .16, lo = o.lo ?? .07, minLen = o.minLen ?? 7, seed = o.seed ?? 3;
+  const sT = 1 + (SIMP - 1) * .5, hi = (o.hi ?? .16) * sT, lo = (o.lo ?? .07) * sT, minLen = (o.minLen ?? 7) * SIMP, seed = o.seed ?? 3;
   const used = new Uint8Array(aw * ah);
   const col = o.pencil ?? 'white', w = o.w ?? 1.7, a = o.alpha ?? .85, passes = o.passes ?? 2, jit = (o.jit ?? 1.1) * CJIT;
   const mask = o.mask, colorFn = o.colorFn;
@@ -315,7 +321,8 @@ function contourField(pen, F, view, o = {}) {
         q.unshift([e0[0] + (e0[0] - e1[0]) * os * 2, e0[1] + (e0[1] - e1[1]) * os * 2]);
         q.push([z0[0] + (z0[0] - z1[0]) * os * 2, z0[1] + (z0[1] - z1[1]) * os * 2]);
       }
-      pen.poly(q, c, w * (p ? .7 : 1) * lerp(.7, 1.25, clamp(strength * 2)), a * (p ? .55 : 1) * m);
+      const pk = clamp(strength * 2), pw = PRESS ? lerp(.35, 1.9, pk * pk) : lerp(.7, 1.25, pk), pa = PRESS ? lerp(.3, 1, pk) : 1;
+      pen.poly(q, c, w * (p ? .7 : 1) * pw, a * (p ? .55 : 1) * m * pa);
     }
   }
   return chains;
@@ -552,14 +559,14 @@ function lineHatch(pen, F, view, o = {}) {
   const pick = o.pencil ?? (night ? pencilNight : pencilSnow);
   const [rx0, ry0, rx1, ry1] = o.region ?? [0, 0, W, H];
   const cxr = (rx0 + rx1) / 2, cyr = (ry0 + ry1) / 2, R = Math.hypot(rx1 - rx0, ry1 - ry0) / 2 + 10;
-  const [lenA, lenB] = o.len ?? [18, 46], mask = o.mask, fill = o.fill;
+  const [lenA, lenB] = (o.len ?? [18, 46]).map(v => v * (1 + SPARSE)), mask = o.mask, fill = o.fill;
   const V = F.R ? (px, py) => Math.max(samp(F, F.R, px, py), samp(F, F.G, px, py), samp(F, F.B, px, py)) : () => 0;
   let li = 0;
   for (const Ly of layers) {
     li++;
     const ca = Math.cos(Ly.ang), sa = Math.sin(Ly.ang), nx = -sa, ny = ca;   // along (ca, sa); lines offset along the normal
     // the hatch layout is stable from drawing to drawing (ls); each new drawing only nudges it (boil), so the page shimmers instead of strobing
-    const lsp = Ly.sp * spK, phase = hash2(ls, li) * lsp + (hash2(seed, li) - .5) * lsp * boil;
+    const th = Ly.th + (1 - Ly.th) * SPARSE * .45, lsp = Ly.sp * spK * (1 + SPARSE * .5), phase = hash2(ls, li) * lsp + (hash2(seed, li) - .5) * lsp * boil;
     for (let d = -R + phase, k = 0; d < R; d += lsp, k++) {
       const jo = (hash3(k, li, ls) - .5) * lsp * (o.jitter ?? .45) + (hash3(k, li, seed) - .5) * lsp * boil * .5;
       const ox = cxr + nx * (d + jo), oy = cyr + ny * (d + jo);
@@ -583,7 +590,7 @@ function lineHatch(pen, F, view, o = {}) {
         let t = fw > 0 ? toneFn(lerp(samp(F, F.T, px, py), fill.T, fw), lerp(V(px, py), fill.V, fw)) : toneFn(samp(F, F.T, px, py), V(px, py));
         if (mask) t *= mask(X, Y);
         // dither the threshold a little so run ends are ragged, like real hatching
-        const on = t > Ly.th + (hash3(Math.round(X), Math.round(Y), ls + li) - .5) * .12;
+        const on = t > th + (hash3(Math.round(X), Math.round(Y), ls + li) - .5) * .12;
         if (on) {
           if (!run) {
             let r = samp(F, F.R, px, py), g = samp(F, F.G, px, py), b = samp(F, F.B, px, py);

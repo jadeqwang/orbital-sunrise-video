@@ -605,7 +605,10 @@ async function initShots() {
     const rate = roll > 0 ? 24 : 12;
     // during the roll, flash between the tube and close-ups every half beat, then every quarter
     // tube_struggle: he curls round inside the padded tube toward the hatch, ending on his sweating face (the face is real only from ~5.2 s)
-    let id = 'tube_struggle', tp = 1.6 + lt * 2, vz = { zoom: 1.03 };
+    // Kenton: the tube read as roomy (the round hatch filled the frame, him small inside it); framed tight on him so the
+    // padded walls crowd the edges, as in the real ~1 m airlock. ?p4zoom= to try others
+    const pz = +(new URLSearchParams(location.search).get('p4zoom') ?? 1.7);
+    let id = 'tube_struggle', tp = 1.6 + lt * 2, vz = { zoom: pz, cx: .56, cy: .5 };
     if (roll > 0) {
       const step = roll < .5 ? 2 : 4, n = Math.floor(beatPos(t) * step);
       const alts = [['tube_struggle', 7.2], ['valve_bleed', 3.5], ['visor_cu', 4.5], ['glove_cu', 3], ['suit_balloon', 4]];

@@ -528,7 +528,7 @@ async function initShots2() {
     text(g, 'ОРБИТАЛЬНЫЙ ВОСХОД', W / 2, 600, { font: FONT.cyr(48), col: 'verm', align: 'center', alpha: k, ls: 4 });
     text(g, 'JADE WANG', W / 2, 690, { font: FONT.mono(34, 800), col: 'white', align: 'center', alpha: clamp((lt - .3) / .3), ls: 8 });
     text(g, 'An homage to \u201cOrbital Sunrise: The First Art Made in Space\u201d by John Green', W / 2, 900, { font: FONT.serif(30), col: 'silver', align: 'center', alpha: clamp((lt - .6) / .4) });
-    text(g, 'vlogbrothers \u00b7 also an episode of The Anthropocene Reviewed', W / 2, 950, { font: FONT.mono(20), col: 'silver', align: 'center', alpha: clamp((lt - .8) / .4), ls: 2 });
+    // (Kenton: a second line crediting vlogbrothers read as crediting them with the video; the line above says enough)
     typeFlush(L, drawClock(t, 12).n, .3);
     // the picture fades with the last ringing note
     const end = TM.durExt ?? TM.dur, f = clamp((t - (end - 2.4)) / 2.2);
