@@ -134,3 +134,18 @@ and commit. Work on `main`. Commit messages end with the session's Co-Authored-B
   render several shifts and let her pick.
 - Rejected: the faded-background variant (`jade_fade.py --head`, `?h1d=locfade`): "goofy", not the film's style.
 - Open question put to her: the shot is a fuller, more coloured illustration than the sparse hatching either side of it.
+
+## Update: 1:09 and 1:55 on location (in the film)
+
+- 1:09 `K4_home`: plate `jade_studio_loc` (from `media/chars/jade_src/location/smic_2.jpg`: started from the jacket-only
+  drawing so the headphones are only on her head; her real Sony pair matched from `media/refs/jade_headphones.jpg`; mic beside
+  her face; engineer a loose sketch behind the glass; no lamp; lit from the front). Song time = 67.4 + 0.7 + take time.
+- 1:55 `B3_never`: plate `jade_dusk` (from `location/dloose_1.jpg`: Lady Bird Lake trail, relit by the model for the red dusk,
+  background loosened). Song time = 110.4 - 0.8 + take time; the take ends 0.36 s early and holds its last frame.
+- Both: the film's pencil over the take at 45%; lyrics moved clear of her (top right / in the sky). `?k4=old`, `?b3=old`
+  bring back the previous renderer-drawn takes.
+- Relighting: the model may relight her; `jade_location.restore_lines(..., skip_cheeks=True)` puts back only her pencil lines
+  under its light, leaving the cheeks to the scene (her drawing carries the closet's overhead glasses-shadow there).
+- Her notes that shaped these: light must be consistent (no lamp behind her lighting her face), no selfie arm, headphones
+  must be her real pair and not doubled on the neck, backgrounds and props "a little bit loose", no mixing desk visible.
+- 1:51 notebook and 2:02/2:06 hand shots are unchanged (no face).
