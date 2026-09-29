@@ -34,6 +34,29 @@ def headphones(still, prefix, n=2):
         return list(ex.map(lambda i: cfai.gen("google/nano-banana-pro", inp, f"{prefix}_{i}.png", tag="rare_earth_hp")[0][0], range(1, n + 1)))
 
 
+AS_HER = ("Image 1 is a composition to reproduce: a young woman standing on a high platform above the clouds at night, arms spread "
+    "wide, singing. Redraw it with the woman replaced by the real woman in images 2 and 3, drawn as in image 2: a realistic "
+    "coloured-pencil drawing on cream paper, not anime or manga, no stylised features. Her face exactly as in images 2 and 3 "
+    "(large head, wide heart-shaped face with a tapering chin, high forehead, the two slightly different eyebrows), her wide "
+    "rectangular glasses on, her long centre-parted dark hair blowing in the wind, her pale dusty-pink over-ear headphones on her "
+    "head as in image 2, her white jacket with orange bands and black top. {eyes} Keep image 1's pose (arms spread wide), the "
+    "platform, the clouds below and the starry night sky, all in the same realistic coloured-pencil style as image 2, with "
+    "loose, sketchy backgrounds. No makeup. No text, no border.")
+EYES = {"closed": "She sings with her eyes closed and her face lifted slightly.",
+        "open": "She sings with her eyes open, looking out past the camera, her face turned toward us as in image 3."}
+
+
+def as_her(prefix, eyes="closed", n=2):
+    ROOT = pathlib.Path(__file__).resolve().parent.parent
+    imgs = [cfai.data_uri(str(ROOT / "media/refs/rare_earth/re4_snow_1_hp.jpg")),
+            cfai.data_uri(str(ROOT / "media/chars/jade_src/location/smic_2.jpg")),
+            cfai.data_uri(str(ROOT / "media/chars/jade_src/jade_trace_jacket_hp_1.jpg"))]
+    inp = {"prompt": AS_HER.format(eyes=EYES[eyes]), "image_input": imgs, "aspect_ratio": "16:9", "output_format": "png",
+           "image_size": "2K"}
+    with cf.ThreadPoolExecutor(n) as ex:
+        return list(ex.map(lambda i: cfai.gen("google/nano-banana-pro", inp, f"{prefix}_{eyes}_{i}.png", tag="rare_earth_her")[0][0], range(1, n + 1)))
+
+
 def main(frame, prefix, n=2, snow=False):
     inp = {"prompt": SNOW if snow else NIGHT, "image_input": [cfai.data_uri(frame)], "aspect_ratio": "16:9",
            "output_format": "png", "image_size": "2K"}

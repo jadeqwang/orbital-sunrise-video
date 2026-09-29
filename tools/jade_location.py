@@ -155,6 +155,13 @@ FIXES = {
     "loosen_mic": ("Edit image 1, keeping everything exactly as it is, her above all, except the microphone: redraw the "
         "microphone, its pop filter, shock mount, cable and boom arm more loosely, like the looser background: quicker, freer pencil "
         "strokes, less detail, rough edges. Keep its position, size, angle and the light on it. No text, no border."),
+    # 1:09, her idea: the Rare Earth "How could we be alone?" setting, drawn AROUND her approved studio drawing (her face untouched)
+    "rare_setting": ("Edit image 1, keeping her exactly as she is: her face, glasses, hair, pink headphones on her head, jacket, pose, "
+        "size and position, and the pencil style. Replace only everything around her: she now stands on a high open metal platform "
+        "at the top of a tall tower, far above a sea of clouds at night, a deep blue starry night sky behind her, a few thin steel "
+        "cables and a small orange warning light at the platform's edge, like image 2. Remove the studio, the microphone, the "
+        "window and the engineer completely. Cool blue night light on her from the sky, soft and even on her face. The background "
+        "drawn loosely in the same coloured-pencil style. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }

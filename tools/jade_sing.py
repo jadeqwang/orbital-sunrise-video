@@ -46,6 +46,12 @@ SCENES = {
                " She is singing into the studio microphone beside her in a vocal booth. Everything stays as drawn in the first "
                "frame: the microphone and pop filter beside her face, never in front of her mouth; the window behind her with the "
                "sketched engineer; the soft light on her face."),
+    # 1:09, her correction: her real self (glasses, pink headphones) in the Rare Earth setting, eyes closed, arms spread
+    "rare_her": (ROOT / "media" / "audio_refs" / "jade_hook2.mp3", 5,
+                 "'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips closing on 'b' "
+                 "and 'm', opening round and wide on 'home'", "pink headphones on her head",
+                 " She stands on a high platform above the clouds at night, arms spread wide, eyes closed, singing out to the "
+                 "sky; her hair and jacket stir in the wind; the clouds drift slowly below. A slow gentle pull-back."),
     # 1:09 (her idea): her Rare Earth character in coloured pencil, with her real pink headphones (rare_hp_2), arms spread
     "rare": (ROOT / "media" / "audio_refs" / "jade_hook2.mp3", 5,
              "'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips closing on 'b' "
