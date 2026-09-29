@@ -78,9 +78,12 @@ research ──► style frames, character + set sheets (Nano Banana)      │
    * kinetic type: Anton for impact lyrics (with red Cyrillic echoes), Instrument Serif
      italic for the singer's own lines, JetBrains Mono for telemetry, pencil handwriting
      for "Art is a landing in the snow"; big words get a quiet clearing in the drawing.
-6. **The ending.** The song's last chord is held and allowed to ring out (≈4.5 s longer)
+6. **The ending and one word.** The song's last chord is held and allowed to ring out (≈4.5 s longer)
    with a spectral freeze of the sustained chord mixed under the original tail
-   (`tools/extend_ending.py`).
+   (`tools/extend_ending.py`). The lyric "through the sleeve he wore" was changed to "through the
+   suit he wore" (the pressure valve was on the suit) by rebuilding that one word from Jade's own
+   recorded voice: her "s", the "oo" of "through", the "t" of "out" (`tools/suit_splice.py`).
+   The final mix is in [`release/audio/`](release/audio/).
 
 ## Render it
 

@@ -542,10 +542,10 @@ async function initShots() {
     paper(G, 'night');
     await drawPlate(t, 'headfirst', .4 + lt, { view: { zoom: 1.03 }, extra: (pen) => edgePanic(pen, .55, drawClock(t, 12).n * 7) });
     evaHud(t);
-    const w = PR[2].words; // Let his air out through the sleeve he wore
+    const w = PR[2].words; // Let his air out through the suit he wore
     lyricStack(t, [
       { s: 'LET HIS AIR OUT', t: w[0][0], x: 100, y: 250, size: 130, style: 'rise' },
-      { s: 'THROUGH THE SLEEVE HE WORE', t: w[4][0], x: 100, y: 370, size: 96, style: 'rise' },
+      { s: 'THROUGH THE SUIT HE WORE', t: w[4][0], x: 100, y: 370, size: 96, style: 'rise' },
     ]);
   });
   // the airlock: cuts accelerate with the snare roll, drawn on ones at the end

@@ -7,7 +7,7 @@ Can’t feel his hands, can’t feel his face
 \[Pre-Chorus — filter opens, snare roll builds\]  
 So he bleeds the air out, breath by breath  
 Dancing on the edge of a quiet death  
-Let his air out through the sleeve he wore  
+Let his air out through the suit he wore  
 Ninety minutes inside the airlock door  
 \[Chorus / Hook\]  
  Orbital sunrise, burning gold  

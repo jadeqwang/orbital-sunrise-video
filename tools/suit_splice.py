@@ -1,4 +1,4 @@
-"""Review-only test: turn "...through the SLEEVE he wore" (≈53.0 s) into "...through the SUIT he wore"
+"""Turn "...through the SLEEVE he wore" (≈53.0 s) into "...through the SUIT he wore"
 using only Jade's own recorded voice. Nothing used by the renderer / release is modified.
 
 How the new word is built (all in the separated vocal stem, 44.1 kHz, Kim_Vocal_2 MDX-Net):
@@ -28,7 +28,8 @@ import numpy as np, soundfile as sf, pyworld as pw
 from scipy.signal import resample_poly, stft, istft
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-MIX48 = ROOT / "media/audio/Orbital_Sunrise_extended.wav"           # release mix (read only)
+MIX48 = ROOT / "media/audio/Orbital_Sunrise_extended.wav"           # release mix (rewritten only with --apply)
+SLEEVE48 = ROOT / "media/audio/Orbital_Sunrise_extended_sleeve.wav" # the original "sleeve" mix, kept so --apply is repeatable
 VOC = pathlib.Path("/tmp/work/audio/vocals.wav")                     # Kim_Vocal_2 stems of song.wav (44.1 kHz)
 INST = pathlib.Path("/tmp/work/audio/instrumental.wav")
 OUTDIR = ROOT / "release/review"
@@ -191,6 +192,7 @@ def lufs(path):
 def main():
     ap_ = argparse.ArgumentParser(); ap_.add_argument("--mode", default="filter", choices=["filter", "world"])
     ap_.add_argument("--t-gain-db", type=float, default=2.0); ap_.add_argument("--oo-gain-db", type=float, default=-2.5); ap_.add_argument("--tag", default="")
+    ap_.add_argument("--apply", action="store_true", help="write the edited full mix to the release WAV (the original is kept as *_sleeve.wav)")
     args = ap_.parse_args()
     SCRATCH.mkdir(parents=True, exist_ok=True); OUTDIR.mkdir(parents=True, exist_ok=True)
 
@@ -198,7 +200,9 @@ def main():
     sf.write(SCRATCH / f"vocal_edit{args.tag}.wav", vedit[int(50 * SR):int(56 * SR)], SR)
     sf.write(SCRATCH / f"vocal_orig.wav", v[int(50 * SR):int(56 * SR)], SR)
 
-    mix, msr = sf.read(MIX48, dtype="float64"); assert msr == 48000
+    if not SLEEVE48.exists():
+        import shutil; shutil.copy2(MIX48, SLEEVE48)
+    mix, msr = sf.read(SLEEVE48, dtype="float64"); assert msr == 48000   # always edit the original, never an already-edited mix
     # delta on a 48 kHz grid aligned to the stem: stem sample a  ↔  48 kHz sample a*160/147
     pad = 147 * 20                                                     # keep the resampler's edges in zeros
     a0 = (a // 147) * 147 - pad
@@ -208,6 +212,9 @@ def main():
     s48 = a0 * 160 // 147
     after_full = mix.copy()
     after_full[s48:s48 + len(d48)] += d48
+    if args.apply:
+        sf.write(MIX48, after_full, 48000, subtype=sf.info(SLEEVE48).subtype)
+        print(f"applied: wrote {MIX48} ({len(after_full) / 48000:.2f} s)")
 
     e0, e1 = int(EXCERPT[0] * 48000), int(EXCERPT[1] * 48000)
     before, after = mix[e0:e1].copy(), after_full[e0:e1].copy()
