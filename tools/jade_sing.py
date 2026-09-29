@@ -20,7 +20,9 @@ PROMPT = ("A graphite and coloured-pencil drawing on cream paper comes to life, 
           "a little, she may close her eyes on a held note or glance up, her hair moves with her. Through all of it she stays the same "
           "person as in the first frame: the same large head, wide heart-shaped face with its tapering chin, high forehead, the two "
           "slightly different eyebrows, wide glasses, centre-parted hair, jacket and pink headphones round her neck. Do not redraw, "
-          "beautify, slim, age or restyle her face; no makeup, no added lines. Locked-off camera, very slow push-in. "
+          "beautify, slim, age or restyle her face; no makeup, no added lines. Keep her high forehead exactly as drawn: the hairline and "
+          "centre parting stay at the same height above her brows in every frame, never lowered, and the top of her head stays in frame. "
+          "Static locked-off camera, no zoom or push-in: she stays framed chest-up exactly as in the first frame, never a face close-up. "
           "No text, no captions.")
 BG = (" Behind her, in soft light pencil lines on the paper, a quiet generic landscape at golden hour: gentle hills, grass and a "
       "wide sky, drawn lightly so she stays the clear subject.")
