@@ -243,6 +243,15 @@ FIXES = {
         "dark hair swept back from it on both sides under the headphones. Keep her face below the brows, glasses, headphones, "
         "head size and position, the long hair blowing behind her, her pose, clothes and the whole setting exactly as in image 1. "
         "No text, no border."),
+    # her ask: one edit of result 2 itself: arms spread, cargo pants, scaffolding gone, the anime drawing's setting details
+    "rare_one_edit": ("Edit image 1. Do not change the camera: same framing, same zoom, her head exactly the same size and in "
+        "exactly the same place, her face, hair, glasses and pale pink headphones exactly as drawn. Make only these changes: "
+        "1) she spreads her arms wide out to the sides at shoulder height, palms open, like in image 2; her hands may go past "
+        "the edges of the frame. 2) her trousers become the loose grey-blue cargo trousers with a black belt and a long orange "
+        "strap from image 2. 3) remove the scaffolding: the metal frame, beams, posts and the thick diagonal girder. 4) the setting "
+        "becomes the one in image 2: an open platform edge high above a sea of clouds at night, a deep blue sky with stars, long "
+        "thin diagonal support wires running down across the sky, and the small orange box at the platform's edge. Keep image 1's "
+        "loose coloured-pencil style. Do not copy image 2's face. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
