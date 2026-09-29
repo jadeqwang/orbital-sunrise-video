@@ -73,3 +73,37 @@ def main(out_dir):
 
 if __name__ == "__main__":
     main(pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "media" / "refs")
+
+
+def video_on_paper(src, out, audio_from=None, lag=0.0, size=(1280, 720), text=True):
+    """A pencil-on-paper take (any aspect) laid on Snow paper like framing A, with the song from `audio_from` shifted by `lag`
+    (song time = 30.9 + lag + clip time; 30.9 s is where media/audio_refs/jade_hook1.mp3 starts in the song)."""
+    import subprocess, cv2
+    cap = cv2.VideoCapture(str(src))
+    fs = []
+    while True:
+        ok, f = cap.read()
+        if not ok:
+            break
+        fs.append(cv2.cvtColor(f, cv2.COLOR_BGR2RGB).astype(float))
+    paper = np.median(np.concatenate([f[:20].reshape(-1, 3) for f in fs[::12]]), axis=0)
+    base = snow_paper()
+    h, w = fs[0].shape[:2]
+    s = H / h
+    x = W - round(w * s) - 150
+    lyr = Image.new("RGBA", (W, H))
+    if text:
+        lyric(lyr)
+    lyr = np.asarray(lyr, float) / 255
+    cmd = ["ffmpeg", "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", "24", "-i", "-"]
+    if audio_from:
+        cmd += ["-ss", f"{30.9 + lag:.3f}", "-t", f"{len(fs) / 24:.3f}", "-i", str(audio_from), "-map", "0:v", "-map", "1:a", "-c:a", "aac", "-b:a", "128k", "-shortest"]
+    cmd += ["-vf", f"scale={size[0]}:{size[1]}", "-c:v", "libx264", "-crf", "24", "-preset", "slow", "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(out)]
+    p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+    for f in fs:
+        sheet = place(base.copy(), np.clip(f / paper, 0, 1), s, x, 0, fade_left=.15)
+        sheet = sheet * (1 - lyr[..., 3:]) + lyr[..., :3] * 255 * lyr[..., 3:]
+        p.stdin.write(np.clip(sheet, 0, 255).astype(np.uint8).tobytes())
+    p.stdin.close()
+    p.wait()
+    print(out)
