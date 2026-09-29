@@ -1,0 +1,18 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "JP_FRONT",
+   "JP_GRIN",
+   "JP_PROF",
+   "JP_OUTFIT",
+   "JP_HP"
+  ],
+  "audio": [
+   "media/audio_refs/jade_brk.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Dusk on the grassy hilltop above San Francisco: the whole sky has turned deep red and orange. the singer Jade: exactly the real woman in the first three reference photos, her real face unchanged and looking her best (a broad, soft East Asian face with full cheeks, clear smooth skin, a high rounded hairline and a large, fully visible forehead, straight dark brows, a rounded nose, full lips, a small mole near her upper lip) wearing her own thin dark rectangular glasses. Her hair exactly as in those photos: long straight black hair worn half-up, half-down, the top section swept back from her forehead and gathered at the back of her head, the rest falling loose past her shoulders, with one loose face-framing section falling beside her face on one side; no bangs. She wears the outfit in the fourth reference image (cropped white flight jacket with orange bands and a pale-blue dot on the chest, black ribbed crop top, navy wide-leg cargo pants with orange straps), with the pale dusty-pink over-ear headphones from the fifth reference image resting around her neck. She stands under the red sky singing, her head almost level: she looks up with her eyes and tips her chin up only slightly, never throwing her head back, her face three-quarters toward the camera and clearly readable the whole time; she slowly raises one open hand toward the sky as if reaching for something she can't touch. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium shot from the chest up, her raised hand entering the frame, space around her head. Warm light on her face, rim light on her hair and glasses. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 312
+}

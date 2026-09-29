@@ -1,0 +1,18 @@
+{
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "JP_FRONT",
+   "JP_GRIN",
+   "JP_PROF",
+   "JP_OUTFIT",
+   "JP_HP"
+  ],
+  "audio": [
+   "media/audio_refs/jade_hook1.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Golden hour on a grassy hilltop above San Francisco, the city and the bay far below in soft haze. the singer Jade: exactly the real woman in the first three reference photos, her real face unchanged and looking her best (a broad, soft East Asian face with full cheeks, clear smooth skin, a high rounded hairline and a large, fully visible forehead, straight dark brows, a rounded nose, full lips, a small mole near her upper lip) wearing her own thin dark rectangular glasses. Her hair exactly as in those photos: long straight black hair worn half-up, half-down, the top section swept back from her forehead and gathered at the back of her head, the rest falling loose past her shoulders, with one loose face-framing section falling beside her face on one side; no bangs. She wears the outfit in the fourth reference image (cropped white flight jacket with orange bands and a pale-blue dot on the chest, black ribbed crop top, navy wide-leg cargo pants with orange straps), with the pale dusty-pink over-ear headphones from the fifth reference image resting around her neck. The low sun is off to one side, lighting her face warmly (not behind her), wind lifting loose strands of her hair. She sings 'bring me home' toward the sky, lifting her eyes on the last word. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium shot framed from the chest up, her face clear and well lit, about a quarter of the frame height, with space around her head; not a close-up. Slow, gentle push-in. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 433
+}
