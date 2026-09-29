@@ -176,8 +176,21 @@ async function initShots2() {
   // mesh still slips on some frames (a mouth on her chin), so the face is drawn from the plate's own edges only (faceLines: false)
   shot('B3_never', BR[3].t0 - .05, br1, async (t, lt) => {
     paper(G, 'snow');
-    await singer(t, 'jade_brk_p', { view: { zoom: 1.02 }, faceLines: false, hatch: { spacing: 6.2, mask: quiet([[W / 2 - 760, H - 175, W / 2 + 760, H - 45]], .7) } });
-    subtitle(G, lineAt(t), t, { size: 64, col: 'graphite', y: H - 90 });
+    // On the Lady Bird Lake trail at red dusk, drawn and lit around her kept drawing (her own lines, no closet glasses-shadow),
+    // background kept loose, animated singing; the film's pencil over it at 45%. Lips by ear for this line ("Never see what he
+    // saw ahead"): song time = 110.4 - 0.8 + take time (her pick; the take ends 0.36 s before the shot and holds its last frame).
+    // ?b3=old: the previous renderer-drawn take.
+    if (new URLSearchParams(location.search).get('b3') === 'old') {
+      await singer(t, 'jade_brk_p', { view: { zoom: 1.02 }, faceLines: false, hatch: { spacing: 6.2, mask: quiet([[W / 2 - 760, H - 175, W / 2 + 760, H - 45]], .7) } });
+    } else {
+      const tp = t - (110.4 + +(new URLSearchParams(location.search).get('b3lag') ?? -.8));
+      await paperTake('jade_dusk', tp);
+      G.save(); G.globalAlpha = .45;
+      await drawPlate(t, 'jade_dusk', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
+      G.restore();
+    }
+    if (new URLSearchParams(location.search).get('b3') === 'old') subtitle(G, lineAt(t), t, { size: 64, col: 'graphite', y: H - 90 });
+    else subtitle(G, lineAt(t), t, { size: 64, col: 'graphite', x: W - 500, y: 150 });   // in the sky, clear of her
   });
 
   // ============================== ART · 118.00 → 129.70 ==============================

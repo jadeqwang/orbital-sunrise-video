@@ -659,10 +659,22 @@ async function initShots() {
   const studioLight = (X, Y) => clamp(1.3 - Math.hypot((X - 900) / 1.25, Y - 440) / 640, .12, 1) * quiet([[W - 860, H - 270, W - 60, H - 90]], .75)(X, Y);
   shot('K4_home', H2[1].words[2][0] - .05, h21, async (t, lt) => {
     paper(G, 'snow');
-    await singer(t, 'jade_studio_p', { view: { zoom: 1.02 }, ana: { gain: 1.1 }, lines: { contrast: 2.2, white: .62 },
-      hatch: { spacing: 6.2, mask: studioLight }, faceHatch: { tone: studioSkin, pencilOpt: { sat: .5 } }, faceContour: { hi: .28, lo: .11 } });
+    // In the vocal booth, drawn around her kept drawing (her notes: headphones only on her head, mic beside her face, the
+    // engineer a loose sketch behind the glass, no lamp), animated singing; the film's pencil over it at 45% as at 0:32.
+    // Lips by ear: song time = 67.4 + 0.7 + take time (her "A"). ?k4=old: the previous renderer-drawn take.
+    if (new URLSearchParams(location.search).get('k4') === 'old') {
+      await singer(t, 'jade_studio_p', { view: { zoom: 1.02 }, ana: { gain: 1.1 }, lines: { contrast: 2.2, white: .62 },
+        hatch: { spacing: 6.2, mask: studioLight }, faceHatch: { tone: studioSkin, pencilOpt: { sat: .5 } }, faceContour: { hi: .28, lo: .11 } });
+    } else {
+      const tp = t - (67.4 + +(new URLSearchParams(location.search).get('k4lag') ?? .7));
+      await paperTake('jade_studio_loc', tp);
+      G.save(); G.globalAlpha = .45;
+      await drawPlate(t, 'jade_studio_loc', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
+      G.restore();
+    }
     const w = H2[1].words;
-    lyricStack(t, [{ s: 'bring me home', t: w[2][0], x: W - 110, y: H - 140, font: FONT.serif(124), col: 'crimson', align: 'right', style: 'rise' }]);
+    lyricStack(t, [{ s: 'bring me home', t: w[2][0], x: W - 110, y: new URLSearchParams(location.search).get('k4') === 'old' ? H - 140 : 190,
+      font: FONT.serif(124), col: 'crimson', align: 'right', style: 'rise' }]);   // new take: top right, clear of the mic stand
   });
 
   if (typeof initShots2 === 'function') await initShots2();
