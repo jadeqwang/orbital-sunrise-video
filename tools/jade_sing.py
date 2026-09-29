@@ -29,7 +29,7 @@ def main(first, out, bg=False):
     inp = {"prompt": PROMPT + (BG if bg else ""), "duration": 5, "resolution": "720p", "aspect_ratio": "16:9",
            "generate_audio": True, "image": cfai.data_uri(first), "reference_audios": [cfai.data_uri(AUDIO)],
            "use_virtual_avatar": True}
-    return cfai.gen("bytedance/seedance-2.5", inp, out, tag="jade_sing", background=False, timeout=900)
+    return cfai.gen("bytedance/seedance-2.5", inp, out, tag="jade_sing", timeout=1800)
 
 
 if __name__ == "__main__":
