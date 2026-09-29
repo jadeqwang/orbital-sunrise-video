@@ -204,6 +204,15 @@ FIXES = {
         "colours, light) and the loose coloured-pencil style. Change only the platform: remove all the railings and the posts "
         "around it, so the platform's edge is open straight onto the sea of clouds below, like the open tower platform in image 2. "
         "Keep the steel cables rising from the platform and the small orange warning light at its edge. No text, no border."),
+    # 1:09, her ask: the setting and posture of the anime reference (image 2) on result 2, keeping her face, glasses, camera angle
+    "rare_anime_pose": ("Edit image 1. Keep her face exactly as it is in image 1: the same face shape, features, expression, "
+        "eyebrows, glasses, centre-parted hair, pale pink headphones on her head, black mock-neck crop top with bare midriff, "
+        "white cropped jacket with orange bands, and keep the same camera angle, framing, head size and head position as image 1. "
+        "Change her posture to match image 2: arms spread wide out to the sides at shoulder height, palms open, her long hair "
+        "blowing out behind her in the wind, singing out to the sky. Change the setting to match image 2: the open platform high "
+        "above a sea of clouds at night under a deep blue starry sky, with long thin diagonal support wires running down across "
+        "the frame from above, and small details like the orange box at the platform's edge. Keep image 1's loose coloured-pencil "
+        "drawing style and night light; do not copy image 2's anime face or character design. No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }
