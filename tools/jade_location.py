@@ -1,6 +1,6 @@
 """Put her on location: the image model draws the place AROUND her kept drawing, in the same picture, with her untouched.
 
-    python3 tools/jade_location.py <first_frame.jpg> <out_prefix> [n]
+    python3 tools/jade_location.py <first_frame.jpg> <out_prefix> [n] [scene]      scene: hook1 | studio_neck | studio_head | dusk
 
 The earlier backgrounds were drawn empty and she was laid over them ("superimposed on a postcard"). Here the model sees her
 and draws the scene for her pose: a selfie at arm's length at an overlook, so ground, light and camera agree with her.
@@ -33,9 +33,35 @@ def check(src, out, box=(.36, .06, .62, .62), tol=10.0):
     return d, d <= tol
 
 
-def main(first, prefix, n=2):
+KEEP = ("Edit this pencil drawing on cream paper. Keep the woman exactly as she is drawn: the same pencil lines, the same face, "
+        "head size and shape, high forehead, glasses, eyebrows, hair, jacket, pose, size and position in the picture. Do not "
+        "redraw, move, resize, beautify or restyle her. Draw the place around her in the same graphite and coloured-pencil style "
+        "on the same paper, as a shot in a music video filmed by someone holding the camera in front of her. ")
+SCENES = {
+    "hook1": PROMPT,
+    # 1:09 · singing in the vocal booth
+    "studio_neck": KEEP + ("Her pink headphones stay round her neck as drawn. She is in a small recording vocal booth at night: grey "
+        "acoustic foam panels on the walls, a warm lamp. A large-diaphragm condenser microphone with a round pop filter on a boom "
+        "arm stands at the side of the picture, at her chin height, beside her face, never in front of her face or mouth. Behind "
+        "her, a window into the dim control room with the glow of a mixing desk and monitors. Warm lamp light from the side: a "
+        "soft warm rim of coloured pencil on her hair and shoulder, nothing else changed on her. No text, no border."),
+    "studio_head": KEEP.replace("jacket, pose", "jacket, pose (except the headphones)") + ("Move only her pale pink over-ear "
+        "headphones from around her neck onto her head: the band over the top of her hair, the cups over her ears; her head "
+        "stays exactly the same size and shape, the band sits on top of her hair. She is in a small recording vocal booth at "
+        "night: grey acoustic foam panels, a warm lamp. A large-diaphragm condenser microphone with a round pop filter on a boom "
+        "arm stands at the side of the picture at her chin height, beside her face, never in front of her face or mouth. Behind "
+        "her, a window into the dim control room with the glow of a mixing desk. Warm lamp light from the side. No text, no border."),
+    # 1:55 · never see what he saw ahead: red dusk in Austin
+    "dusk": KEEP + ("She stands on the Lady Bird Lake hike-and-bike trail in Austin, Texas at dusk: the whole sky is a deep red "
+        "and orange, the downtown Austin skyline and the Congress Avenue bridge far behind her across the calm water, the red "
+        "sky reflected in the lake, a few trees along the trail. Red dusk light in coloured pencil: a red-orange rim along her "
+        "hair and shoulder from the sky, nothing else changed on her. No text, no border."),
+}
+
+
+def main(first, prefix, n=2, scene="hook1"):
     import concurrent.futures as cf
-    inp = {"prompt": PROMPT, "image_input": [cfai.data_uri(first)], "aspect_ratio": "16:9", "output_format": "png", "image_size": "2K"}
+    inp = {"prompt": SCENES[scene], "image_input": [cfai.data_uri(first)], "aspect_ratio": "16:9", "output_format": "png", "image_size": "2K"}
     def one(i):
         p = cfai.gen("google/nano-banana-pro", inp, f"{prefix}_{i}.png", tag="jade_location")[0][0]
         return p, check(first, p)
@@ -45,7 +71,7 @@ def main(first, prefix, n=2):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 2)
+    main(sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 2, sys.argv[4] if len(sys.argv) > 4 else "hook1")
 
 
 FACE_OVAL = [10, 338, 297, 332, 284, 251, 389, 356, 454, 323, 361, 288, 397, 365, 379, 378, 400, 377, 152, 148, 176, 149, 150,
