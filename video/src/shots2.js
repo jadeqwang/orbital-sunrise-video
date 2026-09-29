@@ -250,6 +250,33 @@ async function initShots2() {
   // the bottom, the way the Earth sweeps through the plate. Each pass keeps one stroke layout (seed per pass; jseed boils it).
   const SPIN_B0 = 352, SPIN_BEATS = 3, SPIN_LAG = .06, SPIN_HALF = .17;   // pass centre = B(352 + 3k) + lag; half a crossing, s
   const PORT_UV = [486 / 960, 277 / 540], PORT_R = 252 / 960;             // glass opening in plate uv (Hough fit, frames 1–91; the camera holds it)
+  // her note (2:20): the capsule is still tumbling in the g-load shot, so its two cabin portholes keep flashing, the sun
+  // sweeping across one and then the other on the tumble's beat, black glass in between. Discs hand-tracked in the g_force
+  // plate (x, y, r in 960×540 plate px at plate frames 1/50/100/145: the camera drifts and pushes in); the left one sits
+  // behind the first cosmonaut's helmet, so only its top half is lit
+  const CAB_PORTS = [
+    { f: [1, 50, 100, 145], x: [705, 682, 743, 762], y: [172, 160, 160, 165], r: [42, 45, 50, 55], lag: 0, top: false },
+    { f: [1, 50, 100, 145], x: [292, 257, 262, 245], y: [150, 145, 140, 128], r: [38, 40, 45, 48], lag: .5, top: true }];
+  const track = (fs, vs, f) => { let i = 0; while (i < fs.length - 2 && f > fs[i + 1]) i++; return lerp(vs[i], vs[i + 1], clamp((f - fs[i]) / (fs[i + 1] - fs[i]))); };
+  function cabinPorts(t, view, pf) {
+    for (const P0 of CAB_PORTS) {
+      const x = track(P0.f, P0.x, pf), y = track(P0.f, P0.y, pf), r = track(P0.f, P0.r, pf);
+      const [cx, cy] = view.toScreen(x / 960, y / 540), [ex, ey] = view.toScreen((x + r) / 960, y / 540), R = Math.hypot(ex - cx, ey - cy);
+      // where the sun is in the tumble: a pass every SPIN_BEATS beats, this port half a turn after the other
+      const bp = (beatPos(t) - SPIN_B0) / SPIN_BEATS - P0.lag, ph = bp - Math.round(bp);
+      const f = Math.exp(-Math.pow(ph / .16, 2));                     // 1 as the sun crosses this port, 0 facing black space
+      G.save(); G.beginPath(); G.arc(cx, cy, R, 0, TAU); G.clip(); if (P0.top) { G.beginPath(); G.rect(cx - R, cy - R, 2 * R, R * .95); G.clip(); }
+      paper(G, 'night', clamp(.85 * (1 - f)));                        // dead black glass between passes
+      G.globalCompositeOperation = 'lighter';
+      const gr = G.createRadialGradient(cx, cy, 0, cx, cy, R); gr.addColorStop(0, `rgba(255,236,200,${.9 * f})`); gr.addColorStop(.7, `rgba(255,190,120,${.55 * f})`); gr.addColorStop(1, 'rgba(255,160,90,0)');
+      G.fillStyle = gr; G.fillRect(cx - R, cy - R, 2 * R, 2 * R); G.restore();
+      if (f > .05) {                                                  // the flash spills into the cabin round the rim
+        G.save(); G.globalCompositeOperation = 'lighter';
+        const sp = G.createRadialGradient(cx, cy, R * .8, cx, cy, R * 3); sp.addColorStop(0, `rgba(255,190,120,${.28 * f})`); sp.addColorStop(1, 'rgba(255,190,120,0)');
+        G.fillStyle = sp; G.fillRect(cx - R * 3, cy - R * 3, R * 6, R * 6); G.restore();
+      }
+    }
+  }
   function portholeSun(t, view) {
     const d = drawClock(t, 12).n;   // t is already on the shot's twos grid (renderFrame); d only boils the strokes
     const k = Math.round((beatPos(t) - SPIN_B0) / SPIN_BEATS), c = B(SPIN_B0 + k * SPIN_BEATS) + SPIN_LAG, p = (t - c) / SPIN_HALF;
@@ -337,6 +364,7 @@ async function initShots2() {
     const { view } = await drawPlate(t, cur[1], cur[2] + (t - cur[0]) * (ho.rate || 1), { face: ho.face, rate: riser > .3 ? 24 : 12, view: { zoom: 1.05 + (ho.zoom || 0) + riser * .15, rot: ho.roll ? -ho.roll + (t - cur[0]) * ho.roll * 1.1 : 0, ox: (hash(Math.floor(t * 24)) - .5) * shake, oy: (hash(Math.floor(t * 24) + 7) - .5) * shake },
       extra: (pen) => edgePanic(pen, .35 + riser * .65, drawClock(t, 24).n * 13) });
     if (ho.sun && view) portholeSun(t, view);
+    if (cur[1] === 'g_force' && view) cabinPorts(t, view, (cur[2] + (t - cur[0]) * (ho.rate || 1)) * 24);
     const idx = holds.indexOf(cur);
     lyricStack(t, [{ s: 'HOLD ON', t: cur[0], x: W / 2, y: H / 2 + cur[3] * .35, size: cur[3], align: 'center', style: 'slam', col: idx === 2 ? 'gold' : 'white' }]);
     if (t > bd1 - .12) { G.fillStyle = P.cream; G.globalAlpha = clamp((t - (bd1 - .12)) / .12); G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
