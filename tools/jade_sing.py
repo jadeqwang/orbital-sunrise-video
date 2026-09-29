@@ -15,10 +15,12 @@ AUDIO = ROOT / "media" / "audio_refs" / "jade_hook1.mp3"     # her vocal, "bring
 PROMPT = ("A graphite and coloured-pencil drawing on cream paper comes to life, still a pencil drawing in every frame: the same fine "
           "pencil lines, the same paper, the same drawing style as the first frame. The woman in the drawing sings the words "
           "'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips closing on 'b' and 'm', "
-          "opening round and wide on 'home'. Only her mouth, jaw, a slight lift of the chin, a blink and a few loose strands of hair "
-          "move. Her face, head size and shape, glasses, eyebrows, hair, jacket and headphones stay exactly as drawn in the first "
-          "frame: do not redraw, beautify, slim or restyle her face; no makeup. She looks toward the camera. Locked-off camera, "
-          "very slow push-in. No text, no captions.")
+          "opening round and wide on 'home'. She sings with feeling: her brows and eyes respond to the music, her head tilts and lifts "
+          "a little, she may close her eyes on a held note or glance up, her hair moves with her. Through all of it she stays the same "
+          "person as in the first frame: the same large head, wide heart-shaped face with its tapering chin, high forehead, the two "
+          "slightly different eyebrows, wide glasses, centre-parted hair, jacket and pink headphones round her neck. Do not redraw, "
+          "beautify, slim, age or restyle her face; no makeup, no added lines. Locked-off camera, very slow push-in. "
+          "No text, no captions.")
 BG = (" Behind her, in soft light pencil lines on the paper, a quiet generic landscape at golden hour: gentle hills, grass and a "
       "wide sky, drawn lightly so she stays the clear subject.")
 
