@@ -1,0 +1,16 @@
+{
+ "spec": {
+  "duration": 5,
+  "refs": [
+   "J4T",
+   "J4F",
+   "J4H"
+  ],
+  "audio": [
+   "media/audio_refs/jade_hook2.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "A small professional recording studio at night: acoustic foam panels, warm practical lamps, a glowing mixing desk out of focus behind the glass. the singer Jade (exactly the woman in the reference images, same face: an East Asian woman in her thirties with a broad soft face and full cheeks, visible double eyelid creases, a rounded nose, light freckles, thick straight dark eyebrows, a soft broad nose, full lips, and her thin black rectangular metal-frame glasses, which she always wears; long straight glossy black hair with a centre part and curtain bangs; oversized cropped white flight jacket with orange bands and a small pale-blue dot on the chest, black ribbed crop top, navy wide-leg cargo pants with orange straps, orange-foam headphones around her neck). In this shot, unlike the references, her orange-foam headphones are worn ON HER HEAD: the thin silver headband arches over the top of her head and the round orange foam pads cover both ears (slim vintage Walkman-style headphones exactly like the pair in the references: a thin silver wire headband and small flat round orange foam pads, not bulky ear cups, ear defenders or earmuffs), a thin cable running down from them; nothing around her neck. She keeps her glasses on. She sings into a large-diaphragm studio condenser microphone on a stand, with a round black mesh pop filter clipped between the microphone and her mouth, set off to one side of her face at chin level, never in front of her mouth: her lips, chin and whole face stay clear and visible the whole time. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium shot, framed from the waist or chest up with space around her; her face never fills the frame, no close-up. Three-quarter angle from her open side: the microphone and pop filter are seen side-on at the edge of the frame beside her face, never between the camera and her face; her eyes open, steady camera. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 183
+}

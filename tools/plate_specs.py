@@ -322,10 +322,12 @@ for _v3, _v4 in [("jade_hook1_v3", "jade_hook1_v4"), ("jade_studio", "jade_studi
     _s["refs"] = [_V4_REF.get(r, r) for r in _s["refs"]]
     _s["prompt"] = _s["prompt"].replace(JADE3, JADE4)
     PLATES[_v4] = _s
-# v4 retakes: take1 of studio had bulky ear-defender cups and the pop filter over her mouth; brk tipped her head far back; notebook lost the jacket's orange band
+# v4 retakes: studio takes 1-2 had bulky ear-defender cups and the pop filter over her mouth; brk tipped her head far back; notebook lost the jacket's orange band
 PLATES["jade_studio_v4"]["prompt"] = PLATES["jade_studio_v4"]["prompt"].replace(
     "cover both ears, a thin cable",
-    "cover both ears (slim, light on-ear headphones exactly like the pair in the references, small flat foam pads, not bulky ear defenders or earmuffs), a thin cable").replace(
+    "cover both ears (slim vintage Walkman-style headphones exactly like the pair in the references: a thin silver wire headband and small flat round orange foam pads, not bulky ear cups, ear defenders or earmuffs), a thin cable").replace(
+    "Three-quarter angle, the microphone and pop filter in the foreground of the frame, steady camera.",
+    "Three-quarter angle from her open side: the microphone and pop filter are seen side-on at the edge of the frame beside her face, never between the camera and her face; her eyes open, steady camera.").replace(
     "set just below and to one side of her mouth so her whole face stays visible.",
     "set off to one side of her face at chin level, never in front of her mouth: her lips, chin and whole face stay clear and visible the whole time.")
 PLATES["jade_brk_v4"]["prompt"] = PLATES["jade_brk_v4"]["prompt"].replace(

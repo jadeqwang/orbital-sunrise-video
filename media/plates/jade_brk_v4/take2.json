@@ -1,0 +1,16 @@
+{
+ "spec": {
+  "duration": 8,
+  "refs": [
+   "J4T",
+   "J4F",
+   "J4H"
+  ],
+  "audio": [
+   "media/audio_refs/jade_brk.mp3"
+  ],
+  "generate_audio": true,
+  "prompt": "Dusk on the grassy hilltop above San Francisco: the whole sky has turned deep red and orange. the singer Jade (exactly the woman in the reference images, same face: an East Asian woman in her thirties with a broad soft face and full cheeks, visible double eyelid creases, a rounded nose, light freckles, thick straight dark eyebrows, a soft broad nose, full lips, and her thin black rectangular metal-frame glasses, which she always wears; long straight glossy black hair with a centre part and curtain bangs; oversized cropped white flight jacket with orange bands and a small pale-blue dot on the chest, black ribbed crop top, navy wide-leg cargo pants with orange straps, orange-foam headphones around her neck) stands under the red sky singing, her eyes lifted up to the sky, her head almost level: she looks up with her eyes and tips her chin up only slightly, never throwing her head back, so her face stays turned three-quarters toward the camera and clearly readable the whole time; she slowly raises one open hand toward the sky as if reaching for something she can't touch. She sings the song in the reference audio, her lips precisely synchronised to every word and breath of the vocal from the first frame to the last; natural singing mouth shapes, jaw and throat movement. Medium shot from the chest up, her raised hand entering the frame, space around her head; her face never fills the frame. Camera at chest height, slightly low, the red sky filling the space behind her, soft warm light on her face, rim light on her hair and glasses. Photorealistic, shot on 35mm film, cinematic, present day San Francisco. Clear readable face, hard directional light, simple uncluttered background. No on-screen text, no captions."
+ },
+ "secs": 224
+}
