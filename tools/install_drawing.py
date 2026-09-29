@@ -19,7 +19,8 @@ PAPER = np.array([246, 242, 232], dtype=np.float32)
 W, H = 960, 540
 
 im = Image.open(SRC).convert("RGB")
-card = im.crop(CARD)
+k = im.width / 930                # CARD was measured on a 930x558 copy of the photo; scale it to this copy
+card = im.crop(tuple(round(v * k) for v in CARD))
 med = np.array(ImageStat.Stat(card.crop(BARE)).median, dtype=np.float32)
 card = Image.fromarray(np.clip(np.asarray(card, dtype=np.float32) * (PAPER / med), 0, 255).astype(np.uint8))
 s = min(W / card.width, H / card.height) * 0.98
