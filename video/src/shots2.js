@@ -230,12 +230,67 @@ async function initShots2() {
 
   // ============================== BUILD · 129.70 → 143.20 ==============================
   const [bd0, bd1] = S('build').slice(1), BD = linesIn('build');
+  // The sun whips past the porthole once per turn of the tumble: every 3 beats (≈1.1 s), centred just after beats 352, 355, 358,
+  // which is where the plate's spin is between Earths (Earth → black → SUN → black → Earth). It enters at the top and leaves at
+  // the bottom, the way the Earth sweeps through the plate. Each pass keeps one stroke layout (seed per pass; jseed boils it).
+  const SPIN_B0 = 352, SPIN_BEATS = 3, SPIN_LAG = .06, SPIN_HALF = .17;   // pass centre = B(352 + 3k) + lag; half a crossing, s
+  const PORT_UV = [486 / 960, 277 / 540], PORT_R = 252 / 960;             // glass opening in plate uv (Hough fit, frames 1–91; the camera holds it)
+  function portholeSun(t, view) {
+    const d = drawClock(t, 12).n;   // t is already on the shot's twos grid (renderFrame); d only boils the strokes
+    const k = Math.round((beatPos(t) - SPIN_B0) / SPIN_BEATS), c = B(SPIN_B0 + k * SPIN_BEATS) + SPIN_LAG, p = (t - c) / SPIN_HALF;
+    if (p < -1.35 || p > 2.2) return;
+    const [cx, cy] = view.toScreen(PORT_UV[0], PORT_UV[1]), [ex, ey] = view.toScreen(PORT_UV[0] + PORT_R, PORT_UV[1]), R = Math.hypot(ex - cx, ey - cy);
+    const circle = g => { g.beginPath(); g.arc(cx, cy, R, 0, TAU); };
+    if (p > 1.05) {   // hard black after it: the eye is blind for a moment, the glass goes dead
+      const a = clamp(1.25 - (p - 1.05) * .9);
+      G.save(); circle(G); G.clip(); paper(G, 'night', a); G.restore();
+      return;
+    }
+    // the path: top → bottom with a slight lean (the tumble's axis is not quite level), a little different each turn
+    const lean = -.28 + (hash(k * 5 + 3) - .5) * .16, dx = Math.sin(lean), dy = Math.cos(lean), side = (hash(k * 5 + 4) - .5) * .35 * R;
+    const sx = cx + dx * p * R * 1.28 - dy * side, sy = cy + dy * p * R * 1.28 + dx * side;
+    const f = Math.exp(-Math.pow(p / .5, 2));                                // the flare: strongest as it crosses the middle
+    const vis = clamp((1.2 - Math.abs(p)) / .35);                            // rays reach in before the disc does
+    // wash: the plate's hatching burns out under the glare
+    G.save(); circle(G); G.clip(); paper(G, 'night', clamp(.25 + f * .8) * vis); G.restore();
+    const L = layer(3), pen = new Pen(), seed = 600 + k * 37;
+    // washed-out hatching: long pale strokes laid across the glass, densest round the sun
+    const ang = -.62, ca = Math.cos(ang), sa = Math.sin(ang), sp = 6.5;
+    for (let i = -Math.ceil(R / sp); i <= R / sp; i++) {
+      const off = i * sp, half = Math.sqrt(Math.max(0, R * R - off * off));
+      for (let s = -half, j = 0; s < half; j++) {
+        const h1 = hash2(i * 97 + j, seed), h2 = hash2(i * 97 + j, seed + 1), len = 26 + 70 * h1;
+        const u = s + len / 2, x = cx - sa * off + ca * u, y = cy + ca * off + sa * u;
+        s += len + 3 + 10 * h2;
+        const near = Math.exp(-Math.hypot(x - sx, y - sy) / (R * (.45 + .5 * f))), dens = vis * Math.min(1, f * 1.05 + .12) * (.5 + .5 * near);
+        if (h2 > dens) continue;
+        const jx = (hash2(i * 97 + j, d * 3 + 1) - .5) * 2.2, jy = (hash2(i * 97 + j, d * 3 + 2) - .5) * 2.2;
+        const col = near > .55 || (f > .6 && h1 < .45) ? 'white' : near > .25 || f > .6 ? (h1 < .55 ? 'cream' : 'gold') : (h1 < .6 ? 'gold' : 'orange');
+        pen.l(x - ca * len / 2 + jx, y - sa * len / 2 + jy, x + ca * len / 2 + jx, y + sa * len / 2 + jy, col, 1.7 + 1.4 * near + f, clamp(.3 + .45 * f + .3 * near));
+      }
+    }
+    // smear: the disc's track back up the path it came down
+    for (let i = 0; i < 46; i++) {
+      const h1 = hash2(i, seed + 5), h2 = hash2(i, seed + 6), o = (h1 - .5) * 150 * (.6 + .4 * f), len = R * (.35 + .6 * h2) * vis;
+      const x0 = sx - dy * o, y0 = sy + dx * o, x1 = x0 - dx * len, y1 = y0 - dy * len, bend = (hash2(i, d + 90) - .5) * 10;
+      pen.q(x0, y0, (x0 + x1) / 2 + bend, (y0 + y1) / 2, x1, y1, h2 < .4 ? 'white' : h2 < .75 ? 'gold' : 'orange', 1.6 + 2 * (1 - Math.abs(h1 - .5) * 2), .5 + .4 * (1 - h2));
+    }
+    // the sunburst (same pencils as the sunrise): long rays stretched along the whip, then the white-gold core
+    const along = Math.atan2(dy, dx);
+    raysFrom(pen, sx, sy, { n: 520, r0: 14, r1: R * 1.5, energy: vis * (.55 + .45 * f), seed: seed + 11, jseed: d, w: [1.4, 3.2], alpha: [.5, .95],
+      lenMul: a => .55 + .9 * Math.abs(Math.cos(a - along)) });
+    raysFrom(pen, sx, sy, { n: 620, r0: 0, r1: 150 + 90 * f, energy: vis, seed: seed + 13, jseed: d, cols: ['white', 'gold', 'gold', 'white', 'orange'], w: [2, 4.2], alpha: [.85, 1] });
+    pen.flush(L.g, ORDER_NIGHT); toothIn(L, d);
+    L.g.save(); L.g.globalCompositeOperation = 'destination-in'; circle(L.g); L.g.fill(); L.g.restore();   // only through the glass
+    G.drawImage(L.c, 0, 0);
+  }
   shot('G1_failed', bd0, BD[1].t0 - .05, async (t, lt) => {
     paper(G, 'night');
     const glitch = Math.floor(t * 12) % 7 === 0 ? 1 : 0;
     // through the porthole while the capsule tumbles: Earth, black, Earth sweep past (plate frames 0–90, before the plasma).
     // face:false: the plate's face hits are reflections on the glass
-    await drawPlate(t, 'porthole_spin', .1 + lt * 1.2, { face: false, view: { zoom: 1.08, ox: 330 + glitch * 18, rot: Math.sin(lt * 2.2) * .04 } });
+    const { view } = await drawPlate(t, 'porthole_spin', .1 + lt * 1.2, { face: false, view: { zoom: 1.08, ox: 330 + glitch * 18, rot: Math.sin(lt * 2.2) * .04 } });
+    if (view) portholeSun(t, view);
     const w = BD[0].words;
     lyricStack(t, [
       { s: 'GUIDANCE', t: w[0][0], x: 110, y: 380, size: 200, col: 'verm', style: 'slam' },
