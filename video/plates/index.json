@@ -796,5 +796,14 @@
   "take": "take1.mp4",
   "mattes": false,
   "gain": 1.0
+ },
+ "hatch_drawn_soft": {
+  "n": 193,
+  "fps": 24,
+  "w": 1280,
+  "h": 720,
+  "take": "take1.mp4 (toned to its neighbours)",
+  "mattes": false,
+  "gain": 1.0
  }
 }

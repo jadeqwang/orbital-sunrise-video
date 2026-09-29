@@ -445,7 +445,8 @@ async function initShots2() {
     paper(G, 'snow');
     // ?l3=drawn: Kenton's "what a human would draw" test: the shot drawn by hand (tools/human_draw.py, looser version, her pick)
     // and animated from that drawing (tools/drawn_plate.py), shown as it is: no tracing pass over it
-    if (new URLSearchParams(location.search).get('l3') === 'drawn') await paperTake('hatch_drawn', .4 + lt * 1.3);
+    const l3 = new URLSearchParams(location.search).get('l3');   // ?l3=drawn | soft (toned to the pale shot before it: her note on contrast/saturation)
+    if (l3 === 'drawn' || l3 === 'soft') await paperTake(l3 === 'soft' ? 'hatch_drawn_soft' : 'hatch_drawn', .4 + lt * 1.3);
     else await drawPlate(t, 'hatch_free', 2.2 + lt * 1.3, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[W / 2 - 620, 100, W / 2 + 620, 260]], .8) } });
     lyricStack(t, [{ s: 'MADE IT DOWN', t: MADE2.t0, x: W / 2, y: 220, size: 150, align: 'center', col: 'graphite', style: 'rise' }]);
   });
