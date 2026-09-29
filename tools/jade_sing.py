@@ -68,7 +68,7 @@ SCENES = {
                  "sky the whole time. She wears very baggy near-black navy parachute cargo trousers, wide and loose from hip to hem, soft "
                  "matte fabric in deep drape folds, the hems breaking loosely over her sneakers with at most a slight gather "
                  "right at the ankle, side cargo pockets, a black belt and a long orange strap hanging down the front. As she sings she slowly lifts and spreads her arms wide, her face lifting a "
-                 "little to the sky; her hair and the open cropped jacket stir in the wind; the clouds drift slowly below. Her face "
+                 "little to the sky; her long hair and the open cropped jacket blow in a steady breeze the whole time; the clouds drift slowly below. Her face "
                  "is as expressive as a singer giving everything in a live performance: brows lifting and drawing together with "
                  "the feeling of the words, eyes squeezing shut on the held note, mouth opening wide and round on 'home', cheeks "
                  "lifting, her head moving with the phrase. Her whole body sings with her, not only her upper body: she shifts her "
@@ -85,7 +85,7 @@ SCENES = {
 }
 
 
-def main(first, out, bg=False, avatar=True, loc=False, scene=None, refs=()):
+def main(first, out, bg=False, avatar=True, loc=False, scene=None, refs=(), refvideos=()):
     prompt, audio, dur = PROMPT + (BG if bg else "") + (LOC if loc else ""), AUDIO, 5
     if scene == "rare":   # her Rare Earth character: an illustrated character, not her likeness (no glasses)
         audio, dur, words, wear, where = SCENES[scene]
@@ -106,10 +106,16 @@ def main(first, out, bg=False, avatar=True, loc=False, scene=None, refs=()):
         inp["reference_images"] = [cfai.data_uri(r) for r in refs]
         inp["prompt"] += (" The reference image shows only her trousers: dress her in exactly those trousers; take nothing "
                           "else from it.")
+    if refvideos:   # public URL(s), e.g. the approved take on raw.githubusercontent.com: seedance reference_videos
+        inp["reference_videos"] = list(refvideos)
+        inp["prompt"] += (" Follow the reference video's body motion and choreography closely: the same timing of her arms "
+                          "lifting and spreading, the same weight shifts, head movement and camera pull-back; take only the "
+                          "motion from it, not her clothes.")
     return cfai.gen("bytedance/seedance-2.5", inp, out, tag="jade_sing", timeout=1800)
 
 
 if __name__ == "__main__":
     sc = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--scene=")), None)
     refs = [a.split("=", 1)[1] for a in sys.argv if a.startswith("--ref=")]
-    main(sys.argv[1], sys.argv[2], "--bg" in sys.argv, "--no-avatar" not in sys.argv, "--loc" in sys.argv, sc, refs)
+    vids = [a.split("=", 1)[1] for a in sys.argv if a.startswith("--refvideo=")]
+    main(sys.argv[1], sys.argv[2], "--bg" in sys.argv, "--no-avatar" not in sys.argv, "--loc" in sys.argv, sc, refs, vids)
