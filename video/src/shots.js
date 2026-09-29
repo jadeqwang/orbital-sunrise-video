@@ -686,10 +686,12 @@ async function initShots() {
       await singer(t, 'jade_studio_p', { view: { zoom: 1.02 }, ana: { gain: 1.1 }, lines: { contrast: 2.2, white: .62 },
         hatch: { spacing: 6.2, mask: studioLight }, faceHatch: { tone: studioSkin, pencilOpt: { sat: .5 } }, faceContour: { hi: .28, lo: .11 } });
     } else {
-      // her Rare Earth nod: on the open tower platform above the clouds at night, arms spreading as she sings (take F, lips by
-      // ear: her "A", song time = 67.4 + 0.5 + take time). ?k4=studio: the vocal-booth take (lag 0.7).
-      const studio = new URLSearchParams(location.search).get('k4') === 'studio', id = studio ? 'jade_studio_loc' : 'jade_rare_her';
-      const tp = t - (67.4 + +(new URLSearchParams(location.search).get('k4lag') ?? (studio ? .7 : .5)));
+      // her Rare Earth nod: on the open tower platform above the clouds at night, arms spreading as she sings. Take M: F's motion
+      // (F given to the animator as a reference video) in the baggy dark cargo pants Kenton liked; lips by ear, her "B":
+      // song time = 67.4 + 0.3 + take time. ?k4=F: take F (lag 0.5); ?k4=studio: the vocal-booth take (lag 0.7).
+      const k4 = new URLSearchParams(location.search).get('k4'), studio = k4 === 'studio';
+      const id = studio ? 'jade_studio_loc' : k4 === 'F' ? 'jade_rare_her' : 'jade_rare_her_m';
+      const tp = t - (67.4 + +(new URLSearchParams(location.search).get('k4lag') ?? (studio ? .7 : k4 === 'F' ? .5 : .3)));
       await paperTake(id, tp);
       G.save(); G.globalAlpha = .45;
       await drawPlate(t, id, tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
