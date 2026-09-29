@@ -81,6 +81,25 @@ SCENES = {
 }
 
 
+class _P:   # a landmark in full-image coordinates
+    def __init__(s, x, y): s.x, s.y = x, y
+
+
+def face_landmarks(A):
+    """MediaPipe face landmarks for her in image A (full-image normalised coords). The detector misses small faces in busy
+    frames, so fall back to the centre half of the picture (where she always is) and map back."""
+    import jade_forehead as JF, mediapipe as mp
+    h, w = A.shape[:2]
+    r = JF.landmarker().detect(mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(A.astype(np.uint8))))
+    if r.face_landmarks:
+        return r.face_landmarks[0]
+    x0, y0, x1, y1 = w // 4, 0, w * 3 // 4, h * 3 // 4
+    r = JF.landmarker().detect(mp.Image(image_format=mp.ImageFormat.SRGB, data=np.ascontiguousarray(A[y0:y1, x0:x1].astype(np.uint8))))
+    if not r.face_landmarks:
+        raise RuntimeError("no face found")
+    return [_P((x0 + p.x * (x1 - x0)) / w, (y0 + p.y * (y1 - y0)) / h) for p in r.face_landmarks[0]]
+
+
 def cheek_mask(L, w, h, feather):
     """Her cheeks under the glasses, where the drawing carries the shadow her glasses cast from the closet's overhead light."""
     import cv2
@@ -103,8 +122,7 @@ def restore_lines(src, edited, out, sigma=None, grow=1.08, feather=18, skip_chee
     B = np.asarray(Image.open(edited).convert("RGB").resize((A.shape[1], A.shape[0]), Image.LANCZOS), float)
     h, w = A.shape[:2]
     sigma = sigma or w / 220
-    r = JF.landmarker().detect(mp.Image(image_format=mp.ImageFormat.SRGB, data=A.astype(np.uint8)))
-    L = r.face_landmarks[0]
+    L = face_landmarks(A)
     pts = np.array([[L[i].x * w, L[i].y * h] for i in FACE_OVAL]); c = pts.mean(0); pts = c + (pts - c) * grow
     m = np.zeros((h, w), np.uint8); cv2.fillPoly(m, [pts.astype(np.int32)], 255)
     m = cv2.GaussianBlur(m.astype(float) / 255, (0, 0), feather)[..., None]
@@ -162,6 +180,25 @@ FIXES = {
         "cables and a small orange warning light at the platform's edge, like image 2. Remove the studio, the microphone, the "
         "window and the engineer completely. Cool blue night light on her from the sky, soft and even on her face. The background "
         "drawn loosely in the same coloured-pencil style. No text, no border."),
+    # 1:09, her note: "it should be a crop top and you should be able to see some bare midriff" (the shot was chest-up)
+    "rare_wider": ("Image 1 is a drawing placed smaller on a blank page. Extend it outward to fill the whole picture, like zooming "
+        "the camera out: keep everything already drawn exactly as it is (above all her face, glasses, hair and headphones, "
+        "unchanged, same size and place), and continue the scene around it in the same coloured-pencil style and night light: "
+        "more of the starry sky, the sea of clouds, the tower platform, its cables and railing. Continue her body down to about "
+        "her knees: her short cropped white jacket with orange bands hanging open, under it a black crop top that ends above her "
+        "waist with a band of bare midriff showing, dark trousers. Her arms relaxed at her sides. No text, no border, no blank "
+        "areas left."),
+    # 1:09, her notes on the wider version: mock-neck crop top, a looser background; and no selfie arm
+    "rare_wider_fix": ("Edit image 1, keeping her face, glasses, hair, headphones, head size and position exactly as they are. Make "
+        "three changes only. 1) Her black top is a mock-neck crop top: a short snug black top whose collar comes a little way up "
+        "her neck, ending above her waist so a band of bare midriff shows under the open cropped white jacket. 2) Her arms hang "
+        "relaxed at her sides; nothing reaches toward the camera. 3) Redraw the background more loosely, like a quick coloured-pencil "
+        "sketch around a finished figure: freer strokes, less detail, simplified clouds, platform and cables, some bare paper "
+        "showing; same places, colours and night light. She stays the most finished thing in the picture. No text, no border."),
+    "rare_arm_shadow": ("Edit image 1, keeping everything exactly as it is (her face, glasses, hair, headphones, mock-neck crop top, "
+        "jacket, colours, background and night light) except two things. 1) Her arm on the left side of the picture, which now "
+        "reaches forward toward the camera, hangs straight down relaxed at her side instead, her hand by her hip, the sleeve of "
+        "the cropped jacket falling naturally. 2) " + NO_GLASSES_SHADOW + "No text, no border."),
     "dusk_fix": ("Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, "
         "hair, glasses, jacket and pose exactly as they are. " + NO_GLASSES_SHADOW + "Change nothing else. No text, no border."),
 }

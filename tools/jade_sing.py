@@ -50,8 +50,9 @@ SCENES = {
     "rare_her": (ROOT / "media" / "audio_refs" / "jade_hook2.mp3", 5,
                  "'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips closing on 'b' "
                  "and 'm', opening round and wide on 'home'", "pink headphones on her head",
-                 " She stands on a high platform above the clouds at night, arms spread wide, eyes closed, singing out to the "
-                 "sky; her hair and jacket stir in the wind; the clouds drift slowly below. A slow gentle pull-back."),
+                 " She stands on a high platform above the clouds at night. As she sings she slowly lifts and spreads her arms "
+                 "wide, her face lifting a little to the sky, her eyes closing on the held note; her hair and the open cropped "
+                 "jacket stir in the wind; the clouds drift slowly below. Steady camera, a very slow gentle pull-back."),
     # 1:09 (her idea): her Rare Earth character in coloured pencil, with her real pink headphones (rare_hp_2), arms spread
     "rare": (ROOT / "media" / "audio_refs" / "jade_hook2.mp3", 5,
              "'bring me home' from the reference audio, her lips shaping each word in time with the voice: lips closing on 'b' "
