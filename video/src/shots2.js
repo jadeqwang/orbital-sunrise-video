@@ -443,7 +443,10 @@ async function initShots2() {
   // the hatch lies in the snow; Leonov climbs out and helps Belyayev
   shot('L3_madeit', MADE2.t0 - .05, HOME2.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'hatch_free', 2.2 + lt * 1.3, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[W / 2 - 620, 100, W / 2 + 620, 260]], .8) } });
+    // ?l3=drawn: Kenton's "what a human would draw" test: the shot drawn by hand (tools/human_draw.py, looser version, her pick)
+    // and animated from that drawing (tools/drawn_plate.py), shown as it is: no tracing pass over it
+    if (new URLSearchParams(location.search).get('l3') === 'drawn') await paperTake('hatch_drawn', .4 + lt * 1.3);
+    else await drawPlate(t, 'hatch_free', 2.2 + lt * 1.3, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[W / 2 - 620, 100, W / 2 + 620, 260]], .8) } });
     lyricStack(t, [{ s: 'MADE IT DOWN', t: MADE2.t0, x: W / 2, y: 220, size: 150, align: 'center', col: 'graphite', style: 'rise' }]);
   });
   // night by the fire: quilted suit linings, parachute cloth, fur boots. The plate is dusk; here only what the fire lights is drawn
