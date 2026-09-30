@@ -5,6 +5,7 @@
 const FONT = {
   impact: (s) => `${s}px Anton`,
   cyr: (s, w = 700) => `${w} ${s}px Oswald`,
+  cjk: (s) => `700 ${s}px "Noto Sans SC"`,           // subset: the title's 轨道日出 only (fonts/NotoSansSC_subset_700.otf)
   serif: (s) => `italic ${s}px "Instrument Serif"`,
   serifR: (s) => `${s}px "Instrument Serif"`,
   mono: (s, w = 400) => `${w} ${s}px "JetBrains Mono"`,

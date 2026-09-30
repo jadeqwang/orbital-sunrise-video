@@ -354,7 +354,8 @@ async function initShots() {
       { s: 'ORBITAL', t: tt, x: 110, y: 420, size: 230, style: 'slam' },
       { s: 'SUNRISE', t: tt + .12, x: 110, y: 640, size: 230, style: 'slam' },
       { s: 'ОРБИТАЛЬНЫЙ ВОСХОД', t: tt + .3, x: 116, y: 716, font: FONT.cyr(52), col: 'verm', style: 'rise', ls: 3 },
-      { s: '18.03.1965 — THE FIRST SPACEWALK', t: tt + .25, x: 118, y: 790, font: FONT.mono(26, 700), col: 'silver', style: 'type', dur: .3, ls: 2 },
+      { s: '轨道日出', t: tt + .36, x: 118, y: 772, font: FONT.cjk(38), col: 'verm', style: 'rise', ls: 14 },
+      { s: '18.03.1965 — THE FIRST SPACEWALK', t: tt + .25, x: 118, y: 836, font: FONT.mono(26, 700), col: 'silver', style: 'type', dur: .3, ls: 2 },
     ]);
   });
 

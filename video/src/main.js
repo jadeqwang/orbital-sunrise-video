@@ -81,6 +81,7 @@ window.renderSheet = async (times, cols = 3, w = 640) => {
   if (!Q.has('norit')) { try { const r = await loadJSON('data/timemap.json'); RIT.map = r.map; RIT.dur = r.duration; } catch (e) { console.warn('no time map: output time = song time'); } }
   buildTooth(); buildPaper('night'); buildPaper('snow');
   await Promise.all([FONT.impact(40), FONT.cyr(40), FONT.serif(40), FONT.mono(20), FONT.mono(20, 700), FONT.mono(20, 800), FONT.serifR(40), FONT.cyr(40, 500)].map(f => document.fonts.load(f, 'AБ')));
+  await document.fonts.load(FONT.cjk(40), '轨道日出');
   if (typeof initShots === 'function') await initShots();
   window.ready = true;
   if (!Q.has('render')) {

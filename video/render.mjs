@@ -48,7 +48,7 @@ if (args.encode) {
 }
 
 // Static file server (localhost) so plates can be read back with getImageData without canvas tainting.
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.webp': 'image/webp', '.bin': 'application/octet-stream' };
+const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.otf': 'font/otf', '.webp': 'image/webp', '.bin': 'application/octet-stream' };
 const server = createServer((req, res) => {
   const p = join(ROOT, decodeURIComponent(req.url.split('?')[0]));
   if (!p.startsWith(ROOT) || !existsSync(p) || statSync(p).isDirectory()) { if (args.verbose) console.log('404 ' + req.url); res.writeHead(404); res.end(); return; }

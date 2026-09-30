@@ -662,7 +662,8 @@ async function initShots2() {
     const L = typeLayer(), g = L.g, k = clamp(lt / .12);
     text(g, 'ORBITAL SUNRISE', W / 2, 520, { font: FONT.impact(200), col: 'white', align: 'center', alpha: k, ls: 6 });
     text(g, 'ОРБИТАЛЬНЫЙ ВОСХОД', W / 2, 600, { font: FONT.cyr(48), col: 'verm', align: 'center', alpha: k, ls: 4 });
-    text(g, 'JADE WANG', W / 2, 690, { font: FONT.mono(34, 800), col: 'white', align: 'center', alpha: clamp((lt - .3) / .3), ls: 8 });
+    text(g, '轨道日出', W / 2, 652, { font: FONT.cjk(34), col: 'verm', align: 'center', alpha: k, ls: 14 });
+    text(g, 'JADE WANG', W / 2, 730, { font: FONT.mono(34, 800), col: 'white', align: 'center', alpha: clamp((lt - .3) / .3), ls: 8 });
     text(g, 'An homage to \u201cOrbital Sunrise: The First Art Made in Space\u201d by John Green', W / 2, 900, { font: FONT.serif(30), col: 'silver', align: 'center', alpha: clamp((lt - .6) / .4) });
     // (Kenton: a second line crediting vlogbrothers read as crediting them with the video; the line above says enough)
     typeFlush(L, drawClock(t, 12).n, .3);
