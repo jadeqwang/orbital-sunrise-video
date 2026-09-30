@@ -6,6 +6,10 @@
 
 * ▶ **[`release/Orbital_Sunrise_1080p.mp4`](release/Orbital_Sunrise_1080p.mp4)** — 1920×1080, 24 fps, 4:02, HEVC
 * [`release/Orbital_Sunrise_720p_h264.mp4`](release/Orbital_Sunrise_720p_h264.mp4) — 1280×720, H.264, for players and sites that need H.264
+* **Extended cut** (this branch; the extended recording, two new intro lines, 4:11):
+  [`release/extended/Orbital_Sunrise_extended_1080p.mp4`](release/extended/Orbital_Sunrise_extended_1080p.mp4) (HEVC) and
+  [`release/extended/Orbital_Sunrise_extended_720p_h264.mp4`](release/extended/Orbital_Sunrise_extended_720p_h264.mp4) (H.264).
+  How it was retimed: [`docs/ALTERNATE_CUT.md`](docs/ALTERNATE_CUT.md)
 
 A colored-pencil drawing redrawn twelve times a second is about the hardest thing there is to
 compress (fine hatching everywhere, all of it changing), so both files are two-pass encodes sized
