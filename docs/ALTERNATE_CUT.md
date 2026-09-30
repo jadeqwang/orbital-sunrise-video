@@ -15,6 +15,21 @@ Style: [`STYLE_BIBLE.md`](STYLE_BIBLE.md). Facts on screen: [`FACTS.md`](FACTS.m
 the WAV/AIFF asked for in item 2 below: fine to work from, but ask for the lossless master (and her vocal stem) if she has
 them. The released cut's audio is untouched.
 
+Her lyric sheet for it is `Orbital_Sunrise_alt_Lyrics.md` (repo root; `Orbital_Sunrise_Lyrics.md` stays the released
+cut's). Against the old sheet:
+
+- **Intro: two new lines** after "First man floating in the void of space": "Tied to the ship by the slightest trace" /
+  "Pull him back to the ship's embrace". These are the ≈12 s inserted at ≈13.9 s (below). In `timing.json` they go
+  *between* intro lines 0 and 1, so `L1[1]` ("Can't feel his hands…") becomes `L1[3]` in the shots.
+- **Pre-chorus says "suit"**, like the released sheet; the old *recording* sang "sleeve", so confirm by ear at ≈1:04.
+- **Final chorus, line 2** is now "Fall through the skies, bring me home" (was "Orbital sunrise, bring me home"): the
+  hook3 line text in `timing.json` and the type in the hook3 shots change; its timing likely does not.
+- **The old outro is split in two**: "Fifteen hundred klicks…" is now its own section, "[Vocal led, orchestral strings]",
+  and "[Outro — decisive ending]" holds only "Made it down — home." ×2. Check whether the strings are new in the mix
+  (the section names in `timing.json` are the film's own and need not follow the sheet).
+- **Ending**: "[Soft piano from intro, ritardando at the end]", so the ritardando may already be in the recording
+  (item 4: then `tools/ritardando.py` is not needed).
+
 `python3 tools/compare_mix.py Orbital_Sunrise.mp3 media/audio/Orbital_Sunrise_alt.mp3` (a new tool: windowed spectral
 matching, old song time to new song time) finds:
 
