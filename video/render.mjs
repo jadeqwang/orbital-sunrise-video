@@ -21,7 +21,7 @@ const ROOT = resolve('.');
 // outro ritardando (tools/ritardando.py; data/timemap.json names its audio, .wav or the committed .m4a fallback).
 // Never fall back to the mp3: it has the old lyric ("sleeve").
 // The extended recording (docs/ALTERNATE_CUT.md) has its own ritardando: data/timemap.json is the identity and names its ring-out mix.
-const EXT = resolve('../media/audio/Orbital_Sunrise_alt_extended.wav'), EXT_M4A = resolve('../media/audio/Orbital_Sunrise_alt_extended.m4a');
+const EXT = resolve('../media/audio/Orbital_Sunrise_alt2_extended.wav'), EXT_M4A = resolve('../media/audio/Orbital_Sunrise_alt2_extended.m4a');
 const RIT = args.norit ? null : JSON.parse(readFileSync(resolve('data/timemap.json')));
 const firstOf = fs => fs.find(f => existsSync(f));
 const SONG = args.song ? resolve(args.song)

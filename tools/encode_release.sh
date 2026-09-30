@@ -17,7 +17,7 @@ FR="$ROOT/video/out/frames/f%05d.jpg"
 # AUDIO=... overrides. The extended recording (docs/ALTERNATE_CUT.md) plays its own ritardando, so both modes use its
 # ring-out mix (tools/extend_ending.py); never the released cut's Orbital_Sunrise.mp3 (it has the old lyric "sleeve").
 if [ -z "${AUDIO:-}" ]; then
-  AUDIO="$ROOT/media/audio/Orbital_Sunrise_alt_extended.wav"
+  AUDIO="$ROOT/media/audio/Orbital_Sunrise_alt2_extended.wav"
   [ -f "$AUDIO" ] || AUDIO="${AUDIO%.wav}.m4a"
 fi
 [ -f "$AUDIO" ] || { echo "missing audio $AUDIO" >&2; exit 1; }
