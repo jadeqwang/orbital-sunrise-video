@@ -98,7 +98,7 @@ She confirmed the new mix sings "suit" and asked for the film to be retimed. Don
     behind him in the tube, i.e. feet first too; left as released.
   - Lyric change (2026-09-30): the pre-chorus's "Ninety minutes inside the airlock door" (wrong, docs/FACTCHECK.md §1) is
     now "Eternity inside the airlock door" on the alt sheet and in `timing.json` (`REWORDED` in `tools/retime.py`:
-    "Eternity" on "Ninety"'s time, "minutes" drops); P4 types ETERNITY / INSIDE THE AIRLOCK DOOR. She will re-record it;
+    "Eternity" on "Ninety"'s time, "minutes" drops); P4 types ETERNITY / INSIDE THE AIRLOCK DOOR. She will re-record it (done: "The re-record" below);
     until then the audio still sings the old words.
   - `I4_hands` now cuts on the sung "Can't" (25.96 s). `F2_home` types "FALL THROUGH / THE SKIES" and "bring me home" (its
     type mask grew to fit).
@@ -112,6 +112,55 @@ She confirmed the new mix sings "suit" and asked for the film to be retimed. Don
 - **Not done:** the full render needs the plate `leonov_drawing` (drop 1's drawing shots, the coda, the title), which
   `tools/install_drawing.py` builds from her museum photo `media/refs/leonov_drawing_real_photo.jpg` (not committed; not in
   this container). `docs/SHOTLIST.md`, the README's "4:02" and the HANDOFF tables still describe the released cut.
+
+## The re-record: "Eternity inside the airlock door" (2026-09-30)
+
+Her upload `Orbital_Sunrise_airlock_corrected_1.mp3` is committed as `media/audio/Orbital_Sunrise_alt2.mp3` ("Orbital Sunrise
+(airlock corrected)" / "jadewang", MP3 178 kb/s, 48 kHz stereo): **248.68 s**, 1.1 s longer than `Orbital_Sunrise_alt.mp3`.
+It is now the film's audio; `alt` stays committed and renderable (`tools/retime.py --target=alt`).
+
+**A new render, not the old mix with one line patched.** `tools/compare_mix.py media/audio/Orbital_Sunrise_alt.mp3
+media/audio/Orbital_Sunrise_alt2.mp3`: same arrangement and the same vocal performance, but the offset grows steadily from
++0.02 s at the start to +1.64 s at 240 s (new = 1.00605 × alt + 0.135: **0.6 % slower**, ≈163.9 BPM), match scores 0.6–0.95
+(never ≈1.0), and per-line the two vocal stems match equally well everywhere, the airlock line included. No insert, no cut.
+The piano outro keeps its ritardando; the final chord is at **244.78 s** (243.19 in `alt`), and this recording fades the chord
+to silence within ~4 s (−60 dB at +3.3 s) instead of cutting it off.
+
+**Lyrics** (Parakeet on the Kim_Vocal_2 stem, per line over several windows, against `alt` the same way): the pre-chorus's
+line 4 now sings **"Eternity inside the airlock door"** (the recogniser hears "Eternity inside the airlock door" and, in some
+windows, "An/And eternity": the unstressed first "E-" is a pickup ≈0.25 s before where "Ninety" sat). "suit", "Tied to the
+ship by the slightest trace", "Pull him back to the ship's embrace" and "Fall through the skies, bring me home" are all
+sung as on `Orbital_Sunrise_alt_Lyrics.md`. Differences from the sheet the recogniser reports and that need her ear:
+the breakdown's "Never see what **he** saw ahead" is heard as "what **you** saw" in all 12 windows tried (`alt`: "he"), and
+the breakdown's "breath by breath" as "breath **my** breath" in most (`alt`: "by"). Neither is changed in `timing.json`
+(the breakdown's type does not show those words; `B3_never`'s lips are by ear).
+
+**Retimed** (`tools/retime.py`, now with `TARGETS`, default `alt2`):
+
+- `python3 tools/retime.py map` aligns the released mix with `alt2` directly (not through `alt`), with the search centred on
+  `compare_mix.py`'s fits of release → alt2; the piano outro's anchors re-measured on `alt2` (onset cross-correlation of each
+  `alt` anchor note, r 0.96–0.99; the chord 244.78). Insert 12.985 → 25.331 s; `shift_after` **+10.084 s**. With
+  `--target=alt` the same code reproduces the old `editmap.json`/`timing.json` exactly.
+- Word times not from the map, re-measured on the `alt2` vocal stem: `python3 tools/retime.py carry --from=alt
+  --stem-from=<alt vocals.wav> --stem=<alt2 vocals.wav>` carries `alt`'s measured times through a DTW of the two stems and
+  snaps them to `alt2`'s onsets/note changes (the two new intro lines, "Can't feel his hands…", "Fall through the skies…",
+  and "inside the airlock door"); "Eternity" (sung only here) from `python3 tools/retime.py words 65.9 69.3 "Eternity inside
+  the airlock door" --stem=<alt2 vocals.wav>` (recogniser + snapping): **Eternity 66.14, inside 67.06, the 67.50, airlock
+  67.99, door 68.59**. `words` alone was 0.1–0.2 s off on some words (it snapped to the wrong note change), so it is the
+  cross-check, not the source, for words both recordings sing. The vocal stems: `python3 tools/vocal_stem.py
+  media/audio/Orbital_Sunrise_alt2.mp3 --out=/tmp/work/stem_alt2` (and the same for `alt`).
+- `render.mjs --list` against `alt`'s list through (alt → release → alt2): all 55 shots move with the map (median
+  0.003 s); the cuts on re-measured words by up to 0.06 s (N1/N2 on "Pull", N2/I4 on "Can't"), and `P3_sleeve`/`P4_airlock`'s
+  cut is now on the sung "Eternity" (66.09, 0.25 s earlier than the map would put it). Checked on contact sheets (ETERNITY lands on 66.14–66.3, INSIDE THE AIRLOCK DOOR on "inside") and
+  `timing_edit.py clicks --from=62.5 --to=70`: every pre-chorus word within 0.04 s of a vocal onset except "inside" (it
+  glides out of "-ty" with no onset).
+- **Ring-out:** `python3 tools/extend_ending.py --src=media/audio/Orbital_Sunrise_alt2.mp3
+  --out=media/audio/Orbital_Sunrise_alt2_extended.wav --shift=10.084` (+ the committed `.m4a`): **252.28 s = 6055 frames**.
+  `timemap.json`, `render.mjs`, `encode_release.sh`, `package_hls.sh` default to it; `timing.json` dur 248.68 / durExt 252.284.
+- **Not done** (her call, 2026-09-30: she is still collecting notes): the full render and the release encode.
+  `release/extended/*` (4:11, `alt`) and `video/out/frames` (6017 frames) are **stale**: re-render with
+  `node render.mjs --frames=0:252.28 --workers=4 --force` (and delete frames ≥ f06055), then
+  `OUT=$PWD/release/extended NAME=Orbital_Sunrise_extended tools/encode_release.sh`.
 
 ## 0. Ask her first (only she can supply these)
 
