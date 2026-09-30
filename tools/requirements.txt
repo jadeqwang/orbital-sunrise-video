@@ -1,0 +1,20 @@
+# Python packages the tools/ scripts import (versions that ran together in the 2026-09-29/30 containers).
+# Install: tools/setup_env.sh (or pip install -r tools/requirements.txt). mediapipe must stay 0.10.14: the face / selfie
+# tasks code (tools/plate_meta.py, jade_head_lock.py, jade_forehead.py, jade_fade.py) was written against it.
+numpy==2.4.6
+scipy==1.17.1
+pillow==12.3.0
+opencv-python-headless==5.0.0.93
+scikit-image==0.26.0
+matplotlib
+mediapipe==0.10.14
+rembg==2.0.85
+onnxruntime==1.30.0
+soundfile==0.14.0
+pyworld==0.3.5
+imageio-ffmpeg==0.6.0
+requests
+# Optional, audio for an alternate cut (tools/setup_env.sh --audio):
+#   faster-whisper   word timestamps for tools/timing_edit.py align (its models download from huggingface.co)
+#   audio-separator[cpu]   the Kim_Vocal_2 MDX-Net vocal stem (/tmp/work/audio/vocals.wav) used by suit_splice.py,
+#                    mouth_track.py, lipsync.py

@@ -1,0 +1,69 @@
+# The lyric lines exactly as timed in video/data/timing.json (written by tools/timing_edit.py export).
+# [section start end] headers are the film's sections (song seconds); each following line is one timed lyric line,
+# its words are timing.json's word tokens (the text split on spaces, with ( ) … — dropped).
+# The drop1 lines are the chopped vocal ("Sun-rise… (bring me) home…") timed as the hook's words.
+# Orbital_Sunrise_Lyrics.md (repo root) is the lyric sheet as written; this file is what the film is keyed to.
+
+[intro 0.0 23.632]
+First man floating in the void of space
+Can't feel his hands, can't feel his face
+
+[hook1 23.632 34.344]
+Orbital sunrise, burning gold
+Orbital sunrise, bring me home
+
+[swell 34.344 44.4]
+
+[pre 44.4 59.5]
+So he bleeds the air out, breath by breath
+Dancing on the edge of a quiet death
+Let his air out through the suit he wore
+Ninety minutes inside the airlock door
+
+[hook2 59.5 70.943]
+Orbital sunrise, burning gold
+Orbital sunrise, bring me home
+
+[drop1 70.943 104.6]
+Orbital sunrise, bring me home
+Orbital sunrise, bring me home
+Orbital sunrise, bring me home
+Orbital sunrise, bring me home
+
+[brk 104.6 118.0]
+He bleeds the air out, breath by breath
+Dancing on the edge of a quiet death
+I'll never float where the sky turns red
+Never see what he saw ahead
+
+[art 118.0 129.7]
+Art is a landing in the snow
+Can't think, can't write, but my hands still know
+
+[build 129.7 143.2]
+Guidance failed and the capsule spun
+Doing the math with a spinning sun
+Hold on… hold on… hold on…
+
+[hook3 143.2 152.629]
+Orbital sunrise, burning gold
+Orbital sunrise, bring me home
+
+[drop2 152.629 176.8]
+Off course… (but I'm) home
+Off course… (but I'm) home
+Off course… (but I'm) home
+
+[outro 176.8 189.637]
+Fifteen hundred klicks, coming in hot
+Fifteen hundred klicks, we overshot
+Made it down —
+home.
+Made it down —
+home.
+
+[landed 189.637 226.552]
+
+[coda 226.552 234.696]
+
+[end 234.696 237.76]

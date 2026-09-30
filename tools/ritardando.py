@@ -1,17 +1,20 @@
 """A performer's ritardando for the piano outro (her note: "gently get slower the way a musician would when performing").
 
-    python3 tools/ritardando.py [--vmin=0.75] [--start=228.36] [--out=media/audio/Orbital_Sunrise_rit.wav]
+    python3 tools/ritardando.py [--vmin=0.75] [--start=228.36] [--end=234.6957] [--src=media/audio/Orbital_Sunrise_extended.wav]
+                                [--out=media/audio/Orbital_Sunrise_rit.wav]
 
 The tempo holds at 1 until --start, then eases down (quadratically, like a pianist leaning back) to --vmin at the final chord
-(234.696 s, the last beat); the chord's ring-out after it is untouched. Pitch is preserved (rubberband with a time map).
+(--end, default 234.6957 s, the last beat); the chord's ring-out after it is untouched. For a new / longer mix (an
+alternate cut) pass --src= its "suit" WAV and move --start/--end to where that mix's piano outro and final chord are
+(docs/ALTERNATE_CUT.md). Pitch is preserved (rubberband with a time map).
 Also writes <out>.map.json: [[song_s, out_s], ...] so the renderer can draw frame at output time u from song time s(u).
 """
 import sys, json, pathlib, subprocess
 import numpy as np, soundfile as sf
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC = ROOT / "media/audio/Orbital_Sunrise_extended.wav"      # the release mix ("suit")
 args = dict(a[2:].split("=", 1) for a in sys.argv[1:] if a.startswith("--") and "=" in a)
-VMIN, S0, S1 = float(args.get("vmin", .75)), float(args.get("start", 228.36)), 234.6957
+SRC = pathlib.Path(args.get("src", ROOT / "media/audio/Orbital_Sunrise_extended.wav"))   # the release mix ("suit")
+VMIN, S0, S1 = float(args.get("vmin", .75)), float(args.get("start", 228.36)), float(args.get("end", 234.6957))
 OUT = pathlib.Path(args.get("out", ROOT / "media/audio/Orbital_Sunrise_rit.wav"))
 
 x, sr = sf.read(SRC)

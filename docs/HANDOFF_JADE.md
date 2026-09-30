@@ -7,6 +7,8 @@ scenes.** Everything else below is context for that. Written at the end of a lon
 still chains, how to cut new vocal clips for an alternate cut with more lyrics): see [`docs/TAKES.md`](TAKES.md). Each final
 take's inputs are archived next to it in `media/plates/<plate_id>/`.
 
+**Alternate cut with extra lyric lines** (new mix, timing, shots to retime, release, environment rebuild): see [`docs/ALTERNATE_CUT.md`](ALTERNATE_CUT.md).
+
 ## The open problem, in her words
 
 - Kenton (a friend) watched the release: "The rendering of you is a bit odd. I parse the face shape as a lot less attractive

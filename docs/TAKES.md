@@ -281,7 +281,8 @@ ran 12 s). `tools/jade_sing.py` fixes the duration per scene (5 s, dusk 8 s): ed
 Takes cost ~3–6 minutes each (`secs` in the genlog); run 2–4 in parallel. The gateway once ran out of credit ("Insufficient
 balance"): she tops it up.
 
-**A longer or new sung line** (e.g. an alternate cut with more lyrics):
+**A longer or new sung line** (e.g. an alternate cut with more lyrics; the whole pipeline around it, from the new mix and
+timing.json to shots with absolute times and the release, is in [`ALTERNATE_CUT.md`](ALTERNATE_CUT.md)):
 1. Find the words' times in `video/data/timing.json` (`lines[].words` = `[time, word]`) and `Orbital_Sunrise_Lyrics.md`.
 2. Cut the vocal reference from the song at the new start. The existing clips are **full-mix excerpts** of
    `Orbital_Sunrise.mp3` (repo root) — not stems — verified by cross-correlation: `jade_hook1.mp3` starts at 30.9 s (5 s),
