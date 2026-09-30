@@ -314,7 +314,7 @@ function descentMap(t, t0, o = {}) {
   tele(Lt.g, 'PLANNED LANDING ZONE', tx - 90, ty + 110, t, t0 + .3, { size: 24, weight: 700, col: 'graphite', dur: .5, align: 'right' });
   tele(Lt.g, 'KAZAKH STEPPE', tx - 90, ty + 146, t, t0 + .5, { size: 20, col: 'lead', dur: .4, align: 'right' });
   tele(Lt.g, 'УРАЛ · URALS', 1210, 180, t, t0 + .6, { size: 22, col: 'lead', dur: .4 });
-  if (k > .98) { tele(Lt.g, 'ACTUAL: THE TAIGA NEAR PERM', ax + 50, ay - 30, t, t0 + (o.dur ?? 4.5), { size: 28, weight: 800, col: 'verm', dur: .6 }); tele(Lt.g, 'DEEP SNOW · NO ROADS · −25 °C', ax + 50, ay + 10, t, t0 + (o.dur ?? 4.5) + .4, { size: 22, weight: 700, col: 'graphite', dur: .5 }); }
+  if (k > .98) { tele(Lt.g, 'ACTUAL: THE TAIGA NEAR PERM', ax + 50, ay - 30, t, t0 + (o.dur ?? 4.5), { size: 28, weight: 800, col: 'verm', dur: .6 }); tele(Lt.g, 'DEEP SNOW · NO ROADS · WOLVES', ax + 50, ay + 10, t, t0 + (o.dur ?? 4.5) + .4, { size: 22, weight: 700, col: 'graphite', dur: .5 }); }
   typeFlush(Lt, d, .3);
 }
 
