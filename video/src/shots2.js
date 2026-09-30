@@ -87,10 +87,10 @@ async function initShots2() {
   });
   shot('D2_id_leonov', bt(16), bt(24), async (t, lt, dur) => idCard(t, lt, dur, {
     plate: 'leonov_turn', t0: bt(16), num: '01', accent: 'gold', en1: 'ALEXEI', en2: 'LEONOV', ru: 'АЛЕКСЕЙ ЛЕОНОВ',
-    stats: ['PILOT-COSMONAUT · AGE 30 · CALLSIGN «АЛМАЗ-2»', 'FIRST HUMAN IN OPEN SPACE', 'TRAINED AS A PAINTER — PACKED COLORED PENCILS'] }));
+    stats: ['PILOT-COSMONAUT · AGE 30 · CALLSIGN «АЛМАЗ-2»', 'FIRST HUMAN IN OPEN SPACE', 'A LIFELONG ARTIST — PACKED COLORED PENCILS'] }));
   shot('D3_id_belyayev', bt(24), bt(32), async (t, lt, dur) => idCard(t, lt, dur, {
     plate: 'belyayev_turn', t0: bt(24), num: '02', accent: 'sky', en1: 'PAVEL', en2: 'BELYAYEV', ru: 'ПАВЕЛ БЕЛЯЕВ',
-    stats: ['COMMANDER · AGE 39 · CALLSIGN «АЛМАЗ-1»', 'FIGHTER PILOT', 'FLEW THE FIRST MANUAL RE-ENTRY'] }));
+    stats: ['COMMANDER · AGE 39 · CALLSIGN «АЛМАЗ-1»', 'FIGHTER PILOT', 'FLEW THE FIRST SOVIET MANUAL LANDING'] }));
   // Leonov draws the sunrise; the vocal chops hit as words
   const w0 = D1[0].words;
   shot('D4_drawing', bt(32), bt(48), async (t, lt) => {
@@ -432,8 +432,9 @@ async function initShots2() {
     const spin = lt * .35;
     const { view } = await drawPlate(t, 'vzor_manual', .5 + lt, { view: { zoom: 1.1, rot: Math.sin(spin) * .06 } });
     if (view) cabinPorts(t, view, (.5 + lt) * 24, VZ_PORTS);
-    // hand-written orbital arithmetic circling the frame
-    const Lt = typeLayer(), eq = ['Δv = 106 m/s', 't = 22 s', 'θ ≈ 90°', 'ОРИЕНТАЦИЯ — РУЧНАЯ', 'h = 497 km', '±1°'];
+    // hand-written orbital arithmetic circling the frame. Sourced figures only (docs/FACTCHECK.md §4.2): the TDU-1 retro-rocket
+    // (~16 kN for ~45 s, Δv ~155 m/s), the 167 × 475 km orbit and its 90.9 min period
+    const Lt = typeLayer(), eq = ['Δv ≈ 155 m/s', 't ≈ 45 s', 'T = 90.9 min', 'ОРИЕНТАЦИЯ — РУЧНАЯ', 'h = 167–475 km', 'F ≈ 16 kN'];
     eq.forEach((s, i) => { const a = spin + i / eq.length * TAU, r = 430; text(Lt.g, s, W / 2 + Math.cos(a) * r * 1.6, H / 2 + Math.sin(a) * r * .8, { font: FONT.serif(46), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * .9, align: 'center', rot: Math.sin(a) * .2 }); });
     typeFlush(Lt, drawClock(t, 12).n, .4);
     const w = BD[1].words;

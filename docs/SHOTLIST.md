@@ -26,11 +26,11 @@ Type sizes: **XL** ≥ 18 % frame height, **L** 10–18 %, **S** subtitle.
 
 ## Swell · 34.34 – 44.40 · instrumental, rising
 | 34.34 – 37.30 | 12 minutes | camera_reach | EVA T+ clock · SUIT 0.40 ATM (mono) |
-| 37.30 – 40.20 | The suit balloons | suit_balloon + P blueprint outline expanding | +6 CM · THE SUIT IS SWELLING |
+| 37.30 – 40.20 | The suit balloons | suit_balloon + P blueprint outline expanding | SWELLING on the spreading dimension line (no number: no source measures it) · IN VACUUM, THE SUIT BALLOONS |
 | 40.20 – 44.40 | He doesn't fit | airlock_fail | HE CAN'T GET BACK IN. |
 
 ## Pre-chorus · 44.40 – 59.50 · filter opens, snare roll
-| 44.40 – 48.46 | Breath by breath | valve_bleed; gauge 0.40 → 0.27 ATM on each "breath" | BREATH / BY / BREATH stacked right |
+| 44.40 – 48.46 | Breath by breath | valve_bleed; the gauge switches once, 0.40 → 0.27 ATM, on "So" (his one switch to the suit's second mode) | BREATH / BY / BREATH stacked right |
 | 48.46 – 51.37 | Quiet death | tumble_slow, red scribble from the frame edges | DANCING ON THE EDGE on a tightrope line · *of a quiet death* |
 | 51.37 – 54.67 | Through the suit | headfirst | LET HIS AIR OUT THROUGH THE SUIT HE WORE (M) |
 | 54.67 – 59.50 | The airlock door | tube_turn; cuts accelerate with the snare roll (ones) | NINETY MINUTES · INSIDE THE AIRLOCK DOOR · hatch slam to black |

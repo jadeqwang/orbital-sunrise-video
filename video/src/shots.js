@@ -152,10 +152,9 @@ function lyricStack(t, items, o = {}) {
 // EVA telemetry: the 12 min 09 s spacewalk compressed into the song's 8.0 → 58.6 s (released song times: O() moves them).
 const EVA0 = 7.99, EVA1 = 58.6, EVA_SECS = 12 * 60 + 9;
 function evaClock(t) { const s = clamp((t - O(EVA0)) / (O(EVA1) - O(EVA0))) * EVA_SECS; return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(Math.floor(s % 60)).padStart(2, '0')}`; }
-function suitPressure(t) { // atm: bled in steps on each "breath"
+function suitPressure(t) { // atm: one switch from 0.40 to the suit's 0.27 reserve mode, on "So he bleeds" (his 1965 report and 2004 interview)
   const w = (linesIn('pre')[0] || { words: [] }).words;
-  const steps = [[w[0]?.[0] ?? O(44.6), .40], [w[6]?.[0] ?? O(47.2), .35], [w[8]?.[0] ?? O(47.9), .30], [O(50.2), .27]];
-  let p = .40; for (const [ts, v] of steps) if (t >= ts) p = v; return p;
+  return t >= (w[0]?.[0] ?? O(44.6)) ? .27 : .40;
 }
 function evaHud(t, o = {}) {
   if (t < EVA0 - .2 || t > EVA1 + 1) return;
@@ -315,7 +314,7 @@ function descentMap(t, t0, o = {}) {
   tele(Lt.g, 'PLANNED LANDING ZONE', tx - 90, ty + 110, t, t0 + .3, { size: 24, weight: 700, col: 'graphite', dur: .5, align: 'right' });
   tele(Lt.g, 'KAZAKH STEPPE', tx - 90, ty + 146, t, t0 + .5, { size: 20, col: 'lead', dur: .4, align: 'right' });
   tele(Lt.g, 'УРАЛ · URALS', 1210, 180, t, t0 + .6, { size: 22, col: 'lead', dur: .4 });
-  if (k > .98) { tele(Lt.g, 'ACTUAL: THE TAIGA NEAR PERM', ax + 50, ay - 30, t, t0 + (o.dur ?? 4.5), { size: 28, weight: 800, col: 'verm', dur: .6 }); tele(Lt.g, 'DEEP SNOW · NO ROADS · WOLVES', ax + 50, ay + 10, t, t0 + (o.dur ?? 4.5) + .4, { size: 22, weight: 700, col: 'graphite', dur: .5 }); }
+  if (k > .98) { tele(Lt.g, 'ACTUAL: THE TAIGA NEAR PERM', ax + 50, ay - 30, t, t0 + (o.dur ?? 4.5), { size: 28, weight: 800, col: 'verm', dur: .6 }); tele(Lt.g, 'DEEP SNOW · NO ROADS · −25 °C', ax + 50, ay + 10, t, t0 + (o.dur ?? 4.5) + .4, { size: 22, weight: 700, col: 'graphite', dur: .5 }); }
   typeFlush(Lt, d, .3);
 }
 
@@ -601,7 +600,7 @@ async function initShots() {
     await drawPlate(t, 'camera_reach', .4 + lt, { view: { zoom: 1.04 } });
     evaHud(t);
     const Lt = typeLayer();
-    tele(Lt.g, 'HE TRIES TO REACH THE CAMERA ON HIS LEG.', 110, H - 120, t, sw0 + .4, { size: 26, weight: 700, col: 'white', dur: 1.1 });
+    tele(Lt.g, 'HE REACHES FOR THE SHUTTER ON HIS THIGH.', 110, H - 120, t, sw0 + .4, { size: 26, weight: 700, col: 'white', dur: 1.1 });
     tele(Lt.g, 'THE SUIT WILL NOT BEND.', 110, H - 78, t, sw0 + 1.8, { size: 26, weight: 700, col: 'verm', dur: .6 });
     typeFlush(Lt, drawClock(t, 12).n, .35);
   });
@@ -619,7 +618,7 @@ async function initShots() {
     pen.l(cx - half, y, cx + half, y, 'gold', 1.4, .7);
     pen.flush(Lr.g, ORDER_NIGHT); toothIn(Lr, d); G.drawImage(Lr.c, 0, 0);
     const Lt = typeLayer();
-    text(Lt.g, `+${Math.round(k * 6)} CM`, cx, y - 26, { font: FONT.mono(34, 800), col: 'gold', align: 'center' });
+    text(Lt.g, 'SWELLING', cx, y - 26, { font: FONT.mono(34, 800), col: 'gold', align: 'center' });   // no number: no source measures it
     tele(Lt.g, 'IN VACUUM, THE SUIT BALLOONS', 110, 180, t, B(Bn(100)) + .2, { size: 26, weight: 700, col: 'white', dur: .8 });
     typeFlush(Lt, d, .35);
   });
