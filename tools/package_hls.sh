@@ -6,7 +6,16 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 FR="$ROOT/video/out/frames/f%05d.jpg"
-AUDIO="$ROOT/media/audio/Orbital_Sunrise_extended.wav"
+# The release audio: the "suit" mix with the outro ritardando (tools/ritardando.py --vmin=0.65), matching frames rendered
+# with render.mjs's default time map (video/data/timemap.json). Frames rendered with --norit: NORIT=1 (the unslowed mix).
+# AUDIO=... overrides. Never the mp3 (it has the old lyric "sleeve").
+if [ -z "${AUDIO:-}" ]; then
+  if [ -n "${NORIT:-}" ]; then AUDIO="$ROOT/media/audio/Orbital_Sunrise_extended.wav"; else AUDIO="$ROOT/media/audio/Orbital_Sunrise_rit_0.65.wav"; fi
+  [ -f "$AUDIO" ] || AUDIO="${AUDIO%.wav}.m4a"
+fi
+[ -f "$AUDIO" ] || { echo "missing audio $AUDIO" >&2; exit 1; }
+NF=$(ls "$ROOT/video/out/frames" | grep -c '^f.*\.jpg$'); DUR_A=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$AUDIO")
+python3 -c "import sys; n,d=$NF,$DUR_A; print(f'audio {d:.2f} s, frames {n} ({n/24:.2f} s)'); sys.exit(0 if abs(n/24-d)<0.1 else 'frame count does not match the audio: render with/without --norit to match')"
 REL="$ROOT/release"; WEB="$REL/web"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 rm -rf "$WEB/hevc" "$WEB/avc"; mkdir -p "$WEB/hevc" "$WEB/avc"

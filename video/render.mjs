@@ -4,21 +4,32 @@
 //   node render.mjs --clip=0:6 [--fps=24] --out=out/test.mp4                    short clip with the song
 //   node render.mjs --frames=0:237.8 --workers=4                                full-res JPEG frames → out/frames (resumable)
 //   node render.mjs --encode [--out=out/orbital_sunrise.mp4]                     frames + song → MP4
-// Every frame is a pure function of song time t, so frames can be rendered in any order.
+//   node render.mjs ... --norit                                                  without the outro ritardando (the pre-2026-09-30 film)
+// Every frame is a pure function of song time t, so frames can be rendered in any order. All times given here (and frame
+// i / fps) are OUTPUT (film) times u: the page draws song time s(u) through data/timemap.json, the ritardando in the release
+// audio (identity until 228.36 s, then the picture slows with the music). --norit: u = s and the unslowed extended mix.
 import puppeteer from 'puppeteer-core';
 import { spawn, execFileSync } from 'node:child_process';
 import { createServer } from 'node:http';
-import { mkdirSync, writeFileSync, existsSync, statSync, renameSync, readdirSync, createReadStream } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync, existsSync, statSync, renameSync, readdirSync, createReadStream } from 'node:fs';
 import { dirname, resolve, extname, join } from 'node:path';
 
 const args = Object.fromEntries(process.argv.slice(2).map(a => { const s = a.replace(/^--/, ''), i = s.indexOf('='); return i < 0 ? [s, true] : [s.slice(0, i), s.slice(i + 1)]; }));
 const CHROME = args.chrome || process.env.CHROME || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 const ROOT = resolve('.');
-// the final mix: the song with its last chord allowed to ring out (tools/extend_ending.py); falls back to the original
-const EXT = resolve('../media/audio/Orbital_Sunrise_extended.wav');
-const SONG = args.song ? resolve(args.song) : (existsSync(EXT) ? EXT : resolve('../Orbital_Sunrise.mp3'));
-const probeDur = f => { try { return +execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).toString().trim(); } catch (e) { return 237.76; } };
+// the final mix: the "suit" song with its last chord allowed to ring out (tools/extend_ending.py) and, by default, the
+// outro ritardando (tools/ritardando.py; data/timemap.json names its audio, .wav or the committed .m4a fallback).
+// Never fall back to the mp3: it has the old lyric ("sleeve").
+const EXT = resolve('../media/audio/Orbital_Sunrise_extended.wav'), EXT_M4A = resolve('../media/audio/Orbital_Sunrise_extended.m4a');
+const RIT = args.norit ? null : JSON.parse(readFileSync(resolve('data/timemap.json')));
+const firstOf = fs => fs.find(f => existsSync(f));
+const SONG = args.song ? resolve(args.song)
+  : RIT ? firstOf([resolve('..', RIT.audio), resolve('..', RIT.audio_fallback)])
+  : firstOf([EXT, EXT_M4A]);
+if (!SONG) throw new Error('no audio: ' + (RIT ? RIT.audio + ' (tools/ritardando.py) or ' + RIT.audio_fallback : EXT));
+const probeDur = f => { try { return +execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', f]).toString().trim(); } catch (e) { return RIT ? RIT.duration : 242.22; } };
 const DUR = probeDur(SONG), fps = +(args.fps || 24);
+console.log(`audio ${SONG.replace(resolve('..') + '/', '')} (${DUR.toFixed(2)} s, ${Math.ceil(DUR * fps)} frames), time map ${RIT ? 'on' : 'off (--norit)'}`);
 const FRAMES_DIR = args.dir || 'out/frames';
 const W = +(args.width || 1920), H = +(args.height || 1080);
 
@@ -55,7 +66,7 @@ async function openPage(tag = '') {
   await page.setViewport({ width: 1280, height: 720 });
   page.on('console', m => { if (['error', 'warn'].includes(m.type()) || args.verbose) console.log(`[page${tag}]`, m.text()); });
   page.on('pageerror', e => console.log(`[page error${tag}]`, e.message));
-  await page.goto(`http://127.0.0.1:${PORT}/studio.html?render&w=${W}&h=${H}${args.q ? '&' + args.q : ''}`, { waitUntil: 'load' });
+  await page.goto(`http://127.0.0.1:${PORT}/studio.html?render&w=${W}&h=${H}${RIT ? '' : '&norit'}${args.q ? '&' + args.q : ''}`, { waitUntil: 'load' });
   await page.waitForFunction('window.ready === true', { timeout: 900000, polling: 500 });
   return page;
 }
@@ -68,8 +79,9 @@ const times = s => String(s).split(',').map(Number);
 try {
   if (args.list) {
     const page = await openPage();
-    const shots = await page.evaluate(() => SHOTS.map(s => [s.name, +s.t0.toFixed(3), +s.t1.toFixed(3)]));
-    for (const [n, a, b] of shots) console.log(`${n.padEnd(18)} ${a.toFixed(2).padStart(7)} → ${b.toFixed(2).padStart(7)}  (${(b - a).toFixed(2)} s)`);
+    // song times; where the ritardando moves a shot, its film (output) times follow in brackets
+    const shots = await page.evaluate(() => SHOTS.map(s => [s.name, +s.t0.toFixed(3), +s.t1.toFixed(3), +outAt(s.t0).toFixed(3), +outAt(Math.min(s.t1, TM.durExt)).toFixed(3)]));
+    for (const [n, a, b, ua, ub] of shots) console.log(`${n.padEnd(18)} ${a.toFixed(2).padStart(7)} → ${b.toFixed(2).padStart(7)}  (${(b - a).toFixed(2)} s)` + (ua !== a || ub !== Math.min(b, 242.2) ? `  [film ${ua.toFixed(2)} → ${ub.toFixed(2)}]` : ''));
     if (args.out) writeFileSync(args.out, JSON.stringify(shots));
   } else if (args.sheet) {
     const page = await openPage(), out = args.out || 'out/sheet.jpg'; mkdirSync(dirname(out), { recursive: true });

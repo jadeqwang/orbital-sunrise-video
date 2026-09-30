@@ -106,7 +106,8 @@ Show her intermediate results early and small; she reads them on her phone.
 - "Hold on" (2:15–2:23): the capsule already tumbles on the first HOLD ON (`G3_hold` in `video/src/shots2.js`).
 - Her writing hand (2:02) now has her jacket sleeve (`jade_hand_writing_p` take 2).
 
-To release: full render (`cd video && node render.mjs --frames=0:242.2 --workers=4`), then `tools/encode_release.sh`,
+To release: full render (`cd video && node render.mjs --frames=0:243.2 --workers=4`; see "Outro ritardando" below: frames
+from 228.9 s on changed, so re-render them with `--force` if `out/frames` holds an older render), then `tools/encode_release.sh`,
 `tools/package_hls.sh`, republish the watch page (https://claude.ai/artifact/TYmS3GPKvHH3f1i45QrjJ5, in batches under 58 MB)
 and commit. Work on `main`. Commit messages end with the session's Co-Authored-By / Claude-Session lines.
 
@@ -164,3 +165,26 @@ and commit. Work on `main`. Commit messages end with the session's Co-Authored-B
   media/stills; `pip install rembg onnxruntime soundfile`; `tools/plate_masks.py` (~90 min on 4 cores);
   `tools/install_drawing.py` needs her photo at media/refs/leonov_drawing_real_photo.jpg (not committed);
   `tools/extend_ending.py`. The container had no ffprobe: a duration-only stand-in at /usr/local/bin/ffprobe was enough.
+
+## Outro ritardando (approved 2026-09-30, not yet in a release)
+
+- She approved **ritardando B** for the piano outro: `media/audio/Orbital_Sunrise_rit_0.65.wav` (243.17 s), made by
+  `tools/ritardando.py --vmin=0.65 --start=228.36 --out=media/audio/Orbital_Sunrise_rit_0.65.wav` from the "suit" release mix
+  `media/audio/Orbital_Sunrise_extended.wav` (the WAVs are gitignored; `Orbital_Sunrise_rit_0.65.m4a` is the committed
+  fallback). **Never rebuild audio from the mp3** (it says "sleeve").
+- The picture follows the slowed music: **film (output) time u is drawn from song time s(u)**. `video/data/timemap.json`
+  (written by `python3 tools/timemap.py media/audio/Orbital_Sunrise_rit_0.65.map.json` from ritardando.py's map) holds
+  [[s, u], ...]: identity until ~228.9 s (the map is rounded to 1 ms), then the ritardando; after the final chord (song
+  234.70 s, film 235.64 s) a constant +0.948 s shift, so the ring-out and the title fade are unchanged. `video/src/main.js`
+  `renderFrame(u)` maps it (`songAt` / `outAt`); the 12-per-second drawing clock runs in film time, so the outro stays on twos.
+  Shots are still written in song time; frames before 228.9 s are byte-identical to the unmapped render.
+- All render.mjs times (`--frames`, `--clip`, `--sheet`, `--stills`, frame i / 24) are now **film time**; `--list` prints song
+  times with the film times in brackets where they differ. Default audio for `--clip` / `--encode` is the time map's
+  (`Orbital_Sunrise_rit_0.65.wav`, else the .m4a). The film is 243.17 s = **5837 frames** (was 242.22 s / 5814):
+  `node render.mjs --frames=0:243.2 --workers=4`.
+- **Off switch:** `node render.mjs ... --norit` (and `studio.html?norit`) reproduces the old film exactly (song time = film
+  time, the unslowed extended mix, 5814 frames); release it with `NORIT=1 tools/encode_release.sh` /
+  `NORIT=1 tools/package_hls.sh`. Both scripts take `AUDIO=...` too and refuse to run when the frame count in
+  `video/out/frames` does not match the audio's length (frames from the other mode).
+- To try another ritardando: run ritardando.py with other settings, then `tools/timemap.py <its .map.json>`; render.mjs and the
+  page pick up the new map and audio from `video/data/timemap.json`.
