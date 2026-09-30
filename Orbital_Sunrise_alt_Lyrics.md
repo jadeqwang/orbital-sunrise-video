@@ -10,7 +10,7 @@ Can’t feel his hands, can’t feel his face
 So he bleeds the air out, breath by breath  
 Dancing on the edge of a quiet death  
 Let his air out through the suit he wore  
-Ninety minutes inside the airlock door  
+Eternity inside the airlock door  
 \[Chorus / Hook\]  
  Orbital sunrise, burning gold  
  Orbital sunrise, bring me home  

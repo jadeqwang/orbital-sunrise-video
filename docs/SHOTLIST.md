@@ -33,7 +33,7 @@ Type sizes: **XL** ≥ 18 % frame height, **L** 10–18 %, **S** subtitle.
 | 44.40 – 48.46 | Breath by breath | valve_bleed; the gauge switches once, 0.40 → 0.27 ATM, on "So" (his one switch to the suit's second mode) | BREATH / BY / BREATH stacked right |
 | 48.46 – 51.37 | Quiet death | tumble_slow, red scribble from the frame edges | DANCING ON THE EDGE on a tightrope line · *of a quiet death* |
 | 51.37 – 54.67 | Through the suit | headfirst | LET HIS AIR OUT THROUGH THE SUIT HE WORE (M) |
-| 54.67 – 59.50 | The airlock door | tube_turn; cuts accelerate with the snare roll (ones) | NINETY MINUTES · INSIDE THE AIRLOCK DOOR · hatch slam to black |
+| 54.67 – 59.50 | The airlock door | tube_turn; cuts accelerate with the snare roll (ones) | ETERNITY · INSIDE THE AIRLOCK DOOR (was NINETY MINUTES; alt cut, 2026-09-30) · hatch slam to black |
 
 ## Hook 2 · 59.50 – 70.94 · relief
 | 59.50 – 62.70 | Porthole | porthole_sunrise, symmetric | ORBITAL SUNRISE set around the porthole ring |

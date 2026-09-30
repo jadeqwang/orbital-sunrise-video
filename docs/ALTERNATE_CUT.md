@@ -76,23 +76,30 @@ She confirmed the new mix sings "suit" and asked for the film to be retimed. Don
   lips stay on her voice (the take plays 1.6 % faster). `render.mjs --list` against the released list: every shot moves
   exactly with the map (within 0.08 s) except the intended changes below.
 - **New shots** (the two new lines are the story's hinge: he floats free, all that holds him is a line to the ship, and the
-  ship can't take him back: at the hatch, head first, the ballooned suit jams in the rim; her direction, 2026-09-30:
-  "he should get stuck at the hatch door … make sure he's entering head first and not feet first"):
+  ship can't take him back: at the hatch the ballooned suit jams in the rim; her direction, 2026-09-30: "he should get stuck
+  at the hatch door"; she first asked for head first, then chose his memoir's order: the jammed attempt feet first, the
+  head-first entry after he bleeds the suit):
   - `N1_tether` ("Tied to the ship by the slightest trace", one shot over the whole line): the extreme wide
     `ship_wide_sunrise` (the ship small at the top, him hanging far below on one thin line over the Earth), plate 3.1 → 7.9 s
     at 0.74x under a slow push-in (H1c plays 1.0 → 3.9 of the take), "TIED / TO THE SHIP" in the sky right of the airlock.
     From "by" the pencil traces the tether in gold from the hatch lid to where it meets him (his shoulders), following it as
     he drifts (`TETHER`: its ends and middle tracked in plate uv every 0.5 s of plate time), "by the slightest trace" and
     "TETHER · 5.35 M" (on "trace") beside it.
-  - `N2_jam` ("Pull him back to the ship's embrace"): `headfirst` (the take P3 later plays through when he finally gets in),
-    from behind at the Volga's mouth: helmet and shoulders inside the rim, backpack and legs outside. Only its first second,
-    run in and back out on the beat (shove, jam, back off, shove), so he never gets through; on "embrace" a punch-in on the
-    rim squeezing his shoulders, the page's edges panicking as in S3. P3 then rhymes with it: same hatch, same angle, and
-    after bleeding the air he gets in.
-  - Rejected for N2: `airlock_fail` (he enters legs first), the archived `airlock_struggle` takes 2 and 3 (his helmet ends up
-    outside the rim: reads as coming out, or feet first), and I3's exit run backwards (that is a feet-first entry).
+  - `N2_jam` ("Pull him back to the ship's embrace"): `airlock_fail` take1 (mattes made with `tools/plate_masks.py`), the
+    feet-first attempt that jams, in memoir order: at the open mouth of the Volga tube he swings his legs in, the ballooned
+    suit jams against the rim, he pushes back out, turns and struggles. Plate 1.0 → 7.95 s, speed-ramped: 1.25x through the
+    jam and the push out ("Pull him back"), faster through the turn, his face in the visor (plate 6.5 s) on "embrace" with a
+    punch-in right of the type, then 0.76x on his strained face to the cut. He never gets in. P3 (`headfirst`) is then the
+    head-first entry that works, after he bleeds the air. Note: his 22 March 1965 report and the onboard film say legs
+    first throughout (docs/FACTCHECK.md); the film follows the memoir (2004).
+  - Replaced for N2 (2026-09-30): `headfirst`'s first second run in and back out on the beat (a head-first jam matches
+    neither account). Still rejected: the archived `airlock_struggle` takes 2 and 3, and I3's exit run backwards.
   - Note: S3's plate (`airlock_struggle` take 1, "HE CAN'T GET BACK IN.") has him facing out of the rim with his backpack
-    behind him in the tube, i.e. the planned feet-first attempt; left as released.
+    behind him in the tube, i.e. feet first too; left as released.
+  - Lyric change (2026-09-30): the pre-chorus's "Ninety minutes inside the airlock door" (wrong, docs/FACTCHECK.md §1) is
+    now "Eternity inside the airlock door" on the alt sheet and in `timing.json` (`REWORDED` in `tools/retime.py`:
+    "Eternity" on "Ninety"'s time, "minutes" drops); P4 types ETERNITY / INSIDE THE AIRLOCK DOOR. She will re-record it;
+    until then the audio still sings the old words.
   - `I4_hands` now cuts on the sung "Can't" (25.96 s). `F2_home` types "FALL THROUGH / THE SKIES" and "bring me home" (its
     type mask grew to fit).
 - **Audio:** her recording already slows the piano outro ("ritardando at the end" on the sheet: the eighths widen from 0.20 to

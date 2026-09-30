@@ -60,7 +60,7 @@ landing, they are the same drawing.
 |---|---|---|
 | 0:00 – 0:22 | Intro (whispered) | A poster frame draws itself in 2 s — the hook. Then darkness: the first man outside, tiny against the Earth. *First man floating in the void of space / Can't feel his hands, can't feel his face.* |
 | 0:22 – 0:34 | Hook 1 | The first orbital sunrise ever seen by a human outside a ship. The first color in the film: gold. **ORBITAL SUNRISE** / ОРБИТАЛЬНЫЙ ВОСХОД. |
-| 0:34 – 0:57 | Build + pre-chorus | The suit balloons; he can't reach the camera, can't fit the hatch. Pressure telemetry. He bleeds his air out — 0.40 → 0.27 atm — and goes in head-first. Red scribble closes in. |
+| 0:34 – 0:57 | Build + pre-chorus | The suit balloons; he can't reach the camera, can't fit the hatch. Pressure telemetry. He bleeds his air out — 0.40 → 0.27 atm — and goes in head-first (after a feet-first try jams, in the alternate cut's N2; the 1965 report says legs first). "Eternity inside the airlock door" (was "Ninety minutes"). Red scribble closes in. |
 | 0:59 – 1:10 | Chorus 2 | Inside. Relief through the porthole: another sunrise. |
 | 1:10 – 1:44 | Drop 1 (vocal chops) | Orbit montage on the beat: member ID cards for LEONOV and BELYAYEV, sixteen sunrises a day, the Globus spinning, and Leonov drawing the sunrise with pencils floating on strings. |
 | 1:45 – 1:57 | Breakdown vocals | The singer on Earth, under a red sky: *I'll never float where the sky turns red.* A launch far away. |

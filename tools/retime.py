@@ -21,6 +21,9 @@ Word times that do not come from the map (measured on the new vocal stem: recogn
 Parakeet model, each snapped to the vocal's onsets and pitch changes; see NEW_LINES) are the two new lines, "Can't feel
 his hands, can't feel his face" (whose released times sat up to 0.2 s early; the recogniser and the stem's onsets agree
 on the new ones) and the final chorus's changed line "Fall through the skies, bring me home".
+
+REWORDED: lines whose words change but not yet their recording ("Eternity inside the airlock door", sung as "Ninety
+minutes..." until she re-records it): each new word takes the mapped time of an old one.
 """
 import sys, json, pathlib, subprocess
 import numpy as np
@@ -47,6 +50,12 @@ NEW_LINES = {
     "pull": ("intro", 2, "Pull him back to the ship's embrace", [20.36, 21.01, 21.56, 22.74, 23.03, 23.44, 24.05]),
     "cant": ("intro", 3, None, [26.01, 26.50, 27.08, 27.63, 28.79, 29.50, 30.12, 30.68]),      # re-measured, text unchanged
     "fall": ("hook3", 1, "Fall through the skies, bring me home", [158.78, 159.35, 159.74, 160.05, 161.82, 162.55, 162.79]),
+}
+# lyric changes she will re-record (the audio still sings the old words): section, index, new text, and for each new word
+# the index of the old word whose (mapped) time it takes
+REWORDED = {
+    # was "Ninety minutes inside the airlock door" (docs/FACTCHECK.md §1): "Eternity" on "Ninety", "minutes" drops
+    "eternity": ("pre", 3, "Eternity inside the airlock door", [0, 2, 3, 4, 5]),
 }
 
 
@@ -176,6 +185,10 @@ def retime():
     _, _, text, ws = NEW_LINES["fall"]
     tk = tokens(text); assert len(tk) == len(ws)
     h3.update({"text": text, "t0": ws[0], "words": [[t, w] for t, w in zip(ws, tk)]})
+    for sec, i, text, keep in REWORDED.values():
+        l = [l for l in d["lines"] if l["sec"] == sec][i]
+        tk = tokens(text); assert len(tk) == len(keep), text
+        l.update({"text": text, "words": [[l["words"][j][0], w] for j, w in zip(keep, tk)]})
     d["lines"].sort(key=lambda l: l["t0"])
     # a line that ran up to the next one's start still does (the released intro/pre lines are chained like that)
     for a, b in zip(d["lines"], d["lines"][1:]):

@@ -411,8 +411,9 @@ async function initShots() {
   });
 
   // ---- the extended recording's two new lines: the story's hinge. He floats free, but all that holds him is a line to the
-  // ship; the ship has to take him back, and it can't: at the hatch, head first (as he did it, against the plan), the
-  // ballooned suit jams in the rim. Then "can't feel his hands, can't feel his face" is that suit from inside.
+  // ship; the ship has to take him back, and it can't: at the Volga's mouth, feet first (the plan), the ballooned suit jams
+  // in the rim. Then "can't feel his hands, can't feel his face" is that suit from inside; P3 (after he bleeds the air) is
+  // the head-first entry that works: his memoir's order.
   const N1W = L1[1].words, N2W = L1[2].words;   // Tied to the ship by the slightest trace · Pull him back to the ship's embrace
   // N1 · "Tied to the ship by the slightest trace": the extreme wide (ship_wide_sunrise), Voskhod-2 small at the top and him
   // hanging far below over the Earth on one thin line, the sun coming up top right. The take's later part (H1c plays 1.0 → 3.9
@@ -470,20 +471,23 @@ async function initShots() {
     typeFlush(Lt, d, .4);
   });
 
-  // N2 · "Pull him back to the ship's embrace": he goes back in head first and the ship won't take him. From behind and above
-  // at the Volga's mouth (headfirst, the take P3 plays through when he finally gets in): helmet and shoulders inside the rim,
-  // backpack and legs outside. Only its first second is used, run in and back out on the beat (he shoves, jams, backs off,
-  // shoves again), so here he never gets through; the page's edges start to panic, as in S3. On "embrace" the camera punches
-  // in on the rim squeezing his shoulders: the ship's embrace is too tight for him.
-  const JAM = (c, i) => hash2(c, 71 + i);                                       // per-shove variation (deterministic)
+  // N2 · "Pull him back to the ship's embrace": the first try at getting back in, feet first as planned, and the ship won't
+  // take him (airlock_fail take1: at the open mouth of the Volga tube he swings his legs in, the ballooned suit jams against
+  // the rim, he pushes back out, turns and struggles; the camera ends close on his strained face). In his memoir this is the
+  // attempt that failed; P3 is the head-first entry after he bleeds the suit (his 1965 report says legs first throughout).
+  // The take from 1.0 s (legs going in): 1.25x through the jam and the push back out ("Pull him back"), faster through the
+  // turn, landing on his face in the visor at 6.5 s on "embrace", then 0.76x on the strained face to the cut (7.95 s): he
+  // never gets in. The page's edges panic more and more, as in S3; on "embrace" a punch-in on the face, pushed right of the type.
+  const N2K = [[0, 1.0], [2.4, 4.0], [N2W[6][0] - L1[2].t0 + .05, 6.5], [L1[3].t0 - L1[2].t0, 7.95]];   // [shot time, plate time]
+  const n2tp = lt => { let i = N2K.findIndex(k => k[0] > lt); i = i < 0 ? N2K.length - 1 : Math.max(1, i);
+    const [a, b] = [N2K[i - 1], N2K[i]]; return lerp(a[1], b[1], clamp((lt - a[0]) / (b[0] - a[0]))); };
   shot('N2_jam', L1[2].t0 - .05, L1[3].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
-    const e = smooth(clamp(lt / dur)), b0 = beatPos(L1[2].t0 - .05), bp = (beatPos(t) - b0) / 2, c = Math.floor(bp), p = bp - c;
+    const e = smooth(clamp(lt / dur)), tp = n2tp(drawClock(t, 12).tq - (L1[2].t0 - .05));   // the plate on the drawing clock
     const tight = t >= N2W[6][0] - .05, et = smooth(clamp((t - N2W[6][0]) / (L1[3].t0 - N2W[6][0])));   // "embrace" → the cut
-    const lo = i => .06 + .12 * JAM(i, 1), hi = i => .62 + .3 * JAM(i, 2);    // plate seconds: wedged at the rim → a little deeper
-    const tp = p < .42 ? lerp(lo(c), hi(c), easeOut(p / .42)) : lerp(hi(c), lo(c + 1), easeInOut((p - .42) / .58));
-    const view = tight ? { zoom: lerp(1.5, 1.62, et), cx: .43, cy: .43, rot: -.04 } : { zoom: lerp(1.0, 1.1, e), cx: lerp(.5, .47, e), cy: lerp(.5, .46, e) };
-    await drawPlate(t, 'headfirst', tp, { hold: tp, view, hatch: { mask: quiet([[60, 90, 900, 640]], .72) },
+    const view = tight ? { zoom: lerp(1.38, 1.48, et), cx: .5, cy: .42, ox: 330, oy: 20 } : { zoom: lerp(1.0, 1.1, e), cx: lerp(.5, .53, e), cy: lerp(.5, .47, e) };
+    await drawPlate(t, 'airlock_fail', tp, { hold: tp, view, face: tp > 5.9,
+      hatch: { mask: tight ? quiet([[60, 90, 860, 640]], .72) : quiet([[60, 110, 880, 600]], .42) },   // wide: a lighter clearing, his legs pass under the words
       extra: (pen) => edgePanic(pen, tight ? .6 + .3 * et : .2 + .35 * e, drawClock(t, 12).n * 5) });
     lyricStack(t, [
       { s: 'PULL', t: N2W[0][0], x: 110, y: 290, size: 210, style: 'slam' },
@@ -729,10 +733,10 @@ async function initShots() {
       hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], (id === 'airlock_cut' || id === 'airlock_side' ? .45 : .75) * (1 - roll)) },   // his arm and glove pass under the words: a lighter clearing
       extra: (pen) => edgePanic(pen, .5 + roll * .5, drawClock(t, rate).n * 11) });
     evaHud(t);
-    const w = PR[3].words; // Ninety minutes inside the airlock door
+    const w = PR[3].words; // Eternity inside the airlock door (sung "Ninety minutes..." until she re-records it)
     lyricStack(t, [
-      { s: 'NINETY MINUTES', t: w[0][0], x: W / 2, y: 300, size: 170, align: 'center', style: 'slam' },
-      { s: 'INSIDE THE AIRLOCK DOOR', t: w[2][0], x: W / 2, y: 420, size: 96, align: 'center', style: 'rise', ls: 3 },
+      { s: 'ETERNITY', t: w[0][0], x: W / 2, y: 300, size: 170, align: 'center', style: 'slam' },
+      { s: 'INSIDE THE AIRLOCK DOOR', t: w[1][0], x: W / 2, y: 420, size: 96, align: 'center', style: 'rise', ls: 3 },
     ], { alpha: 1 - roll * .6 });
     // the hatch slams: black on the last beat of the roll
     if (t > O(59.5) - TM.beat * .5) { G.fillStyle = P.night; G.globalAlpha = .92; G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
