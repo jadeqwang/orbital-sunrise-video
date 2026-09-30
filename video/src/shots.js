@@ -326,10 +326,10 @@ async function initShots() {
   const L1 = linesIn('intro'), H1 = linesIn('hook1');
 
   // I1 · The poster draws itself (0 → first beat)
-  const POSTER_TP = 4.4, FIRST_BEAT = B(Bn(7));
+  const POSTER_TP = 4.4, FIRST_BEAT = B(Bn(8));   // beat 8 (≈3.32 s): the band comes in; beat 7 has no onset
   shot('I1_poster', 0, FIRST_BEAT, async (t, lt, dur) => {
     paper(G, 'night');
-    const k = clamp(lt / 2.45);                          // drawing progress
+    const k = clamp(lt / 1.1);                           // drawing progress: done by ≈1.1 s, so the title can be read before the cut
     const view = { zoom: 1.06, ox: 120, oy: 20 };
     // the sun (plate meta) in screen space; the drawing grows outward from the sunrise
     const sm = (META.hero_sunrise || [])[plateIndex('hero_sunrise', POSTER_TP) - 1], su = sm ? sm.sun : [.88, .44];
@@ -348,8 +348,8 @@ async function initShots() {
         raysFrom(pen, sun[0], sun[1], { n: 700, r0: 0, r1: 240, energy: 1, seed: 23, jseed: dI, cols: ['white', 'gold', 'gold', 'white', 'orange'], w: [2, 4.2], alpha: [.85, 1] });
       },
     });
-    // title lockup lands when the drawing is ~85% done
-    const tt = 2.1;
+    // title lockup lands as the drawing fills in: all of it (the date typed last) readable by ≈1.2 s
+    const tt = .65;
     lyricStack(t, [
       { s: 'ORBITAL', t: tt, x: 110, y: 420, size: 230, style: 'slam' },
       { s: 'SUNRISE', t: tt + .12, x: 110, y: 640, size: 230, style: 'slam' },
@@ -389,7 +389,7 @@ async function initShots() {
     tele(Lt.g, '18 MARCH 1965', 120, 250, t, bt(0), { size: 30, weight: 700, col: 'white', dur: .35 });
     tele(Lt.g, 'ВОСХОД-2 · VOSKHOD-2', 120, 300, t, bt(1), { size: 30, weight: 700, col: 'verm', dur: .4 });
     tele(Lt.g, '«ВОСХОД» MEANS «SUNRISE»', 120, 350, t, bt(2), { size: 24, col: 'silver', dur: .45 });
-    tele(Lt.g, 'ORBIT 2 · ALTITUDE ~500 KM', 120, 420, t, bt(3), { size: 24, col: 'silver', dur: .45 });
+    tele(Lt.g, 'ORBIT 2 · APOGEE ~500 KM', 120, 420, t, bt(3), { size: 24, col: 'silver', dur: .45 });
     typeFlush(Lt, dIdx, .4);
   });
 
@@ -604,7 +604,7 @@ async function initShots() {
     await drawPlate(t, 'camera_reach', .4 + lt, { view: { zoom: 1.04 } });
     evaHud(t);
     const Lt = typeLayer();
-    tele(Lt.g, 'HE REACHES FOR THE SHUTTER ON HIS THIGH.', 110, H - 120, t, sw0 + .4, { size: 26, weight: 700, col: 'white', dur: 1.1 });
+    tele(Lt.g, "HE CAN'T REACH THE CAMERA SWITCH ON HIS LEG.", 110, H - 120, t, sw0 + .4, { size: 26, weight: 700, col: 'white', dur: 1.1 });
     tele(Lt.g, 'THE SUIT WILL NOT BEND.', 110, H - 78, t, sw0 + 1.8, { size: 26, weight: 700, col: 'verm', dur: .6 });
     typeFlush(Lt, drawClock(t, 12).n, .35);
   });
@@ -622,7 +622,8 @@ async function initShots() {
     pen.l(cx - half, y, cx + half, y, 'gold', 1.4, .7);
     pen.flush(Lr.g, ORDER_NIGHT); toothIn(Lr, d); G.drawImage(Lr.c, 0, 0);
     const Lt = typeLayer();
-    text(Lt.g, 'SWELLING', cx, y - 26, { font: FONT.mono(34, 800), col: 'gold', align: 'center' });   // no number: no source measures it
+    text(Lt.g, 'SUIT SWELLS —', cx, y - 26, { font: FONT.mono(34, 800), col: 'gold', align: 'center' });   // no number: no source measures it
+    text(Lt.g, 'HIS FINGERS NO LONGER REACH THE GLOVES', cx, y + 64, { font: FONT.mono(26, 800), col: 'gold', align: 'center' });   // his account
     tele(Lt.g, 'IN VACUUM, THE SUIT BALLOONS', 110, 180, t, B(Bn(100)) + .2, { size: 26, weight: 700, col: 'white', dur: .8 });
     typeFlush(Lt, d, .35);
   });

@@ -87,7 +87,7 @@ async function initShots2() {
   });
   shot('D2_id_leonov', bt(16), bt(24), async (t, lt, dur) => idCard(t, lt, dur, {
     plate: 'leonov_turn', t0: bt(16), num: '01', accent: 'gold', en1: 'ALEXEI', en2: 'LEONOV', ru: 'АЛЕКСЕЙ ЛЕОНОВ',
-    stats: ['PILOT-COSMONAUT · AGE 30 · CALLSIGN «АЛМАЗ-2»', 'FIRST HUMAN IN OPEN SPACE', 'A LIFELONG ARTIST — PACKED COLORED PENCILS'] }));
+    stats: ['PILOT-COSMONAUT · AGE 30 · CALLSIGN «АЛМАЗ-2»', 'FIRST HUMAN IN OPEN SPACE', 'A PAINTER ALL HIS LIFE'] }));
   shot('D3_id_belyayev', bt(24), bt(32), async (t, lt, dur) => idCard(t, lt, dur, {
     plate: 'belyayev_turn', t0: bt(24), num: '02', accent: 'sky', en1: 'PAVEL', en2: 'BELYAYEV', ru: 'ПАВЕЛ БЕЛЯЕВ',
     stats: ['COMMANDER · AGE 39 · CALLSIGN «АЛМАЗ-1»', 'FIGHTER PILOT', 'FLEW THE FIRST SOVIET MANUAL LANDING'] }));
@@ -578,7 +578,7 @@ async function initShots2() {
       contour: { mask: (X, Y) => firelight(X, Y) > .35 ? 1 : 0 },
       extra: (pen, F, view, d) => flames(pen, fx, Math.min(H + 20, fy + 40), { size: 300, n: 54, seed: d * 3 + 1 }) });
     lyricStack(t, [{ s: 'home', t: HOME2.t0, x: 110, y: 300, font: FONT.serif(150), col: 'gold', style: 'rise' }]);
-    const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · −25 °C', 60, H - 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'silver', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .4);
+    const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · BELOW −25 °C', 60, H - 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'silver', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .4);
   });
   // by the fire he unfolds the folded sheet (the reconstruction) and smiles; no caption (the line moves to the coda)
   shot('L5_survived', O(206.2), O(211.2), async (t, lt) => {
@@ -589,16 +589,16 @@ async function initShots2() {
   // skiers in sheepskin coats bring warm clothes; the cosmonauts by the fire in their linings
   const LEG_BEATS = 3, LEG_END = Bn(610);                                            // the legacy montage ends on beat 610 (≈225.81 s)
   const LEG = [
-    ['1965', 'ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1]],
-    ['1969', 'PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08]],
-    ['1975', 'LEONOV SHAKES HANDS IN ORBIT', 'leg_handshake', [.63, .52, 1.3]],
-    ['2000', 'FIFTEEN NATIONS, ONE STATION', 'leg_station', [.56, .5, 1.06]],
-    ['2003', "CHINA'S FIRST ASTRONAUT", 'leg_yang_liwei', [.63, .5, 1.1]],
-    ['2014', 'A LANDER ON A COMET', 'leg_philae', [.72, .56, 1.7]],
-    ['2019', 'FIRST LANDING ON THE FAR SIDE', 'leg_change4', [.6, .5, 1.08]],
-    ['2023', "INDIA LANDS NEAR THE MOON'S SOUTH POLE", 'leg_chandrayaan3', [.68, .45, 1.1]],   // Chandrayaan-3 landed at ~69°S: near, not at, the pole
-    ['2024', 'THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.62, .5, 1.12]],
-    ['2026', 'FOUR PEOPLE AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12]],
+    ['1965', 'GEMINI 4 — ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1]],
+    ['1969', 'APOLLO 11 — PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08]],
+    ['1975', 'APOLLO–SOYUZ — LEONOV SHAKES HANDS IN ORBIT', 'leg_handshake', [.63, .52, 1.3]],
+    ['2000', 'ISS — FIFTEEN NATIONS, ONE STATION', 'leg_station', [.56, .5, 1.06]],
+    ['2003', "SHENZHOU 5 — CHINA'S FIRST ASTRONAUT", 'leg_yang_liwei', [.63, .5, 1.1]],
+    ['2014', 'ROSETTA / PHILAE — A LANDER ON A COMET', 'leg_philae', [.72, .56, 1.7]],
+    ['2019', "CHANG'E 4 — FIRST SOFT LANDING ON THE MOON'S FAR SIDE", 'leg_change4', [.6, .5, 1.08]],
+    ['2023', "CHANDRAYAAN-3 — INDIA LANDS NEAR THE MOON'S SOUTH POLE", 'leg_chandrayaan3', [.68, .45, 1.1]],   // Chandrayaan-3 landed at ~69°S: near, not at, the pole
+    ['2024', 'POLARIS DAWN — THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.62, .5, 1.12]],
+    ['2026', 'ARTEMIS II — FOUR PEOPLE AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12]],
   ];
   const LEG_B0 = LEG_END - LEG.length * LEG_BEATS, lg0 = B(LEG_B0), lg1 = B(LEG_END), PX = 640;
   shot('L6_rescue', O(211.2), lg0, async (t, lt) => {
