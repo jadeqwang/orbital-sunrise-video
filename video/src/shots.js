@@ -620,7 +620,7 @@ async function initShots() {
     let id = 'tube_struggle', tp = 1.6 + lt * 2, vz = { zoom: pz, cx: .56, cy: .5 };
     // push: from the whole tube (sat a little low, under the lyric) to his face at uv (.21, .465), held below the lyric (y≈730)
     // Owner: the reach is a bit stiff, so only its start is seen; and even at rest people move, so nothing is frozen. The
-    // cutaway (airlock_cut take2: he breathes hard and shifts from frame 0) plays at 1x from the shot's start, and cuts on the
+    // cutaway (airlock_cut take3: he breathes hard, shifts and fidgets his legs from frame 0; ?p4legs=0: take2, no legs) plays at 1x from the shot's start, and cuts on the
     // beat at 56.18 s (beat 151, "the" → "airlock"), take ~1.6 s, as the glove has lifted off his chest and begun up the wall.
     // Then a moment of the inside view (airlock_side take1: breathing, visor fogging, glove pressing and sliding on the wall),
     // 56.18 → 57.2 at 1x from 0.3 s (as lively as any second of it, and the glove is still whole on the wall), with a slow push and drift, before the roll's flurry.
@@ -628,7 +628,7 @@ async function initShots() {
     const armT = new URLSearchParams(location.search).get('p4arm') !== '0', pushDur = 57.2 - (PR[3].t0 - .05), CUT_SIDE = beatTime(151);
     if (!old) {
       const e = smooth(clamp(lt / pushDur));
-      id = armT ? 'airlock_cut' : 'airlock_cut_still'; tp = armT ? lt : 0;
+      id = armT ? (new URLSearchParams(location.search).get('p4legs') === '0' ? 'airlock_cut_t2' : 'airlock_cut') : 'airlock_cut_still'; tp = armT ? lt : 0;
       vz = { zoom: lerp(1.02, 3.0, e), cx: lerp(.5, .212, e), cy: lerp(.44, .4035, e), rot: e * .3 };
       if (t >= CUT_SIDE) {   // his helmet low left under the lyric, the glove on the wall clear of it on the right
         const s = smooth(clamp((t - CUT_SIDE) / (57.2 - CUT_SIDE)));
