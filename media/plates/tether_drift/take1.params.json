@@ -1,0 +1,27 @@
+{
+ "model": "bytedance/seedance-2.5",
+ "input": {
+  "duration": 8,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "reference_images": [
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(3078906 chars)",
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(2666666 chars)"
+  ],
+  "image": "data:image/jpeg;base64,/9j//gAPTGF2YzYxL...(73415 chars)"
+ },
+ "genlog_line": 521,
+ "genlog": {
+  "t": "2026-09-30T17:33:43",
+  "tag": "plate:tether_drift",
+  "out": [
+   "media/plates/tether_drift/take1.mp4"
+  ],
+  "secs": 195.4
+ },
+ "first_frame": "take1.first.jpg = ship_wide_sunrise/take1.mp4 frame 1",
+ "reference_images": "plate_specs.R keys in order (media/chars/*.png, media/env/*.png rebuilt from media/archive/sheets/*.jpg; DRAW = media/refs/leonov_drawing_real_card.jpg, not committed)",
+ "use": "N1_tether 'Tied to the ship by the slightest trace': can replace/extend ship_wide_sunrise (its first frame, same framing); he drifts out until the tether goes taut.",
+ "recreate": "python3 tools/plates.py tether_drift  (spec in tools/plate_specs.py, round 3)"
+}
