@@ -240,6 +240,22 @@ at `media/chars/*.png`, `media/env/*.png`, which are **not in the repo** (gitign
 | `drawing_survives_v2` | 2 | L5_survived |
 | `rescue_v2` | 2 | L6_rescue |
 
+### Round 3 plates (2026-09-30, not yet wired into shots)
+
+Specs in `tools/plate_specs.py` (round 3), made with `python3 tools/plates.py <id>`; each take has `takeN.prompt.txt`,
+`takeN.params.json` (genlog line, inputs, intended use) and, where it continues an existing take, `takeN.first.jpg`.
+
+| plate | take | what | from |
+|---|---|---|---|
+| `hand_over_hand` | 2 (7 s) | he hauls himself back along the tether hand over hand and stops gripping the Volga rim, outside (no entry; S3/P3 do that). Take 1 (archived json/sheet) read as a rigid pole and ended head-in-the-mouth | refs LT, LF, SHIP |
+| `tether_drift` | 1 (8 s) | N1 "by the slightest trace": he drifts away from the ship until the tether goes taut, same framing as `ship_wide_sunrise` | first frame = `ship_wide_sunrise` take1 frame 1 |
+| `countdown_drift` | 1 (5 s) | I6 countdown: gentle drift of him and the coiled tether, orbital night, no sunrise (gain pinned to hero_sunrise's 1.38) | first frame = `hero_sunrise` take1 frame 1 |
+| `card_by_fire` | 1 (6 s) | L5: he takes a small flat card (not a folded sheet, FACTS §4) from his lining by the fire and smiles; push-in onto the card | first frame = `fire_night_v2` take1 at 2.2 s; refs DRAW, LF |
+
+New legacy stills (`tools/legacy_stills.py`, round 3): `leg_tiangong` (T-shaped Tiangong, take 2: take 1 had a hard edge on
+the Earth), `leg_shenzhou7` (Zhai Zhigang in Feitian waving the flag, Liu Boming in Orlan-M at the hatch, 27 Sep 2008;
+replaces `leg_yang_liwei`), `leg_curiosity` (sky crane touchdown, Gale Crater, 6 Aug 2012 UTC).
+
 Stills (`leg_*`, `leonov_drawing`) come from `media/stills/` (`tools/legacy_stills.py`, `tools/install_drawing.py`).
 `leonov_drawing_hand` take 4 and `drawing_hand` take 2 used references (`DRAW`, `DRAWPH`, first frame `DRAWFF` =
 `media/refs/leonov_drawing_real_cabin_frame.png`) whose sent versions are gone (the museum photo is deliberately not
