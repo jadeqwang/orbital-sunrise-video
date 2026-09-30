@@ -820,16 +820,16 @@
   "fps": 24,
   "w": 1920,
   "h": 1080,
-  "take": "take1.mp4 (Seedance 2.5 from still.jpg: he slides one arm up the wall to the hatch), registered onto the still and prepared for the night pencil by tools/airlock_stills.py (tones re-laid, per-frame matte with the moving arm, hand-set face box)",
+  "take": "take2.mp4 (Seedance 2.5 from still.jpg: laboured breathing and small shifts from frame 0, then the glove lifts off his chest and starts up the wall), registered onto the still and prepared for the night pencil by tools/airlock_stills.py (tones re-laid, per-frame matte with the moving arm, hand-set face box)",
   "mattes": true,
   "gain": 1.0
  },
  "airlock_side": {
-  "n": 1,
+  "n": 121,
   "fps": 24,
-  "w": 2560,
-  "h": 1440,
-  "take": "still.jpg, prepared for the night pencil by tools/airlock_stills.py (tones re-laid, subject matte, hand-set face box)",
+  "w": 1920,
+  "h": 1080,
+  "take": "take1.mp4 (Seedance 2.5 from still.jpg: laboured breathing, helmet shifting, visor fogging, glove pressing and sliding on the wall), registered onto the still and prepared for the night pencil by tools/airlock_stills.py (tones re-laid, per-frame matte, hand-set face box)",
   "mattes": true,
   "gain": 1.0
  },
@@ -849,6 +849,15 @@
   "h": 720,
   "take": "take1.mp4",
   "mattes": false,
+  "gain": 1.0
+ },
+ "airlock_side_still": {
+  "n": 1,
+  "fps": 24,
+  "w": 2560,
+  "h": 1440,
+  "take": "still.jpg (airlock_side), prepared for the night pencil by tools/airlock_stills.py (tones re-laid, subject matte, hand-set face box)",
+  "mattes": true,
   "gain": 1.0
  }
 }

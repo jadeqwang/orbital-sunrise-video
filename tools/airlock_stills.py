@@ -1,15 +1,16 @@
-"""Install the true-scale Volga airlock stills (and the animated cutaway take) as plates, prepared for the night pencil pass.
+"""Install the true-scale Volga airlock stills and their animated takes as plates, prepared for the night pencil pass.
 
-    python3 tools/airlock_stills.py [airlock_cut] [airlock_cut_still] [airlock_side]
-    python3 tools/airlock_stills.py --gen       regenerate media/plates/airlock_cut/take1.mp4 (Seedance, from the cutaway still)
+    python3 tools/airlock_stills.py [airlock_cut] [airlock_side] [airlock_cut_still] [airlock_side_still]
+    python3 tools/airlock_stills.py --gen airlock_side    regenerate that take (Seedance, from its still; see TAKES)
 
-airlock_cut_still, airlock_side: media/plates/<src>/still.jpg → video/plates/<id>/f0001.jpg (2560x1440) + m0001.png (subject
-    matte) + meta.json + stats.json.
-airlock_cut: the cutaway still animated (media/plates/airlock_cut/take1.mp4, 5 s: he slides one arm up along the wall past his
-    helmet until his glove presses flat on the closed hatch; locked-off camera). Every frame is registered onto the still (the
-    model re-frames it by ~1%: a similarity fitted on the tube, so the face box and the shot's push hold), toned exactly like
-    the still and installed at 1920x1080 (f0001..f0121). His matte is the still's body matte plus, per frame, what moved since
-    the first frame (the arm: GrabCut inside the convex hull of the strong changes off his body).
+airlock_cut_still, airlock_side_still: media/plates/<src>/still.jpg → video/plates/<id>/f0001.jpg (2560x1440) + m0001.png
+    (subject matte) + meta.json + stats.json.
+airlock_cut, airlock_side: the stills animated (TAKES below: he breathes hard and shifts from frame 0; in the cutaway his glove
+    lifts off his chest and starts up the wall; inside, the glove presses and slides on the wall). Every frame is registered
+    onto its still (a similarity fitted on the static set, so the face box and the shot's framing hold), toned exactly like
+    the still and installed at 1920x1080 (f0001..f0121) with a per-frame matte: the cutaway's is the first frame's body
+    matte plus the moving arm (GrabCut inside the convex hull of the strong changes off his body); the inside view's is
+    rembg per frame plus the glove outline.
 
 On night paper the pencil pass hatches brightness: the stills are bright and low in contrast (cream padding, white suit), so
 drawn as they are they turn into an even grey mat of hatching. Here the tones are re-laid for the pencil:
@@ -109,16 +110,29 @@ def prep_cut(bgr, masks=None):
     return relight(bgr, out, sat), man
 
 
-def prep_side(bgr):
+def glove_shift(frame, ref):
+    """Where the glove has slid to (dx, dy px) relative to ref: its hand (fingers to cuff) tracked by template matching."""
+    x0, y0, x1, y1 = 745, 120, 990, 300
+    tpl = ref[y0:y1, x0:x1]
+    sx0, sy0 = x0 - 120, y0 - 60
+    r = cv2.matchTemplate(frame[sy0:y1 + 60, sx0:x1 + 120], tpl, cv2.TM_CCOEFF_NORMED)
+    _, _, _, (mx, my) = cv2.minMaxLoc(r)
+    return mx + sx0 - x0, my + sy0 - y0
+
+
+def prep_side(bgr, shift=(0, 0), hand=None):
     rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
     L = lightness(bgr)
     rm = rembg_mask(rgb)
     # rembg only half-finds the glove and forearm against the pale wall: inside a hand-drawn outline of the arm its faint
-    # matte is kept (finger shapes), and the forearm below the cuff is filled in
-    arm = np.zeros(L.shape, np.uint8); cv2.fillPoly(arm, [np.array(GLOVE, np.int32)], 1)
+    # matte is kept (finger shapes), and the forearm below the cuff is filled in. In the take the glove slides: the outline's
+    # hand follows it (shift), fading back to the fixed forearm at the frame edge
+    dx, dy = shift
+    poly = [(x + dx * max(0, 1 - max(0, y - 300) / 420), y + dy * max(0, 1 - max(0, y - 300) / 420)) for x, y in GLOVE]
+    arm = np.zeros(L.shape, np.uint8); cv2.fillPoly(arm, [np.array(poly, np.int32)], 1)
     arm = cv2.dilate(arm, np.ones((9, 9), np.uint8))
     subj = ((rm > .45) | ((rm > .1) & (arm > 0))).astype(np.uint8)
-    subj[400:] |= arm[400:]
+    yp = max(0, 215 + dy); subj[yp:] |= arm[yp:]   # palm, cuff and forearm: the outline itself (fingers from rembg)
     subj = np.maximum(cv2.morphologyEx(subj, cv2.MORPH_CLOSE, np.ones((7, 7), np.uint8)),
                       cv2.morphologyEx(subj, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (19, 19))) & arm)
     subj = cv2.morphologyEx(subj, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
@@ -126,6 +140,8 @@ def prep_side(bgr):
     ff = np.pad(subj, 1).copy() * 255
     cv2.floodFill(ff, None, (0, 0), 128)
     subj = np.maximum(subj, (ff[1:-1, 1:-1] == 0).astype(np.uint8))
+    if hand is not None:   # the take: the still's glove matte (its fingers), slid with the glove
+        subj |= np.roll(hand, (int(dy), int(dx)), (0, 1))
     subj = feather(subj, 2.5)
     # wall: a lit surface drawn lightly, its pleats carried by the high-pass; he (glove, arm, helmet) brighter than it
     hp = L - cv2.GaussianBlur(L, (0, 0), 7)
@@ -144,7 +160,7 @@ def prep_side(bgr):
 
 def meta(pid, bgr=None):
     import plate_meta
-    f = FACE["airlock_cut" if pid.startswith("airlock_cut") else pid]
+    f = FACE[pid.replace("_still", "")]
     c = [(f[0] + f[2]) / 2, (f[1] + f[3]) / 2]
     out = []
     for fr in sorted((DST / pid).glob("f*.jpg")):
@@ -156,9 +172,9 @@ def meta(pid, bgr=None):
 
 
 def run(pid):
-    if pid == "airlock_cut":
-        return run_take()
-    src = "airlock_cut" if pid == "airlock_cut_still" else pid
+    if pid in TAKES:
+        return run_take(pid)
+    src = pid.replace("_still", "")
     bgr = cv2.resize(cv2.imread(str(SRC / src / "still.jpg")), (W, H), interpolation=cv2.INTER_AREA)
     img, matte = (prep_cut if src == "airlock_cut" else prep_side)(bgr)
     d = DST / pid
@@ -176,42 +192,62 @@ def run(pid):
     print(pid, "installed")
 
 
-# ---------------------------------------------------------------- the animated cutaway (airlock_cut)
-TAKE = SRC / "airlock_cut" / "take1.mp4"
+# ---------------------------------------------------------------- the animated takes (airlock_cut, airlock_side)
+# Seedance 2.5 image-to-video from the stills (the real-person filter needs use_virtual_avatar), 720p, 5 s, locked camera.
+# Owner: at rest people still move, so both takes are alive from frame 0 (laboured breathing, small shifts). Kept after checks
+# for framing drift (similarity fitted on the static tube/wall, stable within ~1 px over the take) and hand/face artefacts:
+#   airlock_cut  take2.mp4 (of 2: the other re-framed by up to 60 px mid-take); take1.mp4 is the earlier full, stiff reach
+#   airlock_side take1.mp4 (of 2: the other fogged his visor over completely after 2 s)
+LOCK = "The video starts exactly on the input image, with identical framing: a fixed locked-off camera, no zoom, no pan, no push, no reframing, no crop. "
+TAKES = {
+    "airlock_cut": ("take2.mp4", LOCK +
+        "The entire sealed airlock tube from the left hatch to the right hatch stays in view, the same size and in the same place "
+        "in every frame, with the black background around it; the man keeps his size and position. A cosmonaut in a white spacesuit lies "
+        "straight along the padded tube, helmet at the left end against the closed round hatch. He is alive and struggling from the very "
+        "first frame: his chest rises and falls with heavy, laboured breaths, his shoulders and hips shift a little against the padding, "
+        "his head turns slightly inside the helmet, the fingers of his gloves flex. After about one second the gloved hand on the far side "
+        "lifts off his chest and starts to slide up along the upper padded wall toward the hatch. The other arm stays at his side and never "
+        "crosses his face; his face stays fully visible, straining. Nothing else moves: the tube, the padding, the two lamps, the metal "
+        "rings, the control panel and the black background stay exactly as in the image. Photoreal, same lighting."),
+    "airlock_side": ("take1.mp4", LOCK +
+        "Inside a cramped padded airlock tube: a cosmonaut in a white spacesuit lies on his back, his helmet at the lower left, "
+        "the pale pleated wall arching a hand's width above his visor, his right glove pressed flat against the wall at the upper right, "
+        "two small lamps, a closed round hatch in the middle distance. He is alive and struggling: his chest and shoulders heave with "
+        "laboured breathing, his helmet shifts a little, the inside of his visor fogs and clears with each breath, his gloved hand presses "
+        "against the pleated wall and slides a few centimetres, its fingers flexing (one glove, five fingers). His face stays fully visible, "
+        "straining, teeth gritted. Nothing else moves: the wall, the pleats, the lamps, the hatch stay exactly as in the image, same size "
+        "and place in every frame. Photoreal, same lighting."),
+}
 TAKE_OUT = (1920, 1080)
-TAKE_PROMPT = (
-    "The video starts exactly on the input image, with identical framing: a fixed locked-off camera, no zoom, no pan, no push, "
-    "no reframing, no crop: the entire sealed airlock tube from the left hatch to the right hatch stays in view, the same size "
-    "and in the same place in every frame, with the black background around it; the man keeps his exact size and position. "
-    "A cosmonaut in a white spacesuit lies straight along the padded tube, helmet at the left end against the closed round hatch. "
-    "Only ONE arm moves: over five seconds, slowly and with effort, he lifts the arm on the far side, the one against the upper padded "
-    "wall, and slides it along the wall behind and above his helmet, toward the closed round hatch at the left end, until his glove "
-    "touches the hatch rim above his helmet and presses flat against it. The other arm stays still, resting at his side on the lower "
-    "padding; it never lifts and never crosses his face. His face inside the visor stays fully visible the whole time and strains, "
-    "teeth gritted. His body barely moves. Nothing else moves: the tube, the padding, the two lamps, the metal rings, the control "
-    "panel and the black background stay exactly as in the image. Photoreal, same lighting.")
+# where the static set is, for registration (the subject is masked out): working-size px boxes
+STATIC_OUT = {"airlock_cut": [(140, 180, 920, 560)], "airlock_side": [(0, 300, 620, 720), (700, 80, 1150, 720)]}
 
 
-def gen_take():
-    """Seedance 2.5 image-to-video from the cutaway still (the real-person filter needs use_virtual_avatar). Takes 2-5 min.
-    Of four tries this is the one that kept the framing and one arm (others re-scaled the tube or crossed his face)."""
+def take_path(pid):
+    return SRC / pid / TAKES[pid][0]
+
+
+def gen_take(pid):
+    """Takes 2-5 min; check the result (framing, hands, face) before installing."""
     import cfai
-    inp = {"prompt": TAKE_PROMPT, "duration": 5, "resolution": "720p", "aspect_ratio": "16:9", "generate_audio": False,
-           "use_virtual_avatar": True, "image": cfai.data_uri(SRC / "airlock_cut" / "still.jpg")}
-    cfai.gen("bytedance/seedance-2.5", inp, TAKE, tag="airlock_arm", timeout=1800)
+    inp = {"prompt": TAKES[pid][1], "duration": 5, "resolution": "720p", "aspect_ratio": "16:9", "generate_audio": False,
+           "use_virtual_avatar": True, "image": cfai.data_uri(SRC / pid / "still.jpg")}
+    cfai.gen("bytedance/seedance-2.5", inp, take_path(pid), tag="airlock_alive", timeout=1800)
 
 
-def take_frames():
+def take_frames(pid):
     import subprocess, tempfile
     with tempfile.TemporaryDirectory() as td:
-        subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(TAKE), f"{td}/f%04d.png"], check=True)
+        subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", str(take_path(pid)), f"{td}/f%04d.png"], check=True)
         return [cv2.resize(cv2.imread(str(p)), (W, H), interpolation=cv2.INTER_AREA) for p in sorted(pathlib.Path(td).glob("f*.png"))]
 
 
-def register(frame, still):
-    """Similarity from the take's first frame onto the still, fitted on the tube only (SIFT + RANSAC)."""
+def register(frame, still, pid="airlock_cut"):
+    """Similarity from the take's first frame onto the still, fitted on the static set only (SIFT + RANSAC)."""
     sift = cv2.SIFT_create(8000)
-    mask = np.full((H, W), 255, np.uint8); mask[180:560, 140:920] = 0
+    mask = np.full((H, W), 255, np.uint8)
+    for x0, y0, x1, y1 in STATIC_OUT[pid]:
+        mask[y0:y1, x0:x1] = 0
     k1, d1 = sift.detectAndCompute(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), mask)
     k2, d2 = sift.detectAndCompute(cv2.cvtColor(still, cv2.COLOR_BGR2GRAY), mask)
     good = [a for a, b in cv2.BFMatcher().knnMatch(d1, d2, k=2) if a.distance < .7 * b.distance]
@@ -226,19 +262,29 @@ def fill_holes(m):
     return np.maximum(m, (ff[1:-1, 1:-1] == 0).astype(np.uint8))
 
 
-def run_take():
-    if not TAKE.exists():
-        gen_take()
-    still = cv2.resize(cv2.imread(str(SRC / "airlock_cut" / "still.jpg")), (W, H), interpolation=cv2.INTER_AREA)
-    frames = take_frames()
-    M = register(frames[0], still)
+def run_take(pid):
+    if not take_path(pid).exists():
+        gen_take(pid)
+    still = cv2.resize(cv2.imread(str(SRC / pid / "still.jpg")), (W, H), interpolation=cv2.INTER_AREA)
+    frames = take_frames(pid)
+    M = register(frames[0], still, pid)
     frames = [cv2.warpAffine(f, M, (W, H), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE) for f in frames]
-    obj, man0 = cut_masks(frames[0])
-    ref = cv2.GaussianBlur(frames[0].astype(np.float32), (0, 0), 1.5)
-    d = DST / "airlock_cut"
+    d = DST / pid
     for p in list(d.glob("f*.jpg")) + list(d.glob("m*.png")):
         p.unlink()
     d.mkdir(parents=True, exist_ok=True)
+    save = lambda i, img, matte: (cv2.imwrite(str(d / f"f{i:04d}.jpg"), cv2.resize(img, TAKE_OUT, interpolation=cv2.INTER_CUBIC), [cv2.IMWRITE_JPEG_QUALITY, 92]),
+                                  i % 2 == 1 and cv2.imwrite(str(d / f"m{i:04d}.png"), cv2.resize((matte * 255).astype(np.uint8), (512, 288), interpolation=cv2.INTER_AREA)))
+    if pid == "airlock_side":   # toned like the still, frame by frame (its matte: rembg per frame + the glove outline)
+        g0 = cv2.cvtColor(still, cv2.COLOR_BGR2GRAY)
+        hand = (prep_side(still)[1] > .5).astype(np.uint8); hand[:100] = 0; hand[330:] = 0; hand[:, :700] = 0   # the glove in the still
+        for i, f in enumerate(frames, 1):
+            save(i, *prep_side(f, glove_shift(cv2.cvtColor(f, cv2.COLOR_BGR2GRAY), g0), hand))
+        meta(pid)
+        print(pid, "installed:", len(frames), "frames")
+        return
+    obj, man0 = cut_masks(frames[0])
+    ref = cv2.GaussianBlur(frames[0].astype(np.float32), (0, 0), 1.5)
     body = cv2.dilate(man0, np.ones((9, 9), np.uint8))
     for i, f in enumerate(frames, 1):
         # his arm: the strong changes since the first frame off his body, in the tube's upper left where the arm travels
@@ -262,16 +308,16 @@ def run_take():
             m = cv2.morphologyEx(((gc == cv2.GC_FGD) | (gc == cv2.GC_PR_FGD)).astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
             n, lab, st, _ = cv2.connectedComponentsWithStats(m)
             man = fill_holes((lab == 1 + np.argmax(st[1:, 4])).astype(np.uint8))
-        img, matte = prep_cut(f, (obj, man))
-        cv2.imwrite(str(d / f"f{i:04d}.jpg"), cv2.resize(img, TAKE_OUT, interpolation=cv2.INTER_CUBIC), [cv2.IMWRITE_JPEG_QUALITY, 92])
-        if i % 2 == 1:
-            cv2.imwrite(str(d / f"m{i:04d}.png"), cv2.resize((matte * 255).astype(np.uint8), (512, 288), interpolation=cv2.INTER_AREA))
-    meta("airlock_cut")
-    print("airlock_cut installed:", len(frames), "frames")
+        save(i, *prep_cut(f, (obj, man)))
+    meta(pid)
+    print(pid, "installed:", len(frames), "frames")
 
 
 if __name__ == "__main__":
+    ids = [a for a in sys.argv[1:] if not a.startswith("--")] or ["airlock_cut", "airlock_cut_still", "airlock_side", "airlock_side_still"]
     if "--gen" in sys.argv:
-        gen_take()
-    for pid in [a for a in sys.argv[1:] if not a.startswith("--")] or ["airlock_cut", "airlock_cut_still", "airlock_side"]:
+        for pid in ids:
+            if pid in TAKES:
+                gen_take(pid)
+    for pid in ids:
         run(pid)

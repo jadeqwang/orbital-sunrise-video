@@ -619,18 +619,21 @@ async function initShots() {
     const pz = +(new URLSearchParams(location.search).get('p4zoom') ?? 1.7);
     let id = 'tube_struggle', tp = 1.6 + lt * 2, vz = { zoom: pz, cx: .56, cy: .5 };
     // push: from the whole tube (sat a little low, under the lyric) to his face at uv (.21, .465), held below the lyric (y≈730)
-    // Owner: the reach is a bit stiff, so only its start is seen. The cutaway holds still through "NINETY MIN-", then plays the
-    // take at its own speed from 55.2 s (the glove lifts off his chest), and cuts on the beat at 56.18 s (beat 151, "the"
-    // → "airlock"), when the glove has just begun sliding up the wall (take ~1.0 s). Then a moment of the inside view
-    // (airlock_side, 56.18 → 57.2, a slow push and drift) before the roll's flurry. ?p4arm=0: the cutaway is the still.
+    // Owner: the reach is a bit stiff, so only its start is seen; and even at rest people move, so nothing is frozen. The
+    // cutaway (airlock_cut take2: he breathes hard and shifts from frame 0) plays at 1x from the shot's start, and cuts on the
+    // beat at 56.18 s (beat 151, "the" → "airlock"), take ~1.6 s, as the glove has lifted off his chest and begun up the wall.
+    // Then a moment of the inside view (airlock_side take1: breathing, visor fogging, glove pressing and sliding on the wall),
+    // 56.18 → 57.2 at 1x from 0.3 s (as lively as any second of it, and the glove is still whole on the wall), with a slow push and drift, before the roll's flurry.
+    // ?p4arm=0: both are the stills.
     const armT = new URLSearchParams(location.search).get('p4arm') !== '0', pushDur = 57.2 - (PR[3].t0 - .05), CUT_SIDE = beatTime(151);
     if (!old) {
       const e = smooth(clamp(lt / pushDur));
-      id = armT ? 'airlock_cut' : 'airlock_cut_still'; tp = armT ? Math.max(0, t - 55.2) : 0;
+      id = armT ? 'airlock_cut' : 'airlock_cut_still'; tp = armT ? lt : 0;
       vz = { zoom: lerp(1.02, 3.0, e), cx: lerp(.5, .212, e), cy: lerp(.44, .4035, e), rot: e * .3 };
       if (t >= CUT_SIDE) {   // his helmet low left under the lyric, the glove on the wall clear of it on the right
         const s = smooth(clamp((t - CUT_SIDE) / (57.2 - CUT_SIDE)));
-        id = 'airlock_side'; tp = 0; vz = { zoom: lerp(1.14, 1.23, s), rot: lerp(.33, .37, s), ox: lerp(135, 110, s), oy: 60 };
+        id = armT ? 'airlock_side' : 'airlock_side_still'; tp = armT ? .3 + (t - CUT_SIDE) : 0;
+        vz = { zoom: lerp(1.14, 1.23, s), rot: lerp(.33, .37, s), ox: lerp(135, 110, s), oy: 60 };
       }
     }
     if (roll > 0) {
@@ -640,9 +643,9 @@ async function initShots() {
       const a = alts[n % alts.length]; id = a[0]; tp = a[1] + frac(beatPos(t) * step) * .3; vz = { zoom: 1.1 + roll * .25 };
     }
     // the stills' faces (hand-boxed in their meta) get the face pass, drawn from hatching and edges (no landmarks)
-    const still = id === 'airlock_cut' || id === 'airlock_cut_still' || id === 'airlock_side';
+    const still = id.startsWith('airlock_cut') || id.startsWith('airlock_side');
     await drawPlate(t, id, tp, { rate, view: vz, face: id === 'tube_struggle' ? tp > 5.2 : still || undefined, ...(still ? { faceLines: false, faceHatch: { white: .66, contrast: 1.3 }, faceContour: { hi: .25, lo: .1 } } : {}), ...(id.startsWith('airlock_cut') ? { aw: 960, ah: 540 } : {}),
-      hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], (id === 'airlock_cut' ? .5 : .75) * (1 - roll)) },   // the reaching arm passes under the words: a lighter clearing
+      hatch: { mask: quiet([[W / 2 - 720, 150, W / 2 + 720, 450]], (id === 'airlock_cut' || id === 'airlock_side' ? .45 : .75) * (1 - roll)) },   // his arm and glove pass under the words: a lighter clearing
       extra: (pen) => edgePanic(pen, .5 + roll * .5, drawClock(t, rate).n * 11) });
     evaHud(t);
     const w = PR[3].words; // Ninety minutes inside the airlock door
