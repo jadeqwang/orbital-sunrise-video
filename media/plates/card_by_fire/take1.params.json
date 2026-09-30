@@ -1,0 +1,28 @@
+{
+ "model": "bytedance/seedance-2.5",
+ "input": {
+  "duration": 6,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "reference_images": [
+   "data:image/jpeg;base64,/9j/4AAQSkZJRgABA...(88227 chars)",
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(4595682 chars)"
+  ],
+  "image": "data:image/jpeg;base64,/9j//gAPTGF2YzYxL...(189287 chars)",
+  "use_virtual_avatar": true
+ },
+ "genlog_line": 520,
+ "genlog": {
+  "t": "2026-09-30T17:33:22",
+  "tag": "plate:card_by_fire",
+  "out": [
+   "media/plates/card_by_fire/take1.mp4"
+  ],
+  "secs": 174.2
+ },
+ "first_frame": "take1.first.jpg = fire_night_v2/take1.mp4 at 2.2 s",
+ "reference_images": "plate_specs.R keys in order (media/chars/*.png, media/env/*.png rebuilt from media/archive/sheets/*.jpg; DRAW = media/refs/leonov_drawing_real_card.jpg, not committed)",
+ "use": "L5_survived (3:38): by the fire he takes a small flat card (not a folded sheet: FACTS \u00a74, FACTCHECK P2-8) from his lining and smiles; continues fire_night_v2's scene (its frame at 2.2 s).",
+ "recreate": "python3 tools/plates.py card_by_fire  (spec in tools/plate_specs.py, round 3)"
+}

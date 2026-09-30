@@ -875,7 +875,8 @@
   "w": 960,
   "h": 540,
   "take": "still",
-  "mattes": false
+  "mattes": true,
+  "gain": 1.087
  },
  "leg_shenzhou7": {
   "n": 1,
@@ -883,7 +884,8 @@
   "w": 960,
   "h": 540,
   "take": "still",
-  "mattes": false
+  "mattes": true,
+  "gain": 1.0
  },
  "leg_curiosity": {
   "n": 1,
@@ -891,6 +893,43 @@
   "w": 960,
   "h": 540,
   "take": "still",
-  "mattes": false
+  "mattes": true,
+  "gain": 1.027
+ },
+ "tether_drift": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false,
+  "gain": 1.0
+ },
+ "countdown_drift": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false,
+  "gain": 1.0
+ },
+ "card_by_fire": {
+  "n": 145,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": false,
+  "gain": 1.0
+ },
+ "hand_over_hand": {
+  "n": 169,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4",
+  "mattes": false,
+  "gain": 1.0
  }
 }

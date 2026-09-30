@@ -1,0 +1,13 @@
+{
+ "spec": {
+  "duration": 5,
+  "first_frame": "media/plates/countdown_drift/take1.first.jpg",
+  "refs": [
+   "LT",
+   "LF",
+   "SHIP"
+  ],
+  "prompt": "The video starts exactly on the input image, with identical framing, lighting and composition; everything in it stays as it is unless described. the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) floats weightless and calm in open space beside the Voskhod-2 spacecraft on the right, in dim light. He drifts very slowly and naturally: a small gentle turn of his body, his arms rising and settling a little, his head turning slightly to look out at the horizon; the coiled white umbilical tether floats and sways softly in loose curves with his movement. The glowing thin band of the atmosphere along the dark Earth stays as it is: the sun does not rise, no flare, the light does not change. Very slow, steady camera, almost locked-off. One continuous shot, no cuts. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 172
+}

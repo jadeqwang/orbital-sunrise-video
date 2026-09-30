@@ -383,3 +383,39 @@ PLATES.update({
         "across it as she writes, the pencil tip and the graphite line clearly visible, paper texture, the leather cover at the edges of the frame. "
         "Only the hand, wrist and notebook, no face. Steady, locked-off camera slightly above. Photorealistic, shot on 35mm film. No on-screen text, no captions."),
 })
+
+# ---------------- round 3 (2026-09-30): replacement / extension plates (facts: docs/FACTS.md §1, §4; docs/FACTCHECK.md P2-4, P2-8) ----------------
+# first frames are frames of the takes they continue or replace, archived as media/plates/<id>/take1.first.jpg
+START = ("The video starts exactly on the input image, with identical framing, lighting and composition; everything in it stays as it is unless described. ")
+PLATES.update({
+    # "Pull him back to the ship's embrace": nobody reeled him in; he hauled himself back along the 5.35 m tether (FACTCHECK P2-4).
+    # He only approaches the airlock mouth here: the entry itself (feet-first jam, then head-first) is S3 / P3.
+    "hand_over_hand": dict(duration=7, refs=["LT", "LF", "SHIP"], prompt=
+        f"Exterior in orbit, bright daylight. Medium-wide shot from the side: the Voskhod-2 spacecraft (third reference) in the upper right of the frame, its pale fabric Volga airlock cylinder "
+        "pointing toward camera-left, its outer end open: a round metal rim barely wider than a man's shoulders, the hinged hatch lid swung open beside it. A thin, soft, flexible white cable tether, "
+        f"no thicker than a finger, runs from a fitting on the rim to the waist of {LEO}, who floats a few metres away in his white Berkut suit with its flat white backpack. "
+        "He pulls himself back toward the ship along the soft tether, hand over hand: his right glove grips the cable and pulls, his left glove reaches ahead of it along the cable, grips and pulls, again and again, "
+        "slow and heavy in his stiff, over-inflated suit; the cable between him and the rim stays a thin line, and the slack he has pulled in floats behind him in loose, soft loops. "
+        "His body stays upright and side-on to the airlock, feet toward the Earth, as he drifts closer. He stops an arm's length from the rim, his helmet still well outside and away from the opening, "
+        "and grips the edge of the rim with one glove. He never puts his head, shoulders or arms into the opening; he does not enter. Nobody else is visible; nobody pulls on the tether from inside. "
+        "The sunlit blue Earth with white clouds curves along the bottom of the frame, black sky above. One continuous shot, no cuts, the camera steady at the same distance, the whole airlock end and him in frame. " + LOOK),
+    # "by the slightest trace": continues ship_wide_sunrise's framing (its first frame); he drifts out until the tether goes taut.
+    "tether_drift": dict(duration=8, first_frame="media/plates/tether_drift/take1.first.jpg", refs=["SHIP", "LT"], prompt=START +
+        "Extremely wide shot, a fixed locked-off camera, no zoom, no pan. The small Voskhod-2 spacecraft (first reference) at the top of the frame, a tiny cosmonaut in a white spacesuit below it above the "
+        "enormous curve of the Earth, joined to the airlock by one thin line. He drifts slowly and weightlessly further away from the ship, turning gently, arms loose; the thin tether, slack and softly curved "
+        "at first, pays out behind him and straightens until it goes almost taut, and his drift stops with a slight gentle tug that turns him a little on the end of the line. "
+        "The spacecraft stays where it is; the Earth, the clouds and the light stay steady; no sunrise, no lens flare burst. One continuous shot, no cuts. " + LOOK, faces=False),
+    # I6_predawn: continues hero_sunrise's first frame (orbital night, before its sunrise) with a gentle natural drift, for the countdown.
+    "countdown_drift": dict(duration=5, first_frame="media/plates/countdown_drift/take1.first.jpg", refs=["LT", "LF", "SHIP"], prompt=START +
+        f"{LEO} floats weightless and calm in open space beside the Voskhod-2 spacecraft on the right, in dim light. He drifts very slowly and naturally: a small gentle turn of his body, "
+        "his arms rising and settling a little, his head turning slightly to look out at the horizon; the coiled white umbilical tether floats and sways softly in loose curves with his movement. "
+        "The glowing thin band of the atmosphere along the dark Earth stays as it is: the sun does not rise, no flare, the light does not change. Very slow, steady camera, almost locked-off. "
+        "One continuous shot, no cuts. " + LOOK),
+    # L5: his drawing was a small flat card (FACTS §4, the leonov_drawing plate), not a folded sheet (FACTCHECK P2-8). Continues fire_night_v2 (its frame at 2.2 s).
+    "card_by_fire": dict(duration=6, first_frame="media/plates/card_by_fire/take1.first.jpg", refs=["DRAW", "LF"], prompt=START +
+        f"Night in the frozen Ural taiga by a small fire. The man on the left is {LEO2}; the man on the right is the commander Pavel Belyayev. Both wear the soft quilted suit linings and fur boots as in the image. "
+        "Leonov reaches inside the front of his padded lining and takes out a small flat stiff card, about the size of a postcard, cream coloured, never folded, no creases; he holds it in both hands "
+        f"toward the firelight and looks at it: it is the coloured-pencil drawing in the first reference image, {DRAWING}. He smiles quietly; Belyayev leans over to look. "
+        "The camera slowly pushes in toward Leonov's hands and the card, then settles on his face and the card together. Warm firelight, sparks rising into the falling snow. "
+        "One continuous shot, no cuts, only these two men. " + LOOK_TAIGA),
+})

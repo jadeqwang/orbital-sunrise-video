@@ -1,0 +1,29 @@
+{
+ "model": "bytedance/seedance-2.5",
+ "input": {
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "reference_images": [
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(2666666 chars)",
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(4595682 chars)",
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(3078906 chars)"
+  ],
+  "image": "data:image/jpeg;base64,/9j//gAPTGF2YzYxL...(71907 chars)",
+  "use_virtual_avatar": true
+ },
+ "genlog_line": 519,
+ "genlog": {
+  "t": "2026-09-30T17:33:12",
+  "tag": "plate:countdown_drift",
+  "out": [
+   "media/plates/countdown_drift/take1.mp4"
+  ],
+  "secs": 158.4
+ },
+ "first_frame": "take1.first.jpg = hero_sunrise/take1.mp4 frame 1",
+ "reference_images": "plate_specs.R keys in order (media/chars/*.png, media/env/*.png rebuilt from media/archive/sheets/*.jpg; DRAW = media/refs/leonov_drawing_real_card.jpg, not committed)",
+ "use": "I6_predawn (the ORBITAL SUNRISE IN 3-2-1 countdown): continues hero_sunrise's first frame (orbital night, before the sun) with a gentle drift of him and the tether; no sunrise in the take.",
+ "recreate": "python3 tools/plates.py countdown_drift  (spec in tools/plate_specs.py, round 3)"
+}

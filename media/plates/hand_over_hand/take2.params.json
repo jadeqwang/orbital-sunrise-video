@@ -1,0 +1,28 @@
+{
+ "model": "bytedance/seedance-2.5",
+ "input": {
+  "duration": 7,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "reference_images": [
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(2666666 chars)",
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(4595682 chars)",
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(3078906 chars)"
+  ],
+  "use_virtual_avatar": true
+ },
+ "genlog_line": 523,
+ "genlog": {
+  "t": "2026-09-30T17:38:50",
+  "tag": "plate:hand_over_hand",
+  "out": [
+   "media/plates/hand_over_hand/take2.mp4"
+  ],
+  "secs": 172.6
+ },
+ "first_frame": null,
+ "reference_images": "plate_specs.R keys in order (media/chars/*.png, media/env/*.png rebuilt from media/archive/sheets/*.jpg; DRAW = media/refs/leonov_drawing_real_card.jpg, not committed)",
+ "use": "'Pull him back to the ship's embrace': he hauls himself back along the tether hand over hand to the open Volga mouth and stops at the rim (entry is S3/P3).",
+ "recreate": "python3 tools/plates.py hand_over_hand  (spec in tools/plate_specs.py, round 3)"
+}
