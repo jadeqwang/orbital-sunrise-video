@@ -252,13 +252,13 @@ async function initShots2() {
   const PORT_UV = [486 / 960, 277 / 540], PORT_R = 252 / 960;             // glass opening in plate uv (Hough fit, frames 1–91; the camera holds it)
   // her notes (2:20): the capsule is still tumbling in the g-load shot, so the sun and the Earth keep sliding across its two cabin
   // portholes like they slide across the big one before it (not the glass pulsing): the sun whips across the right port, then
-  // the left, right to left (one spin axis, the windows side by side), black glass between, the Earth's limb curving through
-  // half a turn later. Glass openings (x, y, r in 960×540 plate px) fitted at frame 1 and carried by a SIFT similarity fit of the
+  // on at the same speed behind the wall to the left one (one object at constant velocity, not a jump: her note; cabPath), the
+  // Earth's limb curving through half a turn later. Glass openings (x, y, r in 960×540 plate px) fitted at frame 1 and carried by a SIFT similarity fit of the
   // wall round each (every 16 frames: the camera drifts and pushes in); the left one sits behind the first cosmonaut's helmet
-  // (occ: his helmet, tracked the same way and cut out soft), so only the sliver above it shows; its sun and Earth run high (top)
+  // (occ: his helmet, tracked the same way and cut out soft), so only the sliver above it shows; the path runs high there (top)
   const CAB_PORTS = [
-    { f: [1, 17, 33, 49, 65, 81, 97, 113, 129, 145], x: [707, 712, 718, 724, 732, 742, 748, 758, 766, 776], y: [175, 173, 172, 170, 168, 167, 167, 165, 164, 163], r: [37, 38, 39, 40, 41, 42, 43, 45, 46, 48], lag: 0, top: false },
-    { f: [1, 17, 33, 49, 65, 81, 97, 113, 129, 145], x: [291, 287, 282, 278, 273, 268, 261, 257, 252, 248], y: [162, 160, 159, 157, 154, 152, 152, 150, 147, 149], r: [41, 42, 43, 44, 45, 46, 48, 49, 50, 51], lag: .3, top: true,
+    { f: [1, 17, 33, 49, 65, 81, 97, 113, 129, 145], x: [707, 712, 718, 724, 732, 742, 748, 758, 766, 776], y: [175, 173, 172, 170, 168, 167, 167, 165, 164, 163], r: [37, 38, 39, 40, 41, 42, 43, 45, 46, 48], top: false },
+    { f: [1, 17, 33, 49, 65, 81, 97, 113, 129, 145], x: [291, 287, 282, 278, 273, 268, 261, 257, 252, 248], y: [162, 160, 159, 157, 154, 152, 152, 150, 147, 149], r: [41, 42, 43, 44, 45, 46, 48, 49, 50, 51], top: true,
       occ: [{ x: [292, 288, 283, 279, 274, 269, 261, 258, 249, 244], y: [190, 189, 188, 187, 184, 183, 183, 180, 178, 177], r: [45, 46, 47, 49, 50, 52, 54, 56, 58, 59] }] }];   // his helmet
   // G2_math (her note, 2:13): the round porthole behind the commander's head in vzor_manual turns with the same tumble. Glass and
   // the two helmets in front of it (occ: cut out soft) carried from frame 12 by SIFT fits of the wall / each helmet (every 8 frames)
@@ -266,6 +266,7 @@ async function initShots2() {
   const VZ_PORTS = [{ f: VZ_F, x: [506, 509, 513, 516, 519, 524, 528, 530, 534, 536], y: [98, 95, 94, 91, 90, 94, 96, 99, 100, 101], r: [56, 58, 59, 61, 63, 63, 65, 66, 68, 69], lag: .65, top: false,
     occ: [{ x: [454, 455, 457, 459, 459, 462, 464, 465, 466, 467], y: [156, 154, 153, 154, 155, 156, 159, 161, 163, 165], r: [87, 90, 93, 96, 99, 103, 105, 108, 111, 114] },
       { x: [574, 579, 584, 590, 595, 601, 608, 613, 619, 623], y: [180, 180, 181, 182, 184, 187, 191, 194, 196, 198], r: [73, 75, 77, 79, 81, 83, 85, 87, 91, 93] }] }];
+  const CAB_B0 = 375, CAB_BEATS = 8, CAB_V = 400, CAB_ER = 200, CAB_EO = 185;   // ≈139.0 s; plate px/s; the Earth's radius, its centre below the path
   const track = (fs, vs, f) => { let i = 0; while (i < fs.length - 2 && f > fs[i + 1]) i++; return lerp(vs[i], vs[i + 1], clamp((f - fs[i]) / (fs[i + 1] - fs[i]))); };
   // where a line (base + u·(ca, sa)) is inside circle (ox, oy, r): [u0, u1] or null
   const chord = (bx, by, ca, sa, ox, oy, r) => { const qx = bx - ox, qy = by - oy, b = qx * ca + qy * sa, c = qx * qx + qy * qy - r * r, D = b * b - c; return D > 0 ? [-b - Math.sqrt(D), -b + Math.sqrt(D)] : null; };
@@ -325,25 +326,48 @@ async function initShots2() {
       if (pts.length > 1) pen.poly(pts, k < 2 ? 'white' : 'sky', 2.2 - k * .3, .8 - k * .1);
     }
   }
+  // one sun on one path across the cabin wall: a straight line in plate px from the right glass's centre through the left one's
+  // visible top (above the helmet), travelled at a constant CAB_V; each window shows it as it passes, the wall hides it between,
+  // so it takes the gap's width / CAB_V to reach the left window. One turn = CAB_BEATS beats, the right port crossed on
+  // CAB_B0 + CAB_BEATS·k; u: how far along the path the sun is, C: one turn's length. The turn index k changes while it's hidden
+  function cabPath(t, pf) {
+    const [A, Q] = CAB_PORTS, T = (P, v) => track(P.f, v, pf);
+    const o = [T(A, A.x), T(A, A.y)], q = [T(Q, Q.x), T(Q, Q.y) - .7 * T(Q, Q.r)], D = Math.hypot(q[0] - o[0], q[1] - o[1]);
+    const e = [(q[0] - o[0]) / D, (q[1] - o[1]) / D], ph = (beatPos(t) - CAB_B0) / CAB_BEATS, C = CAB_V * CAB_BEATS * TM.beat;
+    return { o, e, n: [e[1], -e[0]], u: ph * C, C, k: Math.floor(ph - .75) };   // n: across the path, down
+  }
   function cabinPorts(t, view, pf, ports = CAB_PORTS) {
     const d = drawClock(t, 12).n, cyc = SPIN_BEATS * TM.beat / SPIN_HALF;   // one turn of the tumble in half-crossings
+    const path = ports === CAB_PORTS ? cabPath(t, pf) : null;
     const disc = (P, o) => { const x = track(P.f, o.x, pf), y = track(P.f, o.y, pf), r = track(P.f, o.r, pf), [cx, cy] = view.toScreen(x / 960, y / 540), [ex, ey] = view.toScreen((x + r) / 960, y / 540); return [cx, cy, Math.hypot(ex - cx, ey - cy)]; };
     for (const P0 of ports) {
       const [cx, cy, R0] = disc(P0, P0), R = R0 * .96;
-      // where the sun is in the tumble: a pass every SPIN_BEATS beats, the left port a little after the right
-      const bp = (beatPos(t) - SPIN_B0) / SPIN_BEATS - P0.lag, k = Math.round(bp), p = (bp - k) * cyc;
-      // right to left with a slight fall (the same axis for both windows), a little different each turn
-      const lean = .16 + (hash(k * 7 + 1) - .5) * .12, dx = -Math.cos(lean), dy = Math.sin(lean), nx = -dy, ny = dx;   // n: across the path, up
-      const side = (hash(k * 7 + 2) - .5) * .3 * R + (P0.top ? .7 * R : 0);   // the left port's sun runs high, clear of the helmet
-      const sx = cx + dx * p * R * 1.28 + nx * side, sy = cy + dy * p * R * 1.28 + ny * side;
-      const f = Math.exp(-Math.pow(p / .5, 2)), vis = clamp((1.2 - Math.abs(p)) / .35);
-      // the Earth half a turn off the sun: its limb comes in behind the sun and the next one's leaves ahead of it
-      const pe = p > 0 ? p - cyc / 2 : p + cyc / 2, ER = R * 2.6, eo = R * 1.9 - (P0.top ? R * .5 : 0);
-      const ex = cx + dx * pe * R * 1.28 - nx * eo, ey = cy + dy * pe * R * 1.28 - ny * eo;
-      const earth = Math.hypot(ex - cx, ey - cy) < ER + R;
+      let sx, sy, dx, dy, p, k, ex, ey, ER, sd, ed;
+      if (path) {   // one sun, one Earth for both windows: where each is along the path relative to this window (nearest turn)
+        const { o, e, n, u, C } = path, S = (x, y) => view.toScreen(x / 960, y / 540), ps = R0 / track(P0.f, P0.r, pf);   // screen px per plate px
+        const x = track(P0.f, P0.x, pf), y = track(P0.f, P0.y, pf), a = (x - o[0]) * e[0] + (y - o[1]) * e[1];
+        const w = u - a - C * Math.round((u - a) / C), side = (hash(path.k * 7 + 2) - .5) * 10;   // a little different each turn (hidden when it changes)
+        const P = [o[0] + e[0] * (a + w) + n[0] * side, o[1] + e[1] * (a + w) + n[1] * side], [qx, qy] = S(P[0] + e[0], P[1] + e[1]);
+        [sx, sy] = S(...P); const l = Math.hypot(qx - sx, qy - sy); dx = (qx - sx) / l; dy = (qy - sy) / l;
+        k = path.k; p = w / (1.28 * track(P0.f, P0.r, pf)); sd = 640 + k * 37; ed = 700;
+        const we = u - C / 2 - a, wE = we - C * Math.round(we / C);   // the Earth half a turn behind, its limb just below the path
+        [ex, ey] = S(o[0] + e[0] * (a + wE) + n[0] * CAB_EO, o[1] + e[1] * (a + wE) + n[1] * CAB_EO); ER = CAB_ER * ps;
+      } else {
+        // where the sun is in the tumble: a pass every SPIN_BEATS beats, offset by lag
+        const bp = (beatPos(t) - SPIN_B0) / SPIN_BEATS - P0.lag; k = Math.round(bp); p = (bp - k) * cyc;
+        // right to left with a slight fall, a little different each turn
+        const lean = .16 + (hash(k * 7 + 1) - .5) * .12, nx = -Math.sin(lean), ny = -Math.cos(lean);   // n: across the path, up
+        dx = -Math.cos(lean); dy = Math.sin(lean);
+        const side = (hash(k * 7 + 2) - .5) * .3 * R + (P0.top ? .7 * R : 0);
+        sx = cx + dx * p * R * 1.28 + nx * side; sy = cy + dy * p * R * 1.28 + ny * side;
+        // the Earth half a turn off the sun: its limb comes in behind the sun and the next one's leaves ahead of it
+        const pe = p > 0 ? p - cyc / 2 : p + cyc / 2, eo = R * 1.9 - (P0.top ? R * .5 : 0); ER = R * 2.6;
+        ex = cx + dx * pe * R * 1.28 - nx * eo; ey = cy + dy * pe * R * 1.28 - ny * eo; sd = 640 + k * 37 + P0.lag * 100; ed = 700 + k * 13;
+      }
+      const f = Math.exp(-Math.pow(p / .5, 2)), vis = clamp((1.2 - Math.abs(p)) / .35), earth = Math.hypot(ex - cx, ey - cy) < ER + R;
       const L = layer(3), M = layer(5), pen = new Pen(), sc = R / 544;
-      if (earth) earthStrokes(pen, cx, cy, R, ex, ey, ER, 700 + k * 13, d);
-      if (vis > 0) sunStrokes(pen, cx, cy, R, sx, sy, dx, dy, f, vis, 640 + k * 37 + P0.lag * 100, d, sc);
+      if (earth) earthStrokes(pen, cx, cy, R, ex, ey, ER, ed, d);
+      if (vis > 0) sunStrokes(pen, cx, cy, R, sx, sy, dx, dy, f, vis, sd, d, sc);
       pen.flush(L.g, ORDER_NIGHT); toothIn(L, d);
       // the glass: black space (the plate's lit window put out), a little less under the glare, then the strokes; all masked soft
       // to inside the drawn rim (a hard-edged fill that misses the glass reads as a stray shape: her note)
