@@ -405,10 +405,30 @@ PLATES.update({
         "enormous curve of the Earth, joined to the airlock by one thin line. He drifts slowly and weightlessly further away from the ship, turning gently, arms loose; the thin tether, slack and softly curved "
         "at first, pays out behind him and straightens until it goes almost taut, and his drift stops with a slight gentle tug that turns him a little on the end of the line. "
         "The spacecraft stays where it is; the Earth, the clouds and the light stay steady; no sunrise, no lens flare burst. One continuous shot, no cuts. " + LOOK, faces=False),
+    # take 2 (round 4, her note): take 1's line stayed nearly straight and rigid. A flexible cable hanging slack in a loose curve
+    # as he drifts away, then the 1965 footage's moment: it snaps taut and tugs him (a small jolt and rebound), about 5 s in
+    # (N1 speed-ramps the take so the snap lands on "trace"). Take 1's prompt is in media/plates/tether_drift/take1.prompt.txt.
+    "tether_drift_2": dict(duration=8, first_frame="media/plates/tether_drift/take1.first.jpg", refs=["SHIP", "LT"], prompt=START +
+        "Extremely wide shot, a fixed locked-off camera, no zoom, no pan. The small Voskhod-2 spacecraft (first reference) at the top of the frame, a tiny cosmonaut in a white spacesuit below it above the "
+        "enormous curve of the Earth, joined to the open airlock by his tether: a long, thin, soft, flexible white cable, as limp as a rope, not a rod. "
+        "For the first four to five seconds he drifts slowly and weightlessly further away from the ship and down toward the Earth, turning gently, arms loose, and the tether is SLACK: "
+        "it hangs in a loose, lazy curve, bowing well out to one side in a soft S-shaped arc between the airlock and his waist, rippling and swaying gently as the slack slowly pays out. "
+        "Then, at about five seconds, the slack runs out: the tether snaps straight and taut in an instant, a sudden small jolt that tugs him up short; his body jerks, rebounds a little "
+        "back toward the ship and swings gently on the end of the straight, taut line, which stays taut and straight to the end of the shot. A real, restrained tug, not violent. "
+        "The spacecraft stays where it is; the Earth, the clouds and the light stay steady; no sunrise, no lens flare burst. One continuous shot, no cuts. " + LOOK, faces=False, out_id="tether_drift"),
     # I6_predawn: continues hero_sunrise's first frame (orbital night, before its sunrise) with a gentle natural drift, for the countdown.
     "countdown_drift": dict(duration=5, first_frame="media/plates/countdown_drift/take1.first.jpg", refs=["LT", "LF", "SHIP"], prompt=START +
         f"{LEO} floats weightless and calm in open space beside the Voskhod-2 spacecraft on the right, in dim light. He drifts very slowly and naturally: a small gentle turn of his body, "
         "his arms rising and settling a little, his head turning slightly to look out at the horizon; the coiled white umbilical tether floats and sways softly in loose curves with his movement. "
+        "The glowing thin band of the atmosphere along the dark Earth stays as it is: the sun does not rise, no flare, the light does not change. Very slow, steady camera, almost locked-off. "
+        "One continuous shot, no cuts. " + LOOK),
+    # take 2 (round 4, her note): take 1's tether held one rigid hooked loop. The same first frame; the umbilical is a soft hose
+    # that floats and sways the whole time.
+    "countdown_drift_2": dict(duration=5, first_frame="media/plates/countdown_drift/take1.first.jpg", refs=["LT", "LF", "SHIP"], out_id="countdown_drift", prompt=START +
+        f"{LEO} floats weightless and calm in open space beside the Voskhod-2 spacecraft on the right, in dim light. He drifts very slowly and naturally: a small gentle turn of his body, "
+        "his arms rising and settling a little, his head turning slightly to look out at the horizon. His umbilical tether is a soft, limp, flexible white fabric-covered hose, not a stiff tube: "
+        "from the first moment its loose loop floats and sways freely in weightlessness, slowly bending, uncurling and changing shape all the time, rippling gently along its length in lazy waves "
+        "like a rope drifting underwater, the loop opening and drooping and curling back, following his movements with a slight delay; never frozen, never rigid. "
         "The glowing thin band of the atmosphere along the dark Earth stays as it is: the sun does not rise, no flare, the light does not change. Very slow, steady camera, almost locked-off. "
         "One continuous shot, no cuts. " + LOOK),
     # L5: his drawing was a small flat card (FACTS §4, the leonov_drawing plate), not a folded sheet (FACTCHECK P2-8). Continues fire_night_v2 (its frame at 2.2 s).
