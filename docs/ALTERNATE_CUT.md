@@ -78,11 +78,12 @@ She confirmed the new mix sings "suit" and asked for the film to be retimed. Don
 - **New shots** (the two new lines are the story's hinge: he floats free, all that holds him is a line to the ship, and the
   ship can't take him back: at the hatch, head first, the ballooned suit jams in the rim; her direction, 2026-09-30:
   "he should get stuck at the hatch door … make sure he's entering head first and not feet first"):
-  - `N1a_reach` ("Tied to the ship"): the unused plate `reach_home`, over his shoulder reaching for the Earth, the home he
-    can't touch; the type in the black above it.
-  - `N1b_trace` ("by the slightest trace"): back to I3's wide at the end of his exit (`airlock_exit`, last frame held, slow
-    push), and the pencil traces the real tether in gold from the airlock mouth to his waist while the line is sung
-    (`TETHER`: plate uv along the hose, measured on that frame); "TETHER · 5.35 M".
+  - `N1_tether` ("Tied to the ship by the slightest trace", one shot over the whole line): the extreme wide
+    `ship_wide_sunrise` (the ship small at the top, him hanging far below on one thin line over the Earth), plate 3.1 → 7.9 s
+    at 0.74x under a slow push-in (H1c plays 1.0 → 3.9 of the take), "TIED / TO THE SHIP" in the sky right of the airlock.
+    From "by" the pencil traces the tether in gold from the hatch lid to where it meets him (his shoulders), following it as
+    he drifts (`TETHER`: its ends and middle tracked in plate uv every 0.5 s of plate time), "by the slightest trace" and
+    "TETHER · 5.35 M" (on "trace") beside it.
   - `N2_jam` ("Pull him back to the ship's embrace"): `headfirst` (the take P3 later plays through when he finally gets in),
     from behind at the Volga's mouth: helmet and shoulders inside the rim, backpack and legs outside. Only its first second,
     run in and back out on the beat (shove, jam, back off, shove), so he never gets through; on "embrace" a punch-in on the

@@ -415,37 +415,59 @@ async function initShots() {
   // ship; the ship has to take him back, and it can't: at the hatch, head first (as he did it, against the plan), the
   // ballooned suit jams in the rim. Then "can't feel his hands, can't feel his face" is that suit from inside.
   const N1W = L1[1].words, N2W = L1[2].words;   // Tied to the ship by the slightest trace · Pull him back to the ship's embrace
-  // N1a · "Tied to the ship": over his shoulder, reaching for the Earth, the home he can't touch; the type in the black above it
-  shot('N1a_reach', L1[1].t0 - .05, N1W[4][0] - .05, async (t, lt) => {
+  // N1 · "Tied to the ship by the slightest trace": the extreme wide (ship_wide_sunrise), Voskhod-2 small at the top and him
+  // hanging far below over the Earth on one thin line, the sun coming up top right. The take's later part (H1c plays 1.0 → 3.9
+  // of it at "Orbital sunrise"), 3.1 → 7.9 s at a steady 0.74x, under a slow push-in that keeps the ship at the top of frame.
+  // TIED / TO THE SHIP in the sky right of the airlock; on "by" the pencil traces the tether in gold from the hatch lid down to
+  // where it meets him (at his shoulders) while the line is sung, with the serif line and the caption left of it, under the ship.
+  // TETHER: the tether in plate uv every 0.5 s of plate time, [tp, lid end, middle, his end] (the curve is the quadratic through
+  // them): a thin-line ridge traced row by row down from the lid, a quadratic fitted and followed through the bright limb to
+  // where it enters his matte, smoothed over ±4 frames; linear in time between rows, it stays within 0.5 plate px (across the
+  // line) of that per-frame track.
+  const TETHER = [
+    [3.0, [.49, .2843], [.5009, .4442], [.5118, .6046]], [3.5, [.4911, .2824], [.5021, .445], [.5135, .6075]],
+    [4.0, [.4921, .2824], [.5034, .4499], [.5144, .6171]], [4.5, [.4929, .2824], [.5042, .4526], [.5155, .6229]],
+    [5.0, [.4935, .2806], [.5045, .4537], [.5153, .6269]], [5.5, [.494, .279], [.5047, .4548], [.5144, .6306]],
+    [6.0, [.4948, .2806], [.5049, .4558], [.514, .6311]], [6.5, [.4956, .2806], [.5052, .4565], [.5139, .6332]],
+    [7.0, [.4964, .2806], [.5057, .4565], [.5135, .6335]], [7.5, [.4971, .2774], [.506, .4528], [.5132, .6287]],
+    [8.0, [.4984, .2806], [.5069, .4533], [.5132, .6261]]];
+  const tetherAt = tp => {   // [lid end, middle, his end] in plate uv at plate time tp
+    let i = TETHER.findIndex(r => r[0] > tp); i = i < 0 ? TETHER.length - 1 : Math.max(1, i);
+    const a = TETHER[i - 1], b = TETHER[i], f = clamp((tp - a[0]) / (b[0] - a[0]));
+    return [1, 2, 3].map(j => [lerp(a[j][0], b[j][0], f), lerp(a[j][1], b[j][1], f)]);
+  };
+  shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
-    await drawPlate(t, 'reach_home', .15 + lt * .8, { view: { zoom: 1.03 }, hatch: { spacing: 6.5, mask: quiet([[W - 900, 70, W - 70, 410]], .7) } });
-    lyricStack(t, [
-      { s: 'TIED', t: N1W[0][0], x: W - 110, y: 250, size: 210, align: 'right', style: 'slam' },
-      { s: 'TO THE SHIP', t: N1W[1][0], x: W - 110, y: 385, size: 120, align: 'right', style: 'rise' },
-    ]);
-  });
-  // N1b · "by the slightest trace": back to I3's wide, at the end of his exit (held), and the pencil traces the tether in gold
-  // from the airlock mouth to his waist while the line is sung. TETHER: airlock_exit's last frame, plate uv along the hose
-  // (the airlock-side strand, over the top of its loop, the lower strand to his waist).
-  const TETHER = [[.4265, .618], [.4286, .5855], [.4317, .5577], [.4395, .5345], [.4512, .5215], [.4682, .5136], [.489, .5076],
-    [.5073, .5076], [.5255, .5136], [.5464, .5215], [.5698, .5261], [.5907, .5229], [.6076, .5136]];
-  shot('N1b_trace', N1W[4][0] - .05, L1[2].t0 - .05, async (t, lt, dur) => {
-    paper(G, 'night');
-    const e = smooth(clamp(lt / dur)), k = easeInOut(clamp((t - N1W[4][0]) / (N1W[7][0] + .5 - N1W[4][0])));   // "by" → "trace"
+    const e = smooth(clamp(lt / dur)), z = lerp(1.03, 1.13, e);
+    const k = easeInOut(clamp((t - N1W[4][0]) / (N1W[7][0] + .5 - N1W[4][0])));   // "by" → just after "trace"
     const d = drawClock(t, 12).n;
-    await drawPlate(t, 'airlock_exit', 8.1, { hold: 8.1, view: { zoom: lerp(1.02, 1.09, e), cx: lerp(.5, .52, e) }, hatch: { spacing: 7, mask: quiet([[W / 2 - 420, 110, W / 2 + 240, 250]], .75) },
+    // type: TIED / TO THE SHIP right-aligned in the sky right of the airlock ("SHIP" lands on "ship"); the serif line and the
+    // caption right-aligned left of the tether, in the black between the ship and the limb
+    const rx = W - 120, sw = measure(G, 'SHIP', FONT.impact(120)), gap = measure(G, ' ', FONT.impact(120));
+    const cap = 'TETHER · 5.35 M', capF = FONT.mono(24, 700), lx = 850;
+    await drawPlate(t, 'ship_wide_sunrise', 3.1 + lt * .74, { view: { zoom: z, cy: .5 / z + .003 },
+      hatch: { spacing: 6.5, mask: quiet([[rx - 520, 150, rx + 30, 450], [lx - 610, 440, lx + 20, 570]], .75) },
       extra: (pen, F, view) => {
-        // the trace: arc-length reveal along the hose, a soft wide pass under a firm gold line, the pencil's point at its head
-        const pts = TETHER.map(([u, v]) => view.toScreen(u, v)), seg = pts.slice(1).map((q, i) => Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1]));
+        // the trace, on the frame being drawn: the tracked tether (the quadratic through its three points) revealed by arc length,
+        // a soft wide pass under a firm gold line, the pencil's point at its head. The pencil puts analysis pixel i at uv i / aw,
+        // half a pixel up-left of the plate content it samples, so the trace takes the same half pixel to sit on the drawn line.
+        const [p0, p1, p2] = tetherAt((F.frame - 1) / 24).map(([u, v]) => view.toScreen(u - .5 / F.aw, v - .5 / F.ah)), pts = [];
+        for (let i = 0; i <= 24; i++) { const s = i / 24, a = (2 * s - 1) * (s - 1), b = 4 * s * (1 - s), c = s * (2 * s - 1); pts.push([a * p0[0] + b * p1[0] + c * p2[0], a * p0[1] + b * p1[1] + c * p2[1]]); }
+        const seg = pts.slice(1).map((q, i) => Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1]));
         let left = k * seg.reduce((x, y) => x + y, 0); const path = [pts[0]];
         for (let i = 0; i < seg.length && left > 0; i++) { const f = Math.min(1, left / seg[i]); path.push([lerp(pts[i][0], pts[i + 1][0], f), lerp(pts[i][1], pts[i + 1][1], f)]); left -= seg[i]; }
         if (path.length < 2) return;
         pen.poly(path, 'gold', 7, .28, .02); pen.poly(path, 'gold', 3.2, .95, .02);
         if (k < 1) { const [hx, hy] = path[path.length - 1]; pen.dot(hx, hy, 4, 'white', .95); }
       } });
-    lyricStack(t, [{ s: 'by the slightest trace', t: N1W[4][0], x: W / 2 - 90, y: 205, font: FONT.serif(72), col: 'cream', align: 'center', style: 'rise' }]);
+    lyricStack(t, [
+      { s: 'TIED', t: N1W[0][0], x: rx, y: 300, size: 210, align: 'right', style: 'slam' },
+      { s: 'TO THE', t: N1W[1][0], x: rx - sw - gap, y: 435, size: 120, align: 'right', style: 'rise' },
+      { s: 'SHIP', t: N1W[3][0], x: rx, y: 435, size: 120, align: 'right', style: 'slam' },
+      { s: 'by the slightest trace', t: N1W[4][0], x: lx, y: 505, font: FONT.serif(72), col: 'cream', align: 'right', style: 'rise' },
+    ]);
     const Lt = typeLayer();
-    tele(Lt.g, 'TETHER · 5.35 M', 120, H - 120, t, N1W[7][0], { size: 24, weight: 700, col: 'gold', dur: .6 });
+    tele(Lt.g, cap, lx - measure(G, cap, capF, 1.5), 553, t, N1W[7][0], { size: 24, weight: 700, col: 'gold', dur: .6 });
     typeFlush(Lt, d, .4);
   });
 
