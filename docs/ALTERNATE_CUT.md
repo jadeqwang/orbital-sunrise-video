@@ -162,6 +162,40 @@ the breakdown's "breath by breath" as "breath **my** breath" in most (`alt`: "by
   `node render.mjs --frames=0:252.28 --workers=4 --force` (and delete frames ≥ f06055), then
   `OUT=$PWD/release/extended NAME=Orbital_Sunrise_extended tools/encode_release.sh`.
 
+## Round 3: her fact-check notes on screen (2026-09-30)
+
+The songwriter's notes (her "Leonov Spacewalk Fact-Check" doc; where accounts differ she takes what plays best on screen, the
+memoir's order throughout: the plan was feet first; he hauled himself back hand over hand; feet first jammed; after the
+pressure drop he went in head first). The round-3 plates (docs/TAKES.md "Round 3 plates") are now in the shots:
+
+- **N1_tether** ("Tied to the ship by the slightest trace") plays `tether_drift` 1.2 → 7.95 s at ≈1x (his own drift away from
+  the ship until the tether is taut; same framing as `ship_wide_sunrise`, whose first frame it starts from). `TETHER` was
+  re-measured on it every 0.5 s of plate time: 7 points per row from the lid to where the line enters his matte (a ridge
+  traced down through the sky, then through the limb and clouds toward the matte, a weighted quintic with outliers dropped,
+  ±3-frame smoothing), drawn as a Catmull-Rom curve; the take's tether bows and kinks (3.5 → 5.5 s), so the three-point
+  quadratic is gone. On full-res stills the gold sits on the drawn line.
+- **N2 is two shots.** `N2a_haul` ("Pull him back"): `hand_over_hand` 2.8 → 6.9 s (≈2x easing to 1x as his glove takes the
+  rim), him right of PULL / HIM BACK. `N2b_jam` ("to the ship's embrace", from the sung "to"): `airlock_fail`, the planned
+  feet-first entry, jammed, pushing back out; the punch-in on his face on "embrace" as before.
+- **The swell tries twice more.** `S3a_feet` (beats 108–114): `airlock_struggle` take 1 (facing out of the rim = feet first),
+  2.5 → 7.8 s, wedged and working back out toward us; HE CAN'T GET BACK IN. types on beat 109. `S3b_head` (beat 114 → the
+  pre-chorus): `headfirst`'s first second run in and back out on the beat (the old N2 code from 2c267c5), head first jams
+  too; the caption stays, in a deeper clearing. Then P1 bleeds the suit and P3 is the head-first entry that works. S1/S2
+  captions unchanged. Plate use: `airlock_fail` once (N2b), `airlock_struggle` once (S3a), `headfirst` in S3b (jam) and P3
+  (entry).
+- **I6_predawn** plays `countdown_drift` backwards, slowing, into its first frame (= `hero_sunrise`'s first frame), then
+  `hero_sunrise` eases from rest up to 1x so it reaches `tpHero(hk0)` exactly at the cut; the frame pans to H1a's ox 180 over
+  that part, so H1a continues without a jump. The countdown type moved to the bottom left, off his boots.
+- **L5_survived** plays `card_by_fire` 0.9 → 6.0 s (a small flat card from his lining, the push-in, his smile), lit like L4
+  (fire falloff widening as the fire leaves frame). `drawing_survives_v2` (unfolding a folded sheet) is no longer used.
+- **L7_legacy**: Shenzhou 5 (Yang Liwei, lying down) is replaced by **2008 SHENZHOU 7 — ZHAI ZHIGANG, CHINA'S FIRST SPACEWALK**
+  (27 Sep 2008, Feitian suit), plus **2012 CURIOSITY — A SKY CRANE LOWERS A ROVER ONTO MARS** (6 Aug 2012 UTC, Gale Crater) and
+  **2022 TIANGONG — CHINA'S SPACE STATION IS COMPLETE** (T shape, Mengtian berthed Nov 2022): twelve items. Twelve × 3 beats
+  would start the montage 6 beats into L6's rescue, so the montage keeps its 30 beats (LEG_END − 30 → LEG_END) and the items
+  alternate 3 and 2 beats (the six longer lines get 3). All lines fit the left third (checked on the sheet).
+
+`render.mjs --list`: 57 shots, contiguous; new cuts on "to" (22.88 s), beat 114 (54.36 s) and the legacy beats.
+
 ## 0. Ask her first (only she can supply these)
 
 1. **The new lyric text**, line by line, and where each new line goes (which section, before/after which existing line).

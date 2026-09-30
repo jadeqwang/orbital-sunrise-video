@@ -415,26 +415,46 @@ async function initShots() {
   // in the rim. Then "can't feel his hands, can't feel his face" is that suit from inside; P3 (after he bleeds the air) is
   // the head-first entry that works: his memoir's order.
   const N1W = L1[1].words, N2W = L1[2].words;   // Tied to the ship by the slightest trace · Pull him back to the ship's embrace
-  // N1 · "Tied to the ship by the slightest trace": the extreme wide (ship_wide_sunrise), Voskhod-2 small at the top and him
-  // hanging far below over the Earth on one thin line, the sun coming up top right. The take's later part (H1c plays 1.0 → 3.9
-  // of it at "Orbital sunrise"), 3.1 → 7.9 s at a steady 0.74x, under a slow push-in that keeps the ship at the top of frame.
-  // TIED / TO THE SHIP in the sky right of the airlock; on "by" the pencil traces the tether in gold from the hatch lid down to
-  // where it meets him (at his shoulders) while the line is sung, with the serif line and the caption left of it, under the ship.
-  // TETHER: the tether in plate uv every 0.5 s of plate time, [tp, lid end, middle, his end] (the curve is the quadratic through
-  // them): a thin-line ridge traced row by row down from the lid, a quadratic fitted and followed through the bright limb to
-  // where it enters his matte, smoothed over ±4 frames; linear in time between rows, it stays within 0.5 plate px (across the
-  // line) of that per-frame track.
+  // N1 · "Tied to the ship by the slightest trace": the extreme wide on tether_drift (generated from ship_wide_sunrise's first
+  // frame, same framing): Voskhod-2 small at the top, him hanging below over the Earth, drifting away from the ship until the
+  // tether goes taut. The take 1.2 → 7.95 s at ≈1x (his own drift, no retime), under a slow push-in that keeps the ship at the
+  // top of frame. TIED / TO THE SHIP in the sky right of the airlock; on "by" the pencil traces the tether in gold from the
+  // hatch lid down to where it meets him (his shoulders) while the line is sung, with the serif line and the caption left of it.
+  // TETHER: the tether in plate uv every 0.5 s of plate time, [tp, 7 points from the lid end to his end, equally spaced in
+  // height] (drawn as a Catmull-Rom curve through them): a thin-line ridge traced row by row down from the lid through the sky,
+  // then through the bright limb and the clouds toward where it enters his matte (the first matte rows ≥ 5 px wide under the
+  // line), a weighted quintic through those rows with outliers dropped, smoothed over ±3 frames (the lid end over ±12). The
+  // take's tether bows and kinks as he drifts (most at 3.5 → 5.5 s), so a three-point quadratic no longer fits it.
   const TETHER = [
-    [3.0, [.49, .2843], [.5009, .4442], [.5118, .6046]], [3.5, [.4911, .2824], [.5021, .445], [.5135, .6075]],
-    [4.0, [.4921, .2824], [.5034, .4499], [.5144, .6171]], [4.5, [.4929, .2824], [.5042, .4526], [.5155, .6229]],
-    [5.0, [.4935, .2806], [.5045, .4537], [.5153, .6269]], [5.5, [.494, .279], [.5047, .4548], [.5144, .6306]],
-    [6.0, [.4948, .2806], [.5049, .4558], [.514, .6311]], [6.5, [.4956, .2806], [.5052, .4565], [.5139, .6332]],
-    [7.0, [.4964, .2806], [.5057, .4565], [.5135, .6335]], [7.5, [.4971, .2774], [.506, .4528], [.5132, .6287]],
-    [8.0, [.4984, .2806], [.5069, .4533], [.5132, .6261]]];
-  const tetherAt = tp => {   // [lid end, middle, his end] in plate uv at plate time tp
+    [0.0, [0.4745, 0.2815], [0.4761, 0.3282], [0.4783, 0.375], [0.4803, 0.4218], [0.4823, 0.4685], [0.4842, 0.5153], [0.4865, 0.562]],
+    [0.5, [0.4747, 0.2815], [0.4766, 0.3304], [0.479, 0.3794], [0.4813, 0.4283], [0.4836, 0.4772], [0.4857, 0.5262], [0.4878, 0.5751]],
+    [1.0, [0.475, 0.2815], [0.4771, 0.3327], [0.4801, 0.3839], [0.4828, 0.4351], [0.4856, 0.4862], [0.4888, 0.5374], [0.4912, 0.5886]],
+    [1.5, [0.475, 0.2815], [0.4777, 0.3354], [0.4813, 0.3892], [0.4847, 0.4431], [0.4883, 0.497], [0.4919, 0.5509], [0.4933, 0.6048]],
+    [2.0, [0.4752, 0.2815], [0.4785, 0.3379], [0.4827, 0.3944], [0.4867, 0.4508], [0.4915, 0.5072], [0.4961, 0.5637], [0.493, 0.6201]],
+    [2.5, [0.4757, 0.2815], [0.4794, 0.3408], [0.4843, 0.4001], [0.4888, 0.4594], [0.4949, 0.5187], [0.5007, 0.578], [0.4933, 0.6373]],
+    [3.0, [0.4758, 0.2815], [0.4801, 0.3435], [0.4854, 0.4056], [0.4912, 0.4676], [0.4989, 0.5296], [0.5044, 0.5917], [0.4926, 0.6537]],
+    [3.5, [0.476, 0.2815], [0.4807, 0.3463], [0.4864, 0.4111], [0.4952, 0.4759], [0.5021, 0.5407], [0.501, 0.6056], [0.4926, 0.6704]],
+    [4.0, [0.4761, 0.2815], [0.4813, 0.3491], [0.488, 0.4167], [0.4988, 0.4843], [0.5044, 0.5519], [0.4977, 0.6194], [0.4918, 0.687]],
+    [4.5, [0.4762, 0.2815], [0.4816, 0.3517], [0.4906, 0.4219], [0.4994, 0.4921], [0.5001, 0.5623], [0.4916, 0.6325], [0.4912, 0.7026]],
+    [5.0, [0.4763, 0.2815], [0.4829, 0.3543], [0.4913, 0.4272], [0.4927, 0.5], [0.4899, 0.5728], [0.4885, 0.6457], [0.4872, 0.7185]],
+    [5.5, [0.4766, 0.2815], [0.4826, 0.3574], [0.4817, 0.4332], [0.4825, 0.5091], [0.4856, 0.585], [0.4873, 0.6609], [0.4875, 0.7368]],
+    [6.0, [0.472, 0.2815], [0.4743, 0.3598], [0.4765, 0.4381], [0.4795, 0.5164], [0.482, 0.5947], [0.4832, 0.673], [0.4866, 0.7513]],
+    [6.5, [0.4715, 0.2815], [0.4732, 0.3601], [0.4749, 0.4387], [0.4769, 0.5173], [0.4786, 0.5959], [0.4797, 0.6746], [0.4817, 0.7532]],
+    [7.0, [0.4709, 0.2815], [0.4723, 0.3594], [0.4734, 0.4373], [0.4747, 0.5152], [0.4758, 0.5931], [0.4765, 0.671], [0.4774, 0.7489]],
+    [7.5, [0.4709, 0.2815], [0.4719, 0.3591], [0.4725, 0.4367], [0.474, 0.5143], [0.4752, 0.5919], [0.4752, 0.6695], [0.4766, 0.7471]],
+    [8.0, [0.4709, 0.2815], [0.472, 0.3586], [0.4728, 0.4356], [0.474, 0.5127], [0.4751, 0.5898], [0.4755, 0.6669], [0.4763, 0.744]]];
+  const tetherAt = tp => {   // the tether's points in plate uv at plate time tp
     let i = TETHER.findIndex(r => r[0] > tp); i = i < 0 ? TETHER.length - 1 : Math.max(1, i);
     const a = TETHER[i - 1], b = TETHER[i], f = clamp((tp - a[0]) / (b[0] - a[0]));
-    return [1, 2, 3].map(j => [lerp(a[j][0], b[j][0], f), lerp(a[j][1], b[j][1], f)]);
+    return a.slice(1).map((p, j) => [lerp(p[0], b[j + 1][0], f), lerp(p[1], b[j + 1][1], f)]);
+  };
+  const catmull = (P, k = 6) => {   // a Catmull-Rom curve through the points P (ends repeated)
+    const Q = [P[0], ...P, P[P.length - 1]], out = [];
+    for (let i = 1; i < Q.length - 2; i++) for (let j = 0; j < k; j++) {
+      const s = j / k, [p0, p1, p2, p3] = [Q[i - 1], Q[i], Q[i + 1], Q[i + 2]];
+      out.push([0, 1].map(c => .5 * (2 * p1[c] + (p2[c] - p0[c]) * s + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * s * s + (3 * p1[c] - p0[c] - 3 * p2[c] + p3[c]) * s * s * s)));
+    }
+    out.push(P[P.length - 1]); return out;
   };
   shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
@@ -445,14 +465,13 @@ async function initShots() {
     // caption right-aligned left of the tether, in the black between the ship and the limb
     const rx = W - 120, sw = measure(G, 'SHIP', FONT.impact(120)), gap = measure(G, ' ', FONT.impact(120));
     const cap = 'TETHER · 5.35 M', capF = FONT.mono(24, 700), lx = 850;
-    await drawPlate(t, 'ship_wide_sunrise', 3.1 + lt * .74, { view: { zoom: z, cy: .5 / z + .003 },
+    await drawPlate(t, 'tether_drift', 1.2 + lt * 6.75 / dur, { view: { zoom: z, cy: .5 / z + .003 },
       hatch: { spacing: 6.5, mask: quiet([[rx - 520, 150, rx + 30, 450], [lx - 610, 440, lx + 20, 570]], .75) },
       extra: (pen, F, view) => {
-        // the trace, on the frame being drawn: the tracked tether (the quadratic through its three points) revealed by arc length,
+        // the trace, on the frame being drawn: the tracked tether (the curve through its points) revealed by arc length,
         // a soft wide pass under a firm gold line, the pencil's point at its head. The pencil puts analysis pixel i at uv i / aw,
         // half a pixel up-left of the plate content it samples, so the trace takes the same half pixel to sit on the drawn line.
-        const [p0, p1, p2] = tetherAt((F.frame - 1) / 24).map(([u, v]) => view.toScreen(u - .5 / F.aw, v - .5 / F.ah)), pts = [];
-        for (let i = 0; i <= 24; i++) { const s = i / 24, a = (2 * s - 1) * (s - 1), b = 4 * s * (1 - s), c = s * (2 * s - 1); pts.push([a * p0[0] + b * p1[0] + c * p2[0], a * p0[1] + b * p1[1] + c * p2[1]]); }
+        const pts = catmull(tetherAt((F.frame - 1) / 24).map(([u, v]) => view.toScreen(u - .5 / F.aw, v - .5 / F.ah)));
         const seg = pts.slice(1).map((q, i) => Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1]));
         let left = k * seg.reduce((x, y) => x + y, 0); const path = [pts[0]];
         for (let i = 0; i < seg.length && left > 0; i++) { const f = Math.min(1, left / seg[i]); path.push([lerp(pts[i][0], pts[i + 1][0], f), lerp(pts[i][1], pts[i + 1][1], f)]); left -= seg[i]; }
@@ -471,29 +490,42 @@ async function initShots() {
     typeFlush(Lt, d, .4);
   });
 
-  // N2 · "Pull him back to the ship's embrace": the first try at getting back in, feet first as planned, and the ship won't
-  // take him (airlock_fail take1: at the open mouth of the Volga tube he swings his legs in, the ballooned suit jams against
-  // the rim, he pushes back out, turns and struggles; the camera ends close on his strained face). In his memoir this is the
-  // attempt that failed; P3 is the head-first entry after he bleeds the suit (his 1965 report says legs first throughout).
-  // The take from 1.0 s (legs going in): 1.25x through the jam and the push back out ("Pull him back"), faster through the
-  // turn, landing on his face in the visor at 6.5 s on "embrace", then 0.76x on the strained face to the cut (7.95 s): he
-  // never gets in. The page's edges panic more and more, as in S3; on "embrace" a punch-in on the face, pushed right of the type.
-  const N2K = [[0, 1.0], [2.4, 4.0], [N2W[6][0] - L1[2].t0 + .05, 6.5], [L1[3].t0 - L1[2].t0, 7.95]];   // [shot time, plate time]
+  // N2 · "Pull him back to the ship's embrace", in two shots. Nobody reels him in (docs/FACTCHECK.md P2-4): he hauls himself
+  // back. N2a ("Pull him back"): hand_over_hand, him pulling himself along the tether hand over hand to the Volga's open mouth
+  // until he grips the rim, outside. N2b ("to the ship's embrace"): the planned feet-first entry, and the ship won't take him
+  // (airlock_fail take1: he swings his legs into the tube, the ballooned suit jams against the rim, he pushes back out, turns
+  // and struggles; the camera ends close on his strained face). The swell (S3a/S3b) tries again, feet first and then head
+  // first, and both jam; after he bleeds the suit (P1) the head-first entry works (P3): the memoir's version (2004), which
+  // the film follows throughout (his 1965 report says legs first).
+  const PULL_T = N2W[3][0] - .05;   // "to": the cut from the haul to the jam
+  const n2Type = t => lyricStack(t, [
+    { s: 'PULL', t: N2W[0][0], x: 110, y: 250, size: 190, style: 'slam' },
+    { s: 'HIM BACK', t: N2W[2][0], x: 110, y: 420, size: 190, style: 'slam' },
+    ...(t >= PULL_T ? [{ s: "to the ship's embrace", t: N2W[3][0], x: 116, y: 510, font: FONT.serif(64), col: 'cream', style: 'rise' }] : []),
+  ]);
+  // N2a: the take 2.8 → 6.9 s (he is mid-way along the line → his glove on the rim), fast at first (≈2x) and settling to ≈1x
+  // as he reaches the rim, so the grip lands just before the cut.
+  shot('N2a_haul', L1[2].t0 - .05, PULL_T, async (t, lt, dur) => {
+    paper(G, 'night');
+    const u = clamp(lt / dur), v0 = 2 * 4.1 / dur - 1, tp = 2.8 + dur * (v0 * u + (1 - v0) * u * u / 2);   // speed falls linearly to 1x at the grip
+    await drawPlate(t, 'hand_over_hand', tp, { view: { zoom: lerp(1.34, 1.38, smooth(u)), cx: .375, cy: .5 },   // him right of the type, the ship's mouth at the right edge
+      hatch: { spacing: 6.5, mask: quiet([[60, 60, 700, 460]], .72) } });
+    n2Type(t);
+  });
+  // N2b: the take 1.4 → 4.3 s (legs in, the jam, back out) up to "embrace", whipping through the turn to his face in the visor
+  // (6.2 s) on "embrace", then ≈0.9x on the strained face to the cut (7.95 s); a punch-in on the face, pushed right of the type.
+  const N2K = [[0, 1.4], [N2W[6][0] - .6 - PULL_T, 4.3], [N2W[6][0] - .05 - PULL_T, 6.2], [L1[3].t0 - .05 - PULL_T, 7.95]];   // [shot time, plate time]
   const n2tp = lt => { let i = N2K.findIndex(k => k[0] > lt); i = i < 0 ? N2K.length - 1 : Math.max(1, i);
     const [a, b] = [N2K[i - 1], N2K[i]]; return lerp(a[1], b[1], clamp((lt - a[0]) / (b[0] - a[0]))); };
-  shot('N2_jam', L1[2].t0 - .05, L1[3].t0 - .05, async (t, lt, dur) => {
+  shot('N2b_jam', PULL_T, L1[3].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
-    const e = smooth(clamp(lt / dur)), tp = n2tp(drawClock(t, 12).tq - (L1[2].t0 - .05));   // the plate on the drawing clock
+    const e = smooth(clamp(lt / dur)), tp = n2tp(drawClock(t, 12).tq - PULL_T);   // the plate on the drawing clock
     const tight = t >= N2W[6][0] - .05, et = smooth(clamp((t - N2W[6][0]) / (L1[3].t0 - N2W[6][0])));   // "embrace" → the cut
-    const view = tight ? { zoom: lerp(1.38, 1.48, et), cx: .5, cy: .42, ox: 330, oy: 20 } : { zoom: lerp(1.0, 1.1, e), cx: lerp(.5, .53, e), cy: lerp(.5, .47, e) };
+    const view = tight ? { zoom: lerp(1.38, 1.48, et), cx: .5, cy: .42, ox: 330, oy: 20 } : { zoom: lerp(1.0, 1.08, e), cx: lerp(.5, .53, e), cy: lerp(.5, .47, e) };
     await drawPlate(t, 'airlock_fail', tp, { hold: tp, view, face: tp > 5.9,
-      hatch: { mask: tight ? quiet([[60, 90, 860, 640]], .72) : quiet([[60, 110, 880, 600]], .42) },   // wide: a lighter clearing, his legs pass under the words
-      extra: (pen) => edgePanic(pen, tight ? .6 + .3 * et : .2 + .35 * e, drawClock(t, 12).n * 5) });
-    lyricStack(t, [
-      { s: 'PULL', t: N2W[0][0], x: 110, y: 290, size: 210, style: 'slam' },
-      { s: 'HIM BACK', t: N2W[2][0], x: 110, y: 480, size: 210, style: 'slam' },
-      { s: "to the ship's embrace", t: N2W[3][0], x: 116, y: 575, font: FONT.serif(64), col: 'cream', style: 'rise' },
-    ]);
+      hatch: { mask: quiet([[60, 60, 860, 560]], tight ? .72 : .6) },
+      extra: (pen) => edgePanic(pen, tight ? .6 + .3 * et : .25 + .3 * e, drawClock(t, 12).n * 5) });
+    n2Type(t);
   });
 
   // I4 · Can't feel his hands
@@ -517,18 +549,31 @@ async function initShots() {
       { s: 'HIS FACE', t: w[6][0], x: W - 110, y: 640, size: 170, align: 'right', style: 'rise' },
     ]);
   });
-
+  // I6 + H1a · orbital night → THE SUNRISE (countdown_drift, then hero_sunrise continuous across the cut)
   // I6 + H1a · orbital night → THE SUNRISE (one continuous take of hero_sunrise)
   const SUN_AT = 2.0;                       // plate time where the sun breaks (refined from meta at boot)
   const sunBreak = (() => { const m = META.hero_sunrise; if (!m) return SUN_AT; const i = m.findIndex(f => f.sun[2] > .55 && f.hot > .0005); return i > 0 ? i / 24 : SUN_AT; })();
   const tpHero = t => sunBreak + (t - H1[0].t0);   // align the plate's sunrise with "Orbital"
+  // I6 · the countdown in orbital night. countdown_drift (generated from hero_sunrise's first frame: the same framing, him and
+  // the coiled tether drifting gently, no sunrise) plays backwards, slowing, into its first frame, which IS hero_sunrise's
+  // first frame; hero_sunrise then takes over and eases up to 1x so that it reaches the sunrise on "Orbital" exactly as H1a
+  // plays it (tpHero). The frame pans to H1a's framing (ox 180) over the hero part, so the cut to H1a has no jump.
+  const I6_HERO = 1.4;                                        // seconds of hero_sunrise before the cut to H1a
+  const i6Map = t => {                                        // → [plate, plate time]
+    const s0 = O(20.5), tm = hk0 - I6_HERO;
+    if (t < tm) { const u = clamp((t - s0) / (tm - s0)); return ['countdown_drift', (tm - s0) * .6 * (1 - u) * (1 - u)]; }
+    const D = I6_HERO, Hh = tpHero(hk0), c = (1 - 2 * Hh / D) / (D * D), a = (Hh - c * D * D * D) / (D * D), x = clamp(t - tm, 0, D);
+    return ['hero_sunrise', a * x * x + c * x * x * x];      // h(0) = 0, h'(0) = 0, h(D) = tpHero(hk0), h'(D) = 1
+  };
   shot('I6_predawn', O(20.5), hk0, async (t, lt) => {
     paper(G, 'night');
-    await drawPlate(t, 'hero_sunrise', Math.max(0, tpHero(t)), { rate: 8, view: { zoom: 1.04 }, hatch: { spacing: 7 } });
+    const tq = drawClock(t, 8).tq, [id, tp] = i6Map(tq), pan = smooth(clamp((tq - (hk0 - I6_HERO)) / I6_HERO));
+    await drawPlate(t, id, tp, { hold: tp, rate: 8, view: { zoom: 1.04, ox: 180 * pan }, hatch: { spacing: 7 } });
     const Lt = typeLayer();
     const cd = [[B(Bn(60)), '3'], [B(Bn(61)), '2'], [B(Bn(62)), '1']];
-    tele(Lt.g, 'ORBITAL SUNRISE IN', W / 2 - 250, H - 150, t, O(20.7), { size: 26, weight: 700, col: 'silver', dur: .6 });
-    for (const [bt, s] of cd) if (t >= bt) { const k = clamp((t - bt) / .1); text(Lt.g, s, W / 2 + 190 + (+s === 3 ? 0 : +s === 2 ? 50 : 100), H - 150, { font: FONT.mono(40, 800), col: 'gold', alpha: k }); }
+    // bottom left, clear of his boots (he hangs centre frame, drifting right as the frame pans)
+    tele(Lt.g, 'ORBITAL SUNRISE IN', 110, H - 150, t, O(20.7), { size: 26, weight: 700, col: 'silver', dur: .6 });
+    for (const [bt, s] of cd) if (t >= bt) { const k = clamp((t - bt) / .1); text(Lt.g, s, 550 + (+s === 3 ? 0 : +s === 2 ? 50 : 100), H - 150, { font: FONT.mono(40, 800), col: 'gold', alpha: k }); }
     typeFlush(Lt, drawClock(t, 12).n, .4);
   });
 
@@ -627,12 +672,33 @@ async function initShots() {
     tele(Lt.g, 'IN VACUUM, THE SUIT BALLOONS', 110, 180, t, B(Bn(100)) + .2, { size: 26, weight: 700, col: 'white', dur: .8 });
     typeFlush(Lt, d, .35);
   });
-  shot('S3_nofit', B(Bn(108)), O(44.4), async (t, lt) => {
+  // S3 · HE CAN'T GET BACK IN, twice. S3a: feet first again (airlock_struggle take1, top-down at the Volga's mouth: he faces
+  // out of the rim with his backpack and legs in the tube), wedged, wriggling, and working back out toward us (the take 2.5 →
+  // 7.8 s: he grows in frame as he pushes out). S3b: he tries head first (headfirst, the take P3 later plays through when he
+  // gets in): only its first second, run in and back out on the beat (he shoves, jams at the shoulders, backs off, shoves
+  // again), so here he still doesn't get through. Then P1: he has to let the air out of the suit.
+  const S3_CUT = B(Bn(114));
+  shot('S3a_feet', B(Bn(108)), S3_CUT, async (t, lt, dur) => {
     paper(G, 'night');
     const k = clamp(lt / 4);
-    // top-down at the Volga tube mouth: the ballooned suit wedged in the rim (face:false: the plate's face hits are on the CCCP helmet)
-    await drawPlate(t, 'airlock_struggle', .6 + lt * 1.1, { view: { zoom: 1.03 }, face: false, hatch: { mask: quiet([[W / 2 - 330, H - 170, W / 2 + 330, H - 55]], .75) },
-      extra: (pen) => edgePanic(pen, k * .35, drawClock(t, 12).n * 3) });
+    // face:false: the plate's face hits are on the CCCP helmet
+    await drawPlate(t, 'airlock_struggle', 2.5 + lt * 5.3 / dur, { view: { zoom: 1.03 }, face: false, hatch: { mask: quiet([[W / 2 - 330, H - 170, W / 2 + 330, H - 55]], .75) },
+      extra: (pen) => edgePanic(pen, .1 + k * .35, drawClock(t, 12).n * 3) });
+    evaHud(t);
+    const Lt = typeLayer();
+    tele(Lt.g, "HE CAN'T GET BACK IN.", W / 2 - 230, H - 100, t, B(Bn(109)), { size: 40, weight: 800, col: 'white', dur: .7 });
+    typeFlush(Lt, drawClock(t, 12).n, .35);
+  });
+  const JAM = (c, i) => hash2(c, 71 + i);                                       // per-shove variation (deterministic)
+  shot('S3b_head', S3_CUT, O(44.4), async (t, lt, dur) => {
+    paper(G, 'night');
+    const e = smooth(clamp(lt / dur)), b0 = beatPos(S3_CUT), bp = (beatPos(t) - b0) / 2, c = Math.floor(bp), p = bp - c;
+    const lo = i => .06 + .12 * JAM(i, 1), hi = i => .62 + .3 * JAM(i, 2);    // plate seconds: wedged at the rim → a little deeper
+    const tp = p < .42 ? lerp(lo(c), hi(c), easeOut(p / .42)) : lerp(hi(c), lo(c + 1), easeInOut((p - .42) / .58));
+    const clear = quiet([[W / 2 - 360, H - 190, W / 2 + 360, H - 40]], .95);   // his legs cross the caption: a deeper clearing
+    await drawPlate(t, 'headfirst', tp, { hold: tp, view: { zoom: lerp(1.0, 1.1, e), cx: lerp(.5, .47, e), cy: lerp(.5, .46, e) },
+      hatch: { mask: clear }, contour: { mask: (X, Y) => clear(X, Y) > .5 ? 1 : 0 },
+      extra: (pen) => edgePanic(pen, .35 + .3 * e, drawClock(t, 12).n * 5) });
     evaHud(t);
     const Lt = typeLayer();
     tele(Lt.g, "HE CAN'T GET BACK IN.", W / 2 - 230, H - 100, t, B(Bn(109)), { size: 40, weight: 800, col: 'white', dur: .7 });

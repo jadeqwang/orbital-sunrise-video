@@ -580,36 +580,51 @@ async function initShots2() {
     lyricStack(t, [{ s: 'home', t: HOME2.t0, x: 110, y: 300, font: FONT.serif(150), col: 'gold', style: 'rise' }]);
     const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · BELOW −25 °C', 60, H - 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'silver', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .4);
   });
-  // by the fire he unfolds the folded sheet (the reconstruction) and smiles; no caption (the line moves to the coda)
-  shot('L5_survived', O(206.2), O(211.2), async (t, lt) => {
+  // by the fire he takes a small flat card out of his suit lining, looks at it and smiles (card_by_fire, generated from
+  // fire_night_v2 at 2.2 s, L4's own opening frame, so the cut keeps the framing). The drawing was a small flat card, not a
+  // folded sheet (docs/FACTCHECK.md P2-8; the old drawing_survives_v2 unfolded one). The take 0.9 → 6.0 s: the card comes out
+  // (≈1.5 s), then the camera pushes in onto it and his smile. Lit as L4: only what the fire lights is drawn at first; the
+  // falloff widens as the camera pushes in and the fire leaves the frame. No caption (the line moves to the coda).
+  shot('L5_survived', O(206.2), O(211.2), async (t, lt, dur) => {
     paper(G, 'night');
-    const tp = 1.0 + lt;
-    await drawPlate(t, 'drawing_survives_v2', tp, { view: { zoom: 1.04 }, lines: {}, face: tp > 4.3 });   // earlier face hits are on the hands
+    const tp = .9 + lt * 5.1 / dur, z = 1.03, open = smooth(clamp((tp - 2.1) / 1.6));
+    const fx = W / 2 + (.415 - .5) * W * z, fy = H / 2 + (.957 - .5) * H * z + open * 500;   // the fire (plate meta, first second), sinking out of frame with the push-in
+    const firelight = (X, Y) => clamp(1.25 - Math.hypot((X - fx) / 1.3, Y - fy) / (950 + open * 900), .14 + .5 * open, 1);
+    await drawPlate(t, 'card_by_fire', tp, { view: { zoom: z }, ana: { gain: Math.round((.95 + .35 * open) * 20) / 20 }, lines: { black: .14, contrast: 2.1 - .5 * open }, hatch: { mask: firelight },
+      contour: { mask: (X, Y) => firelight(X, Y) > .35 ? 1 : 0 }, face: tp > 2.4,
+      extra: (pen, F, view, d) => { if (open < .6) flames(pen, fx, Math.min(H + 20, fy + 40), { size: 300 * (1 - open), n: 54, seed: d * 3 + 1 }); } });
   });
   // skiers in sheepskin coats bring warm clothes; the cosmonauts by the fire in their linings
-  const LEG_BEATS = 3, LEG_END = Bn(610);                                            // the legacy montage ends on beat 610 (≈225.81 s)
-  const LEG = [
-    ['1965', 'GEMINI 4 — ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1]],
-    ['1969', 'APOLLO 11 — PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08]],
-    ['1975', 'APOLLO–SOYUZ — LEONOV SHAKES HANDS IN ORBIT', 'leg_handshake', [.63, .52, 1.3]],
-    ['2000', 'ISS — FIFTEEN NATIONS, ONE STATION', 'leg_station', [.56, .5, 1.06]],
-    ['2003', "SHENZHOU 5 — CHINA'S FIRST ASTRONAUT", 'leg_yang_liwei', [.63, .5, 1.1]],
-    ['2014', 'ROSETTA / PHILAE — A LANDER ON A COMET', 'leg_philae', [.72, .56, 1.7]],
-    ['2019', "CHANG'E 4 — FIRST SOFT LANDING ON THE MOON'S FAR SIDE", 'leg_change4', [.6, .5, 1.08]],
-    ['2023', "CHANDRAYAAN-3 — INDIA LANDS NEAR THE MOON'S SOUTH POLE", 'leg_chandrayaan3', [.68, .45, 1.1]],   // Chandrayaan-3 landed at ~69°S: near, not at, the pole
-    ['2024', 'POLARIS DAWN — THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.62, .5, 1.12]],
-    ['2026', 'ARTEMIS II — FOUR PEOPLE AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12]],
+  // The montage keeps its span, beats LEG_END − 30 → LEG_END (≈214.9 → 225.8 s, after L6's rescue), so twelve milestones share
+  // 30 beats: the six with the longer lines get 3 beats, the others 2 (alternating, so the cuts stay on the beat without a
+  // monotone rhythm). Years in order; every line names its mission.
+  const LEG_SPAN = 30, LEG_END = Bn(610);                                            // the legacy montage ends on beat 610 (≈225.81 s)
+  const LEG = [   // [year, line (≤ 8 words after the mission name, docs/FACTS.md §6), plate, framing (cx, cy, zoom) in the right-hand panel, beats]
+    ['1965', 'GEMINI 4 — ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1], 3],
+    ['1969', 'APOLLO 11 — PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08], 2],
+    ['1975', 'APOLLO–SOYUZ — LEONOV SHAKES HANDS IN ORBIT', 'leg_handshake', [.63, .52, 1.3], 3],
+    ['2000', 'ISS — FIFTEEN NATIONS, ONE STATION', 'leg_station', [.56, .5, 1.06], 2],
+    ['2008', "SHENZHOU 7 — ZHAI ZHIGANG, CHINA'S FIRST SPACEWALK", 'leg_shenzhou7', [.6, .46, 1.1], 3],   // 27 Sep 2008, Feitian suit
+    ['2012', 'CURIOSITY — A SKY CRANE LOWERS A ROVER ONTO MARS', 'leg_curiosity', [.65, .5, 1.12], 2],    // 6 Aug 2012 UTC, Gale Crater
+    ['2014', 'ROSETTA / PHILAE — A LANDER ON A COMET', 'leg_philae', [.72, .56, 1.7], 2],
+    ['2019', "CHANG'E 4 — FIRST SOFT LANDING ON THE MOON'S FAR SIDE", 'leg_change4', [.6, .5, 1.08], 3],
+    ['2022', "TIANGONG — CHINA'S SPACE STATION IS COMPLETE", 'leg_tiangong', [.65, .42, 1.06], 2],      // T shape, Mengtian berthed Nov 2022
+    ['2023', "CHANDRAYAAN-3 — INDIA LANDS NEAR THE MOON'S SOUTH POLE", 'leg_chandrayaan3', [.68, .45, 1.1], 3],   // Chandrayaan-3 landed at ~69°S: near, not at, the pole
+    ['2024', 'POLARIS DAWN — THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.62, .5, 1.12], 2],
+    ['2026', 'ARTEMIS II — FOUR PEOPLE AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12], 3],
   ];
-  const LEG_B0 = LEG_END - LEG.length * LEG_BEATS, lg0 = B(LEG_B0), lg1 = B(LEG_END), PX = 640;
+  const LEG_B0 = LEG_END - LEG_SPAN, lg0 = B(LEG_B0), lg1 = B(LEG_END), PX = 640;
+  const LEG_AT = LEG.reduce((a, it) => [...a, a[a.length - 1] + it[4]], [0]);          // each item's first beat, from LEG_B0
+  if (LEG_AT[LEG.length] !== LEG_SPAN) throw new Error('LEG beats must sum to LEG_SPAN');
   shot('L6_rescue', O(211.2), lg0, async (t, lt) => {
     paper(G, 'snow');
     await drawPlate(t, 'rescue_v2', 2 + lt * 1.4, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[40, 30, 760, 110]], .8) } });
     const Lt = typeLayer(); tele(Lt.g, 'RESCUERS ARRIVE ON SKIS', 60, 64, t, O(211.5), { size: 24, weight: 800, col: 'graphite', dur: .6 }); typeFlush(Lt, drawClock(t, 12).n, .6);
   });
-  // team Earth: one milestone every LEG_BEATS beats, on the beat. [year, line (≤ 7 words, docs/FACTS.md §6), plate, framing (cx, cy, zoom) in the right-hand panel]
+  // team Earth: one milestone per LEG item, cut on the beat
   shot('L7_legacy', lg0, lg1, async (t, lt) => {
     paper(G, 'night');
-    const i = clamp(Math.floor((beatPos(t) + 1e-4 - LEG_B0) / LEG_BEATS), 0, LEG.length - 1), [yr, line, plate, fr] = LEG[i], it0 = B(LEG_B0 + i * LEG_BEATS), age = t - it0;
+    const bb = beatPos(t) + 1e-4 - LEG_B0, i = clamp(LEG_AT.findIndex(b => b > bb) - 1, 0, LEG.length - 1), [yr, line, plate, fr] = LEG[i], it0 = B(LEG_B0 + LEG_AT[i]), age = t - it0;
     if (PLATES[plate]) {
       // the drawing grows out from the subject over the first beat, then keeps boiling
       const rv = easeOut(clamp(age / .4)), cx = PX + (W - PX) / 2, cy = H / 2, R0 = Math.hypot(W - PX, H) / 2;

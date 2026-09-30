@@ -14,9 +14,12 @@ Type sizes: **XL** ≥ 18 % frame height, **L** 10–18 %, **S** subtitle.
 | 0.00 – 3.32 | **Poster draws itself** | frame 1 is already a pencil sunburst with Leonov's silhouette cut out of it (the thumbnail); the drawing grows outward from the sun in 1.1 s: contours → hatching; the lockup is all on screen by ≈1.2 s and holds to the cut on beat 8, where the band comes in | ORBITAL SUNRISE (XL, left) · ОРБИТАЛЬНЫЙ ВОСХОД · 18.03.1965 — THE FIRST SPACEWALK |
 | 3.32 – 7.99 | Sun sets, page goes dark | P: the Earth's limb as one thin white line; airlock hatch POV opening | typed: 18 MARCH 1965 · ВОСХОД-2 · VOSKHOD-2 · «ВОСХОД» MEANS «SUNRISE» · ORBIT 2 · APOGEE ~500 KM |
 | 7.99 – 13.19 | First man | airlock_exit (tiny figure emerging, drifting on the tether) | FIRST MAN (XL) · FLOATING (letters drift apart) · in the void of space (S, lost in black) · Belyayev: «ЧЕЛОВЕК ВЫШЕЛ В КОСМИЧЕСКОЕ ПРОСТРАНСТВО» |
+| *ext. 13.84 – 20.46* | Tied to the ship (N1, extended cut only) | tether_drift: he drifts away below the ship until the tether goes taut; the pencil traces the tether in gold (tracked every 0.5 s) | TIED / TO THE SHIP · *by the slightest trace* · TETHER · 5.35 M |
+| *ext. 20.46 – 22.88* | Pull him back (N2a) | hand_over_hand: he hauls himself back along the tether and grips the Volga's rim | PULL / HIM BACK |
+| *ext. 22.88 – 26.21* | to the ship's embrace (N2b) | airlock_fail: feet first (the plan), jammed, back out; punch-in on his face | *to the ship's embrace* |
 | 13.19 – 16.85 | Can't feel his hands | glove_cu | CAN'T FEEL HIS HANDS (L) |
 | 16.85 – 20.50 | Can't feel his face | visor_cu | CAN'T FEEL HIS FACE (L, in the visor) |
-| 20.50 – 23.63 | Before dawn | hero_sunrise (pre-dawn part), band of color thickening | SUNRISE IN 3 · 2 · 1 (mono, on beats) |
+| 20.50 – 23.63 | Before dawn | countdown_drift (him and the coiled tether drifting, played back into its first frame = hero_sunrise's first), then hero_sunrise easing into H1a with no jump | ORBITAL SUNRISE IN 3 · 2 · 1 (mono, on beats, bottom left) |
 
 ## Hook 1 · 23.63 – 34.34 · the first color in the film
 | 23.63 – 26.60 | THE SUNRISE | hero_sunrise (burst + push-in) + P rays | ORBITAL / SUNRISE stacked XL left, on the words |
@@ -27,7 +30,7 @@ Type sizes: **XL** ≥ 18 % frame height, **L** 10–18 %, **S** subtitle.
 ## Swell · 34.34 – 44.40 · instrumental, rising
 | 34.34 – 37.30 | 12 minutes | camera_reach | EVA T+ clock · SUIT 0.40 ATM (mono) · HE CAN'T REACH THE CAMERA SWITCH ON HIS LEG. · THE SUIT WILL NOT BEND. |
 | 37.30 – 40.20 | The suit balloons | suit_balloon + P blueprint outline expanding | SUIT SWELLS — / HIS FINGERS NO LONGER REACH THE GLOVES on the spreading dimension line (no number: no source measures it) · IN VACUUM, THE SUIT BALLOONS |
-| 40.20 – 44.40 | He doesn't fit | airlock_fail | HE CAN'T GET BACK IN. |
+| 40.20 – 44.40 | He doesn't fit | S3a: airlock_struggle, feet first again, wedged, working back out · S3b (last 5 beats): headfirst's first second run in and out on the beat, head first jams too | HE CAN'T GET BACK IN. |
 
 ## Pre-chorus · 44.40 – 59.50 · filter opens, snare roll
 | 44.40 – 48.46 | Breath by breath | valve_bleed; the gauge switches once, 0.40 → 0.27 ATM, on "So" (his one switch to the suit's second mode) | BREATH / BY / BREATH stacked right |
@@ -82,9 +85,9 @@ Type sizes: **XL** ≥ 18 % frame height, **L** 10–18 %, **S** subtitle.
 | 193.00 – 198.72 | home. | hatch_exit | HOME. |
 | 198.72 – 201.24 | Made it down | two_men_snow | MADE IT DOWN |
 | 201.24 – 206.00 | home. | fire_night, black paper, flame tongues over the fire | *home.* · TWO NIGHTS IN THE TAIGA · BELOW −25 °C |
-| 206.00 – 211.00 | It survived | drawing_survives, black paper | THE DRAWING SURVIVED |
+| 206.00 – 211.00 | It survived | card_by_fire: by the fire he takes a small flat card from his lining, push-in on it and his smile | — |
 | 211.00 – 215.00 | Rescue | rescue | — |
-| 215.30 – 226.55 | What came next | legacy stills on black paper, one per bar, each drawn out from its subject in a right-hand panel: 1965 Gemini 4 · 1969 Apollo 11 · 1975 Apollo–Soyuz · 2000 ISS · 2003 Shenzhou 5 · 2014 Rosetta / Philae · 2019 Chang'e 4 (FIRST SOFT LANDING ON THE MOON'S FAR SIDE) · 2023 Chandrayaan-3 · 2024 Polaris Dawn · 2026 Artemis II | year (XL) + one mono line each, MISSION — WHAT IT DID, in the quiet left third |
+| 215.30 – 226.55 | What came next | legacy stills on black paper, one per 2–3 beats, each drawn out from its subject in a right-hand panel: 1965 Gemini 4 · 1969 Apollo 11 · 1975 Apollo–Soyuz · 2000 ISS · 2008 Shenzhou 7 (Zhai Zhigang, China's first spacewalk) · 2012 Curiosity (sky crane) · 2014 Rosetta / Philae · 2019 Chang'e 4 (FIRST SOFT LANDING ON THE MOON'S FAR SIDE) · 2022 Tiangong · 2023 Chandrayaan-3 · 2024 Polaris Dawn · 2026 Artemis II; twelve items in the same 30 beats, 3 or 2 beats each | year (XL) + one mono line each, MISSION — WHAT IT DID, in the quiet left third |
 
 ## Coda · 226.55 – 242.20
 | 226.55 – 234.70 | The drawing | P: Leonov's drawing alone on the white page | *He drew the sunrise anyway.* |
