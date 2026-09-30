@@ -157,10 +157,9 @@ the breakdown's "breath by breath" as "breath **my** breath" in most (`alt`: "by
 - **Ring-out:** `python3 tools/extend_ending.py --src=media/audio/Orbital_Sunrise_alt2.mp3
   --out=media/audio/Orbital_Sunrise_alt2_extended.wav --shift=10.084` (+ the committed `.m4a`): **252.28 s = 6055 frames**.
   `timemap.json`, `render.mjs`, `encode_release.sh`, `package_hls.sh` default to it; `timing.json` dur 248.68 / durExt 252.284.
-- **Not done** (her call, 2026-09-30: she is still collecting notes): the full render and the release encode.
-  `release/extended/*` (4:11, `alt`) and `video/out/frames` (6017 frames) are **stale**: re-render with
-  `node render.mjs --frames=0:252.28 --workers=4 --force` (and delete frames ≥ f06055), then
-  `OUT=$PWD/release/extended NAME=Orbital_Sunrise_extended tools/encode_release.sh`.
+- **Done** (her approval, after the round-3 notes below): the full render (`node render.mjs --frames=0:252.28 --workers=4
+  --force`, 6055 frames) and the release encode (`OUT=$PWD/release/extended NAME=Orbital_Sunrise_extended
+  tools/encode_release.sh`): `release/extended/*` is this recording, 4:12.
 
 ## Round 3: her fact-check notes on screen (2026-09-30)
 
