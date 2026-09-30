@@ -149,12 +149,12 @@ function lyricStack(t, items, o = {}) {
   typeFlush(L, drawClock(t, 12).n, o.grain ?? .5);
 }
 
-// EVA telemetry: the 12 min 09 s spacewalk compressed into the song's 8.0 → 58.6 s.
+// EVA telemetry: the 12 min 09 s spacewalk compressed into the song's 8.0 → 58.6 s (released song times: O() moves them).
 const EVA0 = 7.99, EVA1 = 58.6, EVA_SECS = 12 * 60 + 9;
-function evaClock(t) { const s = clamp((t - EVA0) / (EVA1 - EVA0)) * EVA_SECS; return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(Math.floor(s % 60)).padStart(2, '0')}`; }
+function evaClock(t) { const s = clamp((t - O(EVA0)) / (O(EVA1) - O(EVA0))) * EVA_SECS; return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(Math.floor(s % 60)).padStart(2, '0')}`; }
 function suitPressure(t) { // atm: bled in steps on each "breath"
   const w = (linesIn('pre')[0] || { words: [] }).words;
-  const steps = [[w[0]?.[0] ?? 44.6, .40], [w[6]?.[0] ?? 47.2, .35], [w[8]?.[0] ?? 47.9, .30], [50.2, .27]];
+  const steps = [[w[0]?.[0] ?? O(44.6), .40], [w[6]?.[0] ?? O(47.2), .35], [w[8]?.[0] ?? O(47.9), .30], [O(50.2), .27]];
   let p = .40; for (const [ts, v] of steps) if (t >= ts) p = v; return p;
 }
 function evaHud(t, o = {}) {
@@ -327,7 +327,7 @@ async function initShots() {
   const L1 = linesIn('intro'), H1 = linesIn('hook1');
 
   // I1 · The poster draws itself (0 → first beat)
-  const POSTER_TP = 4.4, FIRST_BEAT = B(7);
+  const POSTER_TP = 4.4, FIRST_BEAT = B(Bn(7));
   shot('I1_poster', 0, FIRST_BEAT, async (t, lt, dur) => {
     paper(G, 'night');
     const k = clamp(lt / 2.45);                          // drawing progress
@@ -411,11 +411,39 @@ async function initShots() {
     typeFlush(Lt, drawClock(t, 12).n, .4);
   });
 
+  // N1 · Tied to the ship by the slightest trace (extended recording): over his shoulder, reaching for the Earth, the tether
+  // floating in a loose curve behind him. The 5 s take is stretched over the ~6.5 s line.
+  shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
+    paper(G, 'night');
+    await drawPlate(t, 'reach_home', .15 + lt * Math.min(1, 4.85 / dur), { view: { zoom: 1.03, ox: -60 }, hatch: { spacing: 6.5 } });
+    const w = L1[1].words;   // Tied to the ship by the slightest trace
+    lyricStack(t, [
+      { s: 'TIED', t: w[0][0], x: 110, y: 300, size: 210, style: 'slam' },
+      { s: 'TO THE SHIP', t: w[3][0], x: 110, y: 450, size: 120, style: 'rise' },
+      { s: 'by the slightest trace', t: w[4][0], x: 116, y: 540, font: FONT.serif(64), col: 'cream', style: 'rise' },
+    ]);
+    const Lt = typeLayer();
+    tele(Lt.g, 'TETHER · 5.35 M', 120, H - 120, t, w[4][0], { size: 24, weight: 700, col: 'silver', dur: .6 });
+    typeFlush(Lt, drawClock(t, 12).n, .4);
+  });
+
+  // N2 · Pull him back to the ship's embrace: his exit from the airlock (I3's take) runs backwards, the ship taking him in
+  shot('N2_pullback', L1[2].t0 - .05, L1[3].t0 - .05, async (t, lt, dur) => {
+    paper(G, 'night');
+    await drawPlate(t, 'airlock_exit', Math.max(.4, 7.4 - lt * 1.05), { view: { zoom: 1.02, oy: 30 }, hatch: { spacing: 7 } });
+    const w = L1[2].words;   // Pull him back to the ship's embrace
+    lyricStack(t, [
+      { s: 'PULL', t: w[0][0], x: W - 110, y: 280, size: 210, align: 'right', style: 'slam' },
+      { s: 'HIM BACK', t: w[2][0], x: W - 110, y: 470, size: 210, align: 'right', style: 'slam' },
+      { s: "to the ship's embrace", t: w[3][0], x: W - 116, y: 560, font: FONT.serif(64), col: 'cream', align: 'right', style: 'rise' },
+    ]);
+  });
+
   // I4 · Can't feel his hands
-  shot('I4_hands', L1[1].t0 - .05, L1[1].words[4][0] - .05, async (t, lt) => {
+  shot('I4_hands', L1[3].t0 - .05, L1[3].words[4][0] - .05, async (t, lt) => {
     paper(G, 'night');
     await drawPlate(t, 'glove_cu', .3 + lt, { view: { zoom: 1.05, ox: 260 }, hatch: { spacing: 6.5 } });
-    const w = L1[1].words;
+    const w = L1[3].words;
     lyricStack(t, [
       { s: "CAN'T FEEL", t: w[0][0], x: 110, y: 470, size: 170, style: 'rise' },
       { s: 'HIS HANDS', t: w[2][0], x: 110, y: 640, size: 170, style: 'rise' },
@@ -423,10 +451,10 @@ async function initShots() {
   });
 
   // I5 · can't feel his face
-  shot('I5_face', L1[1].words[4][0] - .05, 20.5, async (t, lt) => {
+  shot('I5_face', L1[3].words[4][0] - .05, O(20.5), async (t, lt) => {
     paper(G, 'night');
     await drawPlate(t, 'visor_cu', .5 + lt, { view: { zoom: 1.1, ox: -300, oy: 40 }, hatch: { spacing: 6.5 } });
-    const w = L1[1].words;
+    const w = L1[3].words;
     lyricStack(t, [
       { s: "CAN'T FEEL", t: w[4][0], x: W - 110, y: 470, size: 170, align: 'right', style: 'rise' },
       { s: 'HIS FACE', t: w[6][0], x: W - 110, y: 640, size: 170, align: 'right', style: 'rise' },
@@ -437,12 +465,12 @@ async function initShots() {
   const SUN_AT = 2.0;                       // plate time where the sun breaks (refined from meta at boot)
   const sunBreak = (() => { const m = META.hero_sunrise; if (!m) return SUN_AT; const i = m.findIndex(f => f.sun[2] > .55 && f.hot > .0005); return i > 0 ? i / 24 : SUN_AT; })();
   const tpHero = t => sunBreak + (t - H1[0].t0);   // align the plate's sunrise with "Orbital"
-  shot('I6_predawn', 20.5, hk0, async (t, lt) => {
+  shot('I6_predawn', O(20.5), hk0, async (t, lt) => {
     paper(G, 'night');
     await drawPlate(t, 'hero_sunrise', Math.max(0, tpHero(t)), { rate: 8, view: { zoom: 1.04 }, hatch: { spacing: 7 } });
     const Lt = typeLayer();
-    const cd = [[B(60), '3'], [B(61), '2'], [B(62), '1']];
-    tele(Lt.g, 'ORBITAL SUNRISE IN', W / 2 - 250, H - 150, t, 20.7, { size: 26, weight: 700, col: 'silver', dur: .6 });
+    const cd = [[B(Bn(60)), '3'], [B(Bn(61)), '2'], [B(Bn(62)), '1']];
+    tele(Lt.g, 'ORBITAL SUNRISE IN', W / 2 - 250, H - 150, t, O(20.7), { size: 26, weight: 700, col: 'silver', dur: .6 });
     for (const [bt, s] of cd) if (t >= bt) { const k = clamp((t - bt) / .1); text(Lt.g, s, W / 2 + 190 + (+s === 3 ? 0 : +s === 2 ? 50 : 100), H - 150, { font: FONT.mono(40, 800), col: 'gold', alpha: k }); }
     typeFlush(Lt, drawClock(t, 12).n, .4);
   });
@@ -498,7 +526,7 @@ async function initShots() {
     // ?h1d=locfade: everything but her face and hair faded toward the paper (tools/jade_fade.py --head); she found it goofy
     const loc = exp === 'loc' || exp === 'locfade', id = loc ? (exp === 'loc' ? 'jade_loc' : 'jade_locfade') : 'jade_sing3';
     const lag = +(new URLSearchParams(location.search).get('h1dlag') ?? -.22);  // her pick by ear ("G"); ?h1dlag= tries others
-    const tp = loc ? t - (30.9 + lag) : t - 32.05;
+    const tp = loc ? OI(t) - (30.9 + lag) : OI(t) - 32.05;   // take time runs on the released song's clock
     if (exp !== 'js') await paperTake(id, tp);
     if (exp !== 'plain') {
       G.save(); if (exp !== 'js') G.globalAlpha = .45;
@@ -514,7 +542,7 @@ async function initShots() {
 
   // ---------------- swell · 34.34 → 44.40 · the suit balloons ----------------
   const [sw0, sw1] = S('swell').slice(1);
-  shot('S1_reach', sw0, B(100), async (t, lt) => {
+  shot('S1_reach', sw0, B(Bn(100)), async (t, lt) => {
     paper(G, 'night');
     await drawPlate(t, 'camera_reach', .4 + lt, { view: { zoom: 1.04 } });
     evaHud(t);
@@ -523,7 +551,7 @@ async function initShots() {
     tele(Lt.g, 'THE SUIT WILL NOT BEND.', 110, H - 78, t, sw0 + 1.8, { size: 26, weight: 700, col: 'verm', dur: .6 });
     typeFlush(Lt, drawClock(t, 12).n, .35);
   });
-  shot('S2_balloon', B(100), B(108), async (t, lt, dur) => {
+  shot('S2_balloon', B(Bn(100)), B(Bn(108)), async (t, lt, dur) => {
     paper(G, 'night');
     const { view } = await drawPlate(t, 'suit_balloon', .5 + lt, { view: { zoom: 1.03 } });
     evaHud(t);
@@ -538,10 +566,10 @@ async function initShots() {
     pen.flush(Lr.g, ORDER_NIGHT); toothIn(Lr, d); G.drawImage(Lr.c, 0, 0);
     const Lt = typeLayer();
     text(Lt.g, `+${Math.round(k * 6)} CM`, cx, y - 26, { font: FONT.mono(34, 800), col: 'gold', align: 'center' });
-    tele(Lt.g, 'IN VACUUM, THE SUIT BALLOONS', 110, 180, t, B(100) + .2, { size: 26, weight: 700, col: 'white', dur: .8 });
+    tele(Lt.g, 'IN VACUUM, THE SUIT BALLOONS', 110, 180, t, B(Bn(100)) + .2, { size: 26, weight: 700, col: 'white', dur: .8 });
     typeFlush(Lt, d, .35);
   });
-  shot('S3_nofit', B(108), 44.4, async (t, lt) => {
+  shot('S3_nofit', B(Bn(108)), O(44.4), async (t, lt) => {
     paper(G, 'night');
     const k = clamp(lt / 4);
     // top-down at the Volga tube mouth: the ballooned suit wedged in the rim (face:false: the plate's face hits are on the CCCP helmet)
@@ -549,13 +577,13 @@ async function initShots() {
       extra: (pen) => edgePanic(pen, k * .35, drawClock(t, 12).n * 3) });
     evaHud(t);
     const Lt = typeLayer();
-    tele(Lt.g, "HE CAN'T GET BACK IN.", W / 2 - 230, H - 100, t, B(109), { size: 40, weight: 800, col: 'white', dur: .7 });
+    tele(Lt.g, "HE CAN'T GET BACK IN.", W / 2 - 230, H - 100, t, B(Bn(109)), { size: 40, weight: 800, col: 'white', dur: .7 });
     typeFlush(Lt, drawClock(t, 12).n, .35);
   });
 
   // ---------------- pre-chorus · 44.40 → 59.50 ----------------
   const PR = linesIn('pre');
-  shot('P1_bleed', 44.4, PR[1].t0 - .05, async (t, lt) => {
+  shot('P1_bleed', O(44.4), PR[1].t0 - .05, async (t, lt) => {
     paper(G, 'night');
     const w = PR[0].words; // So he bleeds the air out, breath by breath
     const late = t >= w[6][0] - .05;
@@ -599,9 +627,9 @@ async function initShots() {
     ]);
   });
   // the airlock: cuts accelerate with the snare roll, drawn on ones at the end
-  shot('P4_airlock', PR[3].t0 - .05, 59.5, async (t, lt, dur) => {
+  shot('P4_airlock', PR[3].t0 - .05, O(59.5), async (t, lt, dur) => {
     paper(G, 'night');
-    const k = clamp(lt / dur), roll = clamp((t - 57.2) / (59.5 - 57.2));
+    const k = clamp(lt / dur), roll = clamp((t - O(57.2)) / (O(59.5) - O(57.2)));
     const rate = roll > 0 ? 24 : 12;
     // during the roll, flash between the tube and close-ups every half beat, then every quarter
     // tube_struggle: he curls round inside the padded tube toward the hatch, ending on his sweating face (the face is real only from ~5.2 s)
@@ -625,13 +653,13 @@ async function initShots() {
     // Then a moment of the inside view (airlock_side take1: breathing, visor fogging, glove pressing and sliding on the wall),
     // 56.18 → 57.2 at 1x from 0.3 s (as lively as any second of it, and the glove is still whole on the wall), with a slow push and drift, before the roll's flurry.
     // ?p4arm=0: both are the stills.
-    const armT = new URLSearchParams(location.search).get('p4arm') !== '0', pushDur = 57.2 - (PR[3].t0 - .05), CUT_SIDE = beatTime(151);
+    const armT = new URLSearchParams(location.search).get('p4arm') !== '0', pushDur = O(57.2) - (PR[3].t0 - .05), CUT_SIDE = beatTime(Bn(151));
     if (!old) {
       const e = smooth(clamp(lt / pushDur));
       id = armT ? (new URLSearchParams(location.search).get('p4legs') === '0' ? 'airlock_cut_t2' : 'airlock_cut') : 'airlock_cut_still'; tp = armT ? lt : 0;
       vz = { zoom: lerp(1.02, 3.0, e), cx: lerp(.5, .212, e), cy: lerp(.44, .4035, e), rot: e * .3 };
       if (t >= CUT_SIDE) {   // his helmet low left under the lyric, the glove on the wall clear of it on the right
-        const s = smooth(clamp((t - CUT_SIDE) / (57.2 - CUT_SIDE)));
+        const s = smooth(clamp((t - CUT_SIDE) / (O(57.2) - CUT_SIDE)));
         id = armT ? 'airlock_side' : 'airlock_side_still'; tp = armT ? .3 + (t - CUT_SIDE) : 0;
         vz = { zoom: lerp(1.14, 1.23, s), rot: lerp(.33, .37, s), ox: lerp(135, 110, s), oy: 60 };
       }
@@ -654,7 +682,7 @@ async function initShots() {
       { s: 'INSIDE THE AIRLOCK DOOR', t: w[2][0], x: W / 2, y: 420, size: 96, align: 'center', style: 'rise', ls: 3 },
     ], { alpha: 1 - roll * .6 });
     // the hatch slams: black on the last beat of the roll
-    if (t > 59.5 - TM.beat * .5) { G.fillStyle = P.night; G.globalAlpha = .92; G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
+    if (t > O(59.5) - TM.beat * .5) { G.fillStyle = P.night; G.globalAlpha = .92; G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
   });
 
   // ---------------- hook 2 · 59.50 → 70.94 · inside, relief ----------------
@@ -705,7 +733,7 @@ async function initShots() {
       // song time = 67.4 + 0.3 + take time. ?k4=F: take F (lag 0.5); ?k4=studio: the vocal-booth take (lag 0.7).
       const k4 = new URLSearchParams(location.search).get('k4'), studio = k4 === 'studio';
       const id = studio ? 'jade_studio_loc' : k4 === 'F' ? 'jade_rare_her' : 'jade_rare_her_m';
-      const tp = t - (67.4 + +(new URLSearchParams(location.search).get('k4lag') ?? (studio ? .7 : k4 === 'F' ? .5 : .3)));
+      const tp = OI(t) - (67.4 + +(new URLSearchParams(location.search).get('k4lag') ?? (studio ? .7 : k4 === 'F' ? .5 : .3)));
       await paperTake(id, tp);
       G.save(); G.globalAlpha = .45;
       await drawPlate(t, id, tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });

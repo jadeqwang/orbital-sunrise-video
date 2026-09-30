@@ -15,6 +15,11 @@ still ringing. This builds a natural tail:
   4. space    — a synthetic reverb (decaying filtered noise, RT60 ≈ 3 s) on the tail;
   5. the original is kept untouched up to the cross-fade.
 Writes media/audio/Orbital_Sunrise_extended.wav (48 kHz) and a before/after spectrogram for review.
+
+Another recording of the same ending (the extended mix, docs/ALTERNATE_CUT.md):
+    python3 tools/extend_ending.py --src=media/audio/Orbital_Sunrise_alt.mp3 --out=media/audio/Orbital_Sunrise_alt_extended.wav --shift=8.494
+--shift moves every time in here (freeze window, cross-fade, reverb start, review plots) by the final chord's offset in the new
+recording (video/data/editmap.json shift_after: the chord is at 234.696 s here, 243.19 s there).
 """
 import pathlib, subprocess, numpy as np
 
@@ -26,6 +31,14 @@ FREEZE = (235.0, 235.6)      # sustained chord window (after the attack)
 XF0, XF1 = 236.0, 236.9      # cross-fade from the original into the tail
 TAIL = 6.2                   # seconds of new material after XF0
 RT60 = 3.0
+ARGS = dict(a[2:].split("=", 1) for a in __import__("sys").argv[1:] if a.startswith("--") and "=" in a)
+SHIFT = float(ARGS.get("shift", 0))
+if "src" in ARGS:
+    SRC = ROOT / ARGS["src"]
+if "out" in ARGS:
+    OUT = ROOT / ARGS["out"]
+FREEZE = (FREEZE[0] + SHIFT, FREEZE[1] + SHIFT)
+XF0, XF1 = XF0 + SHIFT, XF1 + SHIFT
 
 
 def load(path):
@@ -93,7 +106,7 @@ def main():
     rng = np.random.default_rng(7)
     y = load(SRC)
     n0 = y.shape[1]
-    T0 = 235.8                                   # the frozen chord starts underneath the still-ringing original
+    T0 = 235.8 + SHIFT                                   # the frozen chord starts underneath the still-ringing original
     t0 = int(T0 * SR)
     tex = freeze_texture(y, TAIL + 1.0, rng)[:, :int((TAIL + (XF0 - T0)) * SR)]
     t = np.arange(tex.shape[1]) / SR
@@ -114,9 +127,10 @@ def main():
     out[:, :n0] = orig
     out[:, t0:] += tail
     # a room on the last chord and the tail, brought in after the hit
-    a = int(234.3 * SR)
+    a = int((234.3 + SHIFT) * SR)
     ir = reverb_ir(rng)
-    wet = np.array([np.convolve(out[c, a:], ir[c], mode="full")[:out_len - a] for c in range(2)])
+    from scipy.signal import fftconvolve    # = np.convolve (full), in seconds instead of hours
+    wet = np.array([fftconvolve(out[c, a:], ir[c], mode="full")[:out_len - a] for c in range(2)])
     wet_gain = 10 ** ((rms_db(out[:, a:a + int(1.5 * SR)]) - rms_db(wet[:, :int(1.5 * SR)]) - 10) / 20)
     ramp = np.clip((np.arange(out_len - a) / SR - .3) / 1.5, 0, 1)
     out[:, a:] += wet * wet_gain * ramp
@@ -135,17 +149,17 @@ def main():
         import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
         fig, ax = plt.subplots(2, 1, figsize=(12, 6), sharex=True)
         for k, (sig, name) in enumerate([(y, "original"), (out, "extended")]):
-            s0 = int(230 * SR); seg = sig[:, s0:].mean(0)
+            s0 = int((230 + SHIFT) * SR); seg = sig[:, s0:].mean(0)
             ax[k].specgram(seg, NFFT=4096, Fs=SR, noverlap=3072, cmap="magma", vmin=-140)
             ax[k].set_ylim(0, 6000); ax[k].set_title(name); ax[k].set_ylabel("Hz")
-        ax[1].set_xlabel("seconds after 230 s")
+        ax[1].set_xlabel(f"seconds after {230 + SHIFT:g} s")
         fig.tight_layout(); fig.savefig(OUT.with_suffix(".png"), dpi=80)
         # level curve
         fig, ax = plt.subplots(figsize=(12, 3))
         for sig, name in [(y, "original"), (out, "extended")]:
-            s0 = int(230 * SR); seg = sig[:, s0:].mean(0); hop = SR // 20
+            s0 = int((230 + SHIFT) * SR); seg = sig[:, s0:].mean(0); hop = SR // 20
             lv = [20 * np.log10(np.sqrt(np.mean(seg[i:i + hop] ** 2)) + 1e-9) for i in range(0, len(seg) - hop, hop)]
-            ax.plot(230 + np.arange(len(lv)) / 20, lv, label=name)
+            ax.plot(230 + SHIFT + np.arange(len(lv)) / 20, lv, label=name)
         ax.set_ylim(-90, -5); ax.legend(); ax.set_ylabel("dBFS"); fig.tight_layout(); fig.savefig(OUT.with_name("ending_levels.png"), dpi=80)
     except Exception as e:
         print("plot failed", e)

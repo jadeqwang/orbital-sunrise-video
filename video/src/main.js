@@ -77,6 +77,7 @@ window.renderSheet = async (times, cols = 3, w = 640) => {
   Object.assign(TM, { bpm: tm.bpm, beat: tm.beat, t0: tm.t0, beats: tm.beats, sections: tm.sections, lines: tm.lines, dur: tm.dur, durExt: tm.durExt });
   try { PLATES = await loadJSON('plates/index.json'); } catch (e) { console.warn('no plates index'); }
   try { TM.mouth = await loadJSON('data/mouth.json'); } catch (e) { TM.mouth = null; }
+  try { const e = await loadJSON('data/editmap.json'); Object.assign(EDIT, { map: e.map, ins: e.insert, after: e.shift_after }); } catch (e) { console.warn('no edit map: the released cut'); }
   if (!Q.has('norit')) { try { const r = await loadJSON('data/timemap.json'); RIT.map = r.map; RIT.dur = r.duration; } catch (e) { console.warn('no time map: output time = song time'); } }
   buildTooth(); buildPaper('night'); buildPaper('snow');
   await Promise.all([FONT.impact(40), FONT.cyr(40), FONT.serif(40), FONT.mono(20), FONT.mono(20, 700), FONT.mono(20, 800), FONT.serifR(40), FONT.cyr(40, 500)].map(f => document.fonts.load(f, 'AБ')));

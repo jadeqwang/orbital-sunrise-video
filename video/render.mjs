@@ -20,7 +20,8 @@ const ROOT = resolve('.');
 // the final mix: the "suit" song with its last chord allowed to ring out (tools/extend_ending.py) and, by default, the
 // outro ritardando (tools/ritardando.py; data/timemap.json names its audio, .wav or the committed .m4a fallback).
 // Never fall back to the mp3: it has the old lyric ("sleeve").
-const EXT = resolve('../media/audio/Orbital_Sunrise_extended.wav'), EXT_M4A = resolve('../media/audio/Orbital_Sunrise_extended.m4a');
+// The extended recording (docs/ALTERNATE_CUT.md) has its own ritardando: data/timemap.json is the identity and names its ring-out mix.
+const EXT = resolve('../media/audio/Orbital_Sunrise_alt_extended.wav'), EXT_M4A = resolve('../media/audio/Orbital_Sunrise_alt_extended.m4a');
 const RIT = args.norit ? null : JSON.parse(readFileSync(resolve('data/timemap.json')));
 const firstOf = fs => fs.find(f => existsSync(f));
 const SONG = args.song ? resolve(args.song)
@@ -80,8 +81,9 @@ try {
   if (args.list) {
     const page = await openPage();
     // song times; where the ritardando moves a shot, its film (output) times follow in brackets
+    const TMDUR = await page.evaluate(() => TM.durExt);
     const shots = await page.evaluate(() => SHOTS.map(s => [s.name, +s.t0.toFixed(3), +s.t1.toFixed(3), +outAt(s.t0).toFixed(3), +outAt(Math.min(s.t1, TM.durExt)).toFixed(3)]));
-    for (const [n, a, b, ua, ub] of shots) console.log(`${n.padEnd(18)} ${a.toFixed(2).padStart(7)} → ${b.toFixed(2).padStart(7)}  (${(b - a).toFixed(2)} s)` + (ua !== a || ub !== Math.min(b, 242.2) ? `  [film ${ua.toFixed(2)} → ${ub.toFixed(2)}]` : ''));
+    for (const [n, a, b, ua, ub] of shots) console.log(`${n.padEnd(18)} ${a.toFixed(2).padStart(7)} → ${b.toFixed(2).padStart(7)}  (${(b - a).toFixed(2)} s)` + (ua !== a || ub !== Math.min(b, TMDUR) ? `  [film ${ua.toFixed(2)} → ${ub.toFixed(2)}]` : ''));
     if (args.out) writeFileSync(args.out, JSON.stringify(shots));
   } else if (args.sheet) {
     const page = await openPage(), out = args.out || 'out/sheet.jpg'; mkdirSync(dirname(out), { recursive: true });

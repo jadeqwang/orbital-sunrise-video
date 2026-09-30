@@ -4,57 +4,59 @@
 # The drop1 lines are the chopped vocal ("Sun-rise… (bring me) home…") timed as the hook's words.
 # Orbital_Sunrise_Lyrics.md (repo root) is the lyric sheet as written; this file is what the film is keyed to.
 
-[intro 0.0 23.632]
+[intro 0.0 35.421]
 First man floating in the void of space
+Tied to the ship by the slightest trace
+Pull him back to the ship's embrace
 Can't feel his hands, can't feel his face
 
-[hook1 23.632 34.344]
+[hook1 35.421 45.871]
 Orbital sunrise, burning gold
 Orbital sunrise, bring me home
 
-[swell 34.344 44.4]
+[swell 45.871 55.749]
 
-[pre 44.4 59.5]
+[pre 55.749 70.583]
 So he bleeds the air out, breath by breath
 Dancing on the edge of a quiet death
 Let his air out through the suit he wore
 Ninety minutes inside the airlock door
 
-[hook2 59.5 70.943]
+[hook2 70.583 81.85]
 Orbital sunrise, burning gold
 Orbital sunrise, bring me home
 
-[drop1 70.943 104.6]
+[drop1 81.85 115.03]
 Orbital sunrise, bring me home
 Orbital sunrise, bring me home
 Orbital sunrise, bring me home
 Orbital sunrise, bring me home
 
-[brk 104.6 118.0]
+[brk 115.03 128.224]
 He bleeds the air out, breath by breath
 Dancing on the edge of a quiet death
 I'll never float where the sky turns red
 Never see what he saw ahead
 
-[art 118.0 129.7]
+[art 128.224 139.716]
 Art is a landing in the snow
 Can't think, can't write, but my hands still know
 
-[build 129.7 143.2]
+[build 139.716 152.968]
 Guidance failed and the capsule spun
 Doing the math with a spinning sun
 Hold on… hold on… hold on…
 
-[hook3 143.2 152.629]
+[hook3 152.968 162.233]
 Orbital sunrise, burning gold
-Orbital sunrise, bring me home
+Fall through the skies, bring me home
 
-[drop2 152.629 176.8]
+[drop2 162.233 186.03]
 Off course… (but I'm) home
 Off course… (but I'm) home
 Off course… (but I'm) home
 
-[outro 176.8 189.637]
+[outro 186.03 198.752]
 Fifteen hundred klicks, coming in hot
 Fifteen hundred klicks, we overshot
 Made it down —
@@ -62,8 +64,8 @@ home.
 Made it down —
 home.
 
-[landed 189.637 226.552]
+[landed 198.752 235.193]
 
-[coda 226.552 234.696]
+[coda 235.193 243.19]
 
-[end 234.696 237.76]
+[end 243.19 246.254]

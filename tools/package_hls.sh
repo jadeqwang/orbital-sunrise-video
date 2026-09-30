@@ -8,9 +8,10 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 FR="$ROOT/video/out/frames/f%05d.jpg"
 # The release audio: the "suit" mix with the outro ritardando (tools/ritardando.py --vmin=0.65), matching frames rendered
 # with render.mjs's default time map (video/data/timemap.json). Frames rendered with --norit: NORIT=1 (the unslowed mix).
-# AUDIO=... overrides. Never the mp3 (it has the old lyric "sleeve").
+# AUDIO=... overrides. The extended recording (docs/ALTERNATE_CUT.md) plays its own ritardando, so both modes use its
+# ring-out mix (tools/extend_ending.py); never the released cut's Orbital_Sunrise.mp3 (it has the old lyric "sleeve").
 if [ -z "${AUDIO:-}" ]; then
-  if [ -n "${NORIT:-}" ]; then AUDIO="$ROOT/media/audio/Orbital_Sunrise_extended.wav"; else AUDIO="$ROOT/media/audio/Orbital_Sunrise_rit_0.65.wav"; fi
+  AUDIO="$ROOT/media/audio/Orbital_Sunrise_alt_extended.wav"
   [ -f "$AUDIO" ] || AUDIO="${AUDIO%.wav}.m4a"
 fi
 [ -f "$AUDIO" ] || { echo "missing audio $AUDIO" >&2; exit 1; }

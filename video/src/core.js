@@ -77,6 +77,34 @@ function pulse(t, k = 6, every = 1) { // 1 on each beat (or every Nth), exponent
 }
 function sincePrevBeat(t) { const n = beatN(t); return t - beatTime(n); }
 
+// ---------- edit map: the released cut's song time -> this recording's song time (data/editmap.json) ----------
+// The film was written against the released song. This recording plays the same performance at a slightly different
+// tempo, with two intro lines inserted (tools/retime.py). O(x) moves an absolute time of the released song (a hand-set
+// cut, a vocal clip's start) onto this recording; OI(t) is the inverse (inside the inserted bars: the insert point);
+// Bn(n) moves a released beat number. Without the file all three are the identity (the released cut).
+const EDIT = { map: null, ins: null, after: 0 };
+function O(x) {
+  const m = EDIT.map; if (!m) return x;
+  const n = m.length - 1; if (x >= m[n][0]) return x + EDIT.after;
+  let lo = 0, hi = n;
+  if (EDIT.ins) { if (x < EDIT.ins.old) hi = m.findIndex(p => p[0] >= EDIT.ins.old) - 1; else lo = m.findIndex(p => p[0] >= EDIT.ins.old); }
+  const a = lo, b = hi;
+  if (x <= m[a][0]) return m[a][1] + (x - m[a][0]);
+  while (hi - lo > 1) { const k = (lo + hi) >> 1; if (m[k][0] <= x) lo = k; else hi = k; }
+  if (x >= m[b][0]) { lo = b - 1; hi = b; }
+  const p = m[lo], q = m[hi];
+  return p[1] + (x - p[0]) * (q[1] - p[1]) / (q[0] - p[0]);
+}
+function OI(t) {
+  const m = EDIT.map; if (!m) return t;
+  const n = m.length - 1; if (t >= m[n][1]) return t - EDIT.after;
+  if (EDIT.ins && t > EDIT.ins.new0 && t < EDIT.ins.new1) return EDIT.ins.old;
+  let lo = 0, hi = n; while (hi - lo > 1) { const k = (lo + hi) >> 1; if (m[k][1] <= t) lo = k; else hi = k; }
+  const p = m[lo], q = m[hi];
+  return p[0] + (t - p[1]) * (q[0] - p[0]) / (q[1] - p[1]);
+}
+const Bn = n => (EDIT.ins && EDIT.ins.k && n >= EDIT.ins.beat ? n + EDIT.ins.k : n);
+
 // ---------- palette (the pencil box) ----------
 const P = {
   night: '#0d0c10', snow: '#f3efe6',

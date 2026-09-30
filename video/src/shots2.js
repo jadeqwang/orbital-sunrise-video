@@ -10,7 +10,7 @@ const SEG = { jade_hook1_p: 30.9, jade_studio_p: 67.4, jade_brk_p: 110.4 };
 // Plates drawn with their own mouth are shifted by the lag in data/sync.json.
 const REMOUTH = { jade_hook1_p: true, jade_studio_p: false, jade_brk_p: false };
 // re-mouthed, the plate's own lip timing no longer matters; drawn with its own mouth, the plate is shifted by its measured lag
-const tpSing = (id, t) => t - SEG[id] + (REMOUTH[id] ? 0 : lagOf(id));
+const tpSing = (id, t) => OI(t) - SEG[id] + (REMOUTH[id] ? 0 : lagOf(id));
 // a singing shot on white paper: the plate at song time, re-mouthed or not (REMOUTH)
 const singer = (t, id, o = {}) => drawPlate(t, id, tpSing(id, t), { remouth: REMOUTH[id], paper: 'snow', ...o });
 
@@ -183,7 +183,7 @@ async function initShots2() {
     if (new URLSearchParams(location.search).get('b3') === 'old') {
       await singer(t, 'jade_brk_p', { view: { zoom: 1.02 }, faceLines: false, hatch: { spacing: 6.2, mask: quiet([[W / 2 - 760, H - 175, W / 2 + 760, H - 45]], .7) } });
     } else {
-      const tp = t - (110.4 + +(new URLSearchParams(location.search).get('b3lag') ?? -.8));
+      const tp = OI(t) - (110.4 + +(new URLSearchParams(location.search).get('b3lag') ?? -.8));
       await paperTake('jade_dusk', tp);
       G.save(); G.globalAlpha = .45;
       await drawPlate(t, 'jade_dusk', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
@@ -210,7 +210,7 @@ async function initShots2() {
   // the frame, where the line sits in the first half, so after the cut the line is written on her notebook's blank left page
   // instead, in perspective like B2: HW_* in plate pixels (960×540, the book does not move): head edge (10,367)→(293,252),
   // gutter (293,252)→(627,460). "Art is a landing" is already on the page at the cut; "in the snow" is written from the cut.
-  const A1_SPLIT = B(328), A1_B0 = .45;                                          // ≈121.62 s
+  const A1_SPLIT = B(Bn(328)), A1_B0 = .45;                                          // ≈121.62 s
   const A1_B = { id: 'jade_hand_writing_p', tp: t => A1_B0 + t - A1_SPLIT };
   // HW_* were measured on take 2; take 4 (take 2 rebuilt from its first frame) has the book 3 px left and 16 px higher (phase
   // correlation of the book region against take 2's contact sheet, steady over the whole take)
@@ -248,7 +248,7 @@ async function initShots2() {
   // The sun whips past the porthole once per turn of the tumble: every 3 beats (≈1.1 s), centred just after beats 352, 355, 358,
   // which is where the plate's spin is between Earths (Earth → black → SUN → black → Earth). It enters at the top and leaves at
   // the bottom, the way the Earth sweeps through the plate. Each pass keeps one stroke layout (seed per pass; jseed boils it).
-  const SPIN_B0 = 352, SPIN_BEATS = 3, SPIN_LAG = .06, SPIN_HALF = .17;   // pass centre = B(352 + 3k) + lag; half a crossing, s
+  const SPIN_B0 = Bn(352), SPIN_BEATS = 3, SPIN_LAG = .06, SPIN_HALF = .17;   // pass centre = B(352 + 3k) + lag; half a crossing, s
   const PORT_UV = [486 / 960, 277 / 540], PORT_R = 252 / 960;             // glass opening in plate uv (Hough fit, frames 1–91; the camera holds it)
   // her notes (2:20): the capsule is still tumbling in the g-load shot, so the sun and the Earth keep sliding across its two cabin
   // portholes like they slide across the big one before it (not the glass pulsing): the sun whips across the right port, then
@@ -266,7 +266,7 @@ async function initShots2() {
   const VZ_PORTS = [{ f: VZ_F, x: [506, 509, 513, 516, 519, 524, 528, 530, 534, 536], y: [98, 95, 94, 91, 90, 94, 96, 99, 100, 101], r: [56, 58, 59, 61, 63, 63, 65, 66, 68, 69], lag: .65, top: false,
     occ: [{ x: [454, 455, 457, 459, 459, 462, 464, 465, 466, 467], y: [156, 154, 153, 154, 155, 156, 159, 161, 163, 165], r: [87, 90, 93, 96, 99, 103, 105, 108, 111, 114] },
       { x: [574, 579, 584, 590, 595, 601, 608, 613, 619, 623], y: [180, 180, 181, 182, 184, 187, 191, 194, 196, 198], r: [73, 75, 77, 79, 81, 83, 85, 87, 91, 93] }] }];
-  const CAB_B0 = 375, CAB_BEATS = 8, CAB_V = 400, CAB_ER = 200, CAB_EO = 185;   // ≈139.0 s; plate px/s; the Earth's radius, its centre below the path
+  const CAB_B0 = Bn(375), CAB_BEATS = 8, CAB_V = 400, CAB_ER = 200, CAB_EO = 185;   // ≈139.0 s; plate px/s; the Earth's radius, its centre below the path
   const track = (fs, vs, f) => { let i = 0; while (i < fs.length - 2 && f > fs[i + 1]) i++; return lerp(vs[i], vs[i + 1], clamp((f - fs[i]) / (fs[i + 1] - fs[i]))); };
   // where a line (base + u·(ca, sa)) is inside circle (ox, oy, r): [u0, u1] or null
   const chord = (bx, by, ca, sa, ox, oy, r) => { const qx = bx - ox, qy = by - oy, b = qx * ca + qy * sa, c = qx * qx + qy * qy - r * r, D = b * b - c; return D > 0 ? [-b - Math.sqrt(D), -b + Math.sqrt(D)] : null; };
@@ -445,7 +445,7 @@ async function initShots2() {
   shot('G3_hold', BD[2].t0 - .05, bd1, async (t, lt, dur) => {
     paper(G, 'night');
     let cur = holds[0]; for (const h of holds) if (t >= h[0] - .05) cur = h;
-    const riser = clamp((t - 139.5) / (bd1 - 139.5));
+    const riser = clamp((t - O(139.5)) / (bd1 - O(139.5)));
     const shake = 6 + riser * 22;
     const ho = cur[4] || {};
     const { view } = await drawPlate(t, cur[1], cur[2] + (t - cur[0]) * (ho.rate || 1), { face: ho.face, rate: riser > .3 ? 24 : 12, view: { zoom: 1.05 + (ho.zoom || 0) + riser * .15, rot: ho.roll ? -ho.roll + (t - cur[0]) * ho.roll * 1.1 : 0, ox: (hash(Math.floor(t * 24)) - .5) * shake, oy: (hash(Math.floor(t * 24) + 7) - .5) * shake },
@@ -476,11 +476,12 @@ async function initShots2() {
   });
   shot('F2_home', H3[1].t0 - .05, h31, async (t, lt) => {
     paper(G, 'night');
-    await drawPlate(t, 'reentry_outside', tpRe(t), { view: RE_VIEW, ...RE_OPT, hatch: { pencilOpt: { warm: 1.8 }, mask: quiet([[60, 70, 1140, 240], [W / 2 - 420, H - 150, W / 2 + 420, H - 40]], .8) } });
-    const w = H3[1].words;
+    await drawPlate(t, 'reentry_outside', tpRe(t), { view: RE_VIEW, ...RE_OPT, hatch: { pencilOpt: { warm: 1.8 }, mask: quiet([[60, 70, 1140, 370], [W / 2 - 420, H - 150, W / 2 + 420, H - 40]], .8) } });
+    const w = H3[1].words;   // Fall through the skies, bring me home (the extended recording's final chorus)
     // "bring" lands .4 s before the cut to the parachute ("home" is sung after it): a subtitle-sized line, not a hero word
-    lyricStack(t, [{ s: 'ORBITAL SUNRISE', t: w[0][0], x: 110, y: 200, size: 120, col: 'white', style: 'rise' },
-      { s: 'bring me home', t: w[2][0] - .1, x: W / 2, y: H - 80, font: FONT.serif(64), col: 'cream', align: 'center', style: 'rise' }]);
+    lyricStack(t, [{ s: 'FALL THROUGH', t: w[0][0], x: 110, y: 200, size: 120, col: 'white', style: 'rise' },
+      { s: 'THE SKIES', t: w[2][0], x: 110, y: 330, size: 120, col: 'white', style: 'rise' },
+      { s: 'bring me home', t: w[4][0] - .1, x: W / 2, y: H - 80, font: FONT.serif(64), col: 'cream', align: 'center', style: 'rise' }]);
   });
 
   // ============================== DROP 2 · 152.63 → 176.80 ==============================
@@ -567,7 +568,7 @@ async function initShots2() {
   });
   // night by the fire: quilted suit linings, parachute cloth, fur boots. The plate is dusk; here only what the fire lights is drawn
   // (the hatching falls off with distance from the fire), so the taiga goes to night around it.
-  shot('L4_fire', HOME2.t0 - .05, 206.2, async (t, lt) => {
+  shot('L4_fire', HOME2.t0 - .05, O(206.2), async (t, lt) => {
     paper(G, 'night');
     const ftp = 2.2 + lt * .55, z = 1.03, m = plateMeta('fire_night_v2', ftp), fu = m ? m.sun : [.43, .96];
     const fx = W / 2 + (fu[0] - .5) * W * z, fy = H / 2 + (fu[1] - .5) * H * z;
@@ -579,13 +580,13 @@ async function initShots2() {
     const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · −25 °C', 60, H - 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'silver', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .4);
   });
   // by the fire he unfolds the folded sheet (the reconstruction) and smiles; no caption (the line moves to the coda)
-  shot('L5_survived', 206.2, 211.2, async (t, lt) => {
+  shot('L5_survived', O(206.2), O(211.2), async (t, lt) => {
     paper(G, 'night');
     const tp = 1.0 + lt;
     await drawPlate(t, 'drawing_survives_v2', tp, { view: { zoom: 1.04 }, lines: {}, face: tp > 4.3 });   // earlier face hits are on the hands
   });
   // skiers in sheepskin coats bring warm clothes; the cosmonauts by the fire in their linings
-  const LEG_BEATS = 3, LEG_END = 610;                                            // the legacy montage ends on beat 610 (≈225.81 s)
+  const LEG_BEATS = 3, LEG_END = Bn(610);                                            // the legacy montage ends on beat 610 (≈225.81 s)
   const LEG = [
     ['1965', 'ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1]],
     ['1969', 'PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08]],
@@ -599,10 +600,10 @@ async function initShots2() {
     ['2026', 'FOUR PEOPLE AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12]],
   ];
   const LEG_B0 = LEG_END - LEG.length * LEG_BEATS, lg0 = B(LEG_B0), lg1 = B(LEG_END), PX = 640;
-  shot('L6_rescue', 211.2, lg0, async (t, lt) => {
+  shot('L6_rescue', O(211.2), lg0, async (t, lt) => {
     paper(G, 'snow');
     await drawPlate(t, 'rescue_v2', 2 + lt * 1.4, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[40, 30, 760, 110]], .8) } });
-    const Lt = typeLayer(); tele(Lt.g, 'RESCUERS ARRIVE ON SKIS', 60, 64, t, 211.5, { size: 24, weight: 800, col: 'graphite', dur: .6 }); typeFlush(Lt, drawClock(t, 12).n, .6);
+    const Lt = typeLayer(); tele(Lt.g, 'RESCUERS ARRIVE ON SKIS', 60, 64, t, O(211.5), { size: 24, weight: 800, col: 'graphite', dur: .6 }); typeFlush(Lt, drawClock(t, 12).n, .6);
   });
   // team Earth: one milestone every LEG_BEATS beats, on the beat. [year, line (≤ 7 words, docs/FACTS.md §6), plate, framing (cx, cy, zoom) in the right-hand panel]
   shot('L7_legacy', lg0, lg1, async (t, lt) => {
@@ -623,7 +624,7 @@ async function initShots2() {
 
   // ============================== CODA · 226.55 → end ==============================
   const [c0, c1] = S('coda').slice(1), [e0, e1] = S('end').slice(1);
-  const CARD1 = B(619);                                                          // ≈229.10 s: the survivors card → the drawing
+  const CARD1 = B(Bn(619));                                                          // ≈229.10 s: the survivors card → the drawing
   // 3:46 · Leonov and Belyayev after the rescue: white paper (daylight snow), the words in a clearing above them
   shot('L8_cosmonauts', lg1, CARD1, async (t, lt) => {
     paper(G, 'snow');

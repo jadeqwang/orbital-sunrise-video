@@ -52,6 +52,44 @@ block spliced in**: the arrangement matches but the audio does not sample-for-sa
   they drift ≈0.08 s over a 5 s clip, which may be tolerable, but each take's lag needs a listen against the new audio.
 - The suit splice, ending ring-out and ritardando tools (section 2) all need their times moved through the map above.
 
+## Retimed to the extended mix (branch, 2026-09-30)
+
+She confirmed the new mix sings "suit" and asked for the film to be retimed. Done on this branch; the released cut stays on
+`main`. How it works:
+
+- **One time map moves the whole film.** `python3 tools/retime.py map` aligns the released mix
+  (`Orbital_Sunrise_extended.m4a`) with hers every 0.5 s and writes `video/data/editmap.json` (old song time → new song time;
+  a jump of 12.12 s at old 13.0 s for the inserted lines; note-for-note anchors through the piano outro; +8.494 s after the
+  final chord). Checked on both vocal stems: the new vocal matches the old one word for word within 0.01–0.03 s once
+  mapped, so the recording is the same performance at a slightly different, wandering tempo (≈164.8 BPM on average).
+- `python3 tools/retime.py timing` rewrites `video/data/timing.json` from `video/data/timing_release.json` (the released cut's,
+  kept): every beat, word and section through the map; 33 beats inserted in the new bars (so released beat n ≥ 35 is now
+  n + 33); the two new intro lines; "Can't feel his hands, can't feel his face" re-measured (the released times sat up to
+  0.74 s early on "Can't": in both recordings it is sung ≈0.75 s after the old timing said); the final chorus's
+  "Fall through the skies, bring me home". The new word times come from a speech recogniser run on the new vocal stem
+  (sherpa-onnx, NeMo Parakeet TDT 0.6B int8, downloaded from the k2-fsa/sherpa-onnx GitHub releases, which this environment
+  allows; huggingface.co is blocked), each snapped to the stem's onsets and pitch changes; the recogniser alone is only good
+  to ≈0.1 s on singing.
+- **video/src:** `core.js` has `O(x)` (a released song time → this recording), `OI(t)` (the inverse) and `Bn(n)` (a released
+  beat number), loaded from `editmap.json` in `main.js` (no file: the identity, the released cut). Every hand-set time and
+  beat number in the table of section 4 is wrapped in them, and the singing takes read their clock through `OI(t)`, so their
+  lips stay on her voice (the take plays 1.6 % faster). `render.mjs --list` against the released list: every shot moves
+  exactly with the map (within 0.08 s) except the intended changes below.
+- **New shots:** `N1_tether` ("Tied to the ship by the slightest trace": the unused plate `reach_home`, over his shoulder
+  reaching for the Earth, the tether in a loose curve; "TETHER · 5.35 M") and `N2_pullback` ("Pull him back to the ship's
+  embrace": I3's `airlock_exit` take run backwards, the ship taking him in). `I4_hands` now cuts on the sung "Can't"
+  (25.96 s). `F2_home` types "FALL THROUGH / THE SKIES" and "bring me home" (its type mask grew to fit).
+- **Audio:** her recording already slows the piano outro ("ritardando at the end" on the sheet: the eighths widen from 0.20 to
+  0.31 s before the chord), so there is no `tools/ritardando.py` pass and `video/data/timemap.json` is the identity. It still
+  cut off 4.4 s after the final chord while ringing (−39 dB), so `tools/extend_ending.py --src=media/audio/Orbital_Sunrise_alt.mp3
+  --out=media/audio/Orbital_Sunrise_alt_extended.wav --shift=8.494` gives it the same ring-out as the release (untouched up to
+  242.7 s; 250.69 s = **6017 frames**). The committed fallback is `Orbital_Sunrise_alt_extended.m4a`; `render.mjs`,
+  `encode_release.sh` and `package_hls.sh` default to it. (`extend_ending.py` now convolves with `fftconvolve`: 6 s instead
+  of hours, same result.)
+- **Not done:** the full render needs the plate `leonov_drawing` (drop 1's drawing shots, the coda, the title), which
+  `tools/install_drawing.py` builds from her museum photo `media/refs/leonov_drawing_real_photo.jpg` (not committed; not in
+  this container). `docs/SHOTLIST.md`, the README's "4:02" and the HANDOFF tables still describe the released cut.
+
 ## 0. Ask her first (only she can supply these)
 
 1. **The new lyric text**, line by line, and where each new line goes (which section, before/after which existing line).
