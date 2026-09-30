@@ -8,6 +8,35 @@ Read first: [`HANDOFF_JADE.md`](HANDOFF_JADE.md) (her likeness rules, the releas
 [`TAKES.md`](TAKES.md) (the recipe for every generated take, including "Extending a clip, or adding lyrics").
 Style: [`STYLE_BIBLE.md`](STYLE_BIBLE.md). Facts on screen: [`FACTS.md`](FACTS.md).
 
+## The extended mix she supplied (2026-09-30)
+
+`media/audio/Orbital_Sunrise_alt.mp3` is her upload `Orbital_Sunrise_6.mp3`, committed as received: **247.58 s**
+(vs 237.79 s for `Orbital_Sunrise.mp3`), MP3 180 kb/s, 48 kHz stereo, tags "Orbital Sunrise" / "jadewang". It is lossy, not
+the WAV/AIFF asked for in item 2 below: fine to work from, but ask for the lossless master (and her vocal stem) if she has
+them. The released cut's audio is untouched.
+
+`python3 tools/compare_mix.py Orbital_Sunrise.mp3 media/audio/Orbital_Sunrise_alt.mp3` (a new tool: windowed spectral
+matching, old song time to new song time) finds:
+
+| old song time | new song time | what |
+|---|---|---|
+| 0 – ≈13.9 | 0 – ≈13.9 | the intro through "First man floating in the void of space" (line ends 13.19), same music |
+| — | **≈13.9 – ≈26.0** | **≈12 s of new material** (about 8 bars) before "Can't feel his hands, can't feel his face": presumably the new lyric lines; not transcribed yet (Whisper is blocked here, so by ear / from her) |
+| ≈14 – 230 | new = 0.98445 × old + 12.03 | the rest of the song in the same order, but **1.58 % faster** (≈164.9 BPM vs 162.33): the offset falls steadily from +12.0 s to +8.7 s |
+| 230 – end | +8.4 s | the ending lands ≈0.3 s earlier than the fit; the new mix is ≈1.4 s longer after the final chord than the old mp3 (check whether it already rings out, item 4) |
+
+Match scores are 0.6 – 0.95 rather than ≈1.0 after the intro, so this is a **new render of the song, not the old mix with a
+block spliced in**: the arrangement matches but the audio does not sample-for-sample. Consequences:
+
+- It is case **B** (an insert at ≈13.9 s) **plus a tempo change**: `timing_edit.py shift` alone is not enough. Every time after
+  the insert maps through `new = 0.98445 × old + 12.03` (a scale, then re-check by ear), the beat period becomes ≈0.3639 s,
+  and the beats in `timing.json` must be re-measured (or scaled) rather than shifted. An `editmap.json` (section 4) with a
+  scale segment handles the absolute constants in `video/src`.
+- The "suit"/"sleeve" word (item 3) must be checked by ear in the new mix: ≈1:04 (old 52.6 s → new ≈63.8 s).
+- The five vocal reference clips and the lips of every existing singing take were cut against the old mix: at 1.58 % faster
+  they drift ≈0.08 s over a 5 s clip, which may be tolerable, but each take's lag needs a listen against the new audio.
+- The suit splice, ending ring-out and ritardando tools (section 2) all need their times moved through the map above.
+
 ## 0. Ask her first (only she can supply these)
 
 1. **The new lyric text**, line by line, and where each new line goes (which section, before/after which existing line).
