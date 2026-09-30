@@ -16,10 +16,12 @@ still ringing. This builds a natural tail:
   5. the original is kept untouched up to the cross-fade.
 Writes media/audio/Orbital_Sunrise_extended.wav (48 kHz) and a before/after spectrogram for review.
 
-Another recording of the same ending (the extended mix, docs/ALTERNATE_CUT.md):
+Another recording of the same ending (the extended mixes, docs/ALTERNATE_CUT.md):
+    python3 tools/extend_ending.py --src=media/audio/Orbital_Sunrise_alt2.mp3 --out=media/audio/Orbital_Sunrise_alt2_extended.wav --shift=10.084
     python3 tools/extend_ending.py --src=media/audio/Orbital_Sunrise_alt.mp3 --out=media/audio/Orbital_Sunrise_alt_extended.wav --shift=8.494
 --shift moves every time in here (freeze window, cross-fade, reverb start, review plots) by the final chord's offset in the new
-recording (video/data/editmap.json shift_after: the chord is at 234.696 s here, 243.19 s there).
+recording (video/data/editmap.json shift_after: the chord is at 234.696 s here, 244.78 s in alt2 (the film's), 243.19 s in alt).
+alt2's own ending fades the chord out to silence in ~4 s; the tail replaces that fade the same way.
 """
 import pathlib, subprocess, numpy as np
 
