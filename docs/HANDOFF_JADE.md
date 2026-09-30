@@ -3,6 +3,10 @@
 The film is done and released except for one open problem: **how Jade (the singer, the repo owner) appears in her own
 scenes.** Everything else below is context for that. Written at the end of a long session so a fresh one can take over.
 
+**Recreating or extending any generated shot** (her singing takes above all: first frames, prompts, params, lags, the
+still chains, how to cut new vocal clips for an alternate cut with more lyrics): see [`docs/TAKES.md`](TAKES.md). Each final
+take's inputs are archived next to it in `media/plates/<plate_id>/`.
+
 ## The open problem, in her words
 
 - Kenton (a friend) watched the release: "The rendering of you is a bit odd. I parse the face shape as a lot less attractive

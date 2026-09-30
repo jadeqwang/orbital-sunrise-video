@@ -1,0 +1,51 @@
+{
+ "plate": "jade_dusk",
+ "take": "take1.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 305,
+  "t": "2026-09-29T10:14:40",
+  "tag": "jade_sing",
+  "secs": 294.3,
+  "output_logged": [
+   "SP/dusk2_a.mp4"
+  ]
+ },
+ "input": {
+  "duration": 8,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "image": [
+   "media/plates/jade_dusk/take1.first.jpg"
+  ],
+  "reference_audios": [
+   "media/audio_refs/jade_brk.mp3"
+  ],
+  "use_virtual_avatar": true
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "B3_never (1:54.49-1:58.00), \"never see what he saw ahead\", red dusk on the Lady Bird Lake trail",
+ "default": true,
+ "first_frame": "media/plates/jade_dusk/take1.first.jpg",
+ "chain": "media/plates/jade_dusk/take1.chain.json",
+ "command": "python3 tools/jade_sing.py media/plates/jade_dusk/take1.first.jpg <out.mp4> --scene=dusk",
+ "timing": {
+  "vocal_clip": "media/audio_refs/jade_brk.mp3",
+  "clip_start_song_s": 110.4,
+  "lag_s": -0.8,
+  "formula": "take time = song time - (110.4 + lag)",
+  "picked": "0.6 s earlier than the estimate C",
+  "url_override": "?b3lag=",
+  "note": "the take ends 0.36 s before the shot and holds its last frame"
+ },
+ "renderer": {
+  "file": "video/src/shots2.js B3_never",
+  "plate": "jade_dusk",
+  "size": "1280x720",
+  "flags": "default; ?b3=old renderer-drawn jade_brk_p"
+ },
+ "note": "session name dusk2_a (committed also as media/chars/jade_src/sing/dusk_take_a.mp4)",
+ "reference_audio_cut": "full-mix excerpt of Orbital_Sunrise.mp3 (repo root, original \"sleeve\" mix), 44.1 kHz stereo 192 kb/s mp3; clip starts at song 30.9 s (hook1), 67.4 s (hook2), 110.4 s (brk); verified by cross-correlation (corr 0.999-1.0)"
+}

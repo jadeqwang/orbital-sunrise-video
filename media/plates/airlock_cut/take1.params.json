@@ -1,0 +1,37 @@
+{
+ "plate": "airlock_cut",
+ "take": "take1.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 506,
+  "t": "2026-09-29T21:46:47",
+  "tag": "airlock_arm",
+  "secs": 153.7,
+  "output_logged": [
+   "SP/arm4.mp4"
+  ]
+ },
+ "input": {
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "use_virtual_avatar": true,
+  "image": [
+   "media/plates/airlock_cut/still.jpg"
+  ]
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "P4_airlock (0:54.62-0:59.50): side cutaway, he slides one arm up the wall to the hatch",
+ "default": "at commit a1de1c5; being replaced by another helper right now (airlock_alive_* takes, video/plates/index.json says take2) - check git log",
+ "first_frame": "media/plates/airlock_cut/still.jpg",
+ "chain": "media/plates/airlock_cut/still.chain.json",
+ "command": "python3 tools/airlock_stills.py --gen   (committed a1de1c5 version: regenerates take1 from still.jpg with this prompt; the working version being edited now takes a plate id); then python3 tools/airlock_stills.py airlock_cut to register/tone/matte and install",
+ "renderer": {
+  "file": "video/src/shots.js P4_airlock",
+  "plate": "airlock_cut (1920x1080, registered onto the still) / airlock_cut_still",
+  "flags": "?p4arm=0 still, ?p4=old tube_struggle"
+ },
+ "note": "session name arm4.mp4 (arm1-3 rejected)"
+}

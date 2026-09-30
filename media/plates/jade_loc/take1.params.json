@@ -1,0 +1,50 @@
+{
+ "plate": "jade_loc",
+ "take": "take1.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 275,
+  "t": "2026-09-29T09:04:32",
+  "tag": "jade_sing",
+  "secs": 477.9,
+  "output_logged": [
+   "SP/loc_take_a.mp4"
+  ]
+ },
+ "input": {
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "image": [
+   "media/plates/jade_loc/take1.first.jpg"
+  ],
+  "reference_audios": [
+   "media/audio_refs/jade_hook1.mp3"
+  ],
+  "use_virtual_avatar": true
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "H1d_home (0:32.34-0:34.34), \"bring me home\" (first hook)",
+ "default": true,
+ "first_frame": "media/plates/jade_loc/take1.first.jpg",
+ "chain": "media/plates/jade_loc/take1.chain.json",
+ "command": "python3 tools/jade_sing.py media/plates/jade_loc/take1.first.jpg <out.mp4> --loc",
+ "timing": {
+  "vocal_clip": "media/audio_refs/jade_hook1.mp3",
+  "clip_start_song_s": 30.9,
+  "lag_s": -0.22,
+  "formula": "take time = song time - (30.9 + lag)",
+  "picked": "her \"G\" by ear",
+  "url_override": "?h1dlag="
+ },
+ "renderer": {
+  "file": "video/src/shots.js H1d_home",
+  "plate": "jade_loc",
+  "size": "1280x720",
+  "flags": "default; ?h1d=over|plain|js|locfade",
+  "how": "paperTake(id, tp) + drawPlate at 45% alpha (the film pencil over it)"
+ },
+ "reference_audio_cut": "full-mix excerpt of Orbital_Sunrise.mp3 (repo root, original \"sleeve\" mix), 44.1 kHz stereo 192 kb/s mp3; clip starts at song 30.9 s (hook1), 67.4 s (hook2), 110.4 s (brk); verified by cross-correlation (corr 0.999-1.0)"
+}

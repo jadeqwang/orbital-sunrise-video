@@ -1,0 +1,38 @@
+{
+ "plate": "jade_notebook_p",
+ "take": "take1.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 193,
+  "t": "2026-09-29T01:22:11",
+  "tag": "plate:jade_notebook_p",
+  "secs": 320.4,
+  "output_logged": [
+   "media/plates/jade_notebook_p/take1.mp4"
+  ]
+ },
+ "input": {
+  "duration": 6,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "reference_images": [
+   "media/chars/jade_src/photos/jade_photo_5_front_hair.jpg",
+   "media/chars/jade_src/photos/jade_photo_6_grin.jpg",
+   "media/chars/jade_src/photos/jade_photo_14_profile_left.jpg",
+   "media/archive/chars_v5/comp/outfit_nohp.jpg",
+   "media/archive/chars_v5/comp/hp_ref.jpg"
+  ],
+  "use_virtual_avatar": true
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "B2_float (1:51.01-1:54.49): over the shoulder, her hand writing the lyric in a notebook; the renderer zooms onto the page (no face)",
+ "default": true,
+ "command": "python3 tools/plates.py jade_notebook_p   (spec in tools/plate_specs.py; writes the next takeN.mp4)",
+ "renderer": {
+  "file": "video/src/shots2.js B2_float",
+  "plate": "jade_notebook_p (960x540)",
+  "how": "drawPlate at .4 + lt, zoom 2.3->2.75 onto NB_AT; lyric handwritten along NB_* page coordinates (plate pixels)"
+ }
+}

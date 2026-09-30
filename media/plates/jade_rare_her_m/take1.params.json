@@ -1,0 +1,58 @@
+{
+ "plate": "jade_rare_her_m",
+ "take": "take1.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 507,
+  "t": "2026-09-29T22:05:25",
+  "tag": "jade_sing",
+  "secs": 326.9,
+  "output_logged": [
+   "SP/re/sep_take_m2.mp4"
+  ]
+ },
+ "input": {
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "image": [
+   "media/plates/jade_rare_her_m/take1.first.jpg"
+  ],
+  "reference_audios": [
+   "media/audio_refs/jade_hook2.mp3"
+  ],
+  "use_virtual_avatar": true,
+  "reference_images": [
+   "media/plates/jade_rare_her_m/take1.ref_pants_ok.png"
+  ],
+  "reference_videos": [
+   "https://raw.githubusercontent.com/jadeqwang/orbital-sunrise-video/main/media/plates/jade_rare_her/take1.mp4"
+  ]
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "K4_home (1:08.79-1:10.94) DEFAULT: take M = take F's motion (F as reference video) in baggy dark cargo trousers",
+ "default": true,
+ "first_frame": "media/plates/jade_rare_her_m/take1.first.jpg",
+ "chain": "media/plates/jade_rare_her_m/take1.chain.json",
+ "reference_image": "media/plates/jade_rare_her_m/take1.ref_pants_ok.png (trousers only)",
+ "reference_video": "https://raw.githubusercontent.com/jadeqwang/orbital-sunrise-video/main/media/plates/jade_rare_her/take1.mp4 (take F; must be a public URL)",
+ "command": "python3 tools/jade_sing.py media/plates/jade_rare_her_m/take1.first.jpg <out.mp4> --scene=rare_her_anime --ref=media/plates/jade_rare_her_m/take1.ref_pants_ok.png --refvideo=https://raw.githubusercontent.com/jadeqwang/orbital-sunrise-video/main/media/plates/jade_rare_her/take1.mp4",
+ "timing": {
+  "vocal_clip": "media/audio_refs/jade_hook2.mp3",
+  "clip_start_song_s": 67.4,
+  "lag_s": 0.3,
+  "formula": "take time = song time - (67.4 + lag)",
+  "picked": "her \"B\" of lags 0.1/0.3/0.5/0.7/0.9",
+  "url_override": "?k4lag="
+ },
+ "renderer": {
+  "file": "video/src/shots.js K4_home",
+  "plate": "jade_rare_her_m",
+  "size": "1280x720",
+  "flags": "default; ?k4=F take F, ?k4=studio booth, ?k4=old renderer-drawn jade_studio_p"
+ },
+ "note": "session name sep_take_m2 (a retry of \"m\"); take \"n\" (genlog 502) is the same inputs, not chosen",
+ "reference_audio_cut": "full-mix excerpt of Orbital_Sunrise.mp3 (repo root, original \"sleeve\" mix), 44.1 kHz stereo 192 kb/s mp3; clip starts at song 30.9 s (hook1), 67.4 s (hook2), 110.4 s (brk); verified by cross-correlation (corr 0.999-1.0)"
+}

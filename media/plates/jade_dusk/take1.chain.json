@@ -1,0 +1,94 @@
+{
+ "summary": "take3_first -> SCENES[\"dusk_trail_lit\"] -> FIXES[\"dusk_fix\"] (+restore_lines) -> FIXES[\"loosen\"] -> restore_lines -> dloose_1.jpg = dusk_first.jpg",
+ "steps": [
+  {
+   "local_step": "root: her kept drawing (see jade_loc chain)",
+   "output_in_repo": "media/chars/jade_src/sing/take3_first.jpg"
+  },
+  {
+   "genlog_line": 282,
+   "t": "2026-09-29T09:36:43",
+   "tag": "jade_location",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "tools/jade_location.py SCENES[\"dusk_trail_lit\"]",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/jade_sing3/take1.first.jpg"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/dtrail_2.png"
+   ],
+   "output_in_repo": [
+    "media/chars/jade_src/location/dtrail_2_model.jpg  (JPEG of the model PNG)"
+   ],
+   "secs": 38.0,
+   "note": "dtrail_2: Lady Bird Lake trail, relit (RELIGHT_DUSK)",
+   "prompt": "Edit this pencil drawing on cream paper. Keep the woman exactly as she is drawn: the same pencil lines, the same face, head size and shape, high forehead, glasses, eyebrows, hair, jacket, pose, size and position in the picture. Do not redraw, move, resize, beautify or restyle her. Draw the place around her in the same graphite and coloured-pencil style on the same paper, as a shot in a music video filmed by someone holding the camera in front of her. She stands on the Lady Bird Lake hike-and-bike trail in Austin, Texas at dusk: the whole sky a deep red and orange, the downtown Austin skyline far behind her across the calm water, the red sky reflected in the lake, trees along the trail. Light her as she would really be lit standing there: the sun has just set behind her, so the red-orange sky lights her from behind and the side: a strong red-orange rim along her hair, cheek and shoulder, her face in soft warm shade, the white of her jacket and her skin taking on the dusk colour like everything else in the picture. She must look like she is standing in that light, not pasted onto the picture. Keep every line of her face. No text, no border."
+  },
+  {
+   "genlog_line": 287,
+   "t": "2026-09-29T09:56:00",
+   "tag": "jade_location_fix",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "tools/jade_location.py FIXES[\"dusk_fix\"]",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/chars/jade_src/location/dtrail_2_model.jpg  (JPEG of the model PNG)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/d2fix_1.png"
+   ],
+   "output_in_repo": [
+    "media/chars/jade_src/location/d2fix_1_model.jpg  (JPEG of the model PNG)"
+   ],
+   "secs": 58.8,
+   "note": "d2fix_1 (her pick \"2a\": no closet glasses-shadow); committed restored as location/d2fix_1.jpg = restore_lines(take3_first, d2fix_1.png, skip_cheeks=True) (verified 0.31/255)",
+   "prompt": "Edit image 1, keeping it the same drawing, framing, style and red dusk light, and keeping her face, head size, hair, glasses, jacket and pose exactly as they are. The shadow her glasses cast on her cheeks just under the lenses comes from an overhead light in the original photo; there is no overhead light in this scene. Remove that shadow: her cheeks under her glasses are lit by the same light as the rest of her face. Change nothing else. No text, no border."
+  },
+  {
+   "genlog_line": 298,
+   "t": "2026-09-29T10:05:48",
+   "tag": "jade_location_fix",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "tools/jade_location.py FIXES[\"loosen\"]",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/chars/jade_src/location/d2fix_1.jpg"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/dloose_1.png"
+   ],
+   "output_in_repo": [
+    "media/chars/jade_src/location/dloose_1_model.jpg  (JPEG of the model PNG)"
+   ],
+   "secs": 156.8,
+   "note": "dloose_1: background loosened (her pick \"1:55 · 1\"); NB input was the restored d2fix_1.jpg",
+   "prompt": "Edit image 1, keeping her exactly as she is: her face, head, hair, glasses, headphones, jacket, pose and the light on her unchanged. Redraw only the background behind her more loosely, like a quick pencil sketch around a finished figure: quicker, freer graphite and coloured-pencil strokes, much less detail, simplified shapes, some bare paper showing through, edges left rough. Keep the same composition, places, colours and light direction. She stays the most finished thing in the picture. No text, no border."
+  },
+  {
+   "local_step": "restore_lines(media/chars/jade_src/sing/take3_first.jpg, dloose_1.png, dloose_1.jpg, skip_cheeks=True) — jade_location.restore_lines(src, edited, out, skip_cheeks=True): inside her face oval, the edit's low-frequency light x the original's pencil detail; cheeks left to the scene; verified 0.25/255",
+   "output_in_repo": "media/chars/jade_src/location/dloose_1.jpg (= sing/dusk_first.jpg)"
+  }
+ ]
+}

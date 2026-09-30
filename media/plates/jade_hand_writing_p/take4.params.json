@@ -1,0 +1,34 @@
+{
+ "plate": "jade_hand_writing_p",
+ "take": "take4.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 310,
+  "t": "2026-09-29T10:44:20",
+  "tag": "plate:jade_hand_writing_p",
+  "secs": 254.7,
+  "output_logged": [
+   "media/plates/jade_hand_writing_p/take4.mp4"
+  ]
+ },
+ "input": {
+  "duration": 6,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "image": [
+   "media/plates/jade_hand_writing_p/take4.first.jpg"
+  ]
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "A1_snow second half (after 2:01.6) and A2_hands right half: her hand writing in the notebook, jacket sleeve",
+ "default": true,
+ "first_frame": "media/plates/jade_hand_writing_p/take4.first.jpg (= media/refs/jade_hand_sleeve_from_take2.jpg, recovered from take2.sheet.jpg)",
+ "command": "python3 tools/plates.py jade_hand_writing_p   (spec first_frame=media/refs/jade_hand_sleeve_from_take2.jpg, no reference image)",
+ "renderer": {
+  "file": "video/src/shots2.js A1_snow / A2_hands",
+  "plate": "jade_hand_writing_p (960x540)",
+  "how": "A1_B.tp(t) = 0.45 + t - A1_SPLIT; HW_OFF [-3,-16] because take 4 sits 3 px left / 16 px up from take 2"
+ }
+}

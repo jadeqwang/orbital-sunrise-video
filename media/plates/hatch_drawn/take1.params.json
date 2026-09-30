@@ -1,0 +1,35 @@
+{
+ "plate": "hatch_drawn",
+ "take": "take1.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 328,
+  "t": "2026-09-29T14:59:07",
+  "tag": "drawn_plate",
+  "secs": 380.1,
+  "output_logged": [
+   "SP/hd/hatch_drawn.mp4"
+  ]
+ },
+ "input": {
+  "duration": 8,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "image": [
+   "media/plates/hatch_drawn/take1.first.jpg"
+  ]
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "L3_madeit alternative (?l3=drawn / ?l3=soft): Kenton's \"what a human would draw\" test",
+ "default": false,
+ "first_frame": "media/plates/hatch_drawn/take1.first.jpg",
+ "chain": "media/plates/hatch_drawn/take1.chain.json",
+ "command": "python3 tools/drawn_plate.py media/plates/hatch_drawn/take1.first.jpg <out.mp4> 8 \"Deep snow in the taiga beside the scorched round capsule. The cosmonaut in his white suit with orange straps, bare-headed, stands waist-deep in the snow by the open hatch, breath steaming; he turns and reaches back into the hatch to help his commander climb out. Snow falls lightly; the orange parachute stirs in the branches.\"",
+ "renderer": {
+  "file": "video/src/shots2.js L3_madeit",
+  "plate": "hatch_drawn / hatch_drawn_soft (toned to its neighbours)",
+  "flags": "?l3=drawn, ?l3=soft"
+ }
+}

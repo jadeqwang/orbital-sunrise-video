@@ -1,0 +1,46 @@
+{
+ "plate": "jade_sing3",
+ "take": "take1.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 269,
+  "t": "2026-09-29T08:30:34",
+  "tag": "jade_sing",
+  "secs": 220.8,
+  "output_logged": [
+   "SP/sing_c_3.mp4"
+  ]
+ },
+ "input": {
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "image": [
+   "media/plates/jade_sing3/take1.first.jpg"
+  ],
+  "reference_audios": [
+   "media/audio_refs/jade_hook1.mp3"
+  ],
+  "use_virtual_avatar": true
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "H1d_home alternative (?h1d=over / plain): her approved plain-paper take 3 (review sing_3_a)",
+ "default": false,
+ "first_frame": "media/plates/jade_sing3/take1.first.jpg",
+ "command": "python3 tools/jade_sing.py media/plates/jade_sing3/take1.first.jpg <out.mp4>",
+ "timing": {
+  "vocal_clip": "media/audio_refs/jade_hook1.mp3",
+  "clip_start_song_s": 30.9,
+  "lag_s": 1.15,
+  "formula": "take time = song time - (30.9 + 1.15) = t - 32.05"
+ },
+ "renderer": {
+  "file": "video/src/shots.js H1d_home",
+  "plate": "jade_sing3 (portrait 810x1080) / jade_sing3_169",
+  "flags": "?h1d=over, ?h1d=plain"
+ },
+ "note": "output was portrait 834x1112 even though 16:9 was requested",
+ "reference_audio_cut": "full-mix excerpt of Orbital_Sunrise.mp3 (repo root, original \"sleeve\" mix), 44.1 kHz stereo 192 kb/s mp3; clip starts at song 30.9 s (hook1), 67.4 s (hook2), 110.4 s (brk); verified by cross-correlation (corr 0.999-1.0)"
+}

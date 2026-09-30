@@ -1,0 +1,342 @@
+{
+ "summary": "tube_struggle frames -> airlock_scale rounds v2..v10 (with Volga trainer refs) -> v13A1 -> (local: lengthen) -> v15_1 = still.jpg",
+ "steps": [
+  {
+   "local_step": "tube_struggle plate frames (installed renders: video/plates/tube_struggle/f0001.jpg and f0180.jpg, extracted from media/plates/tube_struggle/take2.mp4 by tools/extract_plates.py)",
+   "output_in_repo": "video/plates/tube_struggle/f0001.jpg (not committed; regenerable)"
+  },
+  {
+   "genlog_line": 414,
+   "t": "2026-09-29T19:46:16",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "video/plates/tube_struggle/f0001.jpg"
+    },
+    {
+     "field": "image_input",
+     "file": "video/plates/tube_struggle/f0180.jpg"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v2D2.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v2D2.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 62.6,
+   "note": "v2D2",
+   "prompt": "Photorealistic 35mm film still. Match ONLY the look of the reference frames (warm tungsten work lamps, cream quilted padded fabric, metal ring frames, the white-and-orange Berkut suit and helmet, colour grade, film grain) -- do NOT copy their scale, the tube in the references is far too big. NOT a drawing. TRUE SCALE, extremely tight: the Voskhod 2 inflatable airlock is a padded tube only 1.0 metre across and 2.5 m long, barely bigger than a person, like a sleeping bag or an MRI bore. Cosmonaut Alexei Leonov in a swollen white Berkut spacesuit with orange-red straps, white helmet with red CCCP, backpack, lies stretched out LENGTHWISE along the tube axis, horizontal, like a hotdog in a bun, jammed in. His shoulders are 65 cm wide, two thirds of the tube diameter; the tube is only one and a half times as wide as his shoulders. His helmet almost touches the ceiling, his backpack scrapes the other side, both elbows press into and dent the padded walls. He CANNOT sit up, cannot turn sideways, there is NO empty space around him, no floor area, only a few centimetres of gap anywhere. He is twisting his torso and shoulders, trying to roll and fold his knees up toward his chest to turn round, straining. Face through the visor: drenched in sweat, exhausted, gritted teeth, visor misted at the edges. Camera: jammed up near the ceiling at the inner end by his boots, looking along his back toward the outer hatch. In the foreground his bent knees are pressed against both walls at once; in the middle his backpack and the back of his helmet, shoulders touching the walls on both sides; beyond his helmet the round outer hatch opening, barely wider than his shoulders, with black space and a sliver of blue Earth. His head is turned back over his shoulder toward camera, sweaty strained face visible through the visor. Padded quilted walls crowd every edge of the frame. 16:9."
+  },
+  {
+   "genlog_line": 418,
+   "t": "2026-09-29T19:50:04",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v2D2.jpg  (JPEG of the 2752x1536 PNG)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v3E2.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v3E2.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 155.7,
+   "note": "v3E2",
+   "prompt": "Edit this photograph, keeping exactly the same photorealistic look: same warm tungsten lamps, same cream quilted padded fabric walls, same tight padded tube, same colour grade and film grain, same sweating grimacing face. NOT a drawing. Change the pose and layout: the cosmonaut is now stretched out LENGTHWISE along the tube axis, lying straight like a hotdog in a bun, NOT curled in a ball, NOT crouching: a 1.9 m man in a 2.5 m long tube that is only 1.0 m across. His legs extend toward the camera, his boots and shins in the near foreground, heavily foreshortened, knees slightly bent and pressing against the walls; his torso and backpack run away from camera along the tube; his helmet is at the far end. The tube is only about 1.5 times as wide as his shoulders: his shoulders almost span the tube, both elbows are bent outward and press into and dent the padded walls on left and right, his helmet nearly touches the ceiling. The round outer hatch is at the far END of the tube, directly beyond his helmet, on the tube axis, facing the camera (not on the side wall), its opening only slightly wider than his shoulders, black space and a sliver of blue Earth through it; he is reaching up toward its rim. Helmet lettering in Cyrillic: red \"СССР\". The white suit has orange-red harness straps and buckles, not racing stripes. Camera low at the inner end, just beyond his boots, looking straight along the tube. 16:9."
+  },
+  {
+   "genlog_line": 427,
+   "t": "2026-09-29T19:57:40",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v3E2.jpg  (JPEG of the 2752x1536 PNG)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v5K2.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v5K2.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 49.4,
+   "note": "v5K2",
+   "prompt": "Photorealistic 35mm film still. From the reference photo take ONLY the look: warm tungsten cage lamps, cream quilted padded fabric, the white Berkut spacesuit with orange-red harness straps, white helmet with red Cyrillic СССР, the sweating grimacing face, colour grade and film grain. Do NOT copy its pose or its roomy tube. NOT a drawing. The Voskhod 2 Volga airlock as in the real museum trainer: a soft padded fabric cylinder only 1 metre in diameter and 2.5 m long, barely wider than a man in a swollen spacesuit, like a sleeping bag or a hot dog bun. Leonov lies perfectly STRAIGHT along the tube's axis like a hot dog in a bun: body fully extended, legs together and straight, boots together, right arm pressed tight along his side, left arm stretched straight ahead of him toward the hatch. He has NO room to bend his knees outward, spread his elbows, sit up or turn. The padded wall hugs him all round, touching and slightly squashed against his helmet, both shoulders, backpack, hips and boots; only a few centimetres of gap anywhere. The tube is only a little wider than his suit. The struggle is shown only by small movements: straining, one shoulder jammed into the padding, his outstretched glove pushing against the padding, drenched in sweat, grimacing, the visor fogged with condensation at the edges. No flags or national patches on the suit. Camera: at the open round outer end of the tube, looking straight in along the axis at him. His helmet and outstretched glove are nearest the camera, his face through the fogged visor, and the rest of his body recedes straight away behind his helmet, heavily foreshortened, toward the inner hatch. The circular padded cross-section wraps tightly around his helmet and shoulders, filling the frame edges with a ring of quilted padding and the metal hatch rim. 16:9."
+  },
+  {
+   "genlog_line": 431,
+   "t": "2026-09-29T20:03:21",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "NOT COMMITTED (third-party photo): Volga airlock trainer, Flickr rocbolt/47829983051 — see docs/TAKES.md"
+    },
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v5K2.jpg  (JPEG of the 2752x1536 PNG)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v6B2.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v6B2.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 43.8,
+   "note": "v6B2: image 1 = Volga trainer photo (third-party)",
+   "prompt": "Photorealistic 35mm film still, NOT a drawing. Reference 1 (museum photo of the real Voskhod 2 Volga airlock) gives the TRUE proportions and construction: a pleated tan fabric cylinder between grey metal rings, ending in a round metal hatch ring whose opening is barely wider than the cosmonaut's helmet and shoulders. Reproduce that tightness exactly: the inside of the tube is only about 1.4 times as wide as his shoulders, the hatch ring opening only about 1.3 times. Reference 2 gives the photoreal look to match: the white Berkut spacesuit with orange-red harness straps, white helmet with red Cyrillic СССР, the sweating grimacing face, the film grade and grain. Do NOT copy reference 2's cage lamps or its wider tube. Scene: INSIDE this airlock tube in orbit. The inner walls are pale tan pleated fabric in soft folds between thin metal hoops. No lamps on the walls: light comes in through the open outer hatch ring (cold blue-white Earthlight) plus a dim warm glow from behind. Leonov lies perfectly STRAIGHT along the tube axis like a hot dog in a bun: body fully extended, legs together and straight, boots together, arms tight along his sides; he cannot bend his knees out, spread his elbows, sit up or turn. The fabric wall hugs him all round, pressing on his helmet, both shoulders, backpack, hips and boots, the pleats bulging around him, only a few centimetres of gap. The struggle shows only in small movements: straining, one shoulder jammed into the fabric, a glove pushing against the wall, drenched in sweat, grimacing, visor fogged at the edges. No emblems, patches or flags on the suit. Camera: slightly oblique, just inside the outer hatch ring, looking back in along his body toward the capsule. His helmet and fogged visor with the sweating grimacing face are nearest, his shoulders filling the round opening, his straight body and legs running away down the pleated tube behind him, the circular section wrapping him tightly. The metal hatch ring rim frames part of the image edge. 16:9."
+  },
+  {
+   "genlog_line": 435,
+   "t": "2026-09-29T20:05:58",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "NOT COMMITTED (third-party photo): Volga airlock trainer, Flickr rocbolt/47829983051 — see docs/TAKES.md"
+    },
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v6B2.jpg  (JPEG of the 2752x1536 PNG)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v7C2.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v7C2.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 60.1,
+   "note": "v7C2",
+   "prompt": "Photorealistic 35mm film still, NOT a drawing. Reference 1 (museum photo of the real Voskhod 2 Volga airlock) gives the true proportions: a fabric cylinder 2.5 m long, 1.2 m wide outside, ending in a round metal hatch ring barely wider than the cosmonaut's helmet and shoulders. Its walls are made rigid by air-filled tubes: inflatable ribs running LENGTHWISE along the wall, side by side all round the circumference, covered in pale tan fabric, so the chamber inside is only 1.0 m across, about the size of a phone booth laid on its side. Reference 2 gives the cosmonaut's pose and look: white Berkut spacesuit with orange-red harness straps, white helmet with red Cyrillic СССР, lying straight. Scene: INSIDE this airlock in orbit. The round cross-section of the chamber is only about 1.4 times as wide as his shoulders; the rounded lengthwise ribs press in on him all round. No lamps on the walls: cold blue-white Earthlight through the open outer hatch ring plus a dim warm glow from the capsule end. Leonov lies perfectly STRAIGHT along the tube axis like a hot dog in a bun: body fully extended, legs together and straight, boots together, arms tight along his sides; he cannot bend his knees out, spread his elbows, sit up or turn. The ribs touch his helmet, both shoulders, backpack, hips and boots, only a few centimetres of gap. The struggle shows only in small movements: straining, one shoulder jammed against a rib, a glove pushing against the wall, face drenched in sweat and GRIMACING with effort (not smiling), visor fogged with condensation at the edges. No emblems, patches or flags on the suit. Camera: inside the chamber just behind his boots, on the tube axis, looking along his body toward the open round outer hatch ring at the far end, black space and a thin sliver of blue Earth beyond. Boot soles together in the foreground, straight legs, hips, backpack and helmet running away down the middle, heavily foreshortened; the ring of lengthwise ribs converges in perspective around him, tight on every side. 16:9."
+  },
+  {
+   "genlog_line": 439,
+   "t": "2026-09-29T20:07:38",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v7C2.jpg  (JPEG of the 2752x1536 PNG)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v7C2fix1.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v7C2fix1.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 52.1,
+   "note": "v7C2fix1",
+   "prompt": "Edit this photograph, fixing the anatomy only. The cosmonaut must have ONE head: remove the extra helmet visible at the hatch behind his torso, and move his helmet (with the same sweating grimacing face and red СССР) so it sits on his shoulders at the far end of his body, centred on the tube axis, directly in front of the open round hatch, his face turned toward the camera over his chest, the back of the helmet almost touching the ribs above. His legs are together and straight, both boots side by side in the foreground. His right glove still pushes against the ribs. Keep everything else identical: the tight lengthwise inflated ribs hugging him all round, the round hatch with black space and Earth, lighting, photoreal film look. 16:9."
+  },
+  {
+   "genlog_line": 441,
+   "t": "2026-09-29T20:10:47",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v7C2fix1.jpg  (JPEG of the 2752x1536 PNG)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v8_1.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v8_1.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 33.8,
+   "note": "v8_1",
+   "prompt": "Edit this photograph with these changes only: 1) His legs are together and straight, pressed side by side along the tube axis, both boot soles side by side and touching in the foreground (no V, no spread legs). 2) His helmet visor is fogged with condensation mist around its edges, face still readable in the centre. 3) His face shows a clear painful grimace of exhausted effort, NOT a grin or smile: teeth clenched, lips pulled back tight, brow deeply furrowed, eyes squeezed half shut, face red and drenched in sweat with beads running down. Keep everything else identical: same camera, same tight lengthwise inflated ribs hugging him at the same width, his shoulders filling the same space, his right glove still pushing against the rib, the open round hatch with black space and Earth, the lighting, colour and photoreal film look. 16:9."
+  },
+  {
+   "genlog_line": 447,
+   "t": "2026-09-29T20:21:01",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "NOT COMMITTED (third-party photo): close crop of the same Volga trainer photo (Flickr rocbolt/47829983051)"
+    },
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v8_1.jpg  (JPEG of the 2752x1536 PNG)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v9A1.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v9A1.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 65.1,
+   "note": "v9A1: image 1 = trainer close crop (third-party)",
+   "prompt": "Photorealistic 35mm film still, NOT a drawing. Reference 1 (museum photo of the real Voskhod 2 Volga airlock hatch) gives the TRUE tightness and construction: a thick maroon-brown foam padding ring gripping the cosmonaut's white helmet and shoulders with barely any gap, tan fabric behind it, grey riveted metal hatch ring. Reference 2 gives the photoreal look: the white Berkut spacesuit with orange-red harness straps, the white helmet with red Cyrillic СССР, the sweating, red, grimacing face with clenched teeth and furrowed brow, the film grade and grain. Leonov is jammed in so tight there is no room around him at all: the padding presses on his helmet and both shoulders on every side, dented around him. His visor is clear (or the gold sun visor raised) so his face shows: drenched in sweat, clenched teeth, furrowed brow, eyes squeezed, visor misted at its edges. One gloved hand is jammed flat against the padding by his chest; he is straining, trying to twist his shoulders. No lamps, no flags, no emblems or patches. Framing: seen from INSIDE the tube, a wide-lens close shot looking at him head-on along the tube axis. His helmet and shoulders fill the circular cross-section; the maroon-brown padded wall presses against his helmet and shoulders on every side and crowds every edge of the frame. No visible length of body, no space around him, only helmet, face, shoulders, chest and the jammed glove. Light: cold blue-white Earthlight from behind the camera plus a dim warm glow. 16:9."
+  },
+  {
+   "genlog_line": 454,
+   "t": "2026-09-29T20:24:37",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v9A1.jpg  (JPEG of the 2752x1536 PNG)"
+    },
+    {
+     "field": "image_input",
+     "file": "NOT COMMITTED (third-party photo): close crop of the same Volga trainer photo (Flickr rocbolt/47829983051)"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v10_A1_1.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v10_A1_1.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 38.9,
+   "note": "v10_A1_1: the close inside view that both stills build on",
+   "prompt": "Edit the first image (photoreal film still of the cosmonaut). The second image is the real airlock padding for reference only. Make it unmistakably INSIDE a sealed, closed airlock tube: he is fully inside the tube, nothing of him sticks out of any opening. Remove the grey riveted metal ring that frames the shot, and replace it with more padded wall, so the camera is clearly inside the tube with him. Behind and around his helmet, at the far end, is a CLOSED round metal hatch cover, shut tight: no open hatch, no view of space, no Earth, no blue glow. The walls are one continuous smooth maroon-brown foam lining over tan fabric (not lumpy torn chunks), wrapping him on every side and crowding every edge of the frame. Keep the true tightness exactly: his helmet nearly fills the tube, only a few centimetres of gap, no room around him. Both suited white shoulders with orange-red harness straps are visibly pressed and sunk into the padding on left and right. One glove is jammed flat against the padding by his chest. His helmet is twisted slightly to one side as he strains to turn round. Face: same sweating, red, painful grimace with clenched teeth and furrowed brow, NOT a grin. The visor is misted with condensation around its edges. Light: only a dim small warm interior lamp glow, sealed tube, deep shadows. Photoreal 35mm film look, white helmet with red Cyrillic СССР, no flags or emblems. 16:9."
+  },
+  {
+   "genlog_line": 486,
+   "t": "2026-09-29T20:41:49",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v10_A1_1.jpg  (JPEG of the 2752x1536 PNG)"
+    },
+    {
+     "field": "image_input",
+     "file": "NOT COMMITTED (third-party photo): Volga airlock construction drawing/photo (RussianSpaceWeb / RSC Energia) — see docs/TAKES.md"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v13A1.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/chain/v13A1.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 33.2,
+   "note": "v13A1: side cutaway at true scale; image 2 = Volga construction reference (third-party)",
+   "prompt": "Photorealistic 35mm film still, NOT a drawing. Use the first reference image only for the cosmonaut's look: white Berkut spacesuit with orange-red harness straps, white helmet with red Cyrillic СССР, sweating red grimacing face with clenched teeth, film grade and grain. No flags or emblems. The Volga airlock interior (real 1965 design): the wall is pale off-white / light grey fabric lining in fine, dense, narrow lengthwise pleats (the 40 air-filled booms seen from inside), exactly like the interior in the construction photo reference, NOT fat cushions and NOT maroon foam; each end is a thick bronze-coloured bolted metal flange ring with rows of bolts; a thin maroon-brown foam padding collar only at the outer hatch rim; two small round lamps on the wall; a small grey duplicate control panel with a few toggle switches mounted on the wall near his hand. One end is a rigid metal ring with the round outer hatch, CLOSED; the other end is the capsule's round metal hatch. Inside diameter only 1.0 m, length 2.5 m; Leonov, 1.9 m long in his swollen suit, lies straight along it. Composition: a SIDE CUTAWAY. The sealed tube is shown cut open lengthwise like a cross-section diagram, but photographed for real, seen exactly from the side, filling the frame width; total darkness and black space all around it. The tube's length is 2.5 times its height. Inside, Leonov lies perfectly straight and horizontal along its full length, legs together, arms at his sides, boots pressed against the capsule-end hatch on the right, his helmet at the closed outer hatch on the left. The cut edge of the curved ribbed fabric wall arcs only a few inches above his helmet, chest and boots, and the bottom of the wall is right under him: he fills almost the whole height. The two small interior lamps give warm light inside, the only light in the image; the cut edge of the wall shows its double fabric layers and round inflated ribs in section. Straining, grimacing face in profile. 16:9. The second reference (archive photo of the real airlock sections under construction) shows the true interior wall and flange rings only; do not include the engineers or the factory."
+  },
+  {
+   "local_step": "v13A1_long.png: v13A1 shrunk onto a wider black canvas (3357x1888), the right-hand hatch moved further right and the gap blocked in tan, so the tube reads ~2.5x as long as it is high",
+   "output_in_repo": "media/plates/airlock_cut/chain/v13A1_long.jpg"
+  },
+  {
+   "genlog_line": 496,
+   "t": "2026-09-29T20:48:25",
+   "tag": "airlock_scale",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/airlock_cut/chain/v13A1_long.jpg  (JPEG of the 3357x1888 PNG)"
+    },
+    {
+     "field": "image_input",
+     "file": "NOT COMMITTED (third-party photo): Volga airlock construction drawing/photo (RussianSpaceWeb / RSC Energia) — see docs/TAKES.md"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/airlock/v15_1.png"
+   ],
+   "output_in_repo": [
+    "media/plates/airlock_cut/still.jpg  (JPEG of the model PNG, full 2752x1536)"
+   ],
+   "secs": 80.7,
+   "note": "v15_1: the approved side cutaway",
+   "prompt": "Edit the first image, a photoreal side cutaway of the Voskhod 2 airlock tube with the cosmonaut lying inside. The tube has been lengthened: the flat brown block and the black gap on the right are a missing section of the SAME tube. Fill it in seamlessly as the continuation of the empty tube: pleated fabric back wall, floor and ceiling continuing from the left part, with the round grey capsule-end hatch cover moved to the far right inside the right bronze flange ring. The tube is now one continuous cylinder, about 2.5 times as long as its inner height, with about 30 cm of empty tube between his boots and the capsule hatch. Other changes, keep them small: 1) The wall lining becomes finer: many narrow dense lengthwise pleats of pale off-white fabric like the second reference image (the real airlock interior), instead of the few fat cushion-like panels. 2) His legs straight and together, lying flat along the tube axis, boots together. 3) His face through the visor readable: a sweating, painful grimace with clenched teeth and furrowed brow, natural skin tone, no blown highlight; visor misted with condensation at its edges. Keep exactly the same: camera angle, the tube's inner height (about 1 m against his 1.9 m body), the cosmonaut's size and position of his helmet at the left, both small warm lamps, the grey toggle-switch panel by his hand, the bronze bolted flange rings and the maroon collar at the left end, black background. 16:9."
+  },
+  {
+   "local_step": "v15_1.png saved as JPEG at full size",
+   "output_in_repo": "media/plates/airlock_cut/still.jpg"
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "plate": "jade_rare_her",
+ "take": "take1.mp4",
+ "model": "bytedance/seedance-2.5",
+ "genlog": {
+  "line": 406,
+  "t": "2026-09-29T19:18:07",
+  "tag": "jade_sing",
+  "secs": 158.7,
+  "output_logged": [
+   "SP/re/stp4_take_f.mp4"
+  ]
+ },
+ "input": {
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "image": [
+   "media/plates/jade_rare_her/take1.first.jpg"
+  ],
+  "reference_audios": [
+   "media/audio_refs/jade_hook2.mp3"
+  ],
+  "use_virtual_avatar": true
+ },
+ "seed": null,
+ "seed_note": "no seed parameter was sent (the Cloudflare seedance-2.5 input has none in this setup): a re-run gives a new take, not the same one",
+ "shot": "K4_home alternative (?k4=F): take F, Rare Earth platform, stars, grey-blue work trousers, arms spreading",
+ "default": false,
+ "first_frame": "media/plates/jade_rare_her/take1.first.jpg",
+ "chain": "media/plates/jade_rare_her/take1.chain.json",
+ "command": "python3 tools/jade_sing.py media/plates/jade_rare_her/take1.first.jpg <out.mp4> --scene=rare_her",
+ "timing": {
+  "vocal_clip": "media/audio_refs/jade_hook2.mp3",
+  "clip_start_song_s": 67.4,
+  "lag_s": 0.5,
+  "formula": "take time = song time - (67.4 + lag)",
+  "url_override": "?k4lag="
+ },
+ "renderer": {
+  "file": "video/src/shots.js K4_home",
+  "plate": "jade_rare_her",
+  "flags": "?k4=F"
+ },
+ "note": "genlog lines 405 and 406 (takes \"e\" and \"f\") are the same job logged twice: identical output files; this is take F",
+ "reference_audio_cut": "full-mix excerpt of Orbital_Sunrise.mp3 (repo root, original \"sleeve\" mix), 44.1 kHz stereo 192 kb/s mp3; clip starts at song 30.9 s (hook1), 67.4 s (hook2), 110.4 s (brk); verified by cross-correlation (corr 0.999-1.0)"
+}

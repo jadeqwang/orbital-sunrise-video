@@ -1,0 +1,40 @@
+{
+ "summary": "hatch_free frame -> tools/human_draw.py -> hatch_hd_2 -> 1280x720 first frame -> tools/drawn_plate.py",
+ "steps": [
+  {
+   "local_step": "a frame of the hatch_free plate (take2), 1280x720 (session hd/hatch_free.jpg)",
+   "output_in_repo": "media/plates/hatch_drawn/chain/hatch_free.jpg"
+  },
+  {
+   "genlog_line": 313,
+   "t": "2026-09-29T13:40:40",
+   "tag": "human_draw",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/hatch_drawn/chain/hatch_free.jpg"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/hd/hatch_hd_2.png"
+   ],
+   "output_in_repo": [
+    "media/refs/human_draw/hatch_hd_2.jpg  (JPEG of the model PNG)"
+   ],
+   "secs": 65.0,
+   "note": "hatch_hd_2 (her pick: the looser redraw)",
+   "prompt": "Redraw this frame as a hand-drawn illustration in coloured pencil on warm cream drawing paper, the way a skilled illustrator would draw it by hand, not a tracing: keep the same composition, camera angle and subjects, but simplify. Suggest the forest with a few confident strokes: spruce silhouettes as simple jagged shapes, trunks as single strokes, the snow left as bare paper, hatching only in the shadows under branches and on the dark side of things. Lines of varying weight and pressure, loose and economical, some edges left open. Only these pencil colours: graphite, lead grey, sky blue, cobalt, a little orange. No text, no border, no signature."
+  },
+  {
+   "local_step": "hatch_hd_2.png resized/cropped to a 1280x720 first frame (exact op not recorded)",
+   "output_in_repo": "media/refs/human_draw/hatch_hd_2_first.jpg"
+  }
+ ]
+}

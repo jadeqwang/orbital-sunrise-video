@@ -1,0 +1,83 @@
+{
+ "summary": "F chain -> sp_2 -> rare_stars_baggy_pants (+ third-party trousers crop) -> sep_2 -> 1920 JPEG first frame; ref pants_ok.png cropped from sdp_1",
+ "steps": [
+  {
+   "local_step": "same chain as take F up to sp_2.png: see media/plates/jade_rare_her/take1.chain.json",
+   "output_in_repo": "media/plates/jade_rare_her/chain/sp_2.jpg"
+  },
+  {
+   "genlog_line": 478,
+   "t": "2026-09-29T20:33:12",
+   "tag": "jade_location_fix",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "tools/jade_location.py FIXES[\"rare_stars_baggy_pants\"]",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/jade_rare_her/chain/sp_2.jpg  (JPEG of the 2752x1536 PNG)"
+    },
+    {
+     "field": "image_input",
+     "file": "NOT COMMITTED (third-party photo): crop of a K-pop dancer's baggy dark cargo trousers (top half) — see docs/TAKES.md"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/re/sep_2.png"
+   ],
+   "output_in_repo": [
+    "media/plates/jade_rare_her_m/take1.first.jpg  (1920x1080 JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 59.1,
+   "note": "sep_2: baggy near-black parachute cargo trousers (Kenton liked); image 2 was a crop of a K-pop dancer's trousers (third-party, not committed)",
+   "prompt": "Edit image 1. Do not change the camera, the framing or her: her head, face, hair, glasses, pale pink headphones, jacket, crop top, pose and body angle stay exactly as drawn, with her arms down at her sides. The picture still ends at her upper thighs exactly as in image 1: do not zoom out, do not show her knees or feet. Change only two things: 1) fill the deep blue night sky with stars: many small white stars and a few brighter four-pointed ones, drawn in white pencil, thickest high in the sky and thinning towards the clouds. 2) make her trousers like the trousers in image 2, but near-black navy whatever their colour in image 2: very baggy parachute/jogger-style cargo trousers, loose and billowy through the hip and thigh, with side cargo pockets, soft matte fabric with deep drape folds (they are gathered and cinched at the ankle, below the bottom edge of the picture); a black belt, and the long orange strap still hanging down the front from the belt. Only copy the trousers from image 2; do not copy anything else from it. Keep everything else exactly as in image 1, in the same loose coloured-pencil style. No text, no border."
+  },
+  {
+   "local_step": "sep_2.png (2752x1536) resized to 1920x1080 JPEG (session file re/sep_first.jpg)",
+   "output_in_repo": "media/plates/jade_rare_her_m/take1.first.jpg"
+  },
+  {
+   "genlog_line": 472,
+   "t": "2026-09-29T20:30:57",
+   "tag": "jade_location_fix",
+   "model": "google/nano-banana-pro",
+   "prompt_source": "ad hoc (full text below)",
+   "inputs": [
+    {
+     "field": "image_input",
+     "file": "media/plates/jade_rare_her/chain/sp_2.jpg  (JPEG of the 2752x1536 PNG)"
+    },
+    {
+     "field": "image_input",
+     "file": "media/refs/rare_earth/anime_ref.jpg"
+    },
+    {
+     "field": "image_input",
+     "file": "NOT COMMITTED (third-party photo): crop of a K-pop dancer's baggy dark cargo trousers — see docs/TAKES.md"
+    }
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output_logged": [
+    "SP/re/sdp_1.png"
+   ],
+   "output_in_repo": [
+    "media/plates/jade_rare_her_m/chain/sdp_1.jpg  (JPEG of the 2752x1536 PNG)"
+   ],
+   "secs": 38.8,
+   "note": "reference-image source: sdp_1 (same baggy-trousers edit, other variant); its trousers were cropped (592x716) to make pants_ok.png, the Seedance reference_images[0] for take M",
+   "prompt": "Edit image 1. Do not change the camera, the framing or her: her head, face, hair, glasses, pale pink headphones, jacket, crop top, pose and body angle stay exactly as drawn, with her arms down at her sides. The picture still ends at her upper thighs as in image 1: do not zoom out, do not show her knees, ankles or feet. Change only two things: 1) fill the deep blue night sky with stars: many small white stars and a few brighter four-pointed ones, drawn in white pencil, thickest high in the sky and thinning towards the clouds. 2) make her trousers like the trousers in image 3 (but near-black navy, whatever colour they are in image 3): very baggy parachute/jogger-style cargo trousers, loose and billowy through the thigh and calf, with side cargo pockets, gathered and cinched at the ankle (elastic or drawcord hems that puff over the shoes, not straight or wide-leg hems; the ankles stay below the frame), soft matte fabric with deep drape folds; add a black belt and keep the long orange strap hanging down the front from the belt, like image 2. Only copy the trousers from image 3, and only the trousers, belt and strap from image 2; do not copy image 2's face, pose or framing. Keep everything else exactly as in image 1, in the same loose coloured-pencil style. No text, no border."
+  },
+  {
+   "local_step": "exact crop of sdp_1.png: x 1114-1706, y 820-1536 (592x716, her trousers from the hips down; verified by template match, SQDIFF 0), saved as PNG",
+   "output_in_repo": "media/plates/jade_rare_her_m/take1.ref_pants_ok.png"
+  }
+ ]
+}
