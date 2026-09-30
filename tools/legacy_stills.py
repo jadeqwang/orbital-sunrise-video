@@ -50,6 +50,27 @@ STILLS.update({
         "Only these two men. Framed with generous headroom: the snowy spruce forest and the soft overcast sky continue naturally above their heads, "
         "one continuous photograph with no bands, borders, panels or collage edges. No text, no logos, no flags.",
 })
+
+# round 3 (2026-09-30): Tiangong, an action shot for China's first spacewalk (replaces the lying-down leg_yang_liwei), Curiosity's sky crane
+STILLS.update({
+    "leg_tiangong": "China's Tiangong space station in its completed T-shaped configuration, seen whole from a distance against black space above the curved blue Earth: "
+        "the long white cylindrical Tianhe core module runs vertically through the middle as the stem of the T; at its forward end a spherical docking node, from which the two "
+        "equally long white laboratory modules, Wentian and Mengtian, extend straight out to the left and to the right, forming the crossbar of the T. At the outer end of each laboratory module "
+        "a pair of very long, narrow, flexible dark-blue solar array wings, one wing on each side, together spanning far wider than the station; two smaller dark-blue solar wings on the Tianhe core module. "
+        "A small white Shenzhou crew spacecraft (bell-shaped capsule with its own small solar wings) docked at the node, and a white Tianzhou cargo ship docked at the aft end of the core module. "
+        "Instantly recognisable silhouette, not cropped, crisp sunlight. The station sits in the right two thirds of the frame; the curved Earth's limb runs unbroken across the whole width of the frame at the bottom, "
+        "one continuous photograph with no bands, panels, borders or straight edges. " + LOOK,
+    "leg_shenzhou7": "27 September 2008, Shenzhou 7, China's first spacewalk: Chinese astronaut Zhai Zhigang floats half out of the round open hatch of the Shenzhou orbital module "
+        "(a white, rounded module with handrails, no solar panels on it) above the curved blue Earth, in the white Chinese Feitian spacesuit: a bulky semi-rigid white suit with an integrated white backpack, "
+        "a white helmet with a gold sun visor raised over a clear visor, a small chest control box, white gloves. He holds up a small red Chinese national flag on a short stick in his right hand "
+        "and waves it toward the camera, his left glove gripping a yellow handrail beside the hatch. Behind him, in the hatch opening, the helmet and shoulders of a second astronaut in a white suit with blue and red stripes. "
+        "Dynamic, joyful, hard sunlight, black sky. The small red flag is the only flag; no other text, logos or lettering. "
+        "Photorealistic, cinematic, 35mm film, hard directional light, clean composition with empty space on the left third for a title.",
+    "leg_curiosity": "6 August 2012, the sky crane landing of NASA's Curiosity rover in Gale Crater on Mars: seen from the side, low above the reddish-tan gravelly plain, "
+        "the rocket-powered descent stage (a squat, boxy frame with four thrusters firing downward in faint plumes, kicking up swirls of red dust) hovers about eight metres above the ground "
+        "and lowers the car-sized six-wheeled Curiosity rover on three thin nylon cables and an umbilical; the rover's six wheels are unfolded and just about to touch the dust, its mast and the "
+        "white finned power unit at its back visible. Mount Sharp rises hazy in the background under a butterscotch-pink sky. " + LOOK,
+})
 REFS = {"leg_survivors": ["media/chars/leonov_faces.png", "media/chars/belyayev_faces.png"]}
 
 

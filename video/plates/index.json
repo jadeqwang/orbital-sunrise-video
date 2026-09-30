@@ -868,5 +868,29 @@
   "take": "take2.mp4 (Seedance 2.5 from still.jpg: laboured breathing and small shifts from frame 0, then the glove lifts off his chest and starts up the wall), registered onto the still and prepared for the night pencil by tools/airlock_stills.py (tones re-laid, per-frame matte with the moving arm, hand-set face box)",
   "mattes": true,
   "gain": 1.0
+ },
+ "leg_tiangong": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "leg_shenzhou7": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
+ },
+ "leg_curiosity": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still",
+  "mattes": false
  }
 }
