@@ -411,31 +411,63 @@ async function initShots() {
     typeFlush(Lt, drawClock(t, 12).n, .4);
   });
 
-  // N1 · Tied to the ship by the slightest trace (extended recording): over his shoulder, reaching for the Earth, the tether
-  // floating in a loose curve behind him. The 5 s take is stretched over the ~6.5 s line.
-  shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
+  // ---- the extended recording's two new lines: the story's hinge. He floats free, but all that holds him is a line to the
+  // ship; the ship has to take him back, and it can't: at the hatch, head first (as he did it, against the plan), the
+  // ballooned suit jams in the rim. Then "can't feel his hands, can't feel his face" is that suit from inside.
+  const N1W = L1[1].words, N2W = L1[2].words;   // Tied to the ship by the slightest trace · Pull him back to the ship's embrace
+  // N1a · "Tied to the ship": over his shoulder, reaching for the Earth, the home he can't touch; the type in the black above it
+  shot('N1a_reach', L1[1].t0 - .05, N1W[4][0] - .05, async (t, lt) => {
     paper(G, 'night');
-    await drawPlate(t, 'reach_home', .15 + lt * Math.min(1, 4.85 / dur), { view: { zoom: 1.03, ox: -60 }, hatch: { spacing: 6.5 } });
-    const w = L1[1].words;   // Tied to the ship by the slightest trace
+    await drawPlate(t, 'reach_home', .15 + lt * .8, { view: { zoom: 1.03 }, hatch: { spacing: 6.5, mask: quiet([[W - 900, 70, W - 70, 410]], .7) } });
     lyricStack(t, [
-      { s: 'TIED', t: w[0][0], x: 110, y: 300, size: 210, style: 'slam' },
-      { s: 'TO THE SHIP', t: w[3][0], x: 110, y: 450, size: 120, style: 'rise' },
-      { s: 'by the slightest trace', t: w[4][0], x: 116, y: 540, font: FONT.serif(64), col: 'cream', style: 'rise' },
+      { s: 'TIED', t: N1W[0][0], x: W - 110, y: 250, size: 210, align: 'right', style: 'slam' },
+      { s: 'TO THE SHIP', t: N1W[1][0], x: W - 110, y: 385, size: 120, align: 'right', style: 'rise' },
     ]);
+  });
+  // N1b · "by the slightest trace": back to I3's wide, at the end of his exit (held), and the pencil traces the tether in gold
+  // from the airlock mouth to his waist while the line is sung. TETHER: airlock_exit's last frame, plate uv along the hose
+  // (the airlock-side strand, over the top of its loop, the lower strand to his waist).
+  const TETHER = [[.4265, .618], [.4286, .5855], [.4317, .5577], [.4395, .5345], [.4512, .5215], [.4682, .5136], [.489, .5076],
+    [.5073, .5076], [.5255, .5136], [.5464, .5215], [.5698, .5261], [.5907, .5229], [.6076, .5136]];
+  shot('N1b_trace', N1W[4][0] - .05, L1[2].t0 - .05, async (t, lt, dur) => {
+    paper(G, 'night');
+    const e = smooth(clamp(lt / dur)), k = easeInOut(clamp((t - N1W[4][0]) / (N1W[7][0] + .5 - N1W[4][0])));   // "by" → "trace"
+    const d = drawClock(t, 12).n;
+    await drawPlate(t, 'airlock_exit', 8.1, { hold: 8.1, view: { zoom: lerp(1.02, 1.09, e), cx: lerp(.5, .52, e) }, hatch: { spacing: 7, mask: quiet([[W / 2 - 420, 110, W / 2 + 240, 250]], .75) },
+      extra: (pen, F, view) => {
+        // the trace: arc-length reveal along the hose, a soft wide pass under a firm gold line, the pencil's point at its head
+        const pts = TETHER.map(([u, v]) => view.toScreen(u, v)), seg = pts.slice(1).map((q, i) => Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1]));
+        let left = k * seg.reduce((x, y) => x + y, 0); const path = [pts[0]];
+        for (let i = 0; i < seg.length && left > 0; i++) { const f = Math.min(1, left / seg[i]); path.push([lerp(pts[i][0], pts[i + 1][0], f), lerp(pts[i][1], pts[i + 1][1], f)]); left -= seg[i]; }
+        if (path.length < 2) return;
+        pen.poly(path, 'gold', 7, .28, .02); pen.poly(path, 'gold', 3.2, .95, .02);
+        if (k < 1) { const [hx, hy] = path[path.length - 1]; pen.dot(hx, hy, 4, 'white', .95); }
+      } });
+    lyricStack(t, [{ s: 'by the slightest trace', t: N1W[4][0], x: W / 2 - 90, y: 205, font: FONT.serif(72), col: 'cream', align: 'center', style: 'rise' }]);
     const Lt = typeLayer();
-    tele(Lt.g, 'TETHER · 5.35 M', 120, H - 120, t, w[4][0], { size: 24, weight: 700, col: 'silver', dur: .6 });
-    typeFlush(Lt, drawClock(t, 12).n, .4);
+    tele(Lt.g, 'TETHER · 5.35 M', 120, H - 120, t, N1W[7][0], { size: 24, weight: 700, col: 'gold', dur: .6 });
+    typeFlush(Lt, d, .4);
   });
 
-  // N2 · Pull him back to the ship's embrace: his exit from the airlock (I3's take) runs backwards, the ship taking him in
-  shot('N2_pullback', L1[2].t0 - .05, L1[3].t0 - .05, async (t, lt, dur) => {
+  // N2 · "Pull him back to the ship's embrace": he goes back in head first and the ship won't take him. From behind and above
+  // at the Volga's mouth (headfirst, the take P3 plays through when he finally gets in): helmet and shoulders inside the rim,
+  // backpack and legs outside. Only its first second is used, run in and back out on the beat (he shoves, jams, backs off,
+  // shoves again), so here he never gets through; the page's edges start to panic, as in S3. On "embrace" the camera punches
+  // in on the rim squeezing his shoulders: the ship's embrace is too tight for him.
+  const JAM = (c, i) => hash2(c, 71 + i);                                       // per-shove variation (deterministic)
+  shot('N2_jam', L1[2].t0 - .05, L1[3].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
-    await drawPlate(t, 'airlock_exit', Math.max(.4, 7.4 - lt * 1.05), { view: { zoom: 1.02, oy: 30 }, hatch: { spacing: 7 } });
-    const w = L1[2].words;   // Pull him back to the ship's embrace
+    const e = smooth(clamp(lt / dur)), b0 = beatPos(L1[2].t0 - .05), bp = (beatPos(t) - b0) / 2, c = Math.floor(bp), p = bp - c;
+    const tight = t >= N2W[6][0] - .05, et = smooth(clamp((t - N2W[6][0]) / (L1[3].t0 - N2W[6][0])));   // "embrace" → the cut
+    const lo = i => .06 + .12 * JAM(i, 1), hi = i => .62 + .3 * JAM(i, 2);    // plate seconds: wedged at the rim → a little deeper
+    const tp = p < .42 ? lerp(lo(c), hi(c), easeOut(p / .42)) : lerp(hi(c), lo(c + 1), easeInOut((p - .42) / .58));
+    const view = tight ? { zoom: lerp(1.5, 1.62, et), cx: .43, cy: .43, rot: -.04 } : { zoom: lerp(1.0, 1.1, e), cx: lerp(.5, .47, e), cy: lerp(.5, .46, e) };
+    await drawPlate(t, 'headfirst', tp, { hold: tp, view, hatch: { mask: quiet([[60, 90, 900, 640]], .72) },
+      extra: (pen) => edgePanic(pen, tight ? .6 + .3 * et : .2 + .35 * e, drawClock(t, 12).n * 5) });
     lyricStack(t, [
-      { s: 'PULL', t: w[0][0], x: W - 110, y: 280, size: 210, align: 'right', style: 'slam' },
-      { s: 'HIM BACK', t: w[2][0], x: W - 110, y: 470, size: 210, align: 'right', style: 'slam' },
-      { s: "to the ship's embrace", t: w[3][0], x: W - 116, y: 560, font: FONT.serif(64), col: 'cream', align: 'right', style: 'rise' },
+      { s: 'PULL', t: N2W[0][0], x: 110, y: 290, size: 210, style: 'slam' },
+      { s: 'HIM BACK', t: N2W[2][0], x: 110, y: 480, size: 210, style: 'slam' },
+      { s: "to the ship's embrace", t: N2W[3][0], x: 116, y: 575, font: FONT.serif(64), col: 'cream', style: 'rise' },
     ]);
   });
 

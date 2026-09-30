@@ -75,10 +75,25 @@ She confirmed the new mix sings "suit" and asked for the film to be retimed. Don
   beat number in the table of section 4 is wrapped in them, and the singing takes read their clock through `OI(t)`, so their
   lips stay on her voice (the take plays 1.6 % faster). `render.mjs --list` against the released list: every shot moves
   exactly with the map (within 0.08 s) except the intended changes below.
-- **New shots:** `N1_tether` ("Tied to the ship by the slightest trace": the unused plate `reach_home`, over his shoulder
-  reaching for the Earth, the tether in a loose curve; "TETHER · 5.35 M") and `N2_pullback` ("Pull him back to the ship's
-  embrace": I3's `airlock_exit` take run backwards, the ship taking him in). `I4_hands` now cuts on the sung "Can't"
-  (25.96 s). `F2_home` types "FALL THROUGH / THE SKIES" and "bring me home" (its type mask grew to fit).
+- **New shots** (the two new lines are the story's hinge: he floats free, all that holds him is a line to the ship, and the
+  ship can't take him back: at the hatch, head first, the ballooned suit jams in the rim; her direction, 2026-09-30:
+  "he should get stuck at the hatch door … make sure he's entering head first and not feet first"):
+  - `N1a_reach` ("Tied to the ship"): the unused plate `reach_home`, over his shoulder reaching for the Earth, the home he
+    can't touch; the type in the black above it.
+  - `N1b_trace` ("by the slightest trace"): back to I3's wide at the end of his exit (`airlock_exit`, last frame held, slow
+    push), and the pencil traces the real tether in gold from the airlock mouth to his waist while the line is sung
+    (`TETHER`: plate uv along the hose, measured on that frame); "TETHER · 5.35 M".
+  - `N2_jam` ("Pull him back to the ship's embrace"): `headfirst` (the take P3 later plays through when he finally gets in),
+    from behind at the Volga's mouth: helmet and shoulders inside the rim, backpack and legs outside. Only its first second,
+    run in and back out on the beat (shove, jam, back off, shove), so he never gets through; on "embrace" a punch-in on the
+    rim squeezing his shoulders, the page's edges panicking as in S3. P3 then rhymes with it: same hatch, same angle, and
+    after bleeding the air he gets in.
+  - Rejected for N2: `airlock_fail` (he enters legs first), the archived `airlock_struggle` takes 2 and 3 (his helmet ends up
+    outside the rim: reads as coming out, or feet first), and I3's exit run backwards (that is a feet-first entry).
+  - Note: S3's plate (`airlock_struggle` take 1, "HE CAN'T GET BACK IN.") has him facing out of the rim with his backpack
+    behind him in the tube, i.e. the planned feet-first attempt; left as released.
+  - `I4_hands` now cuts on the sung "Can't" (25.96 s). `F2_home` types "FALL THROUGH / THE SKIES" and "bring me home" (its
+    type mask grew to fit).
 - **Audio:** her recording already slows the piano outro ("ritardando at the end" on the sheet: the eighths widen from 0.20 to
   0.31 s before the chord), so there is no `tools/ritardando.py` pass and `video/data/timemap.json` is the identity. It still
   cut off 4.4 s after the final chord while ringing (−39 dB), so `tools/extend_ending.py --src=media/audio/Orbital_Sunrise_alt.mp3
