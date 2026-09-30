@@ -105,11 +105,12 @@ Show her intermediate results early and small; she reads them on her phone.
 
 ## Done but not yet in a release
 
-- "Hold on" (2:15–2:23): the capsule already tumbles on the first HOLD ON (`G3_hold` in `video/src/shots2.js`).
-- Her writing hand (2:02) now has her jacket sleeve (`jade_hand_writing_p` take 2).
+- (nothing: everything committed as a renderer default is in the 2026-09-30 release below. The two items that were listed
+  here, the capsule tumbling on the first HOLD ON (`G3_hold`) and her writing hand in the jacket sleeve at 2:02
+  (`jade_hand_writing_p`), were already in the 2026-09-29 release and are in this one.)
 
-To release: full render (`cd video && node render.mjs --frames=0:243.2 --workers=4`; see "Outro ritardando" below: frames
-from 228.9 s on changed, so re-render them with `--force` if `out/frames` holds an older render), then `tools/encode_release.sh`,
+To release: full render (`cd video && node render.mjs --frames=0:243.2 --workers=4`, 5837 frames with the default time map;
+the safest is to move an older `out/frames` aside and render everything, or pass `--force`), then `tools/encode_release.sh`,
 `tools/package_hls.sh`, republish the watch page (https://claude.ai/artifact/TYmS3GPKvHH3f1i45QrjJ5, in batches under 58 MB)
 and commit. Work on `main`. Commit messages end with the session's Co-Authored-By / Claude-Session lines.
 
@@ -157,6 +158,32 @@ and commit. Work on `main`. Commit messages end with the session's Co-Authored-B
   must be her real pair and not doubled on the neck, backgrounds and props "a little bit loose", no mixing desk visible.
 - 1:51 notebook and 2:02/2:06 hand shots are unchanged (no face).
 
+## Released (2026-09-30)
+
+- Full re-render (5837 frames, 243.17 s, ritardando time map on by default) and release. In it since 2026-09-29, all renderer
+  defaults (no URL flags):
+  - 0:32 `H1d_home` on location (`jade_loc`, lag -0.22).
+  - 0:55 `P4_airlock` at true scale: `airlock_cut` **take3** (breathing, shifting, restless legs; `?p4legs=0` = take2) and
+    `airlock_side` take1, both animated.
+  - 1:09 `K4_home` take **M** (`jade_rare_her_m`: Rare Earth platform, baggy dark cargo trousers, lag 0.3).
+  - 1:55 `B3_never` dusk on the Lady Bird Lake trail (`jade_dusk`).
+  - 2:13 / 2:20 `G2_math` / `G3_hold` portholes with the sun at constant speed across the windows.
+  - Credits without the vlogbrothers line.
+  - "suit" in the audio (release audio `media/audio/Orbital_Sunrise_rit_0.65.wav`, from the "suit" extended mix; checked
+    against the committed m4a at the word, 53.0-53.5 s, and it differs from the mp3's "sleeve").
+  - The **ritardando B** ending (see "Outro ritardando" below).
+  - 3:18 `L3_madeit` "made it down" back in the original pencil style (`hatch_free`; `?l3=drawn` / `soft` are the alternatives).
+  - Carried over from 2026-09-29: the first-HOLD-ON tumble and the jacket-sleeve writing hand (take 4).
+- Files: `release/Orbital_Sunrise_1080p.mp4` (HEVC, 94.1 MB) and `release/Orbital_Sunrise_720p_h264.mp4` (H.264, 90.3 MB),
+  both 243.17 s; `release/audio/Orbital_Sunrise.mp3` was already the rit/"suit" mix (unchanged). HLS in `release/web/`
+  (not committed: hevc 41 segments / 144 MB, avc 41 / 87 MB). Watch page https://claude.ai/artifact/TYmS3GPKvHH3f1i45QrjJ5
+  republished in five batches under 58 MB (page: running time 4:03, the Ending line mentions the slowing outro; poster.jpg and
+  making_of.jpg left as they were).
+- Render: ~21 min on 4 workers (+ the airlock span rendered last, after the legs take landed); encodes + HLS ~36 min.
+  All plates were already installed; `airlock_cut` / `airlock_cut_t2` had been reinstalled from take3 / take2 by
+  `tools/airlock_stills.py` in this checkout. The native-size location plates (`jade_loc`, `jade_rare_her_m`, `jade_dusk`, ...)
+  have no meta.json; the page's 404s for those at load are expected.
+
 ## Released (2026-09-29)
 
 - Full render and release with her three singing shots on location, the 2:02 writing hand take 4, and the first-HOLD-ON
@@ -168,7 +195,7 @@ and commit. Work on `main`. Commit messages end with the session's Co-Authored-B
   `tools/install_drawing.py` needs her photo at media/refs/leonov_drawing_real_photo.jpg (not committed);
   `tools/extend_ending.py`. The container had no ffprobe: a duration-only stand-in at /usr/local/bin/ffprobe was enough.
 
-## Outro ritardando (approved 2026-09-30, not yet in a release)
+## Outro ritardando (approved 2026-09-30, released 2026-09-30)
 
 - She approved **ritardando B** for the piano outro: `media/audio/Orbital_Sunrise_rit_0.65.wav` (243.17 s), made by
   `tools/ritardando.py --vmin=0.65 --start=228.36 --out=media/audio/Orbital_Sunrise_rit_0.65.wav` from the "suit" release mix
