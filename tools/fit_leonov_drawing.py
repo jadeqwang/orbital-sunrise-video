@@ -75,7 +75,12 @@ def name_of(c):
     return "blue"
 names = [name_of(c) for c in km.cluster_centers_]
 assert len(set(names)) == 5, names
-ORDER = ["black", "light_blue", "yellow", "orange_red", "blue"]     # the bands from the top (space) down to the Earth
+# the Earth side is two blues layered over each other: split the blue family by how hard it was pressed / how dark it is
+# (the darker, harder strokes are a deep blue pencil; the rest cobalt)
+bi = names.index("blue"); mb = lbl == bi
+deep = mb & (mag > np.percentile(mag[mb], 60)) & ((R / illum)[..., 2] < np.percentile((R / illum)[..., 2][mb], 55))
+lbl[deep] = 5; names.append("deep_blue")
+ORDER = ["black", "light_blue", "yellow", "orange_red", "blue", "deep_blue"]   # the bands from the top (space) down to the Earth
 
 ys0, xs0 = GY0 // CELL * CELL, GX0 // CELL * CELL
 nx, ny = (GX1 - xs0 + CELL - 1) // CELL, (GY1 - ys0 + CELL - 1) // CELL
@@ -93,7 +98,7 @@ def circle_fit(x, y, w):  # weighted Kasa fit
     cx, cy = a / 2, b / 2
     return cx, cy, np.sqrt(c + cx * cx + cy * cy)
 
-pencils, arcs = [], {}
+pencils, arcs, covs = [], {}, {}
 for nm in ORDER:
     i = names.index(nm); m = lbl == i
     full = np.percentile(mag[m], 92)
@@ -111,9 +116,19 @@ for nm in ORDER:
     cx, cy, rr = circle_fit(np.array(rx, float), np.array(ry, float), np.array(rw, float))
     arcs[nm] = dict(cx=round(cx, 1), cy=round(cy, 1), r=round(rr, 1), width=round(float(np.average(sd, weights=rw) * 2.35), 1),
                     span_x=[int(np.percentile(xs, 2)), int(np.percentile(xs, 98))])
+    covs[nm] = cov
     pencils.append(dict(name=nm, T=[round(float(v), 4) for v in T], pressure=round(float(full), 3),
-                        share=round(float(m.sum() / pig.sum()), 3), cov=b64(cov * 255)))
+                        share=round(float(m.sum() / pig.sum()), 3), cov=None))
     print(f"{nm:11s} T={np.round(T, 3)} full |A|={full:.2f} px={m.sum():6d} arc r={rr:7.1f} c=({cx:6.1f},{cy:6.1f}) width={arcs[nm]['width']}")
+
+# where the light blue meets the black there is no clean edge: each runs a little into the other (blurred towards the
+# neighbour only, where the neighbour is present)
+blur = lambda c, s: cv2.GaussianBlur(c.astype(np.float32), (0, 0), s)
+nb, nl = covs["black"], covs["light_blue"]
+covs["black"] = np.maximum(nb, .7 * blur(nb, 2.4) * (blur(nl, 2) > .06))
+covs["light_blue"] = np.maximum(nl, .75 * blur(nl, 2.4) * (blur(nb, 2) > .06))
+for p in pencils:
+    p["cov"] = b64(covs[p["name"]] * 255)
 
 # stroke direction: structure tensor of the total absorbance, perpendicular to its gradient
 g = A.sum(2).astype(np.float32)

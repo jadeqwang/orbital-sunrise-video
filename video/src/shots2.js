@@ -74,7 +74,7 @@ async function leonovDrawing(t, k, view, o = {}) {
 const LD_MODE = new URLSearchParams(location.search).get('drawing') || 'redraw';
 const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
 const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
-const LD_CONTRAST = { black: 1.35, blue: 1.15, light_blue: .95, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
+const LD_CONTRAST = { black: 1.35, blue: 1.3, deep_blue: 1.3, light_blue: .95, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
 const LD_CREDIT = 'A. Leonov, «Sunrise» (Восход), 1965 · Museum of the Yuri Gagarin Cosmonaut Training Centre, Star City';
 // per pencil: stroke length and width (card units), strokes per unit of pressure, how far a stroke leans off the field
 const LD_STYLE = {
@@ -82,7 +82,8 @@ const LD_STYLE = {
   light_blue: { len: [30, 90], w: [1.6, 2.8], k: 4.6, dev: .06 },
   yellow: { len: [36, 100], w: [1.6, 2.8], k: 5, dev: .04 },
   orange_red: { len: [30, 90], w: [1.5, 2.6], k: 4.6, dev: .04 },
-  blue: { len: [36, 120], w: [1.6, 3], k: 4.2, dev: .07 },
+  blue: { len: [36, 120], w: [1.6, 3], k: 6.5, dev: .08, ap: .5 },          // the Earth: cobalt and deep blue laid over each other,
+  deep_blue: { len: [40, 130], w: [1.6, 3.2], k: 5, dev: .06, ap: .55 },   // pressed harder where it is darkest
 };
 let LD = null, LD_PHOTO = null;
 async function ldInit() {
@@ -140,7 +141,7 @@ function ldStrokes() {
         pts.push(x, y); for (let q = 0; q < half[0].length; q += 2) pts.push(half[0][q], half[0][q + 1]);
         if (pts.length < 6) continue;
         out.push({ pts: Float32Array.from(pts), w: inSun ? st.w[1] * (.8 + r() * .3) : st.w[0] + (st.w[1] - st.w[0]) * r(),
-          a: clamp(.2 + .38 * Math.min(1, c) + (r() - .5) * .16, .1, .85) * (inSun ? 1.15 : 1), x, seed: (r() * 1e9) | 0, h: r() });
+          a: clamp(.2 + (st.ap ?? .38) * Math.min(1, c) + (r() - .5) * .16, .1, .85) * (inSun ? 1.15 : 1), x, seed: (r() * 1e9) | 0, h: r() });
       }
     }
     p.strokes = out;
