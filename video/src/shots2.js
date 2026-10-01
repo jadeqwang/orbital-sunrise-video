@@ -74,14 +74,14 @@ async function leonovDrawing(t, k, view, o = {}) {
 const LD_MODE = new URLSearchParams(location.search).get('drawing') || 'redraw';
 const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
 const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
-const LD_CONTRAST = { black: 1.35, blue: 1.3, deep_blue: 1.3, light_blue: .95, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
+const LD_CONTRAST = { black: 1.35, blue: 1.2, deep_blue: 1.12, light_blue: .95, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
 const LD_CREDIT = 'A. Leonov, «Sunrise» (Восход), 1965 · Museum of the Yuri Gagarin Cosmonaut Training Centre, Star City';
 // per pencil: stroke length and width (card units), strokes per unit of pressure, how far a stroke leans off the field
 const LD_STYLE = {
   black: { len: [40, 110], w: [1.8, 3.2], k: 4.2, dev: .05 },
-  light_blue: { len: [30, 90], w: [1.6, 2.8], k: 4.6, dev: .06 },
-  yellow: { len: [36, 100], w: [1.6, 2.8], k: 5, dev: .04 },
-  orange_red: { len: [30, 90], w: [1.5, 2.6], k: 4.6, dev: .04 },
+  light_blue: { len: [30, 90], w: [1.6, 2.8], k: 8, dev: .06, ap: .5, th: .45 },   // the sunrise bands: dense, the card barely shows
+  yellow: { len: [36, 100], w: [1.6, 2.8], k: 9, dev: .04, ap: .55, th: .4 },
+  orange_red: { len: [30, 90], w: [1.5, 2.6], k: 8.5, dev: .04, ap: .55, th: .42 },
   blue: { len: [36, 120], w: [1.6, 3], k: 6.5, dev: .08, ap: .5 },          // the Earth: cobalt and deep blue laid over each other,
   deep_blue: { len: [40, 130], w: [1.6, 3.2], k: 5, dev: .06, ap: .55 },   // pressed harder where it is darkest
 };
@@ -198,12 +198,12 @@ function ldCard(cw, k, d) {
       side(1, a * .55); if (hash2(s.seed, 3) < .6) side(-1, a * .45);
     });
     pen.flush(sg);
-    const A = sg.getImageData(0, 0, rw, rh).data, T = p.Tc;
+    const A = sg.getImageData(0, 0, rw, rh).data, T = p.Tc, TH = (LD_STYLE[p.name] || {}).th ?? .78;   // th: how far pressure fills the tooth
     for (let y = 0; y < rh; y++) {
       const ty = ((y + ry0) % TN) * TN, row = ((y + ry0) * cw + rx0) * 4;
       for (let x = 0; x < rw; x++) {
         const al = A[(y * rw + x) * 4 + 3]; if (!al) continue;
-        const tv = tooth.T[ty + ((x + rx0) % TN)], th = .78 * (1 - tv), c = clamp((al / 255 - th) / (1 - th));
+        const tv = tooth.T[ty + ((x + rx0) % TN)], th = TH * (1 - tv), c = clamp((al / 255 - th) / (1 - th));
         if (c <= 0) continue;
         const i = row + x * 4;
         D[i] *= 1 - c + c * T[0]; D[i + 1] *= 1 - c + c * T[1]; D[i + 2] *= 1 - c + c * T[2];

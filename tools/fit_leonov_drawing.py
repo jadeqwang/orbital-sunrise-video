@@ -104,6 +104,15 @@ for nm in ORDER:
     full = np.percentile(mag[m], 92)
     strong = m & (mag > np.percentile(mag[m], 80)) & (mag < np.percentile(mag[m], 99))
     T = np.median((R / illum)[strong], 0).clip(0, 1)                 # what one full-pressure layer lets through
+    if "blue" in nm:
+        # his blues are clean pigments: the grey in these pixels is black pencil (and shadow) laid over them, which the
+        # film draws as its own black strokes. Sample the hue from the most saturated strokes (white-balanced against the
+        # bare card) and take the neutral part out of the absorbance: what is left is the blue itself.
+        Ap = A[m]; sat = Ap.max(1) - Ap.min(1)
+        top = sat > np.percentile(sat, 85)
+        Ab = np.median(Ap[top], 0); Ab = Ab - .85 * Ab.min()
+        Ab *= np.median(np.linalg.norm(Ap[strong[m]], axis=1)) / np.linalg.norm(Ab) * .8
+        T = np.exp(-Ab).clip(0, 1)
     cov = grid(np.where(m, np.clip(mag / full, 0, 1.25) / 1.25, 0))
     ys, xs = np.where(m)
     # the band's ridge: its weighted centre line, column by column (10-unit columns), then a circle through it
