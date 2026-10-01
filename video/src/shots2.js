@@ -806,7 +806,7 @@ async function initShots2() {
     if (lt < .1) { G.fillStyle = P.snow; G.globalAlpha = .6 * (1 - lt / .1); G.fillRect(0, 0, W, H); G.globalAlpha = 1; }
     const Lt = typeLayer();
     tele(Lt.g, 'MAIN PARACHUTE — OPEN', 60, 64, t, d20 + .3, { size: 24, weight: 800, col: 'graphite', dur: .5 });
-    tele(Lt.g, 'ALTITUDE 5 KM', 60, 100, t, d20 + .9, { size: 20, col: 'lead', dur: .4 });
+    tele(Lt.g, 'ALTITUDE ~2.5 KM', 60, 100, t, d20 + .9, { size: 20, col: 'lead', dur: .4 });
     typeFlush(Lt, drawClock(t, 12).n, .3);
   });
   shot('E2_map', bt2(16), D2[0].t0 - .3, async (t, lt) => {
