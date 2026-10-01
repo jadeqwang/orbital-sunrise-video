@@ -34,13 +34,14 @@ def cheeks_mask(L, w, h, feather):
     return cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), feather)[..., None]
 
 
+NOSE = [6, 197, 195, 5, 4, 1, 19, 94, 2, 98, 327, 129, 358, 49, 279, 64, 294, 48, 278]
 EYES = ([70, 63, 105, 66, 107, 55, 133, 145, 153, 33, 130, 46], [300, 293, 334, 296, 336, 285, 362, 374, 380, 263, 359, 276])   # brow + eye, each side
 
 
 def skin_mask(L, w, h, feather):
     """Her face oval (slightly inset) minus the eyes with the brows above them and the lips, grown a little."""
     m = np.zeros((h, w), np.uint8)
-    p = pts(L, w, h, JL.FACE_OVAL); c = p.mean(0); cv2.fillPoly(m, [(c + (p - c) * .95).astype(np.int32)], 255)
+    p = pts(L, w, h, JL.FACE_OVAL); c = p.mean(0); cv2.fillPoly(m, [(c + (p - c) * 1.0).astype(np.int32)], 255)
     cut = np.zeros((h, w), np.uint8)
     for side in EYES: cv2.fillConvexPoly(cut, cv2.convexHull(pts(L, w, h, side).astype(np.int32)), 255)
     cut = cv2.dilate(cut, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (17, 17)))
@@ -90,7 +91,7 @@ def main(take, first, relit_model, out_dir, plate=None):
     # away from her face the ratio is only a broad wash (her hair and the edge of her head move against the still)
     ratio_far = cv2.GaussianBlur(ratio, (0, 0), 24)
     # the still's skin light, extended past her face edge with her median skin colour, so a moved jaw never pulls in sky or grass
-    inner = oval_mask(LA, w, h, .95, 1)[..., None]
+    inner = oval_mask(LA, w, h, 1.0, 1)[..., None]
     tone = np.median(blurR[(inner[..., 0] > .5) & (cheeks_mask(LA, w, h, 1)[..., 0] > .5)], axis=0)
     skinR = inner * blurR + (1 - inner) * tone
     F = frames(take)
@@ -112,12 +113,13 @@ def main(take, first, relit_model, out_dir, plate=None):
         Y = X * g
         # her skin (the face oval minus the eyes and brows, which change with her expression, and the lips, which sing): the
         # still's skin light carried with her head, times the take's line detail, so the closet's glasses-shadow (Seedance
-        # draws it larger than the still) goes; on the cheeks only the take's faint texture is kept (the shadow's hatched edge
-        # is dropped). The eyes, brows and mouth keep the take's own tones (relit by the ratio above).
+        # draws it larger than the still) goes; outside the nose only the take's faint texture is kept (the shadow's hatched
+        # edges are dropped). The eyes, brows and mouth keep the take's own tones (relit by the ratio above).
         ga = X.mean(2); dl = (ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1)
-        ckm = np.maximum(JL.cheek_mask(L, w, h, 10), cheeks_mask(L, w, h, 9))
-        det = (ckm * np.clip(dl, .84, 1.08)[..., None] + (1 - ckm) * np.clip(dl, 0, 1.15)[..., None])
-        sk = skin_mask(L, w, h, 7)
+        nose = np.zeros((h, w), np.uint8); cv2.fillConvexPoly(nose, cv2.convexHull(pts(L, w, h, NOSE).astype(np.int32)), 255)
+        nm = cv2.GaussianBlur(cv2.dilate(nose, np.ones((9, 9), np.uint8)).astype(np.float32) / 255, (0, 0), 5)[..., None]
+        det = (1 - nm) * np.clip(dl, .84, 1.08)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
+        sk = skin_mask(L, w, h, 15)
         Y = sk * warp(skinR) * det + (1 - sk) * Y
         # the take's golden-hour rim on her hair, jacket and headphones: no low sun in daylight, so its gold goes grey
         hsv = cv2.cvtColor(np.clip(Y, 0, 255).astype(np.uint8), cv2.COLOR_RGB2HSV).astype(np.float32)
