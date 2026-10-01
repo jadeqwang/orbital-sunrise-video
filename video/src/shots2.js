@@ -68,10 +68,12 @@ async function leonovDrawing(t, k, view, o = {}) {
 // the stroke direction field, the sun disc). Here that becomes a few thousand generated pencil strokes, each pencil
 // laid on a supersampled card layer and pressed into the card's tooth: light pressure catches only the grain's peaks,
 // heavy pressure fills the valleys (the waxy look). The card is 1000 units wide.
-//   ?drawing=redraw  (default) this redraw          ?drawing=v1  the round-3 version (leonovDrawing, needs the plate)
+//   (default)        the public cut: no likeness of his drawing at all (pubCabin / pubPage below)
+//   ?drawing=crayon  this redraw (also ?drawing=redraw): NOT for public use, an imitation of his work; for comparison only
+//   ?drawing=v1      the round-3 version (leonovDrawing, needs the plate; also not for public use)
 //   ?drawing=photo   the museum photo of the real drawing, for a licensed cut: needs media/refs/leonov_drawing_real_photo.jpg
 //                    (served by render.mjs as refs/...); without it, it falls back to the redraw. It carries the credit line.
-const LD_MODE = new URLSearchParams(location.search).get('drawing') || 'redraw';
+const LD_MODE = (m => m === 'crayon' ? 'redraw' : ['redraw', 'v1', 'photo'].includes(m) ? m : 'public')(new URLSearchParams(location.search).get('drawing'));
 const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
 const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
 const LD_CONTRAST = { black: 1.35, black_over: 1.35, blue: 1.2, deep_blue: 1.12, light_blue: 1, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
@@ -88,7 +90,7 @@ const LD_STYLE = {
 };
 let LD = null, LD_PHOTO = null;
 async function ldInit() {
-  if (LD_MODE === 'v1') return;
+  if (LD_MODE === 'v1' || LD_MODE === 'public') return;
   try { LD = await loadJSON('data/leonov_drawing.json'); } catch (e) { console.warn('no data/leonov_drawing.json: the v1 drawing'); return; }
   const dec = s => Uint8Array.from(atob(s), c => c.charCodeAt(0)), G0 = LD.grid;
   LD.pencils.forEach(p => { p.c = dec(p.cov); p.Tc = p.T.map(v => Math.pow(v, LD_CONTRAST[p.name] ?? 1.2)); });
@@ -263,6 +265,230 @@ function drawLeonovCard(t, k, cx, cy, cw, rot = 0, o = {}) {
 const ldPhoto = () => LD_MODE === 'photo' && !!LD_PHOTO;
 const ldRedraw = () => LD_MODE !== 'v1' && !!LD;
 
+// ---- the public cut (default): no likeness of his drawing ----
+// The songwriter's decision: his «Sunrise» is not shown, nor any imitation of it (the crayon redraw is a derivative of his
+// work and needs the same permission as the photo). The two drawing moments stay about the act of drawing: his coloured
+// pencils on their string, the card catching the sunrise light, and the sunrise itself drawn in the film's own pencil
+// style. The card is only ever seen from the back (its blank side); nothing of his composition, palette or marks.
+// Everything here is procedural pencil work (no plates, no generated imagery).
+//   ?drawing=crayon (or redraw) the crayon redraw, for comparison only (not public)   ?drawing=photo  the licensed cut
+const PUB = LD_MODE === 'public';
+// the box: a few colours of pencil (body, the facet toward the light, the facet away from it)
+const PUB_PENCILS = [['verm', 'orange', 'crimson'], ['gold', 'cream', 'orange'], ['cobalt', 'sky', 'ultra'], ['green', '#86b98a', '#20402a'],
+  ['graphite', 'lead', 'night'], ['sky', 'white', 'cobalt'], ['orange', 'gold', 'verm']];
+// a hexagonal coloured pencil from its back end (x, y) along ang: three facets of long strokes, the sharpened wood cone and
+// the lead, an outline in the paper's contour pencil and the string tied on near the back. lit: light direction (angle).
+function pubPencil(pen, x, y, ang, len, wid, spec, d, o = {}) {
+  const [col, lit, dk] = spec, ux = Math.cos(ang), uy = Math.sin(ang), nx = -uy, ny = ux, s = o.seed ?? 1, night = o.night !== false;
+  const at = (a, b) => [x + ux * a + nx * b, y + uy * a + ny * b], j = (i, k) => (hash3(s, i, d * 5 + k) - .5);
+  const litSide = Math.cos(ang + Math.PI / 2 - (o.lit ?? -Math.PI / 2)) > 0 ? 1 : -1;   // which side of the body faces the light
+  const body = len * .8, cone = len * .95, rv = o.reveal ?? 1;
+  // facets: the lit one, the body colour, the shaded one
+  const lanes = [[-1, litSide < 0 ? lit : dk], [0, col], [1, litSide > 0 ? lit : dk]];
+  lanes.forEach(([ln, c], li) => {
+    const n = Math.max(3, Math.round(wid / 5));
+    for (let i = 0; i < n; i++) {
+      const b = (ln + (i + .5) / n - .5) * wid / 3 + j(li * 40 + i, 1) * 1.4;
+      const a0 = 3 + j(li * 40 + i, 2) * 8, a1 = Math.min(body, body * rv) - 2 + j(li * 40 + i, 3) * 6;
+      if (a1 <= a0) continue;
+      const [x0, y0] = at(a0, b), [x1, y1] = at(a1, b + j(li * 40 + i, 4) * 1.2);
+      pen.l(x0, y0, x1, y1, c, wid / n / 3 * 2.4, .78 + .15 * hash2(s, li * 40 + i));
+    }
+  });
+  // the ridges between the facets
+  if (rv > .3) [-1, 1].forEach(sg => { const [x0, y0] = at(4, sg * wid / 6), [x1, y1] = at(body * rv - 3, sg * wid / 6 + j(sg + 7, 5)); pen.l(x0, y0, x1, y1, dk, 1, .45); });
+  if (rv >= 1) {
+    // the sharpened wood: strokes from the body's end converge on the lead
+    for (let i = 0; i < 9; i++) {
+      const b = (i / 8 - .5) * wid * .92, [x0, y0] = at(body + 1, b), [x1, y1] = at(cone - 2, b * .2 + j(i, 6));
+      const shade = b * litSide < -wid * .15;
+      pen.l(x0, y0, x1, y1, shade ? 'brown' : '#e8cfa0', 1.9, shade ? .55 : .85);
+    }
+    // the lead
+    for (let i = 0; i < 4; i++) { const b = (i / 3 - .5) * wid * .2, [x0, y0] = at(cone - 3, b), [x1, y1] = at(len, j(i, 7) * .6); pen.l(x0, y0, x1, y1, col === 'graphite' ? 'night' : col, 2, .95); }
+  }
+  // outline in the contour pencil
+  const oc = night ? 'white' : 'graphite', oa = night ? .55 : .7;
+  const e = sg => { const q = []; for (let i = 0; i <= 8; i++) { const a = body * rv * i / 8; q.push(at(a, sg * wid / 2 + j(i + sg * 20, 8) * 1.3)); } if (rv >= 1) q.push(at(cone, sg * wid * .1), at(len, 0)); return q; };
+  pen.poly(e(1), oc, 1.5, oa, .05); pen.poly(e(-1), oc, 1.5, oa, .05);
+  pen.poly([at(0, -wid / 2), at(-1.5, 0), at(0, wid / 2)], oc, 1.4, oa, .05);
+  // the string tied round it near the back end
+  const sc = night ? 'silver' : 'lead';
+  for (let i = 0; i < 3; i++) { const a = len * .055 + i * 3.2; pen.l(...at(a + j(i, 9) * 2, -wid / 2 - 1.5), ...at(a + 2.5 + j(i, 10) * 2, wid / 2 + 1.5), sc, 1.3, .85); }
+  return at(len * .06, 0);                                                             // where the string leaves the pencil
+}
+// a loose string from (ax, ay) to (bx, by), floating (bow: sideways bulge in px, ph: its slow sway)
+function pubString(pen, ax, ay, bx, by, bow, ph, d, o = {}) {
+  const dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L, q = [];
+  for (let i = 0; i <= 16; i++) {
+    const u = i / 16, b = Math.sin(u * Math.PI) * bow + Math.sin(u * Math.PI * 2 + ph) * bow * .35 + (hash3(i, d, 77) - .5) * 1.2;
+    q.push([ax + dx * u + nx * b, ay + dy * u + ny * b]);
+  }
+  const n = Math.max(2, Math.round(q.length * (o.reveal ?? 1)));
+  pen.poly(q.slice(0, n), o.col ?? 'silver', o.w ?? 1.3, o.a ?? .7, .02);
+}
+// a card in space: centre (cx, cy), w × h px, turned by yaw (about its vertical axis) and pitch, then roll; perspective f
+function pubQuad(cx, cy, w, h, yaw, pitch, roll, f = 2600) {
+  return [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => {
+    let x = sx * w / 2, y = sy * h / 2, z = 0;
+    [x, z] = [x * Math.cos(yaw), x * Math.sin(yaw)];
+    [y, z] = [y * Math.cos(pitch) - z * Math.sin(pitch), y * Math.sin(pitch) + z * Math.cos(pitch)];
+    const p = f / (f + z); x *= p; y *= p;
+    return [cx + x * Math.cos(roll) - y * Math.sin(roll), cy + x * Math.sin(roll) + y * Math.cos(roll)];
+  });
+}
+// the card's blank back as a drawn sheet: its tone, warm where the light falls (lx, ly), cross-strokes of the light pencils
+// along its length, and a pencil edge. k: how much sunrise light reaches it.
+function pubCardBack(pen, Q, d, k, o = {}) {
+  const night = o.night !== false;
+  const lerpP = (a, b, u) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u)];
+  G.save(); G.beginPath(); Q.forEach(([x, y], i) => i ? G.lineTo(x, y) : G.moveTo(x, y)); G.closePath();
+  if (o.shadow) { G.shadowColor = 'rgba(40,30,20,.24)'; G.shadowBlur = 30; G.shadowOffsetX = 8; G.shadowOffsetY = 14; }
+  const lit = o.litEdge ?? 1, A = lit ? lerpP(Q[1], Q[2], .5) : lerpP(Q[0], Q[3], .5), B = lit ? lerpP(Q[0], Q[3], .5) : lerpP(Q[1], Q[2], .5);
+  const gr = G.createLinearGradient(A[0], A[1], B[0], B[1]);
+  const base = night ? [196, 186, 168] : [238, 231, 214], warm = [255, 226, 168];
+  gr.addColorStop(0, rgbHex(...base.map((v, i) => lerp(v, warm[i], .85 * k)))); gr.addColorStop(1, rgbHex(...base.map((v, i) => lerp(v * (night ? .55 : .97), warm[i], .18 * k))));
+  G.fillStyle = gr; G.fill(); G.restore();
+  // strokes laid along the card's length (the light pencils), more of them on the lit side
+  for (let i = 0; i < 70; i++) {
+    const v = hash2(i, 31), u0 = hash2(i, 32) * .7, u1 = Math.min(1, u0 + .2 + hash2(i, 33) * .4), jx = (hash3(i, d, 34) - .5) * 1.4;
+    const P0 = lerpP(lerpP(Q[0], Q[3], v), lerpP(Q[1], Q[2], v), u0), P1 = lerpP(lerpP(Q[0], Q[3], v), lerpP(Q[1], Q[2], v), u1);
+    const near = lit ? (u0 + u1) / 2 : 1 - (u0 + u1) / 2;
+    pen.l(P0[0] + jx, P0[1], P1[0] + jx, P1[1], near * k > .45 && hash2(i, 35) < .6 ? 'gold' : (night ? 'cream' : 'silver'), 1.6, (night ? .22 : .07) + (night ? .3 : .2) * near * k);
+  }
+  const q = [...Q, Q[0]].map(([x, y], i) => [x + (hash3(i, d, 36) - .5) * 1.6, y + (hash3(i, d, 37) - .5) * 1.6]);
+  pen.poly(q, night ? 'white' : 'graphite', 1.5, night ? .45 : .35, .02);
+}
+// a soft light (additive on black paper, a warm wash on white)
+function pubGlow(x, y, r, a, col = [255, 196, 110], mode = 'lighter') {
+  if (a <= 0) return;
+  G.save(); G.globalCompositeOperation = mode;
+  const g = G.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(.35, `rgba(${col},${a * .45})`); g.addColorStop(1, `rgba(${col},0)`);
+  G.fillStyle = g; G.fillRect(x - r, y - r, r * 2, r * 2); G.restore();
+}
+// the porthole: a rim of hatched metal round a window onto the Earth's limb, the sun rising on it. k: sunrise 0..1.
+// Returns the sun's screen position.
+function pubPorthole(pen, cx, cy, R, k, d, lt) {
+  // inside the window: black, the Earth's curve low in it (hatched cobalt), the sun coming up over the limb
+  const ER = R * 2.6, ex = cx + R * .45, ey = cy + R * .3 + ER, sx = cx - R * .22, sy = ey - Math.sqrt(ER * ER - (sx - ex) * (sx - ex)) + 26 - 46 * smooth(k);
+  const win = layer(2);
+  win.g.save(); win.g.beginPath(); win.g.arc(cx, cy, R, 0, TAU); win.g.clip();
+  win.g.fillStyle = '#070609'; win.g.fillRect(cx - R, cy - R, 2 * R, 2 * R);
+  const pw = new Pen();
+  starfield(pw, 61, 40, { region: [cx - R, cy - R, cx + R, sy - 20], twinkle: .3 });
+  earthDisc(pw, ex, ey, ER, 19, { spacing: 5.5, lit: .5 + .45 * k, litA: Math.atan2(sy - ey, sx - ex), jseed: d });
+  // the limb: a thin line of atmosphere, white-blue, brightening toward the sun
+  const la = Math.atan2(sy - ey, sx - ex);
+  for (let i = 0; i < 160; i++) {
+    const a = la + (hash2(i, 71) - .5) * 1.3, near = Math.exp(-Math.pow((a - la) / .22, 2)), r = ER + 2 + hash2(i, 72) * (5 + 9 * near * k);
+    const da = (12 + 30 * near) / ER;
+    pw.l(ex + Math.cos(a) * r, ey + Math.sin(a) * r, ex + Math.cos(a + da) * r, ey + Math.sin(a + da) * r, near * k > .5 ? 'white' : 'sky', 1.4 + near, .45 + .45 * near * k);
+  }
+  // the sun: a hot point with rays (the same pencils as the rest of the film's sunrises)
+  raysFrom(pw, sx, sy, { n: 150, r0: 6, r1: R * (.3 + .55 * k), seed: 23, jseed: d, energy: .5 + .5 * k, cols: ['white', 'gold', 'gold', 'orange', 'cream'], alpha: [.3, .75], w: [1, 2], a0: Math.PI, a1: TAU });
+  raysFrom(pw, sx, sy, { n: 60, r0: 4, r1: R * (.12 + .2 * k), seed: 24, jseed: d, energy: 1, cols: ['white', 'cream', 'gold'], alpha: [.5, .9], w: [1.4, 2.4] });
+  for (let i = 0; i < 26; i++) { const a = hash3(i, d, 73) * TAU, r = (8 + 10 * k) * Math.sqrt(hash2(i, 74)); pw.l(sx, sy, sx + Math.cos(a) * r, sy + Math.sin(a) * r, i % 3 ? 'white' : 'cream', 2.4, .95); }
+  pw.flush(win.g, ORDER_NIGHT); toothIn(win, d);
+  win.g.restore();
+  G.drawImage(win.c, 0, 0);
+  pubGlow(sx, sy, R * (.4 + .5 * k), .35 + .35 * k, [255, 214, 150]);
+  // the rim: two pencil circles and hatching round the ring, lit on the side away from the sun's glare, and the bolts
+  const RW = 54;
+  for (let i = 0; i < 1400; i++) {
+    const a = hash2(i, 81) * TAU, r = R + 4 + hash2(i, 82) * (RW - 8), facing = Math.cos(a - (la + Math.PI)) * .5 + .5;
+    const da = (10 + 22 * hash2(i, 83)) / r, jx = (hash3(i, d, 84) - .5) * 1.2;
+    pen.l(cx + Math.cos(a) * r + jx, cy + Math.sin(a) * r, cx + Math.cos(a + da) * r + jx, cy + Math.sin(a + da) * r, facing > .62 ? 'silver' : facing > .3 ? 'lead' : 'brown', 1.8, .45 + .4 * facing);
+  }
+  // the sunrise catches the inner edge of the rim (warm) on the far side
+  for (let i = 0; i < 90; i++) {
+    const a = la + Math.PI + (hash2(i, 85) - .5) * 1.9, r = R + 3 + hash2(i, 86) * 10, da = (14 + 20 * hash2(i, 87)) / r;
+    pen.l(cx + Math.cos(a) * r, cy + Math.sin(a) * r, cx + Math.cos(a + da) * r, cy + Math.sin(a + da) * r, hash2(i, 88) < .5 ? 'gold' : 'orange', 1.8, (.3 + .55 * k) * (1 - Math.abs(hash2(i, 85) - .5) * 1.4));
+  }
+  [R + 1, R + RW].forEach((r, ri) => { const q = []; for (let i = 0; i <= 72; i++) { const a = i / 72 * TAU; q.push([cx + Math.cos(a) * (r + (hash3(i % 72, d, 89 + ri) - .5) * 1.6), cy + Math.sin(a) * (r + (hash3(i % 72, d, 91 + ri) - .5) * 1.6)]); } pen.poly(q, 'white', ri ? 1.5 : 2, ri ? .4 : .6, .01); });
+  for (let i = 0; i < 12; i++) { const a = i / 12 * TAU + .13, r = R + RW * .55; pen.dot(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 3.4, 'silver', .7); }
+  return [sx, sy];
+}
+// D5 (1:40), public: in the dark cabin the sun comes up in the porthole; his card turns slowly in the air, its blank back to
+// us, and the sunrise light blooms over its edge; his pencils float on their strings in front of it.
+function pubCabin(t, lt, dur) {
+  paper(G, 'night');
+  const d = drawClock(t, 12).n, k = smooth(clamp((lt - .2) / (dur * .75))), rv = easeOut(clamp(lt / .9));
+  const pen = new Pen(), L = layer(1);
+  const [sx, sy] = pubPorthole(pen, 1395, 430, 300, k, d, lt);
+  pen.flush(L.g, ORDER_NIGHT); toothIn(L, d); G.drawImage(L.c, 0, 0); L.g.clearRect(0, 0, W, H);
+  // a faint shaft of the sunrise across the cabin toward the card
+  const Ls = layer(2), ps = new Pen();
+  raysFrom(ps, sx, sy, { n: 90, r0: 360, r1: 700, a0: Math.PI * .97, a1: Math.PI * 1.1, seed: 41, jseed: d, energy: k, cols: ['gold', 'cream'], alpha: [.04, .14], w: [1.2, 2.2] });
+  ps.flush(Ls.g, ORDER_NIGHT); toothIn(Ls, d); G.drawImage(Ls.c, 0, 0);
+  // the card: turning slowly in the air, its back toward us, its near edge toward the porthole
+  const cx = 760 + Math.sin(lt * .5) * 14, cy = 390 + Math.cos(lt * .42) * 10;
+  const Q = pubQuad(cx, cy, 640, 430, .98 - lt * .035, .1 + Math.sin(lt * .3) * .03, -.08 + Math.sin(lt * .35) * .02);
+  const cardR = (Q[1][0] + Q[2][0]) / 2, cardRy = (Q[1][1] + Q[2][1]) / 2;
+  G.save(); G.globalAlpha = rv; pubCardBack(pen, Q, d, .25 + .75 * k, { night: true, litEdge: 1 }); G.restore();
+  pen.flush(L.g, ORDER_NIGHT); toothIn(L, d); G.globalAlpha = rv; G.drawImage(L.c, 0, 0); G.globalAlpha = 1; L.g.clearRect(0, 0, W, H);
+  pubGlow(cardR, cardRy, 260 + 160 * k, .1 + .32 * k);                                  // the light blooming over its edge
+  // the pencils on their strings, drifting below it: tied to one string that runs off to his wrist (lower left)
+  const knot = [70 + Math.sin(lt * .4) * 8, 1090], pl = [];
+  PUB_PENCILS.forEach((spec, i) => {
+    const ph = i * 1.7, a = -1.42 + i * .2 + Math.sin(lt * .45 + ph) * .04, r0 = 210 + 80 * hash2(i, 51) + Math.sin(lt * .5 + ph) * 10;
+    const bx = knot[0] + Math.cos(a) * r0, by = knot[1] + Math.sin(a) * r0;
+    const ang = a + (hash2(i, 54) - .5) * .3 + Math.sin(lt * .6 + ph) * .06;
+    pl.push([spec, bx, by, ang, 340 + 50 * hash2(i, 55), i]);
+  });
+  pl.forEach(([spec, bx, by, ang, len, i]) => {
+    const rvi = clamp(rv * 1.3 - i * .05);
+    const s0 = pubPencil(pen, bx, by, ang, len, 24, spec, d, { seed: i + 1, lit: Math.atan2(sy - by, sx - bx), reveal: rvi });
+    pubString(pen, s0[0], s0[1], knot[0], knot[1], (hash2(i, 56) - .5) * 90, lt * .7 + i, d, { reveal: rvi, a: .55 });
+  });
+  pen.flush(L.g, ORDER_NIGHT); toothIn(L, d); G.drawImage(L.c, 0, 0);
+  // the lit facets catch a little of the warm light
+  pl.forEach(([spec, bx, by, ang, len], i) => pubGlow(bx + Math.cos(ang) * len * .5, by + Math.sin(ang) * len * .5, 120, .05 + .06 * k));
+  return d;
+}
+// C1 (3:59, the ending), public: the white page; the light of a sunrise falls through the porthole as a warm pool that
+// slides across the page onto his card, which lies face down; his pencils lie beside it on their string.
+function pubPage(t, lt, dur) {
+  paper(G, 'snow');
+  const d = drawClock(t, 8).n, k = smooth(clamp((lt - .1) / (dur * .8))), rv = easeOut(clamp(lt / 1.2));
+  const pcx = lerp(620, 1060, k), pcy = lerp(720, 640, k), prx = 380 + 260 * k, pry = 250 + 170 * k, pa = -.18;
+  const pool = (X, Y) => { const dx = X - pcx, dy = Y - pcy, u = dx * Math.cos(pa) + dy * Math.sin(pa), v = -dx * Math.sin(pa) + dy * Math.cos(pa); return smooth(clamp((1.08 - Math.hypot(u / prx, v / pry)) / .3)); };
+  const words = quiet([[W / 2 - 860, 110, W / 2 + 860, 270]], .95);
+  // the light on the page: warm strokes inside the pool
+  const L = layer(1), pen = new Pen();
+  for (let y = -40; y < H + 40; y += 7) for (let x = -60; x < W + 60; x += 46) {
+    const X = x + (hash3(x, y, 3) - .5) * 40 + (y * .6) % 46, Y = y + (hash3(x, y, d % 3 + 4) - .5) * 1.4, p = pool(X, Y), m = words(X, Y);
+    const warm = p * m * (.35 + .65 * k);
+    if (warm > .1 && hash3(x, y, 6) < warm * .45) pen.l(X, Y, X + 44, Y - 26, hash3(x, y, 7) < .6 ? 'gold' : 'orange', 1.7, .14 + .24 * warm);
+  }
+  pen.flush(L.g, ORDER_SNOW); toothIn(L, d);
+  G.globalCompositeOperation = 'multiply'; G.drawImage(L.c, 0, 0); G.globalCompositeOperation = 'source-over'; L.g.clearRect(0, 0, W, H);
+  // his card, face down: the blank back, a soft shadow; it warms as the light reaches it
+  const Q = pubQuad(1080, 640, 640, 434, 0, 0, -.045);
+  const kc = clamp((k - .25) / .6);
+  G.save(); G.globalAlpha = rv; pubCardBack(pen, Q, d, kc, { night: false, shadow: true, litEdge: 0 }); G.restore();
+  pen.flush(L.g, ORDER_SNOW); toothIn(L, d); G.globalCompositeOperation = 'multiply'; G.globalAlpha = rv; G.drawImage(L.c, 0, 0);
+  G.globalAlpha = 1; G.globalCompositeOperation = 'source-over'; L.g.clearRect(0, 0, W, H);
+  // his pencils, lying in a loose fan to the left of it, still on their string; each with a soft shadow
+  const knot = [300, 930], pl = [];
+  PUB_PENCILS.forEach((spec, i) => {
+    const ang = -1.12 + i * .16 + (hash2(i, 61) - .5) * .08, r0 = 70 + 40 * hash2(i, 62);
+    pl.push([spec, knot[0] + Math.cos(ang) * r0 + i * 18, knot[1] + Math.sin(ang) * r0, ang + (hash2(i, 63) - .5) * .12, 360 + 40 * hash2(i, 64), i]);
+  });
+  G.save(); G.globalCompositeOperation = 'multiply'; G.filter = 'blur(7px)'; G.globalAlpha = .22 * rv; G.lineCap = 'round'; G.strokeStyle = '#6b5a48';
+  pl.forEach(([, bx, by, ang, len, i]) => { G.globalAlpha = .22 * clamp(rv * 1.4 - i * .06); G.lineWidth = 20; G.beginPath(); G.moveTo(bx + 8, by + 10); G.lineTo(bx + Math.cos(ang) * len * .93 + 8, by + Math.sin(ang) * len * .93 + 10); G.stroke(); });
+  G.restore();
+  pl.forEach(([spec, bx, by, ang, len, i]) => {
+    const rvi = clamp(rv * 1.4 - i * .06);
+    const s0 = pubPencil(pen, bx, by, ang, len, 22, spec, d, { seed: i + 1, night: false, lit: -2.4, reveal: rvi });
+    pubString(pen, s0[0], s0[1], knot[0], knot[1], (hash2(i, 65) - .5) * 40, i, d, { col: 'lead', a: .7, reveal: rvi });
+  });
+  // the string's loose end trails off the page
+  pubString(pen, knot[0], knot[1], -20, 1060, 60, 1.3, d, { col: 'lead', a: .7, reveal: rv });
+  pen.flush(L.g, ORDER_SNOW); toothIn(L, d); G.globalCompositeOperation = 'multiply'; G.drawImage(L.c, 0, 0); G.globalCompositeOperation = 'source-over';
+  pubGlow(pcx, pcy, prx * 1.3, .3 * (.3 + .7 * k), [255, 200, 110], 'multiply');                    // the warmth of the light
+}
+
 async function initShots2() {
   try { SYNC = await loadJSON('data/sync.json'); } catch (e) { SYNC = {}; }
   await ldInit();
@@ -305,6 +531,12 @@ async function initShots2() {
   });
   // his drawing (the reconstruction) on a small white card floating in the dark cabin; no text on the drawing itself
   shot('D5_the_drawing', bt(48), D1[1].t0 - .05, async (t, lt, dur) => {
+    if (PUB) {
+      const d = pubCabin(t, lt, dur), Lt = typeLayer();
+      tele(Lt.g, 'THE FIRST WORK OF ART MADE IN SPACE', W / 2 - 330, H - 40, t, bt(49), { size: 28, weight: 800, col: 'gold', dur: .8 });
+      typeFlush(Lt, d, .3);
+      return;
+    }
     paper(G, 'night');
     const { n: d } = drawClock(t, 12);
     if (ldRedraw()) {
@@ -981,13 +1213,14 @@ async function initShots2() {
   });
   // 3:51 · the drawing, alone on the white page
   shot('C1_drawing', CARD1, e0, async (t, lt, dur) => {
-    paper(G, 'snow');
-    if (ldRedraw()) {
+    if (PUB) pubPage(t, lt, dur);                                                    // the public cut: his card face down
+    else if (ldRedraw()) {
       // round 4: the card itself on the page, large, under the handwritten line
+      paper(G, 'snow');
       const ph = ldPhoto();
       drawLeonovCard(t, easeOut(clamp(lt / 1.6)), W / 2, ph ? 600 : 652, 1100, -.012, { rate: 8 });
       if (ph) { const Lt = typeLayer(); tele(Lt.g, LD_CREDIT, W / 2, H - 40, t, CARD1, { size: 16, col: 'lead', alpha: .85, align: 'center', instant: true }); typeFlush(Lt, drawClock(t, 8).n, .3); }
-    } else await leonovDrawing(t, easeOut(clamp(lt / 1.6)), { zoom: .8, ox: 120, oy: 130 }, { rate: 8 });
+    } else { paper(G, 'snow'); await leonovDrawing(t, easeOut(clamp(lt / 1.6)), { zoom: .8, ox: 120, oy: 130 }, { rate: 8 }); }
     handwrite(t, 'The cosmonauts and the artwork survived.', W / 2, 200, CARD1 + .6, CARD1 + 3.0, { size: 88, align: 'center', col: 'graphite' });
   });
   shot('Z_title', e0, 999, async (t, lt) => {
