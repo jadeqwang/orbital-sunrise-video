@@ -87,7 +87,7 @@ function simulateRope(o) {
     let l = 0; for (let i = 0; i < n; i++) l += Math.hypot(X[i * 3 + 3] - X[i * 3], X[i * 3 + 4] - X[i * 3 + 1], X[i * 3 + 5] - X[i * 3 + 2]);
     maxErr = Math.max(maxErr, Math.abs(l - L) / L);
   }
-  if (Q.has('verbose') || maxErr > .01) console.log(`rope ${o.name ?? ''}: ${N} states, length error max ${(maxErr * 100).toFixed(2)} %`);
+  console.log(`rope ${o.name ?? ''}: ${N} states, length error max ${(maxErr * 100).toFixed(2)} %`);
   return { n, L, t0: o.t0, at: t => out[clamp(Math.round((t - o.t0) * 24), 0, out.length - 1)], frames: out, maxErr };
 }
 
@@ -118,7 +118,7 @@ function drawCable(pen, P, toScreen, o = {}) {
     const wd = R.map(p => w0 * clamp(1 - p[2] / (o.persp ?? 1400), .7, 1.4));
     const off = (k, j = jit) => R.map((p, i) => [p[0] + nrm[i][0] * wd[i] * k + (rnd() - .5) * j, p[1] + nrm[i][1] * wd[i] * k + (rnd() - .5) * j]);
     if (w0 < 6) {   // a thin line: a dark shadow side, the silver body, a white glint on the lit side
-      pen.poly(off(-.28), C.shade, w0 * .9, .75 * A, .04);
+      pen.poly(off(-.28), C.shade, w0 * .9, .55 * A, .04);
       pen.poly(off(0), C.body, w0 * .8, .95 * A, .04);
       pen.poly(off(.22, jit * .6), C.hi, Math.max(.9, w0 * .35), .9 * A, .1);
     } else {        // a thick cable: two edges, shading hatched across the shadow half, a highlight, faint rings

@@ -515,7 +515,7 @@ async function initShots() {
     const t0 = L1[1].t0 - .05, t1 = L1[2].t0 - .05, wa = TD1.waist;
     const tpAt = t => { const tp = 5.0 + (t - N1W[7][0]); return tp >= 4.94 && tp < 5.03 ? 5.042 : tp; };   // as the plate is shown
     const waist = t => { const x = clamp(tpAt(t) * 24, 0, wa.length - 1), i = Math.min(wa.length - 2, Math.floor(x)), f = x - i; return [lerp(wa[i][0], wa[i + 1][0], f), lerp(wa[i][1], wa[i + 1][1], f), 0]; };
-    return simulateRope({ name: 'N1', t0, t1, L: TD1.L, n: 56, endA: () => [TD1.hatch[0], TD1.hatch[1], 0], endB: waist, seed: 11, turns: 2.2, damp: .35, bend: .03, pre: .8, drift: 5 });
+    return simulateRope({ name: 'N1', t0, t1, L: TD1.L, n: 56, endA: () => [TD1.hatch[0], TD1.hatch[1], 0], endB: waist, seed: 11, turns: 1.1, damp: .3, bend: .06, rMin: 16, iters: 80, sub: 16, pre: 1.2, drift: 6 });
   })());
   shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
@@ -540,7 +540,7 @@ async function initShots() {
           const P = rope.at(drawClock(t, 12).tq), toS = (x, y) => view.toScreen(x / TD1.w - .5 / F.aw, y / TD1.h - .5 / F.ah);
           // he covers the cable where it passes behind him (z ≥ 0 inside his matte): it meets him at his waist, from behind
           const hide = (s, X, Y, zz) => { if (!F.M || zz < -1) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5 && s > .5; };
-          const S = drawCable(pen, P, toS, { w: 2.6, light: [1, -.3], seed: dIdx * 31 + 7, hide });
+          const S = drawCable(pen, P, toS, { w: 3.2, light: [1, -.3], seed: dIdx * 31 + 7, hide });
           const seg = S.slice(1).map((q, i) => Math.hypot(q[0] - S[i][0], q[1] - S[i][1]));
           let left = k * seg.reduce((x, y) => x + y, 0); const path = [S[0]];
           for (let i = 0; i < seg.length && left > 0; i++) { const f = Math.min(1, left / seg[i]); path.push([lerp(S[i][0], S[i + 1][0], f), lerp(S[i][1], S[i + 1][1], f)]); left -= seg[i]; }
