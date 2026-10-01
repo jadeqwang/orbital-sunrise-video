@@ -220,7 +220,7 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 | FLEW THE FIRST MANUAL RE-ENTRY | shots2.js:93 | ❌ | Cooper (Faith 7, 1963) came first. This was the first Soviet manual landing, by hand orientation and retrofire. | [NASA Faith 7][f7], [RussianSpaceWeb][rsw] |
 | PENCILS TIED TO HIS WRIST WITH STRING | shots2.js:101 | ⚠️ minor | Each pencil was on a thread; the pack was held to his wrist by a rubber band | [Hyperallergic][hyper], [Linda Hall][lh] |
 | THE FIRST WORK OF ART MADE IN SPACE | shots2.js:119 | ✅ | The exact moment he drew it is undocumented | [Hyperallergic][hyper], [NAU][nau] |
-| ОТКАЗ АВТОМАТИКИ / AND THE CAPSULE SPUN | shots2.js:426–427 | ✅ | | [Grahn][grahn] |
+| ОТКАЗ СИСТЕМЫ УПРАВЛЕНИЯ / AND THE CAPSULE SPUN (was ОТКАЗ АВТОМАТИКИ; Vlad, native speaker, 2026-10) | shots2.js:426–427 | ✅ | | [Grahn][grahn] |
 | Δv = 106 m/s · t = 22 s · θ ≈ 90° · h = 497 km · ±1° | shots2.js:436 | ❌ | TDU-1: ~16 kN for ~45 s, Δv ~155 m/s. Orbit 167 × 475 km. θ and ±1° are unsourced. ОРИЕНТАЦИЯ — РУЧНАЯ is ✅. | [W-Voskhod][wvs], [W-V2][wv2] |
 | MAIN PARACHUTE — OPEN / ALTITUDE 5 KM | shots2.js:495–496 | ✅ / ❓ | Voskhod had two parachutes and a soft-landing rocket; the altitude is unsourced | [W-Voskhod][wvs] |
 | FIFTEEN HUNDRED / KLICKS / COMING IN HOT, WE OVERSHOT | shots2.js:518–520, 527 | ⚠️ | See §3 | |

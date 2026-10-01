@@ -62,7 +62,7 @@ Type sizes: **XL** ≥ 18 % frame height, **L** 10–18 %, **S** subtitle.
 | 124.94 – 129.70 | Hands still know | split: Leonov's hand / singer's hand drawing the same curve | *can't think, can't write, but my hands still know* |
 
 ## Build · 129.70 – 143.20
-| 129.70 – 132.70 | Guidance failed | red_warning, globus | GUIDANCE FAILED · ОТКАЗ АВТОМАТИКИ (glitch red) |
+| 129.70 – 132.70 | Guidance failed | red_warning, globus | GUIDANCE FAILED · ОТКАЗ СИСТЕМЫ УПРАВЛЕНИЯ (glitch red) |
 | 132.70 – 135.48 | Doing the math | vzor_manual + P equations orbiting | DOING THE MATH WITH A SPINNING SUN |
 | 135.48 – 143.20 | Hold on | retrofire → capsule_spin → g_force, drawn on ones | HOLD ON ×3, each bigger |
 

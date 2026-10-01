@@ -672,7 +672,7 @@ async function initShots2() {
     lyricStack(t, [
       { s: 'GUIDANCE', t: w[0][0], x: 110, y: 380, size: 200, col: 'verm', style: 'slam' },
       { s: 'FAILED', t: w[1][0], x: 110, y: 580, size: 200, col: 'verm', style: 'slam' },
-      { s: 'ОТКАЗ АВТОМАТИКИ', t: w[1][0] + .25, x: 116, y: 660, font: FONT.cyr(56), col: 'white', style: 'type', dur: .4, ls: 3 },
+      { s: 'ОТКАЗ СИСТЕМЫ УПРАВЛЕНИЯ', t: w[1][0] + .25, x: 116, y: 660, font: FONT.cyr(46), col: 'white', style: 'type', dur: .4, ls: 3 },
       { s: 'AND THE CAPSULE SPUN', t: w[2][0], x: 116, y: 740, font: FONT.mono(34, 800), col: 'white', style: 'type', dur: .5 },
     ]);
   });
