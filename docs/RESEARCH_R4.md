@@ -425,6 +425,94 @@ drawing and no reproduction of it.
 
 ---
 
+## 4. NASA EVA chronology (Portree & Treviño 1997)
+
+The songwriter supplied two pages as a PDF for research only. It is **not in the repo**.
+**Source:** "The Chronology", pp. 1–2, entries for 18 March 1965 (Voskhod 2) and 3 June 1965 (Gemini 4).
+The two pages carry no title page or author line. The layout ("1965 EVA 1 / World EVA 1 / Russian EVA 1 / Duration")
+and the source notes match D. S. F. Portree & R. C. Treviño, *Walking to Olympus: An EVA Chronology*, NASA Monographs
+in Aerospace History No. 7 (NASA History Office, 1997; NTRS 19980004606). I take that attribution as likely; the pages
+themselves do not confirm it. Its sources are Leonov's 1965 IAC paper (NASA TT F-9727), *Segodnya* 1995, *Soviet Military
+Review* 1980, *Komsomol'skaya Pravda* 1983, *Spaceflight* June 1990 and NASA SP-4006. Cited below as **[WtO]**.
+
+### Exact quotes
+
+| Topic | Quote | Page |
+|---|---|---|
+| Header | "1965 EVA 1 · World EVA 1 · Russian EVA 1 · Duration: 0:24 · Spacecraft/mission: Voskhod 2 · Crew: Pavel Belyayev, Alexei Leonov · Spacewalker: Alexei Leonov · Purpose: Perform EVA ahead of U.S.; demonstrate feasibility of EVA" | 1 |
+| Suit | "Leonov's Berkut (\"Golden Eagle\") suit. Berkut was a modified Vostok Sokol-1 intravehicular (IV) suit." (The name "Sokol" belongs to the later Soyuz suit. Other sources derive Berkut from the Vostok SK-1, so this is probably an error in [WtO].) | 1 |
+| Backpack | "A white metal backpack provided 45 min of oxygen for breathing and cooling. Oxygen vented through a relief valve into space, carrying away heat, moisture, and exhaled carbon dioxide." | 1 |
+| Suit pressure | "Suit pressure could be set at either 40.6 kpascal (5.88 psi) or 27.4 kpascal (3.97 psi)." That is **0.40 atm / 0.27 atm**. | 1 |
+| Why an airlock | "Vostok/Voskhod avionics were cooled by cabin air and would overheat if the capsule was depressurized for EVA." | 1 |
+| Volga build | "designed, built, and tested in just 9 months beginning in mid-1964" | 1 |
+| Volga stowed | "At launch Volga fitted over Voskhod 2's hatch, extending 74 cm (29.6 in) beyond the spacecraft hull." | 1 |
+| Volga dimensions | "a metal ring 1.2-m (3.96-ft) wide fitted over Voskhod 2's inward-opening hatch; a double-walled fabric airlock tube with a deployed length of 2.5 m (8.25 ft); and a metal upper ring 1.2 m (3.96 ft) wide around the inward-opening airlock hatch 65 cm (26 in) wide. Volga's deployed internal volume was 2.5 cu/m (88.3 cu/ft)." | 1 |
+| Volga rigidity | "made rigid by about 40 airbooms clustered in three independent groups. Two groups were sufficient for deployment. The airbooms needed 7 min for full inflation. Four spherical tanks held sufficient oxygen to inflate the airbooms and pressurize the airlock." | 1 |
+| Lights, cameras | "Two lights lit the airlock interior, and three 16-mm cameras - two inside the airlock and one outside on a boom mounted to the upper ring" | 1 |
+| Controls | "Belyayev controlled the airlock from inside Voskhod 2, but a set of backup controls for Leonov was suspended on bungee cords inside the airlock." | 1 |
+| Sequence | "Leonov entered Volga, then Belyayev sealed Voskhod 2 behind him and depressurized the airlock. Leonov opened Volga's outer hatch and pushed out to the end of his 15.35-m (50.7-ft) umbilical." | 1 |
+| Tether control | "He later stated that the umbilical gave him tight control over his movements - an observation belied by subsequent U.S. EVA experience." | 1 |
+| View | "looking down and seeing from the Straits of Gibraltar to the Caspian Sea" | 1 |
+| Jettison | "After Leonov returned to his couch, Belyayev fired pyrotechnic bolts to discard Volga." | 1 |
+| Official line | TASS: "outside the ship and after returning, Leonov feels well." | 2 |
+| Suit balloon, camera | "Leonov's Berkut suit ballooned, making bending difficult. Because of this, Leonov was unable to reach the shutter switch on his thigh for his chest-mounted camera. He could not take pictures of Voskhod 2, nor was he able to recover the camera mounted on Volga which recorded his EVA for posterity." | 2 |
+| Time outside | "After 12 min Leonov reentered Volga." | 2 |
+| Ingress | "Recent accounts say that he violated procedure by entering the airlock head first, then got stuck sideways when he turned to close the outer hatch. This forced him to flirt with dysbarism (the \"bends\") by lowering his suit pressure so he could bend enough to free himself." | 2 |
+| Suicide pill | "he had a suicide pill he could have swallowed if he had been unable to ingress Voskhod 2 and Belyayev had been forced to leave him in orbit" | 2 |
+| Heat | "his core body temperature climbed 1.8 deg C (3.1 deg F) in 20 min - and Leonov stated that he was \"up to his knees\" in sweat, so that his suit sloshed when he moved" | 2 |
+| Landing | Only a timeline line: "March 19 Voskhod 2 landing". There is nothing on the overshoot, the cable between the modules, or the taiga. | 2 |
+| Gemini 4 | "June 3 · 1965 EVA 2 · World EVA 2 · U.S. EVA 1 · Duration: 0:36 · Gemini 4 · Crew: James McDivitt, Edward White · Spacewalker: Edward White · Purpose: Demonstrate EVA feasibility; test HHMU". White: "It's the saddest moment of my life." | 2 |
+
+### Against our docs, lyrics and captions
+
+**Confirms**
+- **12 min outside** ("After 12 min Leonov reentered Volga"). This matches the 12 min 9 s EVA clock (`shots.js` `EVA_SECS`).
+  The header's **0:24** is the depressurized span, which matches our 23 min 41 s (FACTCHECK §1). It is not the time outside.
+- **SUIT 0.40 → 0.27 ATM**: 40.6 kPa and 27.4 kPa are exactly 0.40 and 0.27 atm, the only two settings. This supports the
+  single-switch gauge.
+- **Backpack oxygen: 45 min.** The upper end of our 30–45 min range.
+- **The camera caption** "HE CAN'T REACH THE CAMERA SWITCH ON HIS LEG." The camera was chest-mounted, and the shutter
+  switch was on his thigh. The caption is now correct; FACTCHECK on-screen item 4 is closed.
+- **The suit ballooned and he could not bend** (THE SUIT WILL NOT BEND / IN VACUUM, THE SUIT BALLOONS / HE CAN'T GET
+  BACK IN).
+- **THE AIRLOCK IS CAST OFF**: discarded by pyrotechnic bolts after he was back on his couch.
+- **Volga**: the 1.2 m rings and 2.5 m tube in FACTS.md. It also settles the **65 cm hatch**, which was ❓.
+- **Sweat "up to his knees"** and **+1.8 °C**. The rise took 20 min.
+- **Lyrics** "So he bleeds the air out" and "Dancing on the edge of a quiet death": he lowered his suit pressure and
+  "flirt[ed] with dysbarism".
+- **Legacy caption "1965 · GEMINI 4 — ED WHITE WALKS IN SPACE"**: 3 June 1965, White was the spacewalker, and it was
+  U.S. EVA 1 and World EVA 2.
+
+**Contradicts or differs**
+- **Tether length.** [WtO] says "15.35-m (50.7-ft) umbilical". The caption `TETHER · 5.35 M` follows Space.com and
+  spacefacts, and Russian sources consistently give «фал длиной 5,35 м» (e.g. историк.рф, "Как одиннадцатый стал
+  первым"). [WtO]'s own conversion is also inconsistent (15.35 m = 50.4 ft, not 50.7 ft). [WtO] is the main English
+  source for the "one source says 15.35 m" variant. **Keep 5.35 M**, but it is now contested by a NASA publication.
+  [WtO] does not say what the line carried. It calls it an "umbilical", but its own text has oxygen coming from the
+  backpack, which agrees with "phone and telemetry, no oxygen".
+- **Who opened the outer hatch.** [WtO]: "Leonov opened Volga's outer hatch". FACTCHECK §1 (spacefacts, GMIK): Belyayev,
+  from his console. This is minor and not on screen.
+- **The jam.** [WtO] gives a third version. He went in head first, against procedure. He jammed **sideways while turning
+  to close the outer hatch**. He lowered the suit pressure to free himself. So the bleed comes after the jam inside the
+  tube, not before entry. Compare the memoir (feet first impossible, then bleed, then head first) and the 1965 report
+  and onboard film (legs first). The N2_jam idea ("head first … jams") fits this account better than FACTCHECK said.
+  P4's "curl around to close the hatch" fits all of them.
+- **Camera recovery.** [WtO] says he could not recover the Volga boom camera. Russian accounts say he brought the
+  hand-held S-97 camera in first. These are different cameras, so there is no conflict. Nothing on screen depends on it.
+
+**Adds (not yet used)**
+- Volga was stowed at 74 cm and needed 7 min to inflate. It had ~40 airbooms in 3 groups (2 were enough) and was built
+  in 9 months.
+- Three 16-mm cameras, two airlock lights, and backup controls for Leonov on bungee cords.
+- The airlock was needed because cabin air cooled the avionics.
+- He saw from Gibraltar to the Caspian. He carried a suicide pill. Leonov said the umbilical gave "tight control".
+- Gemini 4: White's EVA lasted 36 min. Its purpose included testing the HHMU (the hand-held maneuvering gun).
+
+**On-screen fixes this source forces: none.** It supports `TETHER · 5.35 M` less than before, but the Russian figure
+still wins.
+
+---
+
 ## Sources (seen via search excerpts only; the user can fetch these)
 
 - Leonov & Scott, *Two Sides of the Moon: Our Story of the Cold War Space Race* (Simon &
@@ -435,6 +523,8 @@ drawing and no reproduction of it.
   Space* 2020:
   https://www.smithsonianmag.com/air-space-magazine/turns-out-alexei-leonovs-first-spacewalk-wasnt-quite-dramatic-we-thought-180974522/
 - A. Siddiqi, *Challenge to Apollo* (NASA SP-2000-4408), Voskhod 2 section.
+- D. S. F. Portree & R. C. Treviño, *Walking to Olympus: An EVA Chronology* (NASA Monographs in
+  Aerospace History 7, 1997; NTRS 19980004606), pp. 1–2: read in full from the songwriter's PDF (§4).
 - "The Voskhod 2 mission revisited" (Hall):
   https://sma.nasa.gov/SignificantIncidents/assets/the-voskhod-2-mission-revisited.pdf and
   http://www.svengrahn.pp.se/histind/Voskhod2/Voskhod2.htm

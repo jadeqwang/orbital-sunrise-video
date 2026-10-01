@@ -48,9 +48,9 @@ Legend: ✅ correct · ❌ wrong · ⚠️ contested or imprecise · ❓ unverif
    retro-rocket; the re-entry itself was ballistic. Use FLEW THE FIRST SOVIET MANUAL LANDING.
 3. ❌ `shots2.js:436` the retro-burn "math" (Δv = 106 m/s, t = 22 s, h = 497 km) matches neither the TDU-1 engine
    (≈45 s burn, Δv ≈155 m/s) nor the orbit (167 × 475 km).
-4. ⚠️ `shots.js:604` HE TRIES TO REACH THE CAMERA ON HIS LEG: the still camera was on his chest. What he could not reach
-   was its **shutter switch on his thigh**.
-5. ⚠️ `shots.js:155–157, 166` the SUIT gauge steps 0.40 → 0.35 → 0.30 → 0.27. The 0.35 and 0.30 steps are invented: his
+4. ✅ (fixed) The caption is now HE CAN'T REACH THE CAMERA SWITCH ON HIS LEG. It matches NASA's *Walking to Olympus*
+   (1997) p. 2: "unable to reach the shutter switch on his thigh for his chest-mounted camera" (RESEARCH_R4 §4).
+5. ✅ (fixed: the gauge now makes one switch, 0.40 → 0.27; NASA 1997 gives only these two settings, 40.6 / 27.4 kPa) Was: `shots.js:155–157, 166` the SUIT gauge steps 0.40 → 0.35 → 0.30 → 0.27. The 0.35 and 0.30 steps are invented: his
    1965 report and his 2004 interview describe one switch, 0.40 → 0.27. Later retellings say 0.30, then 0.25.
 6. ⚠️ `shots.js:527` ORBITAL SUNRISE IN, and `SHOTLIST.md:19` "SUNRISE IN 3 · 2 · 1": the spacewalk took place in orbital
    daylight and ended about five minutes before orbital night. There was no sunrise during it.
@@ -77,7 +77,11 @@ Legend: ✅ correct · ❌ wrong · ⚠️ contested or imprecise · ❓ unverif
    - Even in the memoir, the attempt that failed was feet first. Head first is how he got in, after bleeding pressure. So
      the N2_jam shot ("head first … jams in the rim") matches neither account.
 
-   It is Jade's call, but the film currently shows the less supported version.
+   - A third version: NASA's *Walking to Olympus* (1997) p. 2, citing "recent accounts". He went in head first,
+     "violated procedure", "got stuck sideways when he turned to close the outer hatch", and only then lowered his suit
+     pressure "to free himself". On this account a head-first jam (N2_jam) does have a source (RESEARCH_R4 §4).
+
+   It is Jade's call. Head first is now backed by the memoir and by NASA 1997, against the 1965 report and the film.
 2. ⚠️ `README.md:25–26` "flew the re-entry by hand", `README.md:111` and `TREATMENT.md:68` "first manual re-entry": see
    on-screen item 2.
 3. ⚠️ `README.md:115–116` says "fifteen hundred klicks" is the song's own and the real overshoot was a few hundred
@@ -92,7 +96,7 @@ Legend: ✅ correct · ❌ wrong · ⚠️ contested or imprecise · ❓ unverif
 |---|---|---|---|
 | Launch | 10:00:00 | 07:00:00 | [W-V2][wv2] |
 | Volga airlock depressurized with Leonov inside (start of orbit 2) | 11:28:13 | 08:28:13 | [spacefacts][sf], [GMIK][gmik] |
-| Outer hatch opened (by Belyayev, from his console) | 11:32:54 | 08:32:54 | [spacefacts][sf], [GMIK][gmik] |
+| Outer hatch opened (by Belyayev, from his console; NASA 1997 says "Leonov opened Volga's outer hatch") | 11:32:54 | 08:32:54 | [spacefacts][sf], [GMIK][gmik] |
 | Leonov leaves the airlock; Belyayev radios «Человек вышел в космическое пространство!» | 11:34:51 | 08:34:51 | [spacefacts][sf], [Gudok][gudok], [Rodina][rodina25] |
 | Back inside the airlock, after switching the suit to 0.27 atm (Russian accounts: the S-97 camera went in first) | 11:47:00 | 08:47:00 | [spacefacts][sf], [GMIK][gmik] |
 | Outer hatch closed | 11:48:34 (Russian press), or 11:48:40 | 08:48:40 | [GMIK][gmik], [spacefacts][sf]. Americaspace says "by 11:51" ([AS14][am2]) |
@@ -102,9 +106,10 @@ Legend: ✅ correct · ❌ wrong · ⚠️ contested or imprecise · ❓ unverif
 What the numbers measure:
 
 - **12 min 9 s** is the time outside the ship: from leaving the airlock (11:34:51) to getting back into it (11:47:00).
-  It includes the struggle at the hatch. Sources: [W-V2][wv2], [Gudok][gudok], [spacefacts][sf].
+  It includes the struggle at the hatch. Sources: [W-V2][wv2], [Gudok][gudok], [spacefacts][sf]. NASA 1997 (*Walking to
+  Olympus* p. 2) agrees: "After 12 min Leonov reentered Volga".
 - **23 min 41 s** is the time in vacuum: from the start of depressurization (11:28:13) to the start of repressurization
-  (11:51:54). It breaks down as:
+  (11:51:54). NASA's *Walking to Olympus* (1997) gives the EVA "Duration: 0:24" (p. 1), the same span. It breaks down as:
   - 6 min 38 s in the airless airlock before going out;
   - 12 min 9 s outside;
   - 4 min 54 s in the airlock afterwards.
@@ -175,7 +180,7 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 | Claim | Where | Verdict | Accurate fact | Sources |
 |---|---|---|---|---|
 | "First man floating in the void of space" | alt:2, rel:2, timed:8 | ✅ | First human spacewalk, 18 March 1965 | [W-V2][wv2] |
-| "Tied to the ship by the slightest trace" | alt:3, timed:9 | ✅ | A 5.35 m tether carried the phone and telemetry lines; oxygen came from his backpack | [Space.com][sphero], [W-Berkut][berkut] |
+| "Tied to the ship by the slightest trace" | alt:3, timed:9 | ✅ | A 5.35 m tether (NASA 1997: "15.35-m … umbilical") carried the phone and telemetry lines; oxygen came from his backpack ("45 min of oxygen", NASA 1997 p. 1) | [Space.com][sphero], [W-Berkut][berkut] |
 | "Pull him back to the ship's embrace" | alt:4, timed:10 | ✅ (poetic) | He hauled himself back along the tether, holding the S-97 movie camera in his other hand | [MK 2004][mk04] |
 | "Can't feel his hands, can't feel his face" | alt:5, rel:3, timed:11 | ⚠️ | Hands: his fingertips pulled back from the glove tips and his feet floated in the boots. Face: no source. | [Space.com 50th][sp50] |
 | "So he bleeds the air out, breath by breath" | alt:10, 21, rel:8, 19, timed:20, 36 | ⚠️ (poetic) | His own accounts describe one switch of the suit to its 0.27 atm reserve mode (planned beforehand, per the 1965 report). The gradual or 0.25 atm versions come from later retellings. | [A&S 2020][as20], [MK 2004][mk04], [Hackaday][hack] |
@@ -193,7 +198,7 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 | Claim | Where | Verdict | Accurate fact | Sources |
 |---|---|---|---|---|
 | EVA clock: 12:09 spread over "First man…" to the hatch slam | shots.js:152–153, 165 | ⚠️ minor | 12:09 runs from exit to being back in the airlock. The hatch shut 1.5 min later. | [spacefacts][sf] |
-| SUIT 0.40 → 0.35 → 0.30 → 0.27 ATM on each "breath" | shots.js:155–157, 166 | ⚠️ | 0.40 nominal, switched to 0.27 (reserve). The 0.35 and 0.30 steps are invented. | [W-Berkut][berkut], [A&S 2020][as20], [MK 2004][mk04] |
+| SUIT 0.40 → 0.35 → 0.30 → 0.27 ATM on each "breath" | shots.js:155–157, 166 | ✅ (now one switch, 0.40 → 0.27) | 0.40 nominal, switched to 0.27 (reserve). NASA 1997 p. 1: "40.6 kpascal (5.88 psi) or 27.4 kpascal (3.97 psi)", the only two settings. | [W-Berkut][berkut], [A&S 2020][as20], [MK 2004][mk04] |
 | ВОСХОД-2 · ВЫХОД В КОСМОС | shots.js:164 | ✅ | | |
 | PLANNED LANDING ZONE / KAZAKH STEPPE / УРАЛ · URALS | shots.js:315–317 | ✅ | The automatic landing was planned near Kustanay (Kazakhstan) | [ru-W][rwv2] |
 | ACTUAL: THE TAIGA NEAR PERM | shots.js:318 | ✅ | Usolsky district, Perm Oblast, ~180 km north of Perm, 25–30 km SW of Berezniki | [spacefacts][sf], [Grahn][grahn] |
@@ -201,13 +206,13 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 | 18.03.1965 — THE FIRST SPACEWALK; 18 MARCH 1965; ВОСХОД-2 · VOSKHOD-2; «ВОСХОД» MEANS «SUNRISE» | shots.js:358, 390–392 | ✅ | | [W-V2][wv2] |
 | ORBIT 2 · ALTITUDE ~500 KM | shots.js:393 | ⚠️ minor | Orbit 2 is ✅. The orbit was 167 × 475 km; "~500 km" is the rounded popular figure. | [W-V2][wv2], [GMIK][gmik] |
 | «ЧЕЛОВЕК ВЫШЕЛ В КОСМИЧЕСКОЕ ПРОСТРАНСТВО!» — BELYAYEV, BY RADIO | shots.js:409–410 | ✅ | | [Rodina][rodina25] |
-| TETHER · 5.35 M | shots.js:447 | ✅ | 5.35 m in most sources; one source says 15.35 m | [Space.com][sphero], [spacefacts][sf] |
+| TETHER · 5.35 M | shots.js:535 | ✅ (keep) / ⚠️ | 5.35 m in Russian sources («фал длиной 5,35 м») and most English ones. NASA's *Walking to Olympus* (1997) p. 1 says "15.35-m (50.7-ft) umbilical"; its own ft conversion does not match its metres. Keep 5.35 M (RESEARCH_R4 §4). | [Space.com][sphero], [spacefacts][sf], [WtO][wto] |
 | ORBITAL SUNRISE IN (countdown during the spacewalk) | shots.js:527 | ⚠️ | The spacewalk was in daylight and ended ~5 min before orbital night; no sunrise was seen from outside | [Space.com][sphero] |
-| HE TRIES TO REACH THE CAMERA ON HIS LEG. | shots.js:604 | ⚠️ | The camera was on his chest; he could not reach its shutter switch on his thigh | [Gizmodo][giz], [Space.com 50th][sp50] |
+| HE CAN'T REACH THE CAMERA SWITCH ON HIS LEG. | shots.js:747 | ✅ (fixed) | Chest-mounted camera; the shutter switch was on his thigh (NASA 1997 p. 2) | [Gizmodo][giz], [Space.com 50th][sp50], [WtO][wto] |
 | THE SUIT WILL NOT BEND. / IN VACUUM, THE SUIT BALLOONS / HE CAN'T GET BACK IN. | shots.js:605, 623, 634 | ✅ | | [Space.com 50th][sp50] |
 | +N CM (suit swelling, up to +6) | shots.js:622 | ❓ | No source gives a measurement | |
 | NINETY MINUTES / INSIDE THE AIRLOCK DOOR | shots.js:735–736 | ❌ | See §1 and §2 | [spacefacts][sf] |
-| THE AIRLOCK IS CAST OFF | shots.js:766 | ✅ | Jettisoned with pyro-bolts; the ship rolled at ~17°/s | [AS14][am2] |
+| THE AIRLOCK IS CAST OFF | shots.js:931 | ✅ | Jettisoned with pyro-bolts after he was back on his couch (NASA 1997 p. 1); the ship rolled at ~17°/s | [AS14][am2], [WtO][wto] |
 | ORBIT 02… / SUNRISES SEEN / ONE EVERY 90 MINUTES | shots2.js:83–85 | ✅ | Period 90.9 min; the flight lasted 26 h 02 min (~17 orbits) | [W-V2][wv2], [Grahn][grahn] |
 | LEONOV: AGE 30, CALLSIGN «АЛМАЗ-2», FIRST HUMAN IN OPEN SPACE | shots2.js:90 | ✅ | Born 30 May 1934 | [W-Leonov][wleo], [Rodina][rodina25] |
 | TRAINED AS A PAINTER — PACKED COLORED PENCILS | shots2.js:90 | ⚠️ | The pencils are ✅. As for training: he aimed at the Riga Academy of Arts (1953) but went to flight school; sources differ on whether he enrolled. | [Linda Hall][lh], [NMSM][nmsm] |
@@ -220,7 +225,7 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 | MAIN PARACHUTE — OPEN / ALTITUDE 5 KM | shots2.js:495–496 | ✅ / ❓ | Voskhod had two parachutes and a soft-landing rocket; the altitude is unsourced | [W-Voskhod][wvs] |
 | FIFTEEN HUNDRED / KLICKS / COMING IN HOT, WE OVERSHOT | shots2.js:518–520, 527 | ⚠️ | See §3 | |
 | TWO NIGHTS IN THE TAIGA · −25 °C | shots2.js:580 | ✅ | Nights of 19–20 and 20–21 March. −25 °C is Leonov's figure; Americaspace says −30 °C. | [Fakty][fakty], [AS14][am2] |
-| LEGACY: 1965 White, 1969 Moon, 1975 handshake, 2000 ISS, 2003 Yang Liwei, 2014 Philae, 2019 Chang'e 4, 2023 Chandrayaan-3 (~69°S), 2024 Polaris Dawn, 2026 Artemis II | shots2.js:591–600 | ✅ | Gemini 4: 3 June 1965. ASTP handshake: 17 July 1975. Artemis II: 1–10 April 2026. | [NASA G4][g4], [NASA ASTP][astp], [NASA A2][a2], [Space.com PD][pd] |
+| LEGACY: 1965 Gemini 4 — Ed White walks in space (NASA 1997 p. 2: U.S. EVA 1, World EVA 2, 0:36), 1969 Moon, 1975 handshake, 2000 ISS, 2003 Yang Liwei, 2014 Philae, 2019 Chang'e 4, 2023 Chandrayaan-3 (~69°S), 2024 Polaris Dawn, 2026 Artemis II | shots2.js:591–600 | ✅ | Gemini 4: 3 June 1965. ASTP handshake: 17 July 1975. Artemis II: 1–10 April 2026. | [NASA G4][g4], [NASA ASTP][astp], [NASA A2][a2], [Space.com PD][pd] |
 | RESCUERS ARRIVE ON SKIS | shots2.js:606 | ✅ | 20 March: a team lowered by helicopter nearby skied in; on 21 March the crew skied out to a helicopter | [AS14][am2] |
 | THE COSMONAUTS SURVIVED / The cosmonauts and the artwork survived. | shots2.js:634–635, 642 | ✅ | The drawing is held at the museum of the Gagarin Cosmonaut Training Centre | [NAU][nau] |
 | Homage to "Orbital Sunrise: The First Art Made in Space" by John Green | shots2.js:650 | ✅ | The title of Green's video | [W-OS][wos] |
@@ -275,12 +280,12 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 
 | Claim | Where | Verdict | Accurate fact / what to add | Sources |
 |---|---|---|---|---|
-| Berkut modes 0.40 nominal / 0.27 reserve; control on the suit; O2 in the backpack | 10 | ✅ | The backpack carried 30–45 min of O2 | [W-Berkut][berkut] |
+| Berkut modes 0.40 nominal / 0.27 reserve; control on the suit; O2 in the backpack | 10 | ✅ | The backpack carried 30–45 min of O2 (NASA 1997: 45 min; 40.6 / 27.4 kPa) | [W-Berkut][berkut] |
 | MK 2004: switched to 0.27 atm without telling the ground | 11 | ✅ | Add: the 1965 report says he had planned the switch before the flight. Gradual/0.25 atm versions are later retellings. | [MK 2004][mk04], [A&S 2020][as20], [Hackaday][hack] |
-| Head first vs legs first; Volga 1.0 m inside / 1.2 m outside / 2.5 m long | 12 | ⚠️ / ✅ | Add: the onboard film shows legs first, and RGANTD published the full 22 Mar 1965 report on 30 May 2024. The ~65 cm hatch is ❓. | [A&S 2020][as20], [RG 2024][rg24], [Habr][habr24], [AS14][am2] |
+| Head first vs legs first; Volga 1.0 m inside / 1.2 m outside / 2.5 m long | 12 | ⚠️ / ✅ | Add: the onboard film shows legs first, and RGANTD published the full 22 Mar 1965 report on 30 May 2024. The 65 cm hatch is ✅ (NASA 1997 p. 1: "airlock hatch 65 cm (26 in) wide"; 74 cm stowed, 2.5 m³, 7 min to inflate). | [A&S 2020][as20], [RG 2024][rg24], [Habr][habr24], [AS14][am2] |
 | Cosmosphere trainer label; Leonov ~1.9 m in the suit | 13 | ❓ / ✅ | 1.9 m in the suit is confirmed; the trainer label was not re-checked | [AS14][am2] |
-| Fingertips and feet; sweat up to the knees; ~6 L; +1.8 °C; ~190 bpm; 12 min 9 s | 14 | ✅ / ⚠️ | Other retellings give 143 bpm; 6 L comes from one account | [Space.com 50th][sp50], [AS14][am2] |
-| Tether 5.35 m, phone/telemetry, no oxygen | 15 | ✅ | One source says 15.35 m | [Space.com][sphero] |
+| Fingertips and feet; sweat up to the knees (NASA 1997 ✅); ~6 L; +1.8 °C (NASA 1997: in 20 min ✅); ~190 bpm; 12 min 9 s | 14 | ✅ / ⚠️ | Other retellings give 143 bpm; 6 L comes from one account | [Space.com 50th][sp50], [AS14][am2] |
+| Tether 5.35 m, phone/telemetry, no oxygen | 15 | ✅ | NASA's *Walking to Olympus* (1997) says 15.35 m; Russian sources say 5.35 m (RESEARCH_R4 §4) | [Space.com][sphero] |
 | Suits after landing, air drops | 21–23 | ❓ | Not re-checked | |
 | Rescue on skis on 20 Mar; skied out on 21 Mar; helicopter to Perm | 24 | ✅ | | [AS14][am2] |
 | Hatch jammed against a birch; Belyayev shoved it free | 30 | ✅ / ❓ | The hatch rested on a big birch trunk (Russian accounts); who freed it is not re-checked | [NewsKo][newsko] |
@@ -297,7 +302,7 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 
 | Claim | Where | Verdict | Accurate fact |
 |---|---|---|---|
-| "at the hatch, head first, the ballooned suit jams in the rim" | 78–80, 86–90 | ⚠️ | Memoir: the feet-first attempt failed, and head first worked after bleeding pressure. 1965 report and onboard film: legs first. |
+| "at the hatch, head first, the ballooned suit jams in the rim" | 78–80, 86–90 | ⚠️ | Memoir: the feet-first attempt failed, and head first worked after bleeding pressure. 1965 report and onboard film: legs first. NASA 1997: head first, then stuck sideways turning to close the hatch, then the pressure bleed. That supports a head-first jam. |
 | The tether traced from the airlock to his waist, "TETHER · 5.35 M" | 84–85 | ✅ | |
 | Rejected `airlock_fail` because "he enters legs first" | 91–92 | ⚠️ | Legs first is what the 1965 report and the film show |
 | S3 = the planned feet-first attempt | 93–94 | ✅ | Feet first was the plan |
@@ -309,6 +314,8 @@ The egress proxy refused all of these (403), so the excerpts above need checking
 - **Air & Space, 26 Mar 2020**, "…Wasn't Quite as Dramatic as We Thought" ([link][as20]): the exact report quotes (legs first, 0.27 atm) and what the onboard film shows.
 - ~~**Air & Space, Jan 2005**, "The Nightmare of Voskhod 2"~~: read in full on 2026-10-01 (songwriter's PDF), together
   with RussianSpaceWeb "Voskhod-2 lands in the wild". Exact quotes with page refs are in RESEARCH_R4 §1, "Round 6".
+- ~~NASA, *Walking to Olympus* (Portree & Treviño 1997)~~: pp. 1–2 read in full on 2026-10-01 (songwriter's PDF);
+  quotes in RESEARCH_R4 §4.
 - **Siddiqi, *Challenge to Apollo*** (NASA SP-2000-4408), Voskhod 2 chapter
   ([PDF](https://history.nasa.gov/SP-4408pt1.pdf)): the timeline and the landing distance.
 - **spacefacts.de** ([link][sf]) and **Sven Grahn, "The Voskhod 2 mission revisited"** ([link][grahn],
@@ -361,3 +368,4 @@ The egress proxy refused all of these (403), so the excerpts above need checking
 [astp]: https://www.nasa.gov/history/45-years-ago-historic-handshake-in-space/
 [g4]: https://www.nasa.gov/image-article/june-3-1965-americas-first-spacewalk/
 [pd]: https://www.space.com/spacex-polaris-dawn-first-private-spacewalk
+[wto]: https://ntrs.nasa.gov/citations/19980004606
