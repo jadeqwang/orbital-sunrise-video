@@ -187,7 +187,7 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 | "Dancing on the edge of a quiet death" | alt:11, rel:9 | ✅ (poetic) | Lower suit pressure risked the bends; he judged an hour of breathing pure oxygen made it safe | [MK 2004][mk04] |
 | "Let his air out through the suit he wore" | alt:12, rel:10, timed:22 | ✅ | He vented oxygen through the suit's valve; the pressure-mode control was on the suit | [W-Berkut][berkut], [AS14][am2] |
 | "Ninety minutes inside the airlock door" | alt:13, rel:11, timed:23 | ❌ | 12 min 9 s outside; about 5 min in the airlock afterwards before repressurization; 23 min 41 s in vacuum in total (§1) | [spacefacts][sf], [Gudok][gudok] |
-| "Art is a landing in the snow" | alt:26, rel:24, timed:42 | ✅ (poetic) | They landed in snow up to 2 m deep | [NewsKo][newsko] |
+| "Art is a landing in the snow" | alt:26, rel:24, timed:42 | ✅ (poetic) | They landed in snow up to 2 m deep (ERA5 grid mean: 0.66 m, about −1 °C; see SONG_NOTES_THE_MATH.md, Weather) | [NewsKo][newsko] |
 | "Guidance failed and the capsule spun" | alt:29, rel:27, timed:46 | ✅ | The Sun sensor failed, so the automatic orientation failed. The ship rolled after the airlock was jettisoned, and after the burn the modules stayed joined and tumbled until ~100 km. | [Grahn][grahn], [AS14][am2], [Drew Ex Machina][drew] |
 | "Doing the math with a spinning sun" | alt:30, rel:28, timed:47 | ⚠️ (poetic) | Belyayev oriented the ship by hand through the Vzor (an Earth view); ground control computed the burn | [Grahn][grahn] |
 | "Fall through the skies" / "Off course… (but I'm) home" / "Made it down — home" | alt:34–45, timed:52–65 | ✅ | Manual re-entry, landed off course | [W-V2][wv2] |

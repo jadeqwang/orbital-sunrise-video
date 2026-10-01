@@ -239,7 +239,7 @@ the burn grow by the time the capsule lands.
 | Thrust yawed 3° (the Vzor "crab", step 4) | ~9 m/s sideways: tens of km crossrange |
 | Upper-air density ±20% (March, 60°N) | ∓30 to ∓70 km |
 | Modules joined down to ~100 km | < 1 km (the air above 100 km is too thin to matter) |
-| Parachute drift (5 km, 8–10 m/s, wind 5–15 m/s) | **~2.5–9 km** |
+| Parachute drift (5 km, 8–10 m/s, mean wind 7–15 m/s from the SW) | **~3.5–9.5 km**, toward the NE |
 | Earth turning during the 46 s delay | ~11 km (already in step 6) |
 
 **Reading the table:**
@@ -251,11 +251,28 @@ the burn grow by the time the capsule lands.
 - **The spin** after the burn is frightening but did little to the path. The air above
   100 km is too thin for the extra mass and shape to matter, and the tumble averages out.
   Its cost was in g and in blood vessels, not in kilometres.
-- **Weather** comes last. Russian Wikipedia gives −19 °C by day and 1.5–2 m of snow, but we
-  found no wind record. Our attempt to pull ERA5 reanalysis for 59.6°N 55.5°E (via the
-  Open-Meteo archive API) was blocked by the proxy. ERA5 does cover 1965, so a reader with
-  access could look it up. Wind decides which clearing the capsule lands in, not which
-  district.
+- **Weather** comes last. ERA5 reanalysis for the nearest grid point (59.65°N 55.53°E,
+  196 m) shows the hour of landing, 12:00 MSK on 19 March: 10 m wind **4.0 m/s from 225°**
+  (SW, blowing toward the NE), gusts 9.5 m/s; 100 m wind 6.1 m/s from 226°; **−1.1 °C**;
+  100% cloud; snow depth **0.66 m** (grid mean). All of the 19th was the same steady SW
+  flow: 10 m wind 2.8–4.6 m/s, 100 m wind 4.7–7.7 m/s, overcast throughout. It cooled to
+  −3.6 °C by midnight and −4.4 °C by dawn on the 20th, their night in the forest.
+- **Drift.** ERA5 here gives only the two lowest levels, so the winds aloft are an
+  assumption: wind usually grows with height, so take a column mean of **7–15 m/s**. Main
+  chute at ~5 km, falling 8–10 m/s: 500–625 s under canopy. 7 m/s × 500 s ≈ 3.5 km;
+  15 m/s × 625 s ≈ 9.4 km. So the wind moved the capsule **a few km to ~10 km toward the
+  NE**, against a 368–386 km overshoot. Wind decides which clearing, not which district;
+  the overshoot was the late manual burn.
+- **The data and the story disagree.** Russian Wikipedia gives −19 °C by day and 1.5–2 m
+  of snow; ERA5 gives about −1 °C at landing and 0.66 m. Possible reasons: ERA5 for 1965
+  is a model reconstruction with few Ural observations to pin it; one grid cell averages
+  ~30 km and smooths the terrain; drifts in forest clearings and ravines run far deeper
+  than the mean; −19 °C may be the nights, or memoir drift. We do not pick a side. The film
+  keeps the deep snow and the cold; these notes say what the data says.
+  Source: ERA5 (Hersbach et al. 2020, Copernicus C3S) via the Open-Meteo archive API,
+  `https://archive-api.open-meteo.com/v1/archive?latitude=59.6&longitude=55.5&start_date=1965-03-18&end_date=1965-03-20&hourly=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,wind_speed_100m,wind_direction_100m,cloud_cover,snow_depth&wind_speed_unit=ms&timezone=Europe%2FMoscow`;
+  saved as [`docs/data/era5_landing_1965-03-18_20.json`](data/era5_landing_1965-03-18_20.json).
+  The listed hour is 12:00 MSK; touchdown was 12:02–12:06.
 - **Earth's shape and rotation** are built into any landing-point calculation, so the
   planners would have included them. We did not model them.
 
@@ -288,6 +305,6 @@ Suggestions for the shot (these do not change the music):
 - Seen only as search excerpts, because the egress proxy blocked these pages: Wikipedia
   ("Voskhod 2", "Voskhod (spacecraft)", "S5.4"), Astronautix (Vostok, Voskhod 2), Sven Grahn
   "The Voskhod 2 mission revisited" (and its NASA mirror), Drew Ex Machina, braeunig.us.
-- Also blocked: planetarium.perm.ru, rgantd.ru, Open-Meteo's ERA5 archive (wind on 19 Mar 1965). The descent sphere's 2.3 m / 2,900 kg / chutes at 5 km / 8–10 m/s and the "150 km W of Solikamsk" aim are from Wikipedia (en/ru) search excerpts.
+- Also blocked: planetarium.perm.ru, rgantd.ru. (ERA5 via Open-Meteo was later fetched; see Weather above.) The descent sphere's 2.3 m / 2,900 kg / chutes at 5 km / 8–10 m/s and the "150 km W of Solikamsk" aim are from Wikipedia (en/ru) search excerpts.
 - Not seen: the 2020 Roscosmos document release and Siddiqi's own text. The 46 s and 386 km
   figures come to us only second-hand.
