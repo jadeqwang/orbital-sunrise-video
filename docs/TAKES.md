@@ -250,7 +250,7 @@ at `media/chars/*.png`, `media/env/*.png`, which are **not in the repo** (gitign
 | `drawing_hand` | 2 | B1_split |
 | `leonov_drawing_hand` | 4 | A1_snow, A2_hands |
 | `porthole_spin` | 1 | G1_failed, G2_math |
-| `vzor_manual` | 1 (`?g2=old`), 2 (`?g2=t2`), **3** (round 6) | G2_math |
+| `vzor_manual` | 1 (`?g2=old`), 2 (`?g2=t2`), 3 (`?g2=t3`); default the still `vzor_manual_s4` | G2_math |
 | `capsule_spin` | 1 | G2_math |
 | `g_force` | 1 | G2_math, G3_hold |
 | `reentry_fire` | 1 | F1_reentry |
@@ -311,7 +311,16 @@ Her follow-up: "better without the consoles because they're doing the math in th
 refs `CAB`, no cut): first frame a Nano Banana recomposition of `take2.first.jpg` to heads and shoulders with every console removed
 (`take3.chain.json`); they calculate in their heads while the sun sweeps through the porthole across their faces. Renderer plate
 `vzor_manual_t3` (193 frames, the default): static porthole `VZ3_PORTS`, and the six figures now orbit the two helmets
-(`VZ3_HEADS`, dimmer behind), the math in their heads. `?g2=t2` = take 2, `?g2=old` = take 1.
+(`VZ3_HEADS`, dimmer behind), the math in their heads. `?g2=t3` = this take, `?g2=t2` = take 2, `?g2=old` = take 1.
+
+Her next note: "stage it similarly to before, consistent with other capsule shots ... where you can see the sun and earth sweep through
+two portholes (traveling at a constant rate between the portholes)". G2's default is now G3's cabin: `g_force` take 1 frame 1 with the
+central console removed and t3's expressions (Nano Banana, `take4.chain.json`), installed as the **still plate** `vzor_manual_s4`
+(the pencil boils at 12 fps; slow push-in). Its windows sit where `g_force`'s do, so `cabPath` (now taking a port list with `.path`)
+runs the same one sun / one Earth at `CAB_V` across both on G3's beat grid: right window ≈144.6–144.8 s, left ≈145.1 s, the Earth
+≈145.3 s. Figures orbit both helmets (`VZ4_HEADS`); the lyric sits lower, clear of the faces. Seedance take 4 from that frame was
+rejected (the console faded back in, from the `CAB` reference; `media/archive/plates/vzor_manual_take4.*`); take 5 (`vzor_manual_5`,
+no refs) was refused once by the privacy filter and the retry's result lost to a local timeout: re-run it for a moving plate.
 
 ## Installing a take into the renderer
 

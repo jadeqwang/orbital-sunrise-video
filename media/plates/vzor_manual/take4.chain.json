@@ -1,0 +1,23 @@
+{
+ "steps": [
+  {
+   "model": "google/nano-banana-pro",
+   "genlog_line": 533,
+   "prompt": "Edit the first image (a film frame inside the Voskhod-2 capsule, 1965). Keep exactly its camera position, lens, framing and the dark round vignette, the cabin walls, the cables, the bags, the lettering, and above all BOTH round portholes exactly where they are: the small one high on the wall just above and behind the left cosmonaut's helmet, and the one on the right wall beside the right cosmonaut's head. Keep both cosmonauts exactly where they are, each in his OWN seat, side by side, same size, same suits and helmets. Remove the whole central instrument console (the globe instrument, the dial panel, the round optical sight, the switch panel) completely: in its place show the plain curved cabin wall, cable bundles and the dark gap between the two seats, so there is NOTHING in the foreground and nothing between the two men. Change only their expressions: both concentrate hard, doing difficult arithmetic in their heads, eyes looking slightly up and to the side, like the two men in the second image. Keep the photorealistic 35mm film look, the warm light and colours. Soviet markings only. No text, no captions, no watermark.",
+   "inputs": [
+    "media/plates/vzor_manual/chain/g_force_take1_f1.jpg (g_force take1 frame 1, G3's cabin)",
+    "media/plates/vzor_manual/take3.first.jpg (expressions)"
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output": "chain/ports_still_model.jpg"
+  },
+  {
+   "local": "centre crop to 16:9, resize 1920x1080 lanczos, JPEG q95 -> take4.first.jpg; 960x540 -> video/plates/vzor_manual_s4/f0001.jpg (still plate)"
+  }
+ ],
+ "seedance": "take 4 from it (refs CAB) rejected: the console fades back in; archived media/archive/plates/vzor_manual_take4.*. Take 5 (no refs): privacy filter, then lost to a local timeout."
+}

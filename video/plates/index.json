@@ -1003,5 +1003,14 @@
   "take": "take3.mp4 of vzor_manual (round 6: heads and shoulders, both in their own seats, no consoles, doing the math in their heads; sun sweeping through the porthole)",
   "mattes": true,
   "gain": 1.053
+ },
+ "vzor_manual_s4": {
+  "n": 1,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "still: media/plates/vzor_manual/take4.first.jpg (round 6: G3's cabin with both portholes, console removed, both in their own seats doing the math; the Seedance takes from it were rejected/lost)",
+  "mattes": true,
+  "gain": 1.658
  }
 }
