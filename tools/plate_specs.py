@@ -449,4 +449,15 @@ PLATES.update({
         f"toward the firelight and looks at it: it is the coloured-pencil drawing in the first reference image, {DRAWING}. He smiles quietly; Belyayev leans over to look. "
         "The camera slowly pushes in toward Leonov's hands and the card, then settles on his face and the card together. Warm firelight, sparks rising into the falling snow. "
         "One continuous shot, no cuts, only these two men. " + LOOK_TAIGA),
+    # ---------------- round 6 ----------------
+    # G2_math (her note: "just one cosmonaut on the seat and have Belyayev back in his own seat"): take 1 had the second helmet
+    # right behind/over the commander. First frame = Nano Banana edit of vzor_manual take1 @0.5 s with g_force take1 @2 s as the
+    # seating layout (take2.chain.json): both men in their own couches side by side, the left one on the orientation handle.
+    "vzor_manual_2": dict(duration=8, first_frame="media/plates/vzor_manual/take2.first.jpg", refs=["CAB"], out_id="vzor_manual", prompt=START +
+        "Inside the cramped Voskhod-2 capsule, 1965, the manual orientation before re-entry. Two cosmonauts sit in their own two separate seats side by side, exactly as in the image, "
+        "and stay in their own seats the whole time: nobody moves behind, over or across the other. The cosmonaut on the left grips the small orientation control handle with his gloved hand "
+        "and makes small, careful corrections, nudging it, his eyes going between the round optical sight in front of him and the porthole; his other hand touches the panel. "
+        "The cosmonaut on the right sits still in his seat, watching, breathing, a slight turn of his head. The capsule is slowly spinning: bright sunlight sweeps across the round porthole "
+        "on the back wall and slides across the cabin, the suits and the helmets, then fades, and the sunlit sky in the porthole slowly turns. "
+        "Static locked-off camera, no zoom, no push-in, no cuts, never a face close-up; the framing stays as in the image. " + LOOK),
 })
