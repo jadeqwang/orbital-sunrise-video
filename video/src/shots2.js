@@ -419,30 +419,62 @@ async function initShots2() {
   // A1 is two halves: Leonov's hand drawing the sunrise in the cabin (black paper), then the singer's hand writing lyrics
   // in her notebook (white paper). A1_SPLIT is the cut (a beat in the held note after "in"); A1_B is the second half's plate.
   // face:false on both hand plates: any face hits there are knuckles. In jade_hand_writing_p her hand and pencil fill the top of
-  // the frame, where the line sits in the first half, so after the cut the line is written on her notebook's blank left page
-  // instead, in perspective like B2: HW_* in plate pixels (960×540, the book does not move): head edge (10,367)→(293,252),
-  // gutter (293,252)→(627,460). "Art is a landing" is already on the page at the cut; "in the snow" is written from the cut.
-  const A1_SPLIT = B(Bn(328)), A1_B0 = .45;                                          // ≈121.62 s
+  // the frame (and her own scribble is on the right page), so after the cut the line is written on her notebook's blank left page.
+  const A1_SPLIT = B(Bn(328)), A1_B0 = .45;                                          // ≈132.85 s
   const A1_B = { id: 'jade_hand_writing_p', tp: t => A1_B0 + t - A1_SPLIT };
-  // HW_* were measured on take 2; take 4 (take 2 rebuilt from its first frame) has the book 3 px left and 16 px higher (phase
-  // correlation of the book region against take 2's contact sheet, steady over the whole take)
-  const HW_OFF = [-3, -16], HW_LINES = [[118, 442], [190, 477]].map(([x, y]) => [x + HW_OFF[0], y + HW_OFF[1]]), HW_ALONG = [283, -115], HW_DOWN = [334, 208], HW_SIZE = 46;
+  // The left page as a plane: HW_QUAD is its corners in plate px (960×540) on frame 1 of the take in use (measured on the plate,
+  // not carried from take 2): outer head corner, gutter head, gutter foot, and the outer foot corner (below the frame, where the
+  // fore-edge (2,340)→(225,540) meets the foot edge (600,407)→(425,530)). Page coordinates (u, v): u 0→1 across the head edge
+  // from the outer edge to the gutter, v 0→HW_ASPECT down the page (a 1:1.4 page); HW_H maps them to plate px (homography).
+  // Text is laid out in page units and mapped word by word (each word gets the local affine of the homography at its middle),
+  // so it recedes with the page; lines sit inside the margins (u .1–.84 clear of the outer edge and the gutter's curl, above
+  // the frame's lower edge) and the font is fitted so the longest line fills the measure. The page is blank (no ruled lines).
+  // HW_TRACK: the book region (cover, page block, page edges; her hand masked out) tracked through the take, SIFT similarity
+  // fit to frame 1 every 8 frames: [frame, dx, dy] plate px at the page centre. The camera holds: it stays under 0.6 px.
+  const HW_QUAD = [[2, 340], [280, 227], [600, 407], [306.7, 613.3]], HW_ASPECT = 1.4;
+  const HW_TRACK = [[1, 0, 0], [9, .1, -.2], [17, -.1, 0], [25, .1, -.1], [33, .5, -.2], [41, 0, -.3], [49, .1, -.1], [57, 0, -.2], [65, 0, -.2], [73, .2, -.3],
+    [81, .2, -.2], [89, .4, -.1], [97, .2, -.1], [105, .2, -.2], [113, .4, -.2], [121, .5, -.3], [129, .4, -.4], [137, .6, -.3], [145, .3, -.2]];
+  const HW_H = (() => {   // unit square → quad (Heckbert), then scale v by 1/HW_ASPECT
+    const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = HW_QUAD;
+    const dx1 = x1 - x2, dx2 = x3 - x2, dy1 = y1 - y2, dy2 = y3 - y2, sx = x0 - x1 + x2 - x3, sy = y0 - y1 + y2 - y3, den = dx1 * dy2 - dx2 * dy1;
+    const g = (sx * dy2 - dx2 * sy) / den, h = (dx1 * sy - sx * dy1) / den;
+    return (u, v) => { v /= HW_ASPECT; const z = g * u + h * v + 1; return [((x1 - x0 + g * x1) * u + (x3 - x0 + h * x3) * v + x0) / z, ((y1 - y0 + g * y1) * u + (y3 - y0 + h * y3) * v + y0) / z]; };
+  })();
+  const HW_LINES = [{ u: .1, n: 4 }, { u: .17, n: 3 }], HW_V0 = .32, HW_LEAD = 1.6, HW_MEASURE = .74, HW_FMAX = .14;   // lines: first word's u, word count; first baseline v, leading in font sizes
+  const _mg = document.createElement('canvas').getContext('2d'), wordW = (s, size) => measure(_mg, s, FONT.serif(size));
+  // each sung word written on as it is sung: from just before its onset to the next word (at most .6 s; "in" is held long)
+  const wordWin = (w, i) => [w[i][0] - .08, w[i][0] + clamp((w[i + 1]?.[0] ?? w[i][0] + .6) - w[i][0], .2, .6)];
   shot('A1_snow', ar0, AR[1].t0 - .05, async (t, lt) => {
     const first = t < A1_SPLIT, clear = quiet([[W / 2 - 800, 80, W / 2 + 800, 240]], .8), w = AR[0].words;
-    if (first) {   // the line in cream pencil across the top of his black paper
+    const words = w.map(x => x[1].replace(/[,.]/g, ''));
+    if (first) {   // the line in cream pencil across the top of his black paper, word by word with the vocal
       paper(G, 'night');
       await drawPlate(t, 'leonov_drawing_hand', .3 + lt, { rate: 8, view: { zoom: 1.02 }, face: false, hatch: { spacing: 6.5, mask: clear } });
       snowfall(t, 3, 90, 'silver');
-      handwrite(t, 'Art is a landing in the snow', W / 2, 190, w[0][0] - .1, w[6][0] + .5, { size: 104, align: 'center', col: 'cream' });
+      const sz = 104, sp = wordW(' ', sz), ws = words.map(s => wordW(s, sz)), tot = ws.reduce((a, b) => a + b, 0) + sp * (ws.length - 1);
+      let x = W / 2 - tot / 2;
+      words.forEach((s, i) => { handwrite(t, s, x, 190, ...wordWin(w, i), { size: sz, col: 'cream' }); x += ws[i] + sp; });
     } else {
       paper(G, 'snow');
-      const { view } = await drawPlate(t, A1_B.id, A1_B.tp(t), { paper: 'snow', rate: 8, view: { zoom: 1.02 }, face: false, hatch: { spacing: 6.2 } });
+      const { view, F } = await drawPlate(t, A1_B.id, A1_B.tp(t), { paper: 'snow', rate: 8, view: { zoom: 1.02 }, face: false, hatch: { spacing: 6.2 } });
       snowfall(t, 3, 90, 'lead');
-      const S = (x, y) => view.toScreen(x / 960, y / 540), dir = ([dx, dy]) => { const [x0, y0] = S(300, 300), [x1, y1] = S(300 + dx, 300 + dy), l = Math.hypot(x1 - x0, y1 - y0); return [(x1 - x0) / l, (y1 - y0) / l]; };
-      const [ax, ay] = dir(HW_ALONG), [bx, by] = dir(HW_DOWN), fy = .85;
-      [['Art is a landing', w[0][0] - .1, w[3][0] + .4], ['in the snow', A1_SPLIT, w[6][0] + .5]].forEach(([s, t0, t1], i) => {
-        const [x, y] = S(...HW_LINES[i]);
-        handwrite(t, s, x, y, t0, t1, { size: HW_SIZE * W / 960 * 1.02, col: 'graphite', page: [ax, ay, bx * fy, by * fy] });
+      const f = F?.frame ?? 1, k = HW_TRACK.findIndex(r => r[0] >= f), r1 = HW_TRACK[Math.max(k, 0)], r0 = HW_TRACK[Math.max(k - 1, 0)];
+      const a = r1[0] > r0[0] ? (f - r0[0]) / (r1[0] - r0[0]) : 0, ox = lerp(r0[1], r1[1], a), oy = lerp(r0[2], r1[2], a);
+      const S = (u, v) => { const [x, y] = HW_H(u, v); return view.toScreen((x + ox) / 960, (y + oy) / 540); };
+      // font size in page units: the longest line fits the measure
+      const REF = 100, lines = []; let wi = 0;
+      HW_LINES.forEach(L => { lines.push({ ...L, ws: words.slice(wi, wi + L.n), i0: wi }); wi += L.n; });
+      const fs = Math.min(HW_FMAX, ...lines.map(L => (HW_MEASURE + .1 - L.u) * REF / wordW(L.ws.join(' '), REF))), unit = fs / REF, sp = wordW(' ', REF) * unit;
+      lines.forEach((L, i) => { L.v = HW_V0 + i * HW_LEAD * fs; });
+      lines.forEach(L => {
+        let u = L.u;
+        L.ws.forEach((s, j) => {
+          const ww = wordW(s, REF) * unit, um = u + ww / 2, vm = L.v - fs * .3, e = 1e-3;
+          const [x, y] = S(u, L.v), [mx, my] = S(um, vm), [px, py] = S(um + e, vm), [qx, qy] = S(um, vm + e);
+          const ja = [(px - mx) / e * unit, (py - my) / e * unit], jb = [(qx - mx) / e * unit, (qy - my) / e * unit];
+          handwrite(t, s, x, y, ...wordWin(w, L.i0 + j), { size: REF, col: 'graphite', page: [ja[0], ja[1], jb[0], jb[1]] });
+          u += ww + sp;
+        });
       });
     }
   });
