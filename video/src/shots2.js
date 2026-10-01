@@ -62,8 +62,187 @@ async function leonovDrawing(t, k, view, o = {}) {
       region: [j, j2, W + j, H + j2], reveal: k, revealKey: key }) });
 }
 
+// ---- Leonov's "Sunrise" (1965), redrawn stroke by stroke (round 4) ----
+// The film's own drawing, not the photo: tools/fit_leonov_drawing.py fits the museum photo (local only) to parameters in
+// data/leonov_drawing.json (the card's tone and shape, each pencil's full-pressure colour, its pressure on a 5-unit grid,
+// the stroke direction field, the sun disc). Here that becomes a few thousand generated pencil strokes, each pencil
+// laid on a supersampled card layer and pressed into the card's tooth: light pressure catches only the grain's peaks,
+// heavy pressure fills the valleys (the waxy look). The card is 1000 units wide.
+//   ?drawing=redraw  (default) this redraw          ?drawing=v1  the round-3 version (leonovDrawing, needs the plate)
+//   ?drawing=photo   the museum photo of the real drawing, for a licensed cut: needs media/refs/leonov_drawing_real_photo.jpg
+//                    (served by render.mjs as refs/...); without it, it falls back to the redraw. It carries the credit line.
+const LD_MODE = new URLSearchParams(location.search).get('drawing') || 'redraw';
+const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
+const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
+const LD_CONTRAST = { black: 1.35, blue: 1.15, light_blue: .95, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
+const LD_CREDIT = 'A. Leonov, «Sunrise» (Восход), 1965 · Museum of the Yuri Gagarin Cosmonaut Training Centre, Star City';
+// per pencil: stroke length and width (card units), strokes per unit of pressure, how far a stroke leans off the field
+const LD_STYLE = {
+  black: { len: [40, 110], w: [1.8, 3.2], k: 4.2, dev: .05 },
+  light_blue: { len: [30, 90], w: [1.6, 2.8], k: 4.6, dev: .06 },
+  yellow: { len: [36, 100], w: [1.6, 2.8], k: 5, dev: .04 },
+  orange_red: { len: [30, 90], w: [1.5, 2.6], k: 4.6, dev: .04 },
+  blue: { len: [36, 120], w: [1.6, 3], k: 4.2, dev: .07 },
+};
+let LD = null, LD_PHOTO = null;
+async function ldInit() {
+  if (LD_MODE === 'v1') return;
+  try { LD = await loadJSON('data/leonov_drawing.json'); } catch (e) { console.warn('no data/leonov_drawing.json: the v1 drawing'); return; }
+  const dec = s => Uint8Array.from(atob(s), c => c.charCodeAt(0)), G0 = LD.grid;
+  LD.pencils.forEach(p => { p.c = dec(p.cov); p.Tc = p.T.map(v => Math.pow(v, LD_CONTRAST[p.name] ?? 1.2)); });
+  const ang = dec(LD.orient.ang), coh = dec(LD.orient.coh);
+  // direction field as doubled-angle vectors (so it interpolates), weighted by coherence
+  LD.vx = new Float32Array(ang.length); LD.vy = new Float32Array(ang.length);
+  for (let i = 0; i < ang.length; i++) { const a = ang[i] / 255 * Math.PI * 2, c = .2 + coh[i] / 255; LD.vx[i] = Math.cos(a) * c; LD.vy[i] = Math.sin(a) * c; }
+  ldStrokes();
+  if (LD_MODE === 'photo') { try { LD_PHOTO = await loadImage('refs/' + LD.card.photo); } catch (e) { console.warn('drawing=photo: the photo is not here; drawing the redraw'); } }
+}
+// bilinear sample of a grid (Uint8 0..255 or Float32) at card units (x, y)
+function ldSamp(arr, x, y) {
+  const g = LD.grid, fx = (x - g.x0) / g.cell - .5, fy = (y - g.y0) / g.cell - .5;
+  const x0 = Math.floor(fx), y0 = Math.floor(fy), ax = fx - x0, ay = fy - y0;
+  const at = (i, j) => (i < 0 || j < 0 || i >= g.nx || j >= g.ny) ? 0 : arr[j * g.nx + i];
+  return (at(x0, y0) * (1 - ax) + at(x0 + 1, y0) * ax) * (1 - ay) + (at(x0, y0 + 1) * (1 - ax) + at(x0 + 1, y0 + 1) * ax) * ay;
+}
+function ldDir(x, y) { const vx = ldSamp(LD.vx, x, y), vy = ldSamp(LD.vy, x, y); return Math.atan2(vy, vx) / 2; }
+// the strokes, generated once: seeded in each grid cell in proportion to the pencil's pressure there, then traced along
+// the direction field until they run out of that pencil's band. Inside the sun: short strokes hatched across the disc.
+function ldStrokes() {
+  const g = LD.grid, S = LD.sun, cellA = g.cell * g.cell;
+  LD.pencils.forEach((p, pi) => {
+    const st = LD_STYLE[p.name] || LD_STYLE.blue, r = rng(1965 + pi * 101), out = [];
+    const cov = (x, y) => ldSamp(p.c, x, y) / 255 * 1.25;
+    for (let j = 0; j < g.ny; j++) for (let i = 0; i < g.nx; i++) {
+      const c = p.c[j * g.nx + i] / 255 * 1.25; if (c < .03) continue;
+      const L0 = (st.len[0] + st.len[1]) / 2, W0 = (st.w[0] + st.w[1]) / 2;
+      const sunCell = p.name === 'orange_red' && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * .88;
+      let n = c * st.k * (sunCell ? 1.6 : 1) * cellA / (L0 * W0 * .55); n = Math.floor(n) + (r() < n % 1 ? 1 : 0);
+      for (let s = 0; s < n; s++) {
+        const x = g.x0 + (i + r()) * g.cell, y = g.y0 + (j + r()) * g.cell;
+        const inSun = p.name === 'orange_red' && Math.hypot(x - S.cx, y - S.cy) < S.r * .88;
+        const len = inSun ? 6 + r() * 14 : st.len[0] + (st.len[1] - st.len[0]) * Math.pow(r(), 1.4);
+        const bend = (r() - .5) * .006, dev = (r() - .5) * 2 * st.dev, half = [[], []];
+        const a0 = inSun ? 1.15 + (r() - .5) * .6 : ldDir(x, y) + dev;
+        for (const sg of [1, -1]) {
+          let px = x, py = y, a = a0, run = 0;
+          const pts = half[sg > 0 ? 0 : 1];
+          while (run < len / 2) {
+            const step = 3;
+            if (!inSun) { let b = ldDir(px, py) + dev; while (b - a > Math.PI / 2) b -= Math.PI; while (a - b > Math.PI / 2) b += Math.PI; if (Math.abs(b - a) > .45) break; a = a + (b - a) * .22 + bend * sg; }
+            px += Math.cos(a) * step * sg; py += Math.sin(a) * step * sg; run += step;
+            if (!inSun && cov(px, py) < .04 && r() < .5) break;
+            if (inSun && Math.hypot(px - S.cx, py - S.cy) > S.r * (.95 + .1 * r())) break;   // the disc keeps a round edge                        // ran off the band (ends a little ragged)
+            pts.push(px, py);
+          }
+        }
+        const pts = [];
+        for (let q = half[1].length - 2; q >= 0; q -= 2) pts.push(half[1][q], half[1][q + 1]);
+        pts.push(x, y); for (let q = 0; q < half[0].length; q += 2) pts.push(half[0][q], half[0][q + 1]);
+        if (pts.length < 6) continue;
+        out.push({ pts: Float32Array.from(pts), w: inSun ? st.w[1] * (.8 + r() * .3) : st.w[0] + (st.w[1] - st.w[0]) * r(),
+          a: clamp(.2 + .38 * Math.min(1, c) + (r() - .5) * .16, .1, .85) * (inSun ? 1.15 : 1), x, seed: (r() * 1e9) | 0, h: r() });
+      }
+    }
+    p.strokes = out;
+  });
+  const xs = LD.pencils.flatMap(p => p.strokes.map(s => s.x));
+  LD.xmin = Math.min(...xs); LD.xmax = Math.max(...xs);
+  console.log('leonov drawing: ' + LD.pencils.map(p => p.name + ' ' + p.strokes.length).join(', '));
+}
+// the paper's tooth for the card layer, one tile at layer resolution: fine grain (~1 px on screen) and a coarser one
+let LD_TOOTH = null;
+function ldTooth() {
+  if (LD_TOOTH) return LD_TOOTH;
+  const N = 1024, T = new Float32Array(N * N), f = LD_SS;
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const v = .3 * hash2((x / f) | 0, (y / f) | 0) + .4 * vnoise(x / (2.2 * f), y / (1.8 * f), 31) + .3 * vnoise(x / (7 * f), y / (5.5 * f), 47);
+    T[y * N + x] = clamp((v - .18) / .64);
+  }
+  return (LD_TOOTH = { N, T });
+}
+// one drawing of the card: paper, then each pencil pressed into the tooth. Cached per (size, drawing index, progress).
+const LD_CACHE = { key: '', c: null };
+function ldCard(cw, k, d) {
+  const key = cw + '|' + d + '|' + Math.round(k * 400);
+  if (LD_CACHE.key === key) return LD_CACHE.c;
+  const ch = Math.round(cw * LD.card.h / LD.card.w), u = cw / LD.card.w;
+  let C = LD_CACHE.c; if (!C || C.width !== cw || C.height !== ch) C = makeCanvas(cw, ch);
+  const g = C.getContext('2d', { willReadFrequently: true });
+  // the card: his off-white, a faint mottle and the grain's valleys a shade darker
+  const base = LD.card.rgb.map(v => Math.min(250, v * LD_GAIN)), tooth = ldTooth(), TN = tooth.N;
+  const im = g.createImageData(cw, ch), D = im.data;
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) {
+    const i = (y * cw + x) * 4, tv = tooth.T[(y % TN) * TN + (x % TN)], m = 1 - .028 * (1 - tv) + .018 * (vnoise(x / (90 * LD_SS), y / (90 * LD_SS), 5) - .5);
+    D[i] = base[0] * m; D[i + 1] = base[1] * m; D[i + 2] = base[2] * m; D[i + 3] = 255;
+  }
+  // the drawn region only
+  const rx0 = Math.floor(20 * u), ry0 = 0, rx1 = Math.ceil(870 * u), ry1 = Math.min(ch, Math.ceil(620 * u)), rw = rx1 - rx0, rh = ry1 - ry0;
+  const S = (LD_CACHE.s && LD_CACHE.s.width === rw && LD_CACHE.s.height === rh) ? LD_CACHE.s : (LD_CACHE.s = makeCanvas(rw, rh));
+  const sg = S.getContext('2d', { willReadFrequently: true });
+  const span = LD.xmax - LD.xmin;
+  for (const p of LD.pencils) {
+    sg.setTransform(1, 0, 0, 1, 0, 0); sg.clearRect(0, 0, rw, rh); sg.setTransform(u, 0, 0, u, -rx0, -ry0);
+    const pen = new Pen();
+    p.strokes.forEach((s, si) => {
+      const key2 = (s.x - LD.xmin) / span * .86 + s.h * .14;                          // left → right, a little shuffled
+      const vis = clamp((k - key2) / .05); if (vis <= 0) return;
+      const P = s.pts, n = P.length / 2, m = Math.max(2, Math.round(n * vis));
+      const jx = (hash2(s.seed, d * 2 + 1) - .5) * .7, jy = (hash2(s.seed, d * 2 + 2) - .5) * .7;   // the boil: a hair
+      const pts = []; for (let q = 0; q < m; q++) pts.push([P[q * 2] + jx, P[q * 2 + 1] + jy]);
+      // the pencil's point leaves 2–3 striations: a main line and two thin, lighter ones beside it
+      const a = s.a * (.94 + .12 * hash2(s.seed, d + 7)), w = s.w;
+      pen.poly(pts, '#000', w, a, .25);
+      const nx = -(P[3] - P[1]), ny = P[2] - P[0], nl = Math.hypot(nx, ny) || 1, o = w * .42;
+      const side = (sgn, aa) => pen.poly(pts.map(([x, y]) => [x + nx / nl * o * sgn, y + ny / nl * o * sgn]), '#000', w * .38, aa, .3);
+      side(1, a * .55); if (hash2(s.seed, 3) < .6) side(-1, a * .45);
+    });
+    pen.flush(sg);
+    const A = sg.getImageData(0, 0, rw, rh).data, T = p.Tc;
+    for (let y = 0; y < rh; y++) {
+      const ty = ((y + ry0) % TN) * TN, row = ((y + ry0) * cw + rx0) * 4;
+      for (let x = 0; x < rw; x++) {
+        const al = A[(y * rw + x) * 4 + 3]; if (!al) continue;
+        const tv = tooth.T[ty + ((x + rx0) % TN)], th = .78 * (1 - tv), c = clamp((al / 255 - th) / (1 - th));
+        if (c <= 0) continue;
+        const i = row + x * 4;
+        D[i] *= 1 - c + c * T[0]; D[i + 1] *= 1 - c + c * T[1]; D[i + 2] *= 1 - c + c * T[2];
+      }
+    }
+  }
+  g.putImageData(im, 0, 0);
+  LD_CACHE.key = key; LD_CACHE.c = C;
+  return C;
+}
+// the card on screen: centre (cx, cy), width cw px, rotation rot; k: draw-on progress; returns the card's screen height.
+// Photo mode (licensed): the museum photo of the card (cropped above the pencil box that covers its lower edge) in its place.
+function drawLeonovCard(t, k, cx, cy, cw, rot = 0, o = {}) {
+  const d = drawClock(t, o.rate ?? 12).n, photo = LD_MODE === 'photo' && LD_PHOTO;
+  const ch = cw * LD.card.h / LD.card.w * (photo ? LD.card.photo_crop_v : 1), u = cw / LD.card.w;
+  G.save(); G.translate(cx, cy); G.rotate(rot);
+  // the card's shadow: a soft one on white paper, a faint lift on black
+  G.save(); G.shadowColor = o.night ? 'rgba(0,0,0,.6)' : 'rgba(40,30,20,.22)'; G.shadowBlur = o.night ? 40 : 34; G.shadowOffsetY = o.night ? 10 : 12;
+  G.fillStyle = rgbHex(...LD.card.rgb.map(v => v * LD_GAIN)); G.fillRect(-cw / 2, -ch / 2, cw, ch); G.restore();
+  G.beginPath(); G.rect(-cw / 2, -ch / 2, cw, ch); G.clip();
+  G.imageSmoothingEnabled = true; G.imageSmoothingQuality = 'high';
+  if (photo) {
+    const a = LD.card.photo_to_card, s = LD.card.photo_w / LD_PHOTO.naturalWidth;
+    G.translate(-cw / 2, -ch / 2); G.scale(u, u); G.transform(a[0] * s, a[3] * s, a[1] * s, a[4] * s, a[2], a[5]);
+    G.filter = 'brightness(1.38) contrast(1.06)'; G.drawImage(LD_PHOTO, 0, 0); G.filter = 'none';
+  } else {
+    const C = ldCard(Math.round(cw * LD_SS), k, d);
+    G.drawImage(C, -cw / 2, -ch / 2, cw, ch);
+  }
+  G.restore();
+  // the card's edge: a thin pencil-grey line, a little uneven
+  G.save(); G.translate(cx, cy); G.rotate(rot); G.strokeStyle = o.night ? 'rgba(255,255,255,.10)' : 'rgba(60,50,40,.28)'; G.lineWidth = 1.2; G.strokeRect(-cw / 2, -ch / 2, cw, ch); G.restore();
+  return ch;
+}
+const ldPhoto = () => LD_MODE === 'photo' && !!LD_PHOTO;
+const ldRedraw = () => LD_MODE !== 'v1' && !!LD;
+
 async function initShots2() {
   try { SYNC = await loadJSON('data/sync.json'); } catch (e) { SYNC = {}; }
+  await ldInit();
   const S = sec => secT(sec);
 
   // ============================== DROP 1 · 70.94 → 104.60 ==============================
@@ -105,6 +284,16 @@ async function initShots2() {
   shot('D5_the_drawing', bt(48), D1[1].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
     const { n: d } = drawClock(t, 12);
+    if (ldRedraw()) {
+      // round 4: his card at its own shape and tone, large, the drawing laid on stroke by stroke (drawLeonovCard)
+      const dx = Math.sin(lt * .6) * 12, dy = Math.cos(lt * .5) * 8, rot = Math.sin(lt * .4) * .022, ph = ldPhoto();
+      drawLeonovCard(t, easeOut(clamp(lt / (dur * .7))), W / 2 + dx, (ph ? H / 2 - 44 : H / 2 - 26) + dy, 1330, rot, { night: true });
+      const Lt = typeLayer();
+      tele(Lt.g, 'THE FIRST WORK OF ART MADE IN SPACE', W / 2 - 330, ph ? H - 78 : H - 40, t, bt(49), { size: 28, weight: 800, col: 'gold', dur: .8 });
+      if (ph) tele(Lt.g, LD_CREDIT, W / 2, H - 34, t, bt(48), { size: 16, col: 'silver', alpha: .7, align: 'center', instant: true });
+      typeFlush(Lt, d, .3);
+      return;
+    }
     const drift = [Math.sin(lt * .6) * 14, Math.cos(lt * .5) * 10], rot = Math.sin(lt * .4) * .03;
     const sw = 1440, sh = 880, cx = W / 2 + drift[0], cy = H / 2 - 30 + drift[1];
     const card = g => { g.translate(cx, cy); g.rotate(rot); g.beginPath(); g.rect(-sw / 2, -sh / 2, sw, sh); };
@@ -438,7 +627,10 @@ async function initShots2() {
     eq.forEach((s, i) => { const a = spin + i / eq.length * TAU, r = 430; text(Lt.g, s, W / 2 + Math.cos(a) * r * 1.6, H / 2 + Math.sin(a) * r * .8, { font: FONT.serif(46), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * .9, align: 'center', rot: Math.sin(a) * .2 }); });
     // the scene (Belyayev across both couches at the Vzor, Leonov holding him) is Leonov's account (docs/RESEARCH_R4.md §1):
     // a quiet citation under everything, below the ring of figures (lowest ≈ y 884)
-    tele(Lt.g, 'Source: A. Leonov & D. Scott, Two Sides of the Moon (2004)', W / 2, H - 34, t, BD[1].t0 + .2, { size: 17, col: 'silver', alpha: .62, align: 'center', dur: .6 });
+    // (a soft night-paper fade along the bottom edge and an outline keep it legible over the hatching)
+    { const gr = Lt.g.createLinearGradient(0, H - 90, 0, H); gr.addColorStop(0, rgba(P.night, 0)); gr.addColorStop(.55, rgba(P.night, .72)); gr.addColorStop(1, rgba(P.night, .8));
+      Lt.g.fillStyle = gr; Lt.g.fillRect(0, H - 90, W, 90); }
+    text(Lt.g, 'Source: A. Leonov & D. Scott, Two Sides of the Moon (2004)', W / 2, H - 34, { font: FONT.mono(17, 400), col: 'silver', alpha: .88 * clamp((lt - .2) / .3), align: 'center', ls: 1.5, stroke: 6, strokeCol: 'night' });
     typeFlush(Lt, drawClock(t, 12).n, .4);
     const w = BD[1].words;
     lyricStack(t, [{ s: 'DOING THE MATH', t: w[0][0], x: W / 2, y: 520, size: 150, align: 'center', style: 'rise' }, { s: 'WITH A SPINNING SUN', t: w[3][0], x: W / 2, y: 640, size: 110, align: 'center', style: 'rise', col: 'gold' }]);
@@ -660,7 +852,12 @@ async function initShots2() {
   // 3:51 · the drawing, alone on the white page
   shot('C1_drawing', CARD1, e0, async (t, lt, dur) => {
     paper(G, 'snow');
-    await leonovDrawing(t, easeOut(clamp(lt / 1.6)), { zoom: .8, ox: 120, oy: 130 }, { rate: 8 });
+    if (ldRedraw()) {
+      // round 4: the card itself on the page, large, under the handwritten line
+      const ph = ldPhoto();
+      drawLeonovCard(t, easeOut(clamp(lt / 1.6)), W / 2, ph ? 600 : 652, 1100, -.012, { rate: 8 });
+      if (ph) { const Lt = typeLayer(); tele(Lt.g, LD_CREDIT, W / 2, H - 40, t, CARD1, { size: 16, col: 'lead', alpha: .85, align: 'center', instant: true }); typeFlush(Lt, drawClock(t, 8).n, .3); }
+    } else await leonovDrawing(t, easeOut(clamp(lt / 1.6)), { zoom: .8, ox: 120, oy: 130 }, { rate: 8 });
     handwrite(t, 'The cosmonauts and the artwork survived.', W / 2, 200, CARD1 + .6, CARD1 + 3.0, { size: 88, align: 'center', col: 'graphite' });
   });
   shot('Z_title', e0, 999, async (t, lt) => {

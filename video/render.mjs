@@ -49,9 +49,11 @@ if (args.encode) {
 
 // Static file server (localhost) so plates can be read back with getImageData without canvas tainting.
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.jpg': 'image/jpeg', '.png': 'image/png', '.ttf': 'font/ttf', '.otf': 'font/otf', '.webp': 'image/webp', '.bin': 'application/octet-stream' };
+// refs/: the museum photo of Leonov's drawing for the licensed ?drawing=photo mode (local only, never committed; absent → the redraw)
+const REFS = { '/refs/leonov_drawing_real_photo.jpg': resolve('../media/refs/leonov_drawing_real_photo.jpg') };
 const server = createServer((req, res) => {
-  const p = join(ROOT, decodeURIComponent(req.url.split('?')[0]));
-  if (!p.startsWith(ROOT) || !existsSync(p) || statSync(p).isDirectory()) { if (args.verbose) console.log('404 ' + req.url); res.writeHead(404); res.end(); return; }
+  const u = decodeURIComponent(req.url.split('?')[0]), p = REFS[u] || join(ROOT, u);
+  if ((!REFS[u] && !p.startsWith(ROOT)) || !existsSync(p) || statSync(p).isDirectory()) { if (args.verbose) console.log('404 ' + req.url); res.writeHead(404); res.end(); return; }
   res.writeHead(200, { 'Content-Type': MIME[extname(p)] || 'application/octet-stream', 'Cache-Control': 'max-age=3600' });
   createReadStream(p).pipe(res);
 });
