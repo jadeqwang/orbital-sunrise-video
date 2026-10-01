@@ -244,6 +244,7 @@ Subject: Клип «Orbital Sunrise», посвящённый вашему от�
 > «A. Leonov, «Sunrise» (Восход), 1965 · Museum of the Yuri Gagarin Cosmonaut Training Centre,
 > Star City».
 > Клип будет показан на выставке и в интернете, без коммерческих целей.
+> Мне важно показать именно оригинальный рисунок вашего отца, а не копию или подражание ему.
 >
 > Если вы согласны, подскажите, пожалуйста, как вы хотели бы, чтобы был указан автор, и нет ли у
 > вас изображения рисунка в высоком разрешении (мы также обратились в музей ЦПК). Я буду рада
@@ -272,6 +273,7 @@ Subject: Клип «Orbital Sunrise», посвящённый вашему от�
 > "A. Leonov, «Sunrise» (Восход), 1965 · Museum of the Yuri Gagarin Cosmonaut Training Centre,
 > Star City".
 > The video will be shown in the exhibition and online, for non-commercial purposes.
+> I want to show your father's own drawing, not a reproduction or an imitation of it.
 >
 > If you agree, please tell me how you would like your father to be credited, and whether you
 > have a high-resolution image of the drawing (we have also written to the GCTC museum). I would
