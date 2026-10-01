@@ -25,6 +25,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 import jade_location as JL, jade_fade as JFa
 
+import os
+SMOOTH, CLOSE, RIM = float(os.environ.get('SM', 50)), int(os.environ.get('CL', 41)), float(os.environ.get('RIM', .86))
 LIPS = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291, 375, 321, 405, 314, 17, 84, 181, 91, 146]
 CHEEKS = ([145, 234, 93, 132, 58, 172, 61, 129], [374, 454, 323, 361, 288, 397, 291, 358])   # lower lid, oval down to the jaw, mouth corner, nose
 
@@ -103,9 +105,9 @@ def main(take, first, relit_model, out_dir, plate=None):
     inner = oval_mask(LA, w, h, 1.0, 1)[..., None]
     skA = skin_mask(LA, w, h, 1)
     tone = np.median(blurR[(inner[..., 0] > .5) & (cheeks_mask(LA, w, h, 1)[..., 0] > .5)], axis=0)
-    sm = w / 50
+    sm = w / SMOOTH
     Rc = np.where(skA > .5, R, tone)                                   # outside her skin: her skin tone (no hair, glasses)
-    ker = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (41, 41))
+    ker = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (CLOSE, CLOSE))
     Rc = cv2.erode(cv2.dilate(Rc, ker), ker)                           # a closing: dark bands and lines narrower than ~40 px go
     smooth = cv2.GaussianBlur(Rc * skA, (0, 0), sm) / (cv2.GaussianBlur(skA[..., 0], (0, 0), sm)[..., None] + 1e-4)
     skinR = inner * smooth + (1 - inner) * tone
@@ -131,7 +133,7 @@ def main(take, first, relit_model, out_dir, plate=None):
         # draws it larger than the still) goes; inside her outline only the take's faint texture is kept (the shadow's hatched
         # edges are dropped). The eyes, brows, nose and mouth keep the take's own tones (relit by the ratio above).
         ga = X.mean(2); dl = (ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1)
-        nm = 1 - oval_mask(L, w, h, .86, 4)[..., None]   # her face's outline keeps its lines
+        nm = 1 - oval_mask(L, w, h, RIM, 4)[..., None]   # her face's outline keeps its lines
         det = (1 - nm) * np.clip(dl, .94, 1.04)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
         sk = skin_mask(L, w, h, 15)
         Y = sk * warp(skinR) * det + (1 - sk) * Y
