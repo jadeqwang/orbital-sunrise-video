@@ -460,4 +460,13 @@ PLATES.update({
         "The cosmonaut on the right sits still in his seat, watching, breathing, a slight turn of his head. The capsule is slowly spinning: bright sunlight sweeps across the round porthole "
         "on the back wall and slides across the cabin, the suits and the helmets, then fades, and the sunlit sky in the porthole slowly turns. "
         "Static locked-off camera, no zoom, no push-in, no cuts, never a face close-up; the framing stays as in the image. " + LOOK),
+    # G2_math, her follow-up: "better without the consoles because they're doing the math in their heads". First frame = Nano Banana
+    # recomposition of take2.first.jpg to heads and shoulders, every console removed (take3.chain.json).
+    "vzor_manual_3": dict(duration=8, first_frame="media/plates/vzor_manual/take3.first.jpg", refs=["CAB"], out_id="vzor_manual", prompt=START +
+        "Inside the cramped Voskhod-2 capsule, 1965. The two cosmonauts sit in their own two separate seats side by side, exactly as in the image, framed on their heads and shoulders, "
+        "and stay in their own seats the whole time: nobody moves behind, over or across the other. They are doing difficult arithmetic in their heads: deep concentration, "
+        "eyes moving and flicking up and to the side as they calculate, lips pressed, a slight frown, a small nod, one breathes out slowly; their hands stay out of the frame. "
+        "The capsule is slowly spinning: bright sunlight sweeps in through the round porthole between them, slides across the cabin wall, their helmets and their faces, "
+        "then fades, and comes round again; the sky in the porthole slowly turns. No instrument panels, consoles or controls anywhere in the frame. "
+        "Static locked-off camera, no zoom, no push-in, one continuous shot, no cuts; the framing stays as in the image. " + LOOK),
 })
