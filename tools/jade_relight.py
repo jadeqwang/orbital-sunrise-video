@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import jade_location as JL, jade_fade as JFa
 
 import os
-SMOOTH, CLOSE, RIM = float(os.environ.get('SM', 50)), int(os.environ.get('CL', 41)), float(os.environ.get('RIM', .86))
+SMOOTH, CLOSE, RIM, CHK = float(os.environ.get('SM', 50)), int(os.environ.get('CL', 41)), float(os.environ.get('RIM', .86)), float(os.environ.get('CHK', 0))
 LIPS = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291, 375, 321, 405, 314, 17, 84, 181, 91, 146]
 CHEEKS = ([145, 234, 93, 132, 58, 172, 61, 129], [374, 454, 323, 361, 288, 397, 291, 358])   # lower lid, oval down to the jaw, mouth corner, nose
 
@@ -136,6 +136,7 @@ def main(take, first, relit_model, out_dir, plate=None):
         nm = 1 - oval_mask(L, w, h, RIM, 4)[..., None]   # her face's outline keeps its lines
         det = (1 - nm) * np.clip(dl, .94, 1.04)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
         sk = skin_mask(L, w, h, 15)
+        if CHK: sk = np.maximum(sk, cheeks_mask(L, w, h, CHK))
         Y = sk * warp(skinR) * det + (1 - sk) * Y
         # the take's golden-hour rim on her hair, jacket and headphones: no low sun in daylight, so its gold goes grey
         hsv = cv2.cvtColor(np.clip(Y, 0, 255).astype(np.uint8), cv2.COLOR_RGB2HSV).astype(np.float32)
