@@ -528,29 +528,34 @@ async function initShots2() {
   // not equations". Default: vzor_manual take 6 (plate vzor_manual_cu), a close-up of one cosmonaut; ?g2=s4 = the two-porthole still.
   // The sun keeps G3's beat grid: its one porthole (left edge) is the path's first window, the second a hidden one off-frame where
   // G3's left window would be, so the sun crosses it when it crosses G3's right port and the Earth half a turn later.
-  const VZC_PORTS = Object.assign([{ f: [1, 193], x: [84, 84], y: [189, 189], r: [139, 139], top: false },
-    { f: [1, 193], x: [-331, -331], y: [174, 174], r: [41, 41], top: true, hide: true }], { path: true });
-  const VZC_HEAD = [600, 262];   // his face, plate px
-  // The working in his head: every equation is the real physics and every substituted number computes (checked in Python: μ = 398 600
-  // km³/s², R⊕ = 6378 km; FACTCHECK §4.2 values 167 × 475 km, 90.9 min, TDU-1 ~16 kN for ~45 s, Δv ~155 m/s; the 17°/s roll after the
-  // airlock went). [text, lane, strike]: lane 0 nearest the helmet; strike = a wrong first try he crosses out. They arrive one by one
-  // (half-written while they type on), so the ring fills as the shot goes on.
+  const VZC_PORTS = Object.assign([{ f: [1, 193], x: [22, 22], y: [152, 152], r: [155, 155], top: false },   // Hough fit, still all take
+    { f: [1, 193], x: [-393, -393], y: [137, 137], r: [41, 41], top: true, hide: true }], { path: true });   // G3's offset: −415, −44 to its top
+  const VZC_HEAD = [610, 245];   // his face, plate px
+  // The working in his head, aligned with docs/SONG_NOTES_THE_MATH.md: every equation is the real physics and every substituted number
+  // computes (checked in Python: μ = 398 600 km³/s², R⊕ = 6378 km, g₀ = 9.807; TDU-1 15.83 kN, Isp 266 s, ~45 s; 5682 kg; 167 × 475 km).
+  // The often-quoted Δv ≈ 155 m/s is Vostok's 4.7 t figure: he writes it first and crosses it out for F·t/m ≈ 125 and the rocket
+  // equation's ≈ 128 m/s. [text, lane, strike, colour]: lane 0 nearest the helmet; strike = a wrong first try crossed out. They arrive
+  // one by one, half-written while they type on, so the ring fills as the shot goes on.
   const VZC_EQ = [
-    ['T = 2π √(a³/μ)', 0], ['Δv ≈ 155 m/s', 1], ['a = R⊕ + (hₚ + hₐ)/2', 2], ['T ≈ 88 min', 0, 1], ['= 6378 + (167 + 475)/2 = 6699 km', 1],
-    ['ОРИЕНТАЦИЯ — РУЧНАЯ', 2, 0, 'verm'], ['T = 2π √(6699³ / 398 600) ≈ 5457 s', 0], ['≈ 90.9 min', 1], ['Δv = F·t / m', 2],
-    ['t = Δv·m / F', 0], ['F ≈ 16 kN · t ≈ 45 s', 1], ['155 / 45 = 3.9', 2, 1], ['Δv / t = 155 / 45 ≈ 3.4 m/s²', 0], ['v² = μ (2/r − 1/a)', 1],
-    ['vₚ = √(398 600 (2/6545 − 1/6699)) ≈ 7.89 km/s', 2], ['vₐ ≈ 7.54 km/s', 0], ['Δv / v ≈ 155 / 7890 ≈ 2 %', 1], ['Δv = Isp·g₀·ln(m₀/m₁)', 2],
-    ['ω = 2π/T = 360° / 5457 s ≈ 0.066°/s', 0], ['sin ρ = R⊕/(R⊕ + h) = 6378/6545 ≈ 0.974', 1], ['ρ ≈ 77° → horizon 13° below', 2, 0, 'verm'],
-    ['ω⊕·T = 360°/86 164 s × 5457 s ≈ 22.8°', 0], ['e = (rₐ − rₚ)/(rₐ + rₚ) ≈ 0.023', 1], ['1 s late → Δx ≈ 7.7 km', 2, 0, 'verm'],
-    ['17°/s → 360/17 ≈ 21 s a turn', 0], ['rₚ = 6545 · rₐ = 6853 km', 1]];
+    ['T = 2π √(a³/μ)', 0], ['Δv ≈ 155 m/s', 1, 1], ['a = R⊕ + (hₚ + hₐ)/2', 2], ['T ≈ 88 min', 0, 1], ['= 6378 + (167 + 475)/2 = 6699 km', 1],
+    ['ОРИЕНТАЦИЯ — РУЧНАЯ', 2, 0, 'verm'], ['T = 2π √(6699³ / 398 600) ≈ 5457 s ≈ 90.9 min', 0], ['F·t = m·Δv', 1],
+    ['15 830 N × 45 s ≈ 712 000 N·s', 2], ['÷ 5682 kg → Δv ≈ 125 m/s', 0], ['Δv = Isp·g₀·ln(m₀/m₁)', 1],
+    ['ṁ = F/(Isp·g₀) ≈ 6.07 kg/s × 45 s ≈ 273 kg', 2], ['= 266 · 9.807 · ln(5682/5409) ≈ 128 m/s', 0], ['Δv ≈ 130 m/s', 1, 0, 'verm'],
+    ['v² = μ (2/r − 1/a)', 2], ['vₚ = √(398 600 (2/6545 − 1/6699)) ≈ 7.89 km/s', 0], ['vₐ ≈ 7.54 km/s', 1], ['Δv/v ≈ 128/7540 ≈ 1.7 %', 2],
+    ['sin ρ = R⊕/(R⊕ + h) = 6378/6545 ≈ 0.974', 0], ['ρ ≈ 77° → horizon 13° below', 1], ['u = v·R⊕/r ≈ 7.4 km/s (ground)', 2],
+    ['yaw: u/h ≈ 7.4/300 rad/s ≈ 1.4°/s', 0], ['Δx ≈ u·Δt ≈ 7.4 km/s × Δt', 1, 0, 'verm'], ['46 s × 7.4 ≈ 340 km', 2],
+    ['ω⊕·T = 360° × 90.9/1436.1 ≈ 22.8°', 0], ['+ J₂ 0.23° → 23.0° west / lap', 1], ['23.0° × 111.3 km × cos 53° ≈ 1540 km', 2, 0, 'verm'],
+    ['e = (rₐ − rₚ)/(rₐ + rₚ) ≈ 0.023', 0]];
   function mathRing(Lt, t, lt, dur, view, spin) {
     const [hx, hy] = view.toScreen(VZC_HEAD[0] / 960, VZC_HEAD[1] / 540), n = VZC_EQ.length, tight = 1 - .2 * clamp(lt / dur);   // the ring tightens
     VZC_EQ.forEach(([s, lane, strike, col], i) => {
       const t0 = .05 + i * (dur * .8) / n, age = lt - t0; if (age <= 0) return;
       const nch = Math.min(s.length, Math.ceil(age / .45 * s.length)), shown = s.slice(0, nch);   // typed on over .45 s: half-written
-      const a = spin * (2.6 - lane * .5) + i * 2.399, rx = (560 + lane * 150) * tight, ry = (330 + lane * 105) * tight;   // golden-angle spread
-      const x = hx + Math.cos(a) * rx, y = hy - 30 + Math.sin(a) * ry, front = Math.sin(a) > 0;
-      const o = { font: FONT.serif(lane === 0 ? 44 : lane === 1 ? 38 : 32), col: col || (lane === 2 ? 'gold' : 'cream'), alpha: clamp(age / .2) * (front ? .95 : .55) * (strike && age > 1 ? .6 : 1), align: 'center', rot: Math.sin(a) * .1 + (hash(i) - .5) * .12 };
+      const a = spin * (2.6 - lane * .5) + i * 2.399, rx = (640 + lane * 140) * tight, ry = (350 + lane * 90) * tight;   // golden-angle spread
+      const x = hx - 260 + Math.cos(a) * rx, y = hy - 20 + Math.sin(a) * ry, front = Math.sin(a) > 0;   // centred left of him, over the open wall
+      const fs = lane === 0 ? 44 : lane === 1 ? 38 : 32, half = measure(Lt.g, s, FONT.serif(fs)) / 2;
+      const onFace = Math.abs(y - (hy + 40)) < 330 && x + half > hx - 270 && x - half < hx + 270;   // keep his face readable: what crosses it goes faint
+      const o = { font: FONT.serif(fs), col: col || (lane === 2 ? 'gold' : 'cream'), alpha: clamp(age / .2) * (front ? .95 : .55) * (strike && age > 1 ? .6 : 1) * (onFace ? .12 : 1), align: 'center', rot: Math.sin(a) * .1 + (hash(i) - .5) * .12 };
       const wdt = text(Lt.g, shown, x, y, o);
       if (strike && age > .7) {   // crossed out, then the right one follows
         const k = clamp((age - .7) / .25), ca = Math.cos(o.rot), sa = Math.sin(o.rot), hw = wdt / 2 * k;

@@ -1021,5 +1021,14 @@
   "take": "take1.mp4",
   "mattes": true,
   "gain": 1.068
+ },
+ "vzor_manual_cu": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take6.mp4 of vzor_manual (round 7: close-up of one cosmonaut doing the math, fighting nausea, light swinging across his face)",
+  "mattes": true,
+  "gain": 1.116
  }
 }
