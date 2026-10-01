@@ -155,6 +155,20 @@ blur = lambda c, s: cv2.GaussianBlur(c.astype(np.float32), (0, 0), s)
 nb, nl = covs["black"], covs["light_blue"]
 covs["black"] = np.maximum(nb, .7 * blur(nb, 2.4) * (blur(nl, 2) > .06))
 covs["light_blue"] = np.maximum(nl, .75 * blur(nl, 2.4) * (blur(nb, 2) > .06))
+# black over the blues: on the Earth side he went over the blue with the black pencil in places (the watery darks). Map
+# them: below the yellow band, inside the blue mass, the absorbance every channel shares (min over R, G, B: a clean blue
+# barely absorbs blue light, so what is common to all three is black pigment). Drawn as its own black layer over the blues.
+lower = ~upper
+bluemass = blur(np.isin(lbl, [bi, 5, names.index("light_blue"), names.index("black")]).astype(np.float32), 6) > .25
+neu = A.min(2)
+mk = lower & bluemass & roi
+lo, hi = .14, np.percentile(neu[mk & (neu > .14)], 95)
+over = np.where(mk, np.clip((neu - lo) / (hi - lo), 0, 1), 0)
+covs["black_over"] = grid(over) * np.clip(1.1 * grid(mk.astype(np.float32)), 0, 1)
+covs["black"] = covs["black"] * (grid(upper.astype(np.float32)) > .5)          # the black band itself: above the sunrise only
+bp = next(p for p in pencils if p["name"] == "black")
+pencils.append(dict(name="black_over", T=bp["T"], pressure=round(float(hi), 3), share=round(float((over > .2).sum() / pig.sum()), 3), cov=None))
+print("black over blue: cells", int((covs["black_over"] > .05).sum()), "neutral |A| 95th pct", round(float(hi), 2))
 for p in pencils:
     p["cov"] = b64(covs[p["name"]] * 255)
 

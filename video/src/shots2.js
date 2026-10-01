@@ -74,7 +74,7 @@ async function leonovDrawing(t, k, view, o = {}) {
 const LD_MODE = new URLSearchParams(location.search).get('drawing') || 'redraw';
 const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
 const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
-const LD_CONTRAST = { black: 1.35, blue: 1.2, deep_blue: 1.12, light_blue: 1, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
+const LD_CONTRAST = { black: 1.35, black_over: 1.35, blue: 1.2, deep_blue: 1.12, light_blue: 1, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
 const LD_CREDIT = 'A. Leonov, «Sunrise» (Восход), 1965 · Museum of the Yuri Gagarin Cosmonaut Training Centre, Star City';
 // per pencil: stroke length and width (card units), strokes per unit of pressure, how far a stroke leans off the field
 const LD_STYLE = {
@@ -82,8 +82,9 @@ const LD_STYLE = {
   light_blue: { len: [30, 90], w: [1.6, 2.8], k: 7, dev: .06, ap: .36, th: .45 },   // the sunrise bands: dense, the card barely shows
   yellow: { len: [36, 100], w: [1.6, 2.8], k: 9, dev: .04, ap: .55, th: .4 },
   orange_red: { len: [30, 90], w: [1.5, 2.6], k: 8.5, dev: .04, ap: .55, th: .42 },
-  blue: { len: [36, 120], w: [1.6, 3], k: 6.5, dev: .08, ap: .5 },          // the Earth: cobalt and deep blue laid over each other,
-  deep_blue: { len: [40, 130], w: [1.6, 3.2], k: 5, dev: .06, ap: .55 },   // pressed harder where it is darkest
+  blue: { len: [36, 120], w: [1.6, 3], k: 6.5, dev: .08, ap: .5, th: .85 },          // the Earth: cobalt and deep blue laid over each other,
+  deep_blue: { len: [40, 130], w: [1.6, 3.2], k: 5, dev: .06, ap: .55, th: .85 },   // pressed harder where it is darkest
+  black_over: { len: [30, 100], w: [1.4, 2.6], k: 1.6, dev: .07, ap: .32, th: .9 },   // black laid over the blues where he did
 };
 let LD = null, LD_PHOTO = null;
 async function ldInit() {
@@ -116,13 +117,13 @@ function ldStrokes() {
     for (let j = 0; j < g.ny; j++) for (let i = 0; i < g.nx; i++) {
       const c = p.c[j * g.nx + i] / 255 * 1.25; if (c < .03) continue;
       const L0 = (st.len[0] + st.len[1]) / 2, W0 = (st.w[0] + st.w[1]) / 2;
-      const sunCell = p.name === 'orange_red' && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * .92;
+      const sunCell = p.name === 'orange_red' && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * .84;
       // round the disc the band's own strokes thin out, so the denser band does not swell the sun past its size
       const sunRim = p.name === 'orange_red' && !sunCell && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * 1.35;
-      let n = c * st.k * (sunCell ? 1.6 : sunRim ? .45 : 1) * cellA / (L0 * W0 * .55); n = Math.floor(n) + (r() < n % 1 ? 1 : 0);
+      let n = c * st.k * (sunCell ? 1.6 : sunRim ? .6 : 1) * cellA / (L0 * W0 * .55); n = Math.floor(n) + (r() < n % 1 ? 1 : 0);
       for (let s = 0; s < n; s++) {
         const x = g.x0 + (i + r()) * g.cell, y = g.y0 + (j + r()) * g.cell;
-        const inSun = p.name === 'orange_red' && Math.hypot(x - S.cx, y - S.cy) < S.r * .92;
+        const inSun = p.name === 'orange_red' && Math.hypot(x - S.cx, y - S.cy) < S.r * .84;
         const len = inSun ? 6 + r() * 14 : st.len[0] + (st.len[1] - st.len[0]) * Math.pow(r(), 1.4);
         const bend = (r() - .5) * .006, dev = (r() - .5) * 2 * st.dev, half = [[], []];
         const a0 = inSun ? 1.15 + (r() - .5) * 1.4 : ldDir(x, y) + dev;
@@ -134,8 +135,8 @@ function ldStrokes() {
             if (!inSun) { let b = ldDir(px, py) + dev; while (b - a > Math.PI / 2) b -= Math.PI; while (a - b > Math.PI / 2) b += Math.PI; if (Math.abs(b - a) > .45) break; a = a + (b - a) * .22 + bend * sg; }
             px += Math.cos(a) * step * sg; py += Math.sin(a) * step * sg; run += step;
             if (!inSun && cov(px, py) < .04 && r() < .5) break;
-            if (inSun && Math.hypot(px - S.cx, py - S.cy) > S.r * (.92 + .06 * r())) break;   // the disc keeps a round edge
-            if (!inSun && p.name === 'orange_red' && Math.hypot(px - S.cx, py - S.cy) < S.r * .5) break;   // the band runs into the disc (no pale rim)                        // ran off the band (ends a little ragged)
+            if (inSun && Math.hypot(px - S.cx, py - S.cy) > S.r * (.84 + .05 * r())) break;   // the disc keeps a round edge
+            if (!inSun && p.name === 'orange_red' && Math.hypot(px - S.cx, py - S.cy) < S.r * .4) break;   // the band runs into the disc (no pale rim)                        // ran off the band (ends a little ragged)
             pts.push(px, py);
           }
         }
@@ -152,6 +153,28 @@ function ldStrokes() {
   const xs = LD.pencils.flatMap(p => p.strokes.map(s => s.x));
   LD.xmin = Math.min(...xs); LD.xmax = Math.max(...xs);
   console.log('leonov drawing: ' + LD.pencils.map(p => p.name + ' ' + p.strokes.length).join(', '));
+}
+// Crayon / wax pencil (Leonov's drawing): the stroke is laid as 3–4 lanes of wax across its width (the point's facets),
+// segment by segment, with pressure rising, wandering and lifting along it; lane edges wobble, so the stroke's edge is soft
+// and irregular. The tooth step afterwards breaks it where the paper's grain is low; strokes are flushed in passes, so
+// where they overlap the wax builds up.
+function crayon(pen, pts, w, a, seed) {
+  const n = pts.length; if (n < 2) return;
+  const lanes = w > 2.4 ? 4 : 3, lw = w / lanes * 1.35;
+  const off = [], str = [];
+  for (let i = 0; i < lanes; i++) { off.push(((i + .5) / lanes - .5) * w + (hash2(seed, 40 + i) - .5) * w * .25); str.push(.55 + .55 * hash2(seed, 50 + i)); }
+  const ph = hash2(seed, 61) * 50, lift = .15 + .2 * hash2(seed, 62);
+  for (let j = 0; j < n - 1; j++) {
+    const t = (j + .5) / (n - 1), [x0, y0] = pts[j], [x1, y1] = pts[j + 1];
+    const taper = Math.sqrt(smooth(clamp(t / .14)) * smooth(clamp((1 - t) / lift)));
+    const pr = taper * (.72 + .56 * vnoise(j * .45 + ph, 0, 77));               // pressure along the stroke
+    if (pr < .05) continue;
+    let nx = -(y1 - y0), ny = x1 - x0; const nl = Math.hypot(nx, ny) || 1; nx /= nl; ny /= nl;
+    for (let i = 0; i < lanes; i++) {
+      const wob = (vnoise(j * .7 + i * 9.1, ph, 78) - .5) * w * .35, o = off[i] + wob;
+      pen.l(x0 + nx * o, y0 + ny * o, x1 + nx * o, y1 + ny * o, '#000', lw * (.75 + .45 * pr), clamp(a * pr * str[i], .03, 1));
+    }
+  }
 }
 // the paper's tooth for the card layer, one tile at layer resolution: fine grain (~1 px on screen) and a coarser one
 let LD_TOOTH = null;
@@ -193,12 +216,8 @@ function ldCard(cw, k, d) {
       const P = s.pts, n = P.length / 2, m = Math.max(2, Math.round(n * vis));
       const jx = (hash2(s.seed, d * 2 + 1) - .5) * .7, jy = (hash2(s.seed, d * 2 + 2) - .5) * .7;   // the boil: a hair
       const pts = []; for (let q = 0; q < m; q++) pts.push([P[q * 2] + jx, P[q * 2 + 1] + jy]);
-      // the pencil's point leaves 2–3 striations: a main line and two thin, lighter ones beside it
-      const a = s.a * (.94 + .12 * hash2(s.seed, d + 7)), w = s.w;
-      pen.poly(pts, '#000', w, a, .25);
-      const nx = -(P[3] - P[1]), ny = P[2] - P[0], nl = Math.hypot(nx, ny) || 1, o = w * .42;
-      const side = (sgn, aa) => pen.poly(pts.map(([x, y]) => [x + nx / nl * o * sgn, y + ny / nl * o * sgn]), '#000', w * .38, aa, .3);
-      side(1, a * .55); if (hash2(s.seed, 3) < .6) side(-1, a * .45);
+      crayon(pen, pts, s.w, s.a * (.94 + .12 * hash2(s.seed, d + 7)), s.seed);
+      if (si % 500 === 499) pen.flush(sg);                                               // passes: overlaps build up
     });
     pen.flush(sg);
     const A = sg.getImageData(0, 0, rw, rh).data, T = p.Tc, TH = (LD_STYLE[p.name] || {}).th ?? .78;   // th: how far pressure fills the tooth
