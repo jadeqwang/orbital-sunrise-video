@@ -513,8 +513,12 @@ async function initShots2() {
   // round 6 (her note: "just one cosmonaut on the seat and Belyayev back in his own seat"): vzor_manual take 2, both men in their own
   // couches side by side, the commander on the orientation handle. Locked-off camera: the porthole between them is still (Hough fit
   // of the glass, plate px), no helmet in front of it. ?g2=old brings back take 1 (the second helmet just behind him)
-  const G2_OLD = new URLSearchParams(location.search).get('g2') === 'old';
+  // Her follow-up: "better without the consoles because they're doing the math in their heads": take 3 (default), heads and shoulders,
+  // no consoles; its porthole is still too (bright-glass bbox), and the figures orbit each man's head. ?g2=t2 = take 2, ?g2=old = take 1
+  const G2_Q = new URLSearchParams(location.search).get('g2'), G2_OLD = G2_Q === 'old', G2_T2 = G2_Q === 't2';
   const VZ2_PORTS = [{ f: [1, 165], x: [582, 582], y: [84, 84], r: [58, 58], lag: .65, top: false }];
+  const VZ3_PORTS = [{ f: [1, 193], x: [494, 494], y: [122, 122], r: [93, 93], lag: .65, top: false }];
+  const VZ3_HEADS = [[216, 196], [782, 204]];   // the two faces, plate px
   const CAB_B0 = Bn(375), CAB_BEATS = 8, CAB_V = 400, CAB_ER = 200, CAB_EO = 185;   // ≈139.0 s; plate px/s; the Earth's radius, its centre below the path
   const track = (fs, vs, f) => { let i = 0; while (i < fs.length - 2 && f > fs[i + 1]) i++; return lerp(vs[i], vs[i + 1], clamp((f - fs[i]) / (fs[i + 1] - fs[i]))); };
   // where a line (base + u·(ca, sa)) is inside circle (ox, oy, r): [u0, u1] or null
@@ -679,12 +683,16 @@ async function initShots2() {
   shot('G2_math', BD[1].t0 - .05, BD[2].t0 - .05, async (t, lt) => {
     paper(G, 'night');
     const spin = lt * .35;
-    const { view } = await drawPlate(t, G2_OLD ? 'vzor_manual' : 'vzor_manual_t2', .5 + lt, { view: { zoom: 1.1, rot: Math.sin(spin) * .06 } });
-    if (view) cabinPorts(t, view, (.5 + lt) * 24, G2_OLD ? VZ_PORTS : VZ2_PORTS);
+    const { view } = await drawPlate(t, G2_OLD ? 'vzor_manual' : G2_T2 ? 'vzor_manual_t2' : 'vzor_manual_t3', .5 + lt, { view: { zoom: G2_OLD || G2_T2 ? 1.1 : 1.04, rot: Math.sin(spin) * (G2_OLD || G2_T2 ? .06 : .03) } });
+    if (view) cabinPorts(t, view, (.5 + lt) * 24, G2_OLD ? VZ_PORTS : G2_T2 ? VZ2_PORTS : VZ3_PORTS);
     // hand-written orbital arithmetic circling the frame. Sourced figures only (docs/FACTCHECK.md §4.2): the TDU-1 retro-rocket
     // (~16 kN for ~45 s, Δv ~155 m/s), the 167 × 475 km orbit and its 90.9 min period
     const Lt = typeLayer(), eq = ['Δv ≈ 155 m/s', 't ≈ 45 s', 'T = 90.9 min', 'ОРИЕНТАЦИЯ — РУЧНАЯ', 'h = 167–475 km', 'F ≈ 16 kN'];
-    eq.forEach((s, i) => { const a = spin + i / eq.length * TAU, r = 430; text(Lt.g, s, W / 2 + Math.cos(a) * r * 1.6, H / 2 + Math.sin(a) * r * .8, { font: FONT.serif(46), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * .9, align: 'center', rot: Math.sin(a) * .2 }); });
+    if (!G2_OLD && !G2_T2 && view) eq.forEach((s, i) => {   // the math in their heads: three figures circling each helmet, dimmer behind it
+      const h = i % 2, [hx, hy] = view.toScreen(VZ3_HEADS[h][0] / 960, VZ3_HEADS[h][1] / 540), a = spin * 2.4 + Math.floor(i / 2) / 3 * TAU + h * 1.1;
+      text(Lt.g, s, hx + Math.cos(a) * 340, hy - 40 + Math.sin(a) * 240, { font: FONT.serif(i === 3 ? 40 : 48), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * (Math.sin(a) > 0 ? .95 : .65), align: 'center', rot: Math.sin(a) * .12 });
+    });
+    else eq.forEach((s, i) => { const a = spin + i / eq.length * TAU, r = 430; text(Lt.g, s, W / 2 + Math.cos(a) * r * 1.6, H / 2 + Math.sin(a) * r * .8, { font: FONT.serif(46), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * .9, align: 'center', rot: Math.sin(a) * .2 }); });
     typeFlush(Lt, drawClock(t, 12).n, .4);
     const w = BD[1].words;
     lyricStack(t, [{ s: 'DOING THE MATH', t: w[0][0], x: W / 2, y: 520, size: 150, align: 'center', style: 'rise' }, { s: 'WITH A SPINNING SUN', t: w[3][0], x: W / 2, y: 640, size: 110, align: 'center', style: 'rise', col: 'gold' }]);

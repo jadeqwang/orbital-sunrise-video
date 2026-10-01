@@ -1,0 +1,21 @@
+{
+ "steps": [
+  {
+   "model": "google/nano-banana-pro",
+   "genlog_line": 531,
+   "prompt": "Recompose this film frame inside the Voskhod-2 capsule, 1965, as a closer shot: the same two cosmonauts, each in his OWN seat, side by side, at the same depth and size, framed on their heads and shoulders (helmets and upper chests only), the round porthole with the bright sky visible on the cabin wall between and slightly above their two helmets. Remove every instrument panel, console, control handle, optical sight and grey box from the frame: nothing in front of them, only the two men, their seat headrests, the cabin wall, cables and the porthole. Both keep their white helmets with red CCCP letters and orange trim, visors open, faces fully visible and exactly the same faces as in the image; white Berkut suits with rust-orange harness straps. Both are concentrating hard, calculating in their heads, eyes looking slightly up and to the side, thinking. Neither is behind, above or overlapping the other; a clear gap between their helmets. Keep the warm hard sunlight, the colours and the photorealistic 35mm film look of the image. Medium close shot, static camera. Soviet markings only. No text, no captions, no watermark.",
+   "inputs": [
+    "media/plates/vzor_manual/take2.first.jpg"
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output": "chain/heads_still_model.jpg"
+  },
+  {
+   "local": "centre crop to 16:9, resize 1920x1080 lanczos, JPEG q95 -> take3.first.jpg"
+  }
+ ]
+}

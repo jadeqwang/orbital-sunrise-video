@@ -994,5 +994,14 @@
   "take": "take2.mp4 of vzor_manual (round 6: both cosmonauts in their own seats side by side, the left one on the orientation handle; frames 1-165, a hard cut follows)",
   "mattes": true,
   "gain": 1.26
+ },
+ "vzor_manual_t3": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take3.mp4 of vzor_manual (round 6: heads and shoulders, both in their own seats, no consoles, doing the math in their heads; sun sweeping through the porthole)",
+  "mattes": true,
+  "gain": 1.053
  }
 }

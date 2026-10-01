@@ -1,0 +1,28 @@
+{
+ "model": "bytedance/seedance-2.5",
+ "input": {
+  "prompt": "The video starts exactly on the input image, with identical framing, lighting and composition; everything in it stays as it is unless described. Inside the cramped Voskhod-2 capsule, 1965. The two cosmonauts sit in their own two separate seats side by side, exactly as in the image, framed on their heads and shoulders, and stay in their own seats the whole time: nobody moves behind, over or across the other. They are doing difficult arithmetic in their heads: deep concentration, eyes moving and flicking up and to the side as they calculate, lips pressed, a slight frown, a small nod, one breathes out slowly; their hands stay out of the frame. The capsule is slowly spinning: bright sunlight sweeps in through the round porthole between them, slides across the cabin wall, their helmets and their faces, then fades, and comes round again; the sky in the porthole slowly turns. No instrument panels, consoles or controls anywhere in the frame. Static locked-off camera, no zoom, no push-in, one continuous shot, no cuts; the framing stays as in the image. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions.",
+  "duration": 8,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "reference_images": [
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(4067678 chars)"
+  ],
+  "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABA...(1071587 chars)",
+  "use_virtual_avatar": true
+ },
+ "genlog_line": 532,
+ "genlog": {
+  "t": "2026-10-01T13:33:51",
+  "tag": "plate:vzor_manual",
+  "out": [
+   "media/plates/vzor_manual/take3.mp4"
+  ],
+  "secs": 175.4
+ },
+ "first_frame": "take3.first.jpg = chain/heads_still_model.jpg (Nano Banana, from take2.first.jpg) centre-cropped to 16:9, 1920x1080, JPEG q95",
+ "reference_images": "plate_specs.R['CAB']",
+ "use": "G2_math (2:24), her follow-up 'better without the consoles because they're doing the math in their heads'. Renderer plate vzor_manual_t3 (all 193 frames, no cut). Porthole static (VZ3_PORTS), the figures orbit each helmet (VZ3_HEADS). ?g2=t2 = take 2, ?g2=old = take 1.",
+ "recreate": "python3 tools/plates.py vzor_manual_3"
+}

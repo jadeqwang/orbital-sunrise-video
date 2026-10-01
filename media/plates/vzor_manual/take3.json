@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 8,
+  "first_frame": "media/plates/vzor_manual/take3.first.jpg",
+  "refs": [
+   "CAB"
+  ],
+  "out_id": "vzor_manual",
+  "prompt": "The video starts exactly on the input image, with identical framing, lighting and composition; everything in it stays as it is unless described. Inside the cramped Voskhod-2 capsule, 1965. The two cosmonauts sit in their own two separate seats side by side, exactly as in the image, framed on their heads and shoulders, and stay in their own seats the whole time: nobody moves behind, over or across the other. They are doing difficult arithmetic in their heads: deep concentration, eyes moving and flicking up and to the side as they calculate, lips pressed, a slight frown, a small nod, one breathes out slowly; their hands stay out of the frame. The capsule is slowly spinning: bright sunlight sweeps in through the round porthole between them, slides across the cabin wall, their helmets and their faces, then fades, and comes round again; the sky in the porthole slowly turns. No instrument panels, consoles or controls anywhere in the frame. Static locked-off camera, no zoom, no push-in, one continuous shot, no cuts; the framing stays as in the image. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 183
+}
