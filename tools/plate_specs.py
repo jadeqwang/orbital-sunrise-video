@@ -469,4 +469,13 @@ PLATES.update({
         "The capsule is slowly spinning: bright sunlight sweeps in through the round porthole between them, slides across the cabin wall, their helmets and their faces, "
         "then fades, and comes round again; the sky in the porthole slowly turns. No instrument panels, consoles or controls anywhere in the frame. "
         "Static locked-off camera, no zoom, no push-in, one continuous shot, no cuts; the framing stays as in the image. " + LOOK),
+    # G2_math, her next note: stage it like the other capsule shots, the sun and Earth sweeping through two portholes. First frame =
+    # Nano Banana edit of g_force take1 frame 1 (G3's cabin, both portholes) with the console removed and t3's expressions (take4.chain.json).
+    "vzor_manual_4": dict(duration=8, first_frame="media/plates/vzor_manual/take4.first.jpg", refs=["CAB"], out_id="vzor_manual", prompt=START +
+        "Inside the cramped Voskhod-2 capsule, 1965. The two cosmonauts sit in their own two separate seats side by side, exactly as in the image, and stay in their own seats "
+        "the whole time: nobody moves behind, over or across the other. They are doing difficult arithmetic in their heads: deep concentration, eyes moving and flicking up and "
+        "to the side as they calculate, a slight frown, a small nod, one breathes out slowly; small natural movements only, hands resting where they are. "
+        "Nothing between them and nothing in the foreground: no instrument console. The capsule is slowly spinning, so warm sunlight drifts gently across the cabin and their suits. "
+        "Completely static locked-off camera on a tripod: no zoom, no push-in, no pan, no shake; the walls and both round portholes stay exactly where they are in the frame. "
+        "One continuous shot, no cuts. " + LOOK),
 })
