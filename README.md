@@ -114,3 +114,4 @@ Apollo–Soyuz handshake (1975), continuous crews on the ISS (since 2000), the f
 commercial spacewalk (Polaris Dawn, 2024), Artemis II around the Moon (2026).
 The lyric's "fifteen hundred klicks" is the song's own; the real overshoot was a few
 hundred kilometres.
+The math behind that number, for viewers: [`docs/THE_MATH.md`](docs/THE_MATH.md).

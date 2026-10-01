@@ -1,5 +1,7 @@
 # Song notes: "Doing the math with a spinning sun"
 
+> Plain-language version for viewers: [THE_MATH.md](THE_MATH.md), "The math behind 'fifteen hundred klicks'".
+
 > *Guidance failed and the capsule spun / Doing the math with a spinning sun*
 > (Orbital_Sunrise_alt_Lyrics.md, build before the final chorus; the film's 2:24 shot, G2_math)
 
