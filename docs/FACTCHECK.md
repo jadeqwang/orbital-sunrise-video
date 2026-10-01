@@ -25,13 +25,18 @@ Legend: ✅ correct · ❌ wrong · ⚠️ contested or imprecise · ❓ unverif
    listed in `SHOTLIST.md:36`.
 2. ⚠️ **"Fifteen hundred klicks coming in hot / … we overshot"** (`alt:39–40`, `released:37–38`, `timed:60–61`). This one
    is optional:
-   - 1,500 km is Leonov's own figure, from the memoir excerpt in Air & Space (2005).
+   - 1,500 km is Leonov's own figure, from the memoir excerpt in Air & Space (2005). Verified from the full text
+     (RESEARCH_R4 §1 round 6, PDF p. 3): it is the miss the crew **expected before the burn**: "we would be coming
+     down off-target—1,500 kilometers [930 miles] west of where we were supposed to land". It is not a measured miss.
    - Flight-data accounts give **386 km** past the aim point, caused by the burn firing 46 s late.
-   - RussianSpaceWeb gives **800+ km** past the planned landing area in Kazakhstan.
+   - RussianSpaceWeb gives **800+ km** past the planned landing area in Kazakhstan. Verified from the full text
+     (PDF p. 3): "a more than 800-kilometer overflight of the planned landing area".
 
    Options are in §3.
 3. Nothing else has to be re-recorded. These lines are poetic but acceptable:
-   - "breath by breath": his own accounts describe **one** switch of the suit to 0.27 atm, not a gradual bleed.
+   - "breath by breath": his 1965 report describes **one** switch of the suit to 0.27 atm. The 2005 Air & Space
+     telling is gradual, though: "letting out a little oxygen at a time as I tried to inch inside the airlock"
+     (A&S 2005, PDF p. 2).
    - "can't feel his face": the hands are sourced; the face is not.
    - "doing the math with a spinning sun": the ship really was rolling, and the Sun sensor was the part that failed.
 
@@ -67,7 +72,8 @@ Legend: ✅ correct · ❌ wrong · ⚠️ contested or imprecise · ❓ unverif
    `shots.js:415`):
    - His **22 March 1965 report says legs first, with the camera in his right hand**.
    - The **onboard film** released after his death shows the same (Air & Space, 26 Mar 2020).
-   - Head first comes from his 2004 memoir.
+   - Head first comes from his 2004 memoir. Verified in the 2005 Air & Space excerpt (PDF p. 2): feet first was
+     "impossible", and he went in by "pulling myself into the airlock gradually, head first".
    - Even in the memoir, the attempt that failed was feet first. Head first is how he got in, after bleeding pressure. So
      the N2_jam shot ("head first … jams in the rim") matches neither account.
 
@@ -145,10 +151,10 @@ lyric, since it is contested. Whichever line is chosen, update the type at `shot
 | Figure | Measured from | Source |
 |---|---|---|
 | **386 km** (sometimes given as 368 km) | The aim point. The burn was 46 s late (46 s × ~7.8 km/s ≈ 360 km). | [W-V2][wv2], [spacefacts][sf], [Astronautix][ax] |
-| **more than 800 km** | The planned landing area | [RussianSpaceWeb][rsw] |
+| **more than 800 km** | The planned landing area. Verified (PDF p. 3). RSW blames the centre of gravity: "Both cosmonauts were apparently out of their seats by the time Belyaev pressed the ignition button". It does not mention a 46 s delay. | [RussianSpaceWeb][rsw] |
 | ~865 km | Kostanay to the landing site at 59°34′N 55°28′E (my great-circle arithmetic). The automatic landing was planned near Kustanay, after 17 orbits. | [ru-W][rwv2], [spacefacts][sf] |
-| **~1,500 km west** | "Where they were supposed to land", in Leonov's memoir excerpt | [A&S 2005][as05] |
-| ~2,000 km | Retellings | Search excerpts only |
+| **~1,500 km west** | "Where they were supposed to land", in Leonov's memoir excerpt. Verified (PDF p. 3): this was the crew's forecast before the burn, not the measured miss. | [A&S 2005][as05] |
+| ~2,000 km | Leonov (PDF p. 4): "Our orientation system indicated that we had landed 2,000 kilometers beyond Perm, in deepest Siberia." The landing site contradicts this (~180 km N of Perm, [RSW] p. 4). It is likely the root of the retellings. | [A&S 2005][as05] |
 | 160 km | One Perm regional account | Search excerpt only |
 
 For scale (my arithmetic): the landing site is about 1,600 km from Baikonur and about 180 km from Perm city.
@@ -231,7 +237,7 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 | "sleeve" → "suit": the pressure valve was on the suit | 87–89 | ✅ | | [W-Berkut][berkut] |
 | Facts on screen: date, Алмаз, ages 30/39, 0.40 → ~0.27 atm, taiga near Perm, two nights, legacy | 109–114 | ✅ | | above |
 | "first manual re-entry" | 111 | ⚠️ | First Soviet one; Cooper flew one in 1963 | [NASA Faith 7][f7] |
-| "fifteen hundred klicks is the song's own; the real overshoot was a few hundred kilometres" | 115–116 | ⚠️ | 1,500 km is Leonov's memoir figure; the record gives 386 km or 800+ km (§3) | [A&S 2005][as05] |
+| "fifteen hundred klicks is the song's own; the real overshoot was a few hundred kilometres" | 115–116 | ⚠️ | 1,500 km is Leonov's memoir figure (his pre-burn forecast, A&S 2005 p. 3); the record gives 386 km or 800+ km (§3) | [A&S 2005][as05] |
 
 ### 4.4 `docs/TREATMENT.md`
 
@@ -282,9 +288,9 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 | The drawing held at the Cosmonaut Training Centre museum, shown in London 2015 | 46–47 | ✅ | Shown at the Science Museum, 2015–16 | [NAU][nau], [Hyperallergic][hyper] |
 | Polaris Dawn: ~7–8 min each, ~700 km | 53 | ✅ | About 7 min each; the orbit peaked at ~737 km | [Space.com PD][pd] |
 | Artemis II, 1–10 Apr 2026, crew | 58 | ✅ | | [NASA A2][a2] |
-| Vzor across both seats, 46 s, one revolution later (the 18th) | 75 | ✅ | Wikipedia: planned for orbit 16, flown on 18. Russian Wikipedia: planned after 17 orbits. | [W-V2][wv2], [Grahn][grahn], [ru-W][rwv2] |
-| Modules failed to separate; tumbling until ~100 km | 76 | ✅ | | [Grahn][grahn], [Drew Ex Machina][drew] |
-| ~10 g | 77 | ❓ | Still no primary source | |
+| Vzor across both seats, 46 s, one revolution later (the 18th) | 75 | ✅ / ⚠️ | Across both seats, with Leonov holding him: verified (A&S 2005 p. 4). 18th orbit, 11:35:44 MSK scheduled (RSW p. 2). **46 s is in neither full text**; RSW says both men were still out of their seats at ignition. | Wikipedia: planned for orbit 16, flown on 18. Russian Wikipedia: planned after 17 orbits. | [W-V2][wv2], [Grahn][grahn], [ru-W][rwv2] |
+| Modules failed to separate; tumbling until ~100 km | 76 | ✅ | Leonov: spun round the cable until "about 100 kilometers, when the connecting cable burnt through" (A&S 2005 p. 4). RSW p. 3: separated "on a secondary command from thermal sensors". | [Grahn][grahn], [Drew Ex Machina][drew], [A&S 2005][as05], [RSW][rsw] |
+| ~10 g | 77 | ✅ (per Leonov) | "my instruments indicated 10 Gs" (A&S 2005, PDF p. 4; first-person, not flight data) | [A&S 2005][as05] |
 | Green: video title; podcast 26 Aug 2021; video posted ~16 Nov 2021 | 83 | ✅ / ❓ | The video date is unverified | [episode][ep] |
 
 ### 4.7 `docs/ALTERNATE_CUT.md` (history claims only)
@@ -301,7 +307,8 @@ The on-screen type follows the lyric at `shots2.js:518–520` and `shots2.js:527
 The egress proxy refused all of these (403), so the excerpts above need checking against the pages themselves.
 
 - **Air & Space, 26 Mar 2020**, "…Wasn't Quite as Dramatic as We Thought" ([link][as20]): the exact report quotes (legs first, 0.27 atm) and what the onboard film shows.
-- **Air & Space, Jan 2005**, "The Nightmare of Voskhod 2" ([link][as05]): the exact 1,500 km sentence.
+- ~~**Air & Space, Jan 2005**, "The Nightmare of Voskhod 2"~~: read in full on 2026-10-01 (songwriter's PDF), together
+  with RussianSpaceWeb "Voskhod-2 lands in the wild". Exact quotes with page refs are in RESEARCH_R4 §1, "Round 6".
 - **Siddiqi, *Challenge to Apollo*** (NASA SP-2000-4408), Voskhod 2 chapter
   ([PDF](https://history.nasa.gov/SP-4408pt1.pdf)): the timeline and the landing distance.
 - **spacefacts.de** ([link][sf]) and **Sven Grahn, "The Voskhod 2 mission revisited"** ([link][grahn],

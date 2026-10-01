@@ -13,6 +13,11 @@ lawyer who handles Russian and US copyright before relying on it.
 
 ## 1. Did Belyayev lie across the cabin to use the Vzor, with Leonov holding him?
 
+**Round 6 (2026-10-01): now verified from the full texts. Leonov, Air & Space 2005,
+PDF p. 4: "he had to lean horizontally across both seats in the spacecraft, while I held
+him steady in front of the orientation porthole." The 46 s is in neither source; see
+"Round 6" below.**
+
 **Short answer: yes, according to Leonov's own account and the standard secondary
 histories. Belyayev (the commander) unstrapped and lay across both couches to see through
 the Vzor. Leonov held him in place. Belyayev then got back into his seat to fire the
@@ -148,6 +153,180 @@ is cleared for use).**
   the photographer's or the museum's copyright. Wikimedia Commons may have freely
   licensed ones; check each file's licence. The 2020 Roscosmos release (rg.ru,
   2020-03-18) includes documents and photos; check whether any show the cabin.
+
+### Round 6: both sources read in full (2026-10-01)
+
+The songwriter supplied print-to-PDF copies of two pages. They are for research only and
+are **not in the repo**. Page numbers are those of the PDFs (printfriendly / browser
+prints dated 9/30/26).
+
+- **[L05]** A. Leonov, "The Nightmare of Voskhod 2", *Air & Space/Smithsonian*,
+  1 Jan 2005 (smithsonianmag.com/air-space-magazine/the-nightmare-of-voskhod-2-8655378),
+  7 pp. This is a first-person excerpt adapted from *Two Sides of the Moon*.
+- **[RSW]** A. Zak, "Voskhod-2 lands in the wild", RussianSpaceWeb
+  (russianspaceweb.com/voskhod2-landing.html; last update 18 Mar 2025), 8 pp.
+
+#### The manual orientation (the G2 scene): exact quotes
+
+- **[L05] p. 4:** "Pasha began orienting the craft for reentry. This was no easy task—in
+  order to use the optical device necessary for orientation, he had to lean horizontally
+  across both seats in the spacecraft, while I held him steady in front of the
+  orientation porthole. We then had to maneuver ourselves back into the correct positions
+  in our seats very rapidly so that the spacecraft's center of gravity was correct during
+  the reentry burn."
+- **[RSW] p. 3:** "However, from his seat in the cabin (which saw major re-arrangements
+  during transition from Vostok to Voskhod), Belyaev found it difficult to perform
+  re-orientation of the ship necessary for the firing of the braking engine. He had
+  trouble seeing the Earth's surface through the Vzor navigation window that could help
+  him get a reference on the position of the ship. Belyaev unbuckled from his seat and
+  moved closer to the window for a better view. Leonov also had to move to give his
+  commander a better vantage point."
+- **[RSW] p. 3:** "Both cosmonauts were apparently out of their seats by the time Belyaev
+  pressed the ignition button of the braking engine. As a result, the carefully
+  calculated maneuver was taking place with the capsule's center of gravity shifted
+  relative to its projected position."
+
+What this settles:
+
+- **Across both seats, Leonov holding him: verified, in Leonov's own words** ([L05] p. 4).
+  The wording that the R4/R5 search excerpts attributed to the book ("lean horizontally
+  across both seats", "held him steady in front of the orientation porthole") is exactly
+  the 2005 article's text.
+- **"Lay" vs "lean":** Leonov says "lean horizontally". [RSW] says only "unbuckled from his
+  seat and moved closer to the window".
+- **The word "Vzor":** Leonov does not use it. He says "the optical device necessary for
+  orientation" and "the orientation porthole". [RSW] names it: "the Vzor navigation
+  window".
+- **Lap / legs:** neither source says how Leonov held him. Leonov says "held him steady";
+  [RSW] says Leonov "had to move". "Across his lap" is still unsupported.
+- **46 s to get back into position: in neither source.** Leonov says only "very rapidly".
+  [RSW] goes further the other way: both men were "apparently out of their seats" when
+  the engine fired. That contradicts the Wikipedia/Siddiqi line that Belyayev took 46 s to
+  get back to his seat before firing. The two sources agree on the consequence: the centre
+  of gravity was wrong, or nearly so, during the burn.
+
+#### Retrofire delay and the automatic failure
+
+- **[L05] p. 3:** "Just five minutes before our retro-engine was due to start dropping us
+  out of orbit, I checked our instruments and realized our automatic guidance system for
+  reentry was not functioning correctly. We would have to switch off the automatic
+  landing program. This meant we would have to orient the spacecraft before reentry
+  manually, and would also have to select our landing point manually and decide on the
+  exact timing and duration of the retro-rocket firing. We knew our landing would have to
+  be performed during our next orbit and that, despite our best efforts, we would be
+  coming down off-target—1,500 kilometers [930 miles] west of where we were supposed to
+  land."
+- **[L05] p. 3:** Belyayev to the ground: "We had to turn off the automatic landing system.
+  We have only enough fuel to do one correction, and besides that, the indicator shows
+  that the main engine for reentry is very low on fuel … We can make only one attempt at
+  reentry."
+- **[L05] p. 4:** "It was my job, as navigator, to determine where we would land. … I
+  decided on an area close to the city of Perm, just west of the Ural Mountains."
+- **[RSW] p. 2:** the braking burn was scheduled for the 17th revolution; Belyayev
+  reported "that the automated activation of the TDU braking engine had not worked". The
+  cause was "apparently … a problem with the sun-based orientation system". The manual
+  burn was "scheduled during the following (18th) orbit of the mission, at 11:35:44 Moscow
+  Time on March 19, 1965", "the first Soviet attempt to deorbit the spacecraft manually".
+- **[RSW] p. 3:** "The engine burn apparently lasted as scheduled, but the 'off-line'
+  position of the spacecraft led to a shallower than predicted trajectory and a more than
+  800-kilometer overflight of the planned landing area."
+
+#### The spin / non-separation
+
+- **[L05] p. 4:** "According to the flight schedule, our landing module would separate
+  from the orbital module 10 seconds after retro-fire. … my instruments indicated 10 Gs—
+  were so strong that some of the small blood vessels in our eyes burst. … A communication
+  cable connected the landing module with the orbital module … and we were spinning around
+  it. The spinning eventually stopped at an altitude of about 100 kilometers, when the
+  connecting cable burnt through and our landing module slipped free."
+- **[RSW] p. 3:** "the instrument module failed to separate from the crew capsule according
+  to the nominal sequence shortly after the braking maneuver and only did so on a
+  secondary command from thermal sensors when they detected the heat of reentry."
+- So the ~10 g figure (FACTCHECK §4.6, ❓) now has a first-person source: Leonov's own
+  instrument reading, [L05] p. 4. The two sources differ on *why* the modules came apart
+  (cable burnt through vs. a thermal-sensor command). Both fit "spun until re-entry, ~100 km".
+
+#### Overshoot and landing site
+
+- **[L05] p. 3:** "1,500 kilometers [930 miles] west of where we were supposed to land".
+  This is what the crew *expected* before the burn, not a measured miss.
+- **[L05] p. 4:** "Our orientation system indicated that we had landed 2,000 kilometers
+  beyond Perm, in deepest Siberia." This is wrong on its face: [RSW] p. 4 puts the landing
+  "180 kilometers north of the city of Perm", "between 25 and 30 kilometers southwest of
+  the Berezniki settlement between the villages of Shuchino and Sorokovaya". It is probably
+  the source of the "~2,000 km" retellings (FACTCHECK §3).
+- **[L05] p. 4:** "We had landed in two meters of thick snow." **[RSW] p. 4:** "chest-deep
+  snow in the middle of the taiga". **[L05] p. 5:** "sank up to our chins in snow".
+- **[RSW] p. 4:** landed "March 19, 1965, at 12:06 Moscow Time"; flight time "one day, two
+  hours, two minutes and 17 seconds". (FACTCHECK gives 09:02 UTC = 12:02 MSK; the two
+  differ by 4 min.)
+
+#### Airlock, head/feet first, suit pressure ([L05] only; [RSW] covers the landing)
+
+- **p. 2:** "I realized I had been floating free in space for over 10 minutes."
+- **p. 2:** "My feet had pulled away from my boots and my fingers from the gloves attached
+  to my sleeves, making it impossible to reenter the airlock feet first."
+- **p. 2:** "the only way I could see to do this was pulling myself into the airlock
+  gradually, head first. Even to do this, I would carefully have to bleed off some of the
+  high-pressure oxygen in my suit, via a valve in its lining. … If I did not reenter the
+  craft, within the next 40 minutes my life support would be spent anyway."
+- **p. 2:** "The only solution was to reduce the pressure in my suit by opening the
+  pressure valve and letting out a little oxygen at a time as I tried to inch inside the
+  airlock." No pressures in atm are given.
+- **p. 3:** "I had to curl my body around in order to close the airlock, so Pasha could
+  activate the mechanism to equalize pressure".
+- **p. 6:** "The sweat that had filled my spacesuit … was sloshing around in my boots up to
+  my knees."
+
+#### Rescue
+
+- **[L05] p. 5:** the rescue signal: "Moscow had not received it, but it had been picked
+  up by listening posts as far away as Bonn, Germany. More importantly, a cargo plane
+  flying close to our landing site had also picked it up." Then "late in the afternoon"
+  a helicopter, which could not take them aboard (p. 6: "It was a flimsy ladder").
+- **[RSW] pp. 4–5:** "Four hours after the landing, helicopter pilots finally spotted the
+  red parachute"; Air Force chief Rudenko "strictly prohibited" pick-up by basket or rope
+  ladder.
+- **Wolves.** [L05] p. 5 says only that the taiga "was the habitat of bears and wolves".
+  [RSW] p. 6: "Leonov also remembered seeing a pack of wolves lurking nearby". The two
+  pages disagree on whether he saw wolves.
+- **Cold.** [L05] p. 6: "below –22 degrees Fahrenheit" (= –30 °C). [RSW] p. 6: "minus 25
+  degrees".
+- **Skis.** [L05] p. 6: the next morning "a small group of men on skis came into view". It
+  was "another 24 hours" before the helicopter clearing; then p. 7: "we were ready to ski
+  nine kilometers to a clearing where a helicopter was standing by to fly us to Perm".
+  [RSW] p. 6–7: Sibiryakov's team skied in at 08:30–11:35 on 20 March; the crew skied out
+  9 km on 21 March.
+
+#### G2 caption (round 6)
+
+The scene now carries a verbatim quote from [L05] p. 4. The brackets replace "he", and the
+ellipsis drops " in the spacecraft,":
+
+> `“[BELYAYEV] HAD TO LEAN HORIZONTALLY ACROSS BOTH SEATS … WHILE I HELD HIM STEADY.”` (80 chars)
+> `— A. Leonov, “The Nightmare of Voskhod 2,” Air & Space, 2005`
+
+It replaces the round-5 paraphrase credited to the book. Checked on a contact sheet
+(143.7–146.2 s). It fits on one line in the top band, clear of the figures.
+
+#### What in the film these sources contradict or leave unsupported
+
+- **"46 s" back into the seats**: not in either source. [RSW] says both men were still out
+  of their seats at ignition. (No "46 s" is on screen in G2; the claim lives in the docs.)
+- **G2 "t ≈ 45 s"** (TDU-1 burn): neither source gives a burn length. [RSW] says only that
+  it "apparently lasted as scheduled".
+- **"Fifteen hundred klicks … we overshot"**: Leonov's 1,500 km was a pre-burn forecast,
+  "west of where we were supposed to land", not the miss. [RSW] gives "more than 800" km.
+  His own "2,000 kilometers beyond Perm" is contradicted by the landing site, about 180 km
+  north of Perm.
+- **Head first**: [L05] confirms the memoir version: feet first was "impossible" and he
+  went in "head first". This is still against the 1965 report and onboard film (legs
+  first, FACTCHECK).
+- **"Breath by breath"** (gradual bleed): [L05] supports it: "letting out a little oxygen
+  at a time". FACTCHECK says "one switch" per the 1965 report; the 2005 telling is gradual.
+- **WOLVES** (shots.js:318): [L05] says only "habitat"; [RSW] says he remembered a pack
+  "lurking nearby".
+- **−25 °C**: matches [RSW]; [L05] says below −22 °F (−30 °C).
 
 ---
 
