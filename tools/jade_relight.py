@@ -39,7 +39,7 @@ EYES = ([70, 63, 105, 66, 107, 55, 133, 145, 153, 33, 130, 46], [300, 293, 334, 
 
 
 def skin_mask(L, w, h, feather):
-    """Her face oval (slightly inset) minus the eyes with the brows above them and the lips, grown a little."""
+    """Her face oval minus the eyes with the brows above them, the nose and the lips, each grown a little."""
     m = np.zeros((h, w), np.uint8)
     p = pts(L, w, h, JL.FACE_OVAL); c = p.mean(0); cv2.fillPoly(m, [(c + (p - c) * 1.0).astype(np.int32)], 255)
     cut = np.zeros((h, w), np.uint8)
@@ -47,6 +47,8 @@ def skin_mask(L, w, h, feather):
     cut = cv2.dilate(cut, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (17, 17)))
     lips = np.zeros((h, w), np.uint8); cv2.fillPoly(lips, [pts(L, w, h, LIPS).astype(np.int32)], 255)
     cut = np.maximum(cut, cv2.dilate(lips, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))))
+    nose = np.zeros((h, w), np.uint8); cv2.fillConvexPoly(nose, cv2.convexHull(pts(L, w, h, NOSE).astype(np.int32)), 255)
+    cut = np.maximum(cut, cv2.dilate(nose, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))))
     m[cut > 0] = 0
     return cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), feather)[..., None]
 
@@ -122,12 +124,10 @@ def main(take, first, relit_model, out_dir, plate=None):
         Y = X * g
         # her skin (the face oval minus the eyes and brows, which change with her expression, and the lips, which sing): the
         # still's skin light carried with her head, times the take's line detail, so the closet's glasses-shadow (Seedance
-        # draws it larger than the still) goes; outside the nose only the take's faint texture is kept (the shadow's hatched
-        # edges are dropped). The eyes, brows and mouth keep the take's own tones (relit by the ratio above).
+        # draws it larger than the still) goes; inside her outline only the take's faint texture is kept (the shadow's hatched
+        # edges are dropped). The eyes, brows, nose and mouth keep the take's own tones (relit by the ratio above).
         ga = X.mean(2); dl = (ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1)
-        nose = np.zeros((h, w), np.uint8); cv2.fillConvexPoly(nose, cv2.convexHull(pts(L, w, h, NOSE).astype(np.int32)), 255)
-        nm = cv2.GaussianBlur(cv2.dilate(nose, np.ones((9, 9), np.uint8)).astype(np.float32) / 255, (0, 0), 5)[..., None]
-        nm = np.maximum(nm, 1 - oval_mask(L, w, h, .86, 4)[..., None])   # the nose and her face's outline keep their lines
+        nm = 1 - oval_mask(L, w, h, .86, 4)[..., None]   # her face's outline keeps its lines
         det = (1 - nm) * np.clip(dl, .94, 1.04)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
         sk = skin_mask(L, w, h, 15)
         Y = sk * warp(skinR) * det + (1 - sk) * Y
