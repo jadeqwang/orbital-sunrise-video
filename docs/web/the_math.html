@@ -174,7 +174,7 @@ footer p { margin: 0.4rem 0; }
 
 <section id="why">
   <h2><span class="n">1</span>Why this page exists</h2>
-  <p>We wanted to know whether that line holds up. Where does the number come from? How far off did Alexei Leonov and Pavel Belyayev actually land in March 1965? And how much of the miss came from two men doing by hand what a machine was supposed to do?</p>
+  <p>The song is told from inside Leonov&rsquo;s head, in the minutes after the automatics failed, when he had to work out by hand where they would come down. We wanted to know whether the line holds up. Where does the number come from? How far off did Alexei Leonov and Pavel Belyayev actually land in March 1965? And how much of the miss came from two men doing by hand what a machine was supposed to do?</p>
   <p>The answer is better than &ldquo;right&rdquo; or &ldquo;wrong&rdquo;.</p>
 </section>
 
@@ -191,7 +191,7 @@ footer p { margin: 0.4rem 0; }
     <li><em>Spacecraft data</em>: engine thrust, orbit, capsule size and weight, mostly from Wikipedia pages that cite the standard NASA history (Asif Siddiqi, <em>Challenge to Apollo</em>, NASA SP-2000-4408).</li>
     <li><em>Mission accounts</em>: Anatoly Zak&rsquo;s RussianSpaceWeb history of the landing, read in full.</li>
     <li><em>Memoir</em>: Leonov&rsquo;s own article &ldquo;The Nightmare of Voskhod 2&rdquo; (<em>Air &amp; Space</em>, January 2005), adapted from his book <em>Two Sides of the Moon</em>, also read in full.</li>
-    <li><em>Reanalysis weather</em>: ERA5, a modern computer reconstruction of past weather, for the landing spot and day.</li>
+    <li><em>Reanalysis weather</em>: ERA5, a modern computer reconstruction of past weather (a model, not a measurement). It rebuilds the weather hour by hour, anywhere on Earth, going back to 1940, which is why we could look up the afternoon of 19 March 1965 at the landing site.</li>
   </ul>
   <h3>When sources disagree</h3>
   <p>The rule is to be accurate. Where honest accounts genuinely differ (Leonov&rsquo;s memory against the official record, say), the film may keep the more dramatic version, and the notes say so. Anything no source supports gets fixed.</p>
@@ -320,7 +320,7 @@ footer p { margin: 0.4rem 0; }
   <p><span class="lead-in">The spin came later.</span> After the burn a cable kept the cabin joined to the equipment section, and the pair whirled until about 100&nbsp;km up <span class="chip doc">Documented</span>. The air up there is too thin for the tumble to change the path much <span class="chip est">Estimate</span>. It cost blood vessels, not kilometres.</p>
 
   <h3>The weather (from ERA5, our retrieval)</h3>
-  <p>At noon on 19 March, at the nearest grid point:</p>
+  <p>ERA5 reconstructs the weather hour by hour, anywhere on Earth, back to 1940; it is a model reconstruction, not a measurement. At noon on 19 March 1965, at the grid point nearest the landing site:</p>
   <div class="tbl"><table>
     <thead><tr><th>Item</th><th>ERA5 value</th></tr></thead>
     <tbody>
@@ -460,17 +460,17 @@ sin 1° × 130 m/s           ≈ <span class="r">2.3 m/s</span> up or down
 
 <section id="learnings">
   <h2><span class="n">6</span>Learnings along the way</h2>
-  <p>Things we got wrong first, and what fixing them changed.</p>
+  <p>Things we got wrong in our own first drafts of the video and of this page, and what changed.</p>
   <ul class="learn">
-    <li><strong>The engine&rsquo;s push came from the wrong ship.</strong> The film&rsquo;s first sourced equation ring said &Delta;v &asymp; 155&nbsp;m/s, the figure on Wikipedia. Working it through with Voskhod&rsquo;s actual launch weight, 5,682&nbsp;kg, gives <span class="mono">15,830 N × 45 s ÷ 5,682 kg ≈ 125 m/s</span> (about 128 with the rocket equation). 155&nbsp;m/s comes out exactly for 4,725&nbsp;kg, which is Vostok&rsquo;s weight: it looks like a Vostok number carried over. The on-screen math now writes <span class="mono strike">155</span>, crosses it out, and arrives at about 130 (an older version of the shot still shows 155). The landing story doesn&rsquo;t change.</li>
-    <li><strong>Invented numbers on screen.</strong> The first version of that ring showed <span class="mono">&ldquo;Δv = 106 m/s · t = 22 s · h = 497 km · ±1°&rdquo;</span>, matching neither engine nor orbit. Replaced with sourced figures.</li>
-    <li><strong>&ldquo;Altitude ~500 km&rdquo; was the high point.</strong> An orbit caption said <span class="mono">ALTITUDE ~500 KM</span>. The orbit actually ran from 167 to 475&nbsp;km. The card now says <span class="mono">APOGEE</span> (the highest point) <span class="mono">~500 KM</span>, a rounded popular figure.</li>
-    <li><strong>Orbital speed vs ground speed.</strong> An early check multiplied 46&nbsp;s by 7.8&nbsp;km/s and got about 360&nbsp;km. The point on the ground moves slower than the ship, about 7.4&nbsp;km/s, which gives about 340&nbsp;km. Same conclusion, better number.</li>
-    <li><strong>The 46 seconds.</strong> We first took &ldquo;46&nbsp;s to get back to his seat&rdquo; as solid. Reading both full texts, it is in neither; RussianSpaceWeb even says both men were still out of their seats at ignition. The clock times give 43&nbsp;s. We now mark 46&nbsp;s as second-hand.</li>
-    <li><strong>The weather was blocked, then found.</strong> At first the internet proxy blocked the ERA5 weather archive, and the notes said &ldquo;no wind record&rdquo;. The songwriter later fetched it. The wind turned out to be light and steady, worth a few km of drift.</li>
-    <li><strong>One parachute or two?</strong> We first assumed the main chute opened at 5&nbsp;km, giving 3.5&ndash;9.5&nbsp;km of drift. The two Wikipedia figures (5&nbsp;km and 2.5&nbsp;km) fit a drogue-then-main sequence better. Drift dropped to 2&ndash;6&nbsp;km, and the screen card changed from <span class="mono">5 KM</span> to <span class="mono">~2.5 KM</span>.</li>
-    <li><strong>The Russian caption.</strong> The failure card first read <span class="mono">ОТКАЗ АВТОМАТИКИ</span> (&ldquo;automatics failure&rdquo;). A native speaker preferred <span class="mono">ОТКАЗ СИСТЕМЫ УПРАВЛЕНИЯ</span> (&ldquo;control system failure&rdquo;), and the film changed it.</li>
-    <li><strong>&ldquo;1,500 km&rdquo; is a forecast, not a miss.</strong> We first read Leonov&rsquo;s figure as an exaggerated overshoot. In the full text it is his prediction <em>before</em> the burn, and it matches one lap&rsquo;s westward shift almost exactly.</li>
+    <li><strong>The engine&rsquo;s push came from the wrong ship.</strong> Our first draft of the ring of equations that fills the screen while Leonov does the math said &Delta;v &asymp; 155&nbsp;m/s, Wikipedia&rsquo;s figure. That only works for Vostok&rsquo;s weight (4,725&nbsp;kg); with Voskhod&rsquo;s 5,682&nbsp;kg it is about 125&ndash;130&nbsp;m/s, so the on-screen math now writes <span class="mono strike">155</span>, crosses it out and lands on about 130.</li>
+    <li><strong>Invented numbers in the on-screen equations.</strong> Before that, the same ring of equations showed <span class="mono">&ldquo;Δv = 106 m/s · t = 22 s · h = 497 km · ±1°&rdquo;</span>, which matched neither the engine nor the orbit. We replaced them with sourced figures.</li>
+    <li><strong>&ldquo;Altitude ~500 km&rdquo; was the high point.</strong> Our first draft of the video labelled the orbit <span class="mono">ALTITUDE ~500 KM</span>, but the orbit ran from 167 to 475&nbsp;km. The caption now says <span class="mono">APOGEE</span> (the highest point) <span class="mono">~500 KM</span>.</li>
+    <li><strong>Ship speed vs ground speed.</strong> Our first draft of this math multiplied the 46&nbsp;s delay by the ship&rsquo;s 7.8&nbsp;km/s and got about 360&nbsp;km. The point on the ground beneath it moves slower, about 7.4&nbsp;km/s, so the answer is about 340&nbsp;km.</li>
+    <li><strong>The 46 seconds.</strong> Our first draft treated &ldquo;46&nbsp;s to get back to his seat&rdquo; as solid. Neither full account we read contains it, and the clock times give 43&nbsp;s, so we now mark 46&nbsp;s as second-hand.</li>
+    <li><strong>The weather we thought we couldn&rsquo;t get.</strong> Our first draft said there was no wind record, because our tools couldn&rsquo;t reach ERA5, the archive that reconstructs the weather hour by hour, anywhere on Earth, back to 1940 (a model, not a measurement). Once the songwriter retrieved the afternoon of 19 March 1965 at the landing site, the wind proved light and steady, worth only a few km of drift.</li>
+    <li><strong>One parachute or two?</strong> Our first draft had the main parachute opening at 5&nbsp;km, giving 3.5&ndash;9.5&nbsp;km of drift. The two published heights (5 and 2.5&nbsp;km) fit a small braking chute followed by the main one, so drift fell to 2&ndash;6&nbsp;km and the on-screen caption changed from <span class="mono">5 KM</span> to <span class="mono">~2.5 KM</span>.</li>
+    <li><strong>The Russian failure caption.</strong> Our first draft of the video labelled the failure <span class="mono">ОТКАЗ АВТОМАТИКИ</span> (&ldquo;automatics failure&rdquo;). A native speaker preferred <span class="mono">ОТКАЗ СИСТЕМЫ УПРАВЛЕНИЯ</span> (&ldquo;control system failure&rdquo;), and the video now uses it.</li>
+    <li><strong>&ldquo;1,500 km&rdquo; is a forecast, not a miss.</strong> Our first draft read Leonov&rsquo;s figure as an exaggerated overshoot. In his full article it is his prediction <em>before</em> the burn, and it matches one lap&rsquo;s westward shift almost exactly.</li>
   </ul>
 </section>
 
@@ -478,11 +478,12 @@ sin 1° × 130 m/s           ≈ <span class="r">2.3 m/s</span> up or down
   <h2><span class="n">7</span>Where the song&rsquo;s number lands</h2>
   <p>The capsule came down a few hundred kilometres past its new aim: 368&ndash;386&nbsp;km by the flight data, more than 800&nbsp;km from the original zone by another count. Not 1,500.</p>
   <p>But 1,500&nbsp;km is not made up. It is the number Leonov wrote down for the moment the automatics failed: the two of them, five minutes before the planned burn, realising they would have to wait a lap and come down far to the west. It is the math they did in their heads, and it is very nearly right for what it measured.</p>
-  <p class="closing">The song is about that hour, so it keeps Leonov&rsquo;s number. This page is for anyone who wants the rest of the arithmetic.</p>
+  <p>That is what the song is about: what was going through Leonov&rsquo;s head in those minutes, the sums and the reasoning, with too little to go on and only one try. This page is how we worked backwards to what was in his mind then.</p>
+  <p class="closing">The lyric&rsquo;s 1,500&nbsp;km is his forecast, made with what he knew at that moment. Our hindsight numbers don&rsquo;t correct it; they explain it.</p>
 </section>
 
 <footer>
-  <p><strong>Orbital Sunrise</strong>. Song by Jade Wang. Lyrics: a found poem from John Green&rsquo;s essay &ldquo;Orbital Sunrise&rdquo; (<em>The Anthropocene Reviewed</em>).</p>
+  <p><strong><em>Orbital Sunrise</em></strong>. Song and lyrics by Jade Wang. Narrative arc inspired by John Green&rsquo;s essay &ldquo;Orbital Sunrise&rdquo; (<em>The Anthropocene Reviewed</em>).</p>
   <p>The detailed working notes, with every equation, accompany the film&rsquo;s project files.</p>
 </footer>
 </main>
