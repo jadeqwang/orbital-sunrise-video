@@ -8,8 +8,12 @@ and timing (no new Seedance take, so her approved lip lag stays).
 2. Each take frame i: MediaPipe face landmarks; a similarity transform (eyes, brows, nose, forehead: not the mouth or jaw)
    carries the still onto frame i's head.
    - light: the still's low-frequency light ratio (blur(relit) / blur(first), sigma = w/220, as restore_lines) follows her head
-     inside a widened face oval and stays put elsewhere; frame_i * ratio keeps every line and the mouth of the take;
-   - cheeks under the lenses (jade_location.cheek_mask on frame i): the relit still's cheeks, carried with the head;
+     inside a widened face oval (a broad wash elsewhere; its colour only on her skin); frame_i * ratio keeps every line, the
+     eyes and the singing mouth of the take;
+   - her skin (face oval minus eyes+brows, nose and lips): the relit still's skin light, closed (dark bands under ~40 px go)
+     and smoothed, carried with her head, times the take's faint texture (full line detail only along her face's outline):
+     this is what removes the closet's glasses-shadow, which Seedance draws larger than the still;
+   - the take's golden-hour gold rim on hair / jacket / headphones loses most of its saturation;
    - background: outside her person matte (jade_fade.matte, smoothed over 5 frames, grown) the relit still itself (the
      location redrawn in daylight, loose at the edges), so only she moves, as in the take.
 3. Writes <out_dir>/take1.mp4 (24 fps, the take's length) and, with --plate, the renderer's frames video/plates/<id>/f%04d.jpg.
