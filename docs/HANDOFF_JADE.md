@@ -190,3 +190,9 @@ and commit. Work on `main`. Commit messages end with the session's Co-Authored-B
   `video/out/frames` does not match the audio's length (frames from the other mode).
 - To try another ritardando: run ritardando.py with other settings, then `tools/timemap.py <its .map.json>`; render.mjs and the
   page pick up the new map and audio from `video/data/timemap.json`.
+
+## Round 4 (2026-10-01): her notes on 0:14, 0:33, 0:44 (stills for review; no full render yet)
+
+- 0:44 `H1d_home`: relit for broad daylight per frame (`jade_loc_day`, `tools/jade_relight.py`; the approved take's lips and
+  lag unchanged), looser edges; `?h1d=loc` brings back the golden hour. Details in TAKES.md.
+- 0:14 `N1_tether` / 0:33 `I6_predawn`: new takes of `tether_drift` / `countdown_drift` (TAKES.md "Round 4 takes").

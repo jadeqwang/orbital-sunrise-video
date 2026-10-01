@@ -83,6 +83,22 @@ Useful tags: `jade_sing` (her singing takes), `jade_location` / `jade_location_f
 Song time → take time: `take time = song time − (clip start + lag)`, where the clip start is where the vocal reference clip
 begins in the song and the lag is her pick by ear. `?…lag=` in the renderer URL tries other lags live.
 
+### 0:44 (alt cut) · `H1d_home` · "bring me home" · plate `jade_loc_day` (default since round 4)
+
+- Her round-4 note: relight her (no glasses-shadow, natural skin colour, like 1:55/2:08 but in broad daylight) and a looser
+  sketch at the edges of the Hill Country. **Not a new Seedance take**: `jade_loc` take1 relit frame by frame, so the frames,
+  the lips and her lag (−0.22, "G") are exactly the approved take's.
+- Relit still: Nano Banana `jade_location.FIXES["daylight"]` on `jade_loc/take1.first.jpg` (genlog 524–525, n=2; her pick is
+  ours: `day_2`, `media/plates/jade_loc_day/chain/day_2_model.jpg`; `day_1` kept a stronger band) → `restore_lines(...,
+  skip_cheeks=True)` → `take1.first.jpg`.
+- Per frame: `python3 tools/jade_relight.py media/plates/jade_loc/take1.mp4 media/plates/jade_loc/take1.first.jpg <day_2.png>
+  <out> --plate=jade_loc_day` (landmark-tracked light ratio, her skin from the relit still smoothed and closed so the band
+  goes, the take's eyes/brows/nose/mouth kept, gold rim desaturated, background = the relit still outside her matte). Writes
+  `take1.mp4` (committed) and the 1280x720 frames (`index.json` entry `jade_loc_day`).
+- Renderer: `?h1d=day` (default) adds an edge falloff to the engine's hatching (outer ~fifth of the frame) and a lighter engine
+  on her face (`faceQuiet`, so it does not re-trace the old band from the take's line work). `?h1d=loc` = the golden-hour
+  version as released. Known: faint traces of the band's edge remain on the lower cheeks in the last ~0.5 s (head tilted).
+
 ### 0:32 · `H1d_home` · "bring me home" · plate `jade_loc` (default)
 
 - Shows: her kept drawing on location, a selfie at a Hill Country overlook at golden hour, singing; the film's pencil over it
