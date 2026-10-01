@@ -195,6 +195,18 @@ pressure drop he went in head first). The round-3 plates (docs/TAKES.md "Round 3
 
 `render.mjs --list`: 57 shots, contiguous; new cuts on "to" (22.88 s), beat 114 (54.36 s) and the legacy beats.
 
+## Round 4: title in Chinese; the unsung last "home." (2026-10-01)
+
+- **轨道日出** under ОРБИТАЛЬНЫЙ ВОСХОД in `I1_poster` (Oswald's red, 38 px, in by ≈1.2 s; the date moved down to y 836) and
+  `Z_title` (34 px; JADE WANG moved to y 730). None of the film's fonts has CJK glyphs, so `fonts/NotoSansSC_subset_700.otf`
+  (Noto Sans SC Bold, SIL OFL, `pyftsubset --text=轨道日出`, 4 KB) is loaded as `FONT.cjk` (studio.html, main.js).
+- **The second "home." (OU[5], 211.58 s) is not sung** in alt2: the vocal stem (`vocal_stem.py --ss=190`) and Parakeet hear
+  "Oh, made it down" with "down" at ≈211.0 s; the voice stops ≈211.3 s, and the C5 line the stem holds from there to ≈220 s
+  has no vibrato (0 cents deviation for seconds, unlike every sung note before it) and steps with the strings: orchestra.
+  So `L4_fire` no longer types "home" (nor keeps its clearing); the timing line stays as the cut point. Noted, not changed:
+  in the same check the first "home." sounds ≈204.7 s (a new syllable after "down" held from ≈199.6 s), not at its timed
+  203.37 s; L2's HOME arrives ≈1.3 s early.
+
 ## 0. Ask her first (only she can supply these)
 
 1. **The new lyric text**, line by line, and where each new line goes (which section, before/after which existing line).
