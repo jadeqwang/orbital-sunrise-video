@@ -1,0 +1,12 @@
+{
+ "spec": {
+  "duration": 8,
+  "first_frame": "media/plates/vzor_manual/take6.first.jpg",
+  "refs": [
+   "CAB"
+  ],
+  "out_id": "vzor_manual",
+  "prompt": "The video starts exactly on the input image, with identical framing, lighting and composition; everything in it stays as it is unless described. A close-up inside the Voskhod-2 capsule, 1965: only this one cosmonaut, his face inside the open helmet, exactly as in the image. The capsule is spinning and he is doing life-or-death orbital arithmetic in his head while fighting motion sickness. His expression keeps changing: eyes fixed and intent, then flicking left and right and up as he works through the numbers, lips moving slightly as he counts under his breath; a hard swallow; a wince of nausea, a brief tightening of the jaw, a slow controlled breath out through the nose; he blinks the sweat away and refocuses, fierce concentration. Sweat glistens on his forehead and upper lip. Hard sunlight from the porthole swings slowly across his face as the capsule turns: it sweeps from one side of his face to the other, then the face falls into shadow, and the light comes back round; the bright sky in the porthole on the left turns with it. Static locked-off camera, no zoom, no push-in, one continuous shot, no cuts; he stays where he is in the frame, nobody else appears. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions."
+ },
+ "secs": 209
+}

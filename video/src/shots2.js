@@ -519,10 +519,46 @@ async function initShots2() {
   // (traveling at a constant rate between the portholes)": the default is G3's cabin (g_force frame 1) with the console removed, a still
   // plate (vzor_manual_s4); its two windows sit where g_force's do, so cabPath runs the same one sun / one Earth at CAB_V across them
   // on the same beat grid (CAB_B0 + CAB_BEATS·k: a pass at ≈144.9 s). ?g2=t3 = take 3 (heads, one porthole), ?g2=t2, ?g2=old
-  const G2_Q = new URLSearchParams(location.search).get('g2'), G2_OLD = G2_Q === 'old', G2_T2 = G2_Q === 't2', G2_T3 = G2_Q === 't3', G2_S4 = !G2_OLD && !G2_T2 && !G2_T3;
+  const G2_Q = new URLSearchParams(location.search).get('g2'), G2_OLD = G2_Q === 'old', G2_T2 = G2_Q === 't2', G2_T3 = G2_Q === 't3', G2_S4 = G2_Q === 's4', G2_CU = !G2_OLD && !G2_T2 && !G2_T3 && !G2_S4;
   const VZ4_PORTS = Object.assign([{ f: [1, 193], x: [707, 707], y: [174, 174], r: [39, 39], top: false },
     { f: [1, 193], x: [292, 292], y: [160, 160], r: [41, 41], top: true, occ: [{ x: [290, 290], y: [192, 192], r: [47, 47] }] }], { path: true });   // right, left (behind his helmet)
   const VZ4_HEADS = [[294, 188], [638, 212]];
+  // Her next note (round 7): "closer in on one guy so there's more facial expression and density of math" (the founder's intensity:
+  // trying not to hurl, trying not to die, only pure reason keeps the crew alive, while spinning), and "we have values right now but
+  // not equations". Default: vzor_manual take 6 (plate vzor_manual_cu), a close-up of one cosmonaut; ?g2=s4 = the two-porthole still.
+  // The sun keeps G3's beat grid: its one porthole (left edge) is the path's first window, the second a hidden one off-frame where
+  // G3's left window would be, so the sun crosses it when it crosses G3's right port and the Earth half a turn later.
+  const VZC_PORTS = Object.assign([{ f: [1, 193], x: [84, 84], y: [189, 189], r: [139, 139], top: false },
+    { f: [1, 193], x: [-331, -331], y: [174, 174], r: [41, 41], top: true, hide: true }], { path: true });
+  const VZC_HEAD = [600, 262];   // his face, plate px
+  // The working in his head: every equation is the real physics and every substituted number computes (checked in Python: μ = 398 600
+  // km³/s², R⊕ = 6378 km; FACTCHECK §4.2 values 167 × 475 km, 90.9 min, TDU-1 ~16 kN for ~45 s, Δv ~155 m/s; the 17°/s roll after the
+  // airlock went). [text, lane, strike]: lane 0 nearest the helmet; strike = a wrong first try he crosses out. They arrive one by one
+  // (half-written while they type on), so the ring fills as the shot goes on.
+  const VZC_EQ = [
+    ['T = 2π √(a³/μ)', 0], ['Δv ≈ 155 m/s', 1], ['a = R⊕ + (hₚ + hₐ)/2', 2], ['T ≈ 88 min', 0, 1], ['= 6378 + (167 + 475)/2 = 6699 km', 1],
+    ['ОРИЕНТАЦИЯ — РУЧНАЯ', 2, 0, 'verm'], ['T = 2π √(6699³ / 398 600) ≈ 5457 s', 0], ['≈ 90.9 min', 1], ['Δv = F·t / m', 2],
+    ['t = Δv·m / F', 0], ['F ≈ 16 kN · t ≈ 45 s', 1], ['155 / 45 = 3.9', 2, 1], ['Δv / t = 155 / 45 ≈ 3.4 m/s²', 0], ['v² = μ (2/r − 1/a)', 1],
+    ['vₚ = √(398 600 (2/6545 − 1/6699)) ≈ 7.89 km/s', 2], ['vₐ ≈ 7.54 km/s', 0], ['Δv / v ≈ 155 / 7890 ≈ 2 %', 1], ['Δv = Isp·g₀·ln(m₀/m₁)', 2],
+    ['ω = 2π/T = 360° / 5457 s ≈ 0.066°/s', 0], ['sin ρ = R⊕/(R⊕ + h) = 6378/6545 ≈ 0.974', 1], ['ρ ≈ 77° → horizon 13° below', 2, 0, 'verm'],
+    ['ω⊕·T = 360°/86 164 s × 5457 s ≈ 22.8°', 0], ['e = (rₐ − rₚ)/(rₐ + rₚ) ≈ 0.023', 1], ['1 s late → Δx ≈ 7.7 km', 2, 0, 'verm'],
+    ['17°/s → 360/17 ≈ 21 s a turn', 0], ['rₚ = 6545 · rₐ = 6853 km', 1]];
+  function mathRing(Lt, t, lt, dur, view, spin) {
+    const [hx, hy] = view.toScreen(VZC_HEAD[0] / 960, VZC_HEAD[1] / 540), n = VZC_EQ.length, tight = 1 - .2 * clamp(lt / dur);   // the ring tightens
+    VZC_EQ.forEach(([s, lane, strike, col], i) => {
+      const t0 = .05 + i * (dur * .8) / n, age = lt - t0; if (age <= 0) return;
+      const nch = Math.min(s.length, Math.ceil(age / .45 * s.length)), shown = s.slice(0, nch);   // typed on over .45 s: half-written
+      const a = spin * (2.6 - lane * .5) + i * 2.399, rx = (560 + lane * 150) * tight, ry = (330 + lane * 105) * tight;   // golden-angle spread
+      const x = hx + Math.cos(a) * rx, y = hy - 30 + Math.sin(a) * ry, front = Math.sin(a) > 0;
+      const o = { font: FONT.serif(lane === 0 ? 44 : lane === 1 ? 38 : 32), col: col || (lane === 2 ? 'gold' : 'cream'), alpha: clamp(age / .2) * (front ? .95 : .55) * (strike && age > 1 ? .6 : 1), align: 'center', rot: Math.sin(a) * .1 + (hash(i) - .5) * .12 };
+      const wdt = text(Lt.g, shown, x, y, o);
+      if (strike && age > .7) {   // crossed out, then the right one follows
+        const k = clamp((age - .7) / .25), ca = Math.cos(o.rot), sa = Math.sin(o.rot), hw = wdt / 2 * k;
+        Lt.g.save(); Lt.g.strokeStyle = P.verm; Lt.g.lineWidth = 3; Lt.g.globalAlpha = o.alpha; Lt.g.beginPath();
+        Lt.g.moveTo(x - wdt / 2 * ca, y - 12 - wdt / 2 * sa); Lt.g.lineTo(x + (-wdt / 2 + 2 * hw) * ca, y - 12 + (-wdt / 2 + 2 * hw) * sa); Lt.g.stroke(); Lt.g.restore();
+      }
+    });
+  }
   const VZ2_PORTS = [{ f: [1, 165], x: [582, 582], y: [84, 84], r: [58, 58], lag: .65, top: false }];
   const VZ3_PORTS = [{ f: [1, 193], x: [494, 494], y: [122, 122], r: [93, 93], lag: .65, top: false }];
   const VZ3_HEADS = [[216, 196], [782, 204]];   // the two faces, plate px
@@ -601,6 +637,7 @@ async function initShots2() {
     const path = ports === CAB_PORTS || ports.path ? cabPath(t, pf, ports) : null;
     const disc = (P, o) => { const x = track(P.f, o.x, pf), y = track(P.f, o.y, pf), r = track(P.f, o.r, pf), [cx, cy] = view.toScreen(x / 960, y / 540), [ex, ey] = view.toScreen((x + r) / 960, y / 540); return [cx, cy, Math.hypot(ex - cx, ey - cy)]; };
     for (const P0 of ports) {
+      if (P0.hide) continue;   // a path's off-frame window: only places the sun on its path
       const [cx, cy, R0] = disc(P0, P0), R = R0 * .96;
       let sx, sy, dx, dy, p, k, ex, ey, ER, sd, ed;
       if (path) {   // one sun, one Earth for both windows: where each is along the path relative to this window (nearest turn)
@@ -687,15 +724,18 @@ async function initShots2() {
       { s: 'AND THE CAPSULE SPUN', t: w[2][0], x: 116, y: 740, font: FONT.mono(34, 800), col: 'white', style: 'type', dur: .5 },
     ]);
   });
-  shot('G2_math', BD[1].t0 - .05, BD[2].t0 - .05, async (t, lt) => {
+  shot('G2_math', BD[1].t0 - .05, BD[2].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
     const spin = lt * .35;
-    const { view } = await drawPlate(t, G2_OLD ? 'vzor_manual' : G2_T2 ? 'vzor_manual_t2' : G2_T3 ? 'vzor_manual_t3' : 'vzor_manual_s4', .5 + lt, { view: { zoom: G2_OLD || G2_T2 ? 1.1 : G2_T3 ? 1.04 : 1.05 + lt * .012, rot: Math.sin(spin) * (G2_OLD || G2_T2 ? .06 : .03) } });
-    if (view) cabinPorts(t, view, (.5 + lt) * 24, G2_OLD ? VZ_PORTS : G2_T2 ? VZ2_PORTS : G2_T3 ? VZ3_PORTS : VZ4_PORTS);
+    const plate = G2_OLD ? 'vzor_manual' : G2_T2 ? 'vzor_manual_t2' : G2_T3 ? 'vzor_manual_t3' : G2_S4 ? 'vzor_manual_s4' : 'vzor_manual_cu';
+    const zoom = G2_OLD || G2_T2 ? 1.1 : G2_T3 ? 1.04 : G2_S4 ? 1.05 + lt * .012 : 1.03 + lt * .01;
+    const { view } = await drawPlate(t, plate, .5 + lt, { view: { zoom, rot: Math.sin(spin) * (G2_OLD || G2_T2 ? .06 : .03) } });
+    if (view) cabinPorts(t, view, (.5 + lt) * 24, G2_OLD ? VZ_PORTS : G2_T2 ? VZ2_PORTS : G2_T3 ? VZ3_PORTS : G2_S4 ? VZ4_PORTS : VZC_PORTS);
     // hand-written orbital arithmetic circling the frame. Sourced figures only (docs/FACTCHECK.md §4.2): the TDU-1 retro-rocket
     // (~16 kN for ~45 s, Δv ~155 m/s), the 167 × 475 km orbit and its 90.9 min period
     const Lt = typeLayer(), eq = ['Δv ≈ 155 m/s', 't ≈ 45 s', 'T = 90.9 min', 'ОРИЕНТАЦИЯ — РУЧНАЯ', 'h = 167–475 km', 'F ≈ 16 kN'];
-    if (!G2_OLD && !G2_T2 && view) eq.forEach((s, i) => {   // the math in their heads: three figures circling each helmet, dimmer behind it
+    if (G2_CU && view) mathRing(Lt, t, lt, dur, view, spin);
+    else if (!G2_OLD && !G2_T2 && view) eq.forEach((s, i) => {   // the math in their heads: three figures circling each helmet, dimmer behind it
       const h = i % 2, HD = G2_S4 ? VZ4_HEADS : VZ3_HEADS, [hx, hy] = view.toScreen(HD[h][0] / 960, HD[h][1] / 540), a = spin * 2.4 + Math.floor(i / 2) / 3 * TAU + h * 1.1;
       const [rx, ry, fs] = G2_S4 ? [215, 130, 36] : [340, 240, 48];
       text(Lt.g, s, hx + Math.cos(a) * rx, hy - (G2_S4 ? 30 : 40) + Math.sin(a) * ry, { font: FONT.serif(i === 3 ? fs - 8 : fs), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * (Math.sin(a) > 0 ? .95 : .65), align: 'center', rot: Math.sin(a) * .12 });
@@ -704,7 +744,8 @@ async function initShots2() {
     typeFlush(Lt, drawClock(t, 12).n, .4);
     const w = BD[1].words;
     const ly = G2_S4 ? 300 : 0;   // the two-porthole cabin: under their helmets, clear of the faces
-    lyricStack(t, [{ s: 'DOING THE MATH', t: w[0][0], x: W / 2, y: 520 + ly, size: 150, align: 'center', style: 'rise' }, { s: 'WITH A SPINNING SUN', t: w[3][0], x: W / 2, y: 640 + ly, size: 110, align: 'center', style: 'rise', col: 'gold' }]);
+    if (G2_CU) lyricStack(t, [{ s: 'DOING THE MATH', t: w[0][0], x: 90, y: 860, size: 130, style: 'rise' }, { s: 'WITH A SPINNING SUN', t: w[3][0], x: 90, y: 965, size: 96, style: 'rise', col: 'gold' }]);   // lower left, clear of his face
+    else lyricStack(t, [{ s: 'DOING THE MATH', t: w[0][0], x: W / 2, y: 520 + ly, size: 150, align: 'center', style: 'rise' }, { s: 'WITH A SPINNING SUN', t: w[3][0], x: W / 2, y: 640 + ly, size: 110, align: 'center', style: 'rise', col: 'gold' }]);
   });
   const HO = BD[2].words; // hold on ×3
   // already tumbling on the first HOLD ON (outside), then through the porthole with the sun still sweeping past, then the g-load
