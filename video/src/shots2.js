@@ -68,12 +68,13 @@ async function leonovDrawing(t, k, view, o = {}) {
 // the stroke direction field, the sun disc). Here that becomes a few thousand generated pencil strokes, each pencil
 // laid on a supersampled card layer and pressed into the card's tooth: light pressure catches only the grain's peaks,
 // heavy pressure fills the valleys (the waxy look). The card is 1000 units wide.
-//   (default)        the public cut: no likeness of his drawing at all (pubCabin / pubPage below)
-//   ?drawing=crayon  this redraw (also ?drawing=redraw): NOT for public use, an imitation of his work; for comparison only
+//   (default)        this redraw (also ?drawing=crayon / redraw): the public cut while permission to show the original is
+//                    pending with the museum and his family
+//   ?drawing=blank   no likeness of his drawing at all: his blank card (pubCabin / pubPage below; also ?drawing=public)
 //   ?drawing=v1      the round-3 version (leonovDrawing, needs the plate; also not for public use)
 //   ?drawing=photo   the museum photo of the real drawing, for a licensed cut: needs media/refs/leonov_drawing_real_photo.jpg
 //                    (served by render.mjs as refs/...); without it, it falls back to the redraw. It carries the credit line.
-const LD_MODE = (m => m === 'crayon' ? 'redraw' : ['redraw', 'v1', 'photo'].includes(m) ? m : 'public')(new URLSearchParams(location.search).get('drawing'));
+const LD_MODE = (m => ['blank', 'public'].includes(m) ? 'public' : ['v1', 'photo'].includes(m) ? m : 'redraw')(new URLSearchParams(location.search).get('drawing'));
 const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
 const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
 const LD_CONTRAST = { black: 1.35, black_over: 1.35, blue: 1.2, deep_blue: 1.12, light_blue: 1, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
@@ -265,13 +266,13 @@ function drawLeonovCard(t, k, cx, cy, cw, rot = 0, o = {}) {
 const ldPhoto = () => LD_MODE === 'photo' && !!LD_PHOTO;
 const ldRedraw = () => LD_MODE !== 'v1' && !!LD;
 
-// ---- the public cut (default): no likeness of his drawing ----
-// The songwriter's decision: his «Sunrise» is not shown, nor any imitation of it (the crayon redraw is a derivative of his
+// ---- ?drawing=blank: no likeness of his drawing (the blank-card cut, default from f77f594 until the crayon redraw returned) ----
+// The songwriter's decision then: his «Sunrise» is not shown, nor any imitation of it (the crayon redraw is a derivative of his
 // work and needs the same permission as the photo). The two drawing moments stay about the act of drawing: his coloured
 // pencils on their string, the card catching the sunrise light, and the sunrise itself drawn in the film's own pencil
 // style. The card is only ever seen from the back (its blank side); nothing of his composition, palette or marks.
 // Everything here is procedural pencil work (no plates, no generated imagery).
-//   ?drawing=crayon (or redraw) the crayon redraw, for comparison only (not public)   ?drawing=photo  the licensed cut
+//   (default, or ?drawing=crayon / redraw) the crayon redraw   ?drawing=photo  the licensed cut
 const PUB = LD_MODE === 'public';
 // the box: a few colours of pencil (body, the facet toward the light, the facet away from it)
 const PUB_PENCILS = [['verm', 'orange', 'crimson'], ['gold', 'cream', 'orange'], ['cobalt', 'sky', 'ultra'], ['green', '#86b98a', '#20402a'],
@@ -409,7 +410,7 @@ function pubPorthole(pen, cx, cy, R, k, d, lt) {
   for (let i = 0; i < 12; i++) { const a = i / 12 * TAU + .13, r = R + RW * .55; pen.dot(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 3.4, 'silver', .7); }
   return [sx, sy];
 }
-// D5 (1:40), public: in the dark cabin the sun comes up in the porthole; his card turns slowly in the air, its blank back to
+// D5 (1:40), ?drawing=blank: in the dark cabin the sun comes up in the porthole; his card turns slowly in the air, its blank back to
 // us, and the sunrise light blooms over its edge; his pencils float on their strings in front of it.
 function pubCabin(t, lt, dur) {
   paper(G, 'night');
@@ -446,7 +447,7 @@ function pubCabin(t, lt, dur) {
   pl.forEach(([spec, bx, by, ang, len], i) => pubGlow(bx + Math.cos(ang) * len * .5, by + Math.sin(ang) * len * .5, 120, .05 + .06 * k));
   return d;
 }
-// C1 (3:59, the ending), public: the white page; the light of a sunrise falls through the porthole as a warm pool that
+// C1 (3:59, the ending), ?drawing=blank: the white page; the light of a sunrise falls through the porthole as a warm pool that
 // slides across the page onto his card, which lies face down; his pencils lie beside it on their string.
 function pubPage(t, lt, dur) {
   paper(G, 'snow');
@@ -1213,7 +1214,7 @@ async function initShots2() {
   });
   // 3:51 · the drawing, alone on the white page
   shot('C1_drawing', CARD1, e0, async (t, lt, dur) => {
-    if (PUB) pubPage(t, lt, dur);                                                    // the public cut: his card face down
+    if (PUB) pubPage(t, lt, dur);                                                    // ?drawing=blank: his card face down
     else if (ldRedraw()) {
       // round 4: the card itself on the page, large, under the handwritten line
       paper(G, 'snow');

@@ -239,14 +239,15 @@ glasses-shadow band, and the simulated constant-length tether at 0:14 and throug
 Viewer feedback, added at release: `L2_home` (3:25) types a two-line caption bottom left in L6's mono style, "THE HATCH BLEW
 OPEN — INTO A TREE." / "THEY ROCKED IT UNTIL IT FELL FREE." (FACTS §3), clear of the HOME lyric.
 
-## Public release: blank card (2026-10-01)
+## Public release: crayon redraw (2026-10-01)
 
-The public extended cut (4:12, 252.28 s, 6055 frames) no longer shows any likeness of Leonov's drawing: out of respect,
-pending permission from his family, `D5_the_drawing` (1:40, frames 2403–2537) shows his blank card turning in the cabin and
-`C1_drawing` (3:59, frames 5740–5874) his card lying face down (the default since f77f594). Only those 270 frames were
-re-rendered; the rest is the round 4–5 render (frame-identical outside those shots). `release/extended/` 1080p HEVC and 720p
-H.264 re-encoded (`FRAMES=<dir> tools/encode_release.sh`); audio unchanged, so the 320k MP3 stands. A crayon-redraw version
-(`?drawing=crayon`) was encoded for private review only and is not in the repo.
+Leonov's drawing (`D5_the_drawing` 1:40, frames 2403–2537; `C1_drawing` 3:59, frames 5740–5874) is shown as the film's
+colored-pencil redraw while permission to show the original is pending with the museum and his family. The redraw is the
+default again in `video/src/shots2.js` (also `?drawing=crayon` / `redraw`); the blank-card version (his card turning in the
+cabin, then face down; briefly the default from f77f594) stays reachable as `?drawing=blank`. The redraw renders
+frame-identical to the round 4–5 render (checked against it), so `release/extended/` 1080p HEVC and 720p H.264 were encoded
+from that render with the redraw's 270 drawing frames re-rendered from the main tree (`FRAMES=<dir> tools/encode_release.sh`);
+audio unchanged, so the 320k MP3 stands. The blank-card encodes are kept outside the repo.
 
 ## 0. Ask her first (only she can supply these)
 

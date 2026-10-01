@@ -9,7 +9,7 @@
 * **Extended cut** (this branch; the re-recorded extended mix, two new intro lines, her round 1–5 notes; 4:12, 252.28 s):
   [`release/extended/Orbital_Sunrise_extended_1080p.mp4`](release/extended/Orbital_Sunrise_extended_1080p.mp4) (HEVC) and
   [`release/extended/Orbital_Sunrise_extended_720p_h264.mp4`](release/extended/Orbital_Sunrise_extended_720p_h264.mp4) (H.264).
-  Out of respect, pending permission from Leonov's family, the drawing shots (1:40, 3:59) show his blank card, not his drawing.
+  Leonov's drawing (1:40, 3:59) is shown as a colored-pencil redraw while permission to show the original is pending with the museum and his family.
   How it was retimed: [`docs/ALTERNATE_CUT.md`](docs/ALTERNATE_CUT.md)
 
 A colored-pencil drawing redrawn twelve times a second is about the hardest thing there is to
