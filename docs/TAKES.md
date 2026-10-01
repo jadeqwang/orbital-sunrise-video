@@ -251,7 +251,7 @@ at `media/chars/*.png`, `media/env/*.png`, which are **not in the repo** (gitign
 | `drawing_hand` | 2 | B1_split |
 | `leonov_drawing_hand` | 4 | A1_snow, A2_hands |
 | `porthole_spin` | 1 | G1_failed, G2_math |
-| `vzor_manual` | 1 (`?g2=old`), 2 (`?g2=t2`), 3 (`?g2=t3`); default the still `vzor_manual_s4` | G2_math |
+| `vzor_manual` | 1 (`?g2=old`), 2 (`?g2=t2`), 3 (`?g2=t3`), still `vzor_manual_s4` (`?g2=s4`), **6** (default, `vzor_manual_cu`) | G2_math |
 | `capsule_spin` | 1 | G2_math |
 | `g_force` | 1 | G2_math, G3_hold |
 | `reentry_fire` | 1 | F1_reentry |
@@ -322,6 +322,19 @@ runs the same one sun / one Earth at `CAB_V` across both on G3's beat grid: righ
 ≈145.3 s. Figures orbit both helmets (`VZ4_HEADS`); the lyric sits lower, clear of the faces. Seedance take 4 from that frame was
 rejected (the console faded back in, from the `CAB` reference; `media/archive/plates/vzor_manual_take4.*`); take 5 (`vzor_manual_5`,
 no refs) was refused once by the privacy filter and the retry's result lost to a local timeout: re-run it for a moving plate.
+
+Round 7, her note: "closer in on one guy so there's more facial expression and density of math" (the founder's intensity: trying not
+to hurl, trying not to die, only pure reason keeps the crew alive, while spinning), and "we have values right now but not equations".
+Take 6 (spec `vzor_manual_6`, 8 s, refs `CAB`): first frame a Nano Banana close-up of the left man from `take3.first.jpg`
+(`take6.chain.json`); eyes flicking, a swallow and a wince, light swinging across his face, the Earth through the porthole. Renderer
+plate `vzor_manual_cu` (193 frames, the default). Its one porthole is the first window of G3's sun path (a hidden second window
+sits off-frame where G3's left one would be), so the sun and Earth keep G3's beat grid (sun ≈143.8 s, Earth ≈145.3 s, as in `s4`).
+The equations (`VZC_EQ`, `mathRing`) are real working aligned with `docs/SONG_NOTES_THE_MATH.md`, every number checked in Python:
+T = 2π√(a³/μ) with a = 6699 km → 5457 s ≈ 90.9 min; F·t = m·Δv → 712 000 N·s ÷ 5682 kg ≈ 125 m/s; the rocket equation (Isp 266 s,
+ṁ ≈ 6.07 kg/s, 273 kg) ≈ 128 m/s → **Δv ≈ 130 m/s** (the quoted 155 m/s, Vostok's figure, is written first and crossed out); vis-viva
+7.89 / 7.54 km/s; ρ ≈ 77°; ground speed ≈ 7.4 km/s, yaw rate ≈ 1.4°/s, Δx ≈ 7.4 km per second late, 46 s ≈ 340 km; 22.8° + J₂ 0.23° ≈
+23.0° west per lap ≈ 1540 km at 53° N (the doc: 1,535). They type on one by one around his head (the ring tightens and spins), faint
+where they cross his face; the lyric sits lower left.
 
 ### Round 7 take (2026-10-01): H1c, him close to the ship facing the sunrise
 

@@ -1,0 +1,21 @@
+{
+ "steps": [
+  {
+   "model": "google/nano-banana-pro",
+   "genlog_line": 542,
+   "prompt": "A closer shot of the same scene as this film frame inside the Voskhod-2 capsule, 1965: a close-up of ONLY the cosmonaut on the left, the same man with exactly the same face, his white helmet with red CCCP letters and orange trim, visor raised, the white Berkut suit collar ring and the top of his rust-orange harness straps. His helmet and face fill the right-centre of the frame (head and top of the shoulders, the whole helmet visible, not cropped), seen from slightly to his left; on the left side of the frame, behind him and slightly out of focus, part of the round porthole in the grey cabin wall with its thick metal rim, bright sky in it. He is under intense strain: sweat beading on his forehead and upper lip, jaw clenched, eyes fixed and intent as he calculates in his head, slightly nauseous and pale, fighting it. Hard warm sunlight from the porthole falls across one side of his face, the other side in shadow. Nobody else in the frame. No instruments, no consoles. Keep the photorealistic 35mm film look and colours of the image. Soviet markings only. No text, no captions, no watermark.",
+   "inputs": [
+    "media/plates/vzor_manual/take3.first.jpg"
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output": "chain/close_still_model.jpg"
+  },
+  {
+   "local": "centre crop to 16:9, resize 1920x1080 lanczos, JPEG q95 -> take6.first.jpg"
+  }
+ ]
+}
