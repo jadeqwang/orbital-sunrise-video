@@ -11,7 +11,8 @@
 #   release/Orbital_Sunrise_720p_h264.mp4    H.264 High 720p24, AAC 160k    — plays and uploads anywhere
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-FR="$ROOT/video/out/frames/f%05d.jpg"
+FRAMES="${FRAMES:-$ROOT/video/out/frames}"   # FRAMES=dir overrides (e.g. an assembled frame set)
+FR="$FRAMES/f%05d.jpg"
 # The release audio: the "suit" mix with the outro ritardando (tools/ritardando.py --vmin=0.65), matching frames rendered
 # with render.mjs's default time map (video/data/timemap.json). Frames rendered with --norit: NORIT=1 (the unslowed mix).
 # AUDIO=... overrides. The extended recording (docs/ALTERNATE_CUT.md) plays its own ritardando, so both modes use its
@@ -21,7 +22,7 @@ if [ -z "${AUDIO:-}" ]; then
   [ -f "$AUDIO" ] || AUDIO="${AUDIO%.wav}.m4a"
 fi
 [ -f "$AUDIO" ] || { echo "missing audio $AUDIO" >&2; exit 1; }
-NF=$(ls "$ROOT/video/out/frames" | grep -c '^f.*\.jpg$'); DUR_A=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$AUDIO")
+NF=$(ls "$FRAMES" | grep -c '^f.*\.jpg$'); DUR_A=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$AUDIO")
 python3 -c "import sys; n,d=$NF,$DUR_A; print(f'audio {d:.2f} s, frames {n} ({n/24:.2f} s)'); sys.exit(0 if abs(n/24-d)<0.1 else 'frame count does not match the audio: render with/without --norit to match')"
 OUT="${OUT:-$ROOT/release}"; NAME="${NAME:-Orbital_Sunrise}"; mkdir -p "$OUT"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT

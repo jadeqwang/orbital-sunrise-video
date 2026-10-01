@@ -1,7 +1,7 @@
 # ORBITAL SUNRISE — music video
 
-**Song:** *Orbital Sunrise* — Jade Wang
-**Lyrics:** a found poem from John Green's essay *Orbital Sunrise* (*The Anthropocene Reviewed*)
+**Song and lyrics:** Jade Wang
+**Narrative arc:** inspired by John Green's essay *Orbital Sunrise* (*The Anthropocene Reviewed*)
 **Video:** every frame drawn in colored pencil by JavaScript
 
 * ▶ **[`release/Orbital_Sunrise_1080p.mp4`](release/Orbital_Sunrise_1080p.mp4)** — 1920×1080, 24 fps, 4:02, HEVC
@@ -9,6 +9,7 @@
 * **Extended cut** (this branch; the re-recorded extended mix, two new intro lines, her round 1–5 notes; 4:12, 252.28 s):
   [`release/extended/Orbital_Sunrise_extended_1080p.mp4`](release/extended/Orbital_Sunrise_extended_1080p.mp4) (HEVC) and
   [`release/extended/Orbital_Sunrise_extended_720p_h264.mp4`](release/extended/Orbital_Sunrise_extended_720p_h264.mp4) (H.264).
+  Out of respect, pending permission from Leonov's family, the drawing shots (1:40, 3:59) show his blank card, not his drawing.
   How it was retimed: [`docs/ALTERNATE_CUT.md`](docs/ALTERNATE_CUT.md)
 
 A colored-pencil drawing redrawn twelve times a second is about the hardest thing there is to

@@ -239,6 +239,15 @@ glasses-shadow band, and the simulated constant-length tether at 0:14 and throug
 Viewer feedback, added at release: `L2_home` (3:25) types a two-line caption bottom left in L6's mono style, "THE HATCH BLEW
 OPEN — INTO A TREE." / "THEY ROCKED IT UNTIL IT FELL FREE." (FACTS §3), clear of the HOME lyric.
 
+## Public release: blank card (2026-10-01)
+
+The public extended cut (4:12, 252.28 s, 6055 frames) no longer shows any likeness of Leonov's drawing: out of respect,
+pending permission from his family, `D5_the_drawing` (1:40, frames 2403–2537) shows his blank card turning in the cabin and
+`C1_drawing` (3:59, frames 5740–5874) his card lying face down (the default since f77f594). Only those 270 frames were
+re-rendered; the rest is the round 4–5 render (frame-identical outside those shots). `release/extended/` 1080p HEVC and 720p
+H.264 re-encoded (`FRAMES=<dir> tools/encode_release.sh`); audio unchanged, so the 320k MP3 stands. A crayon-redraw version
+(`?drawing=crayon`) was encoded for private review only and is not in the repo.
+
 ## 0. Ask her first (only she can supply these)
 
 1. **The new lyric text**, line by line, and where each new line goes (which section, before/after which existing line).
