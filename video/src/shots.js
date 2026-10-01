@@ -777,9 +777,49 @@ async function initShots() {
   });
 
   // H1c · Orbital sunrise (the wide)
-  shot('H1c_wide', H1[1].t0 - .05, H1[1].words[2][0] - .05, async (t, lt) => {
+  // Round 7 (her note on 0:41.4: "have him close to the ship, facing the sunrise, cord floating around him consistent with the
+  // other umbilical-cord-like shot"): ship_wide_close (ship_wide_sunrise's framing, him a couple of metres from the airlock's
+  // mouth facing the sun on the right, generated with no tether) and the I6 / H1a cable: the same constant-length rope
+  // simulation (tether.js) from the airlock's mouth to his hip, ≈5.35 m at his scale, floating in big loops, his body a
+  // collision solid from his matte (front / behind sides, hidden by his matte when behind), drawn the same way.
+  // Tracks: video/data/tether_h1c.json (tools/tether_r5.py h1c). ?h1c=old: ship_wide_sunrise as before (its straight line).
+  const H1C_OLD = Q.get('h1c') === 'old', H1C_T0 = H1[1].t0 - .05, H1C_T1 = H1[1].words[2][0] - .05, H1C_TP0 = .3;
+  let TDC = null, ROPEC = null;
+  if (!H1C_OLD) { try { TDC = await loadJSON('data/tether_h1c.json'); } catch (e) { console.warn('no data/tether_h1c.json (tools/tether_r5.py h1c)'); } }
+  const tpC = t => H1C_TP0 + (t - H1C_T0);
+  const trackC = (t, key) => { const a = TDC[key], x = clamp(tpC(t) * 24, 0, a.length - 1), i = Math.min(a.length - 2, Math.floor(x)), f = x - i; return [lerp(a[i][0], a[i + 1][0], f), lerp(a[i][1], a[i + 1][1], f)]; };
+  // his size sets the scale: I6's parameters (he ≈ 360 px there) times s; the cable is 5.35 m with him ≈ 1.9 m in the suit
+  const h1cRope = () => ROPEC || (ROPEC = (async () => {
+    const t0 = H1C_T0, t1 = H1C_T1, nP = PLATES[TDC.plate].n, hh = TDC.height, s = hh / 360, need = new Set();
+    for (let t = t0; t <= t1 + .05; t += 1 / 96) { const fp = clamp(tpC(t) * 24 + 1, 1, nP), k = Math.floor((fp - 1) / 2) * 2 + 1; need.add(k); if (k + 2 <= nP) need.add(k + 2); }
+    const SD = (TETHER_R6 || TETHER_STATS) ? await loadBodySDF(TDC.plate, [...need].sort((a, b) => a - b), f => TDC.hip[clamp(f - 1, 0, TDC.hip.length - 1)], { cell: 1, pad: 30 }) : null;
+    const field = (t, blend = true) => bodyAtFrame(SD, clamp(tpC(t) * 24 + 1, 1, nP), blend);
+    const body = { T: 35 * s, m: Math.max(1.5, 5 * s), taper: 30 * s };
+    // the start route (x, y in his heights from the hip, z in plate px · s): out of the airlock, a big loop down below
+    // him, up past his front (toward the sun), over his head behind him, down his back to the hip
+    const rope = simulateRope({ name: 'H1c', t0, t1, n: 72, seed: +(Q.get('h1cseed') || 3),
+      endA: t => [...trackC(t, 'anchor'), 0], endB: t => [...trackC(t, 'hip'), 0],
+      via: (A, Hp) => H1C_VIA.map(([x, y, z]) => [Hp[0] + x * hh, Hp[1] + y * hh, z * s]),
+      damp: .15, bend: .015, rMin: 70 * s, iters: 60, sub: 12, pre: .8, drift: 24 * s,
+      ...(TETHER_R6 ? { collide: { field, ...body, h: .75, exemptB: 3 } } : {}) });
+    console.log(`H1c cable ${(rope.L / hh * 1.9).toFixed(2)} m (${rope.L.toFixed(0)} px, he ${hh} px)`);
+    if (TETHER_STATS) console.warn('tether H1c ' + JSON.stringify(ropeClipStats(rope, f => field(t0 + f / 24, false), (f, i, P, sd) => sd[i] > 0, 3, body)));
+    return rope;
+  })());
+  const H1C_VIA = [[-.55, -.25, 40], [-.5, .45, 30], [-.05, .8, -20], [.55, .55, -60], [.75, -.1, -70], [.5, -.75, -30], [-.05, -.95, 60], [-.45, -.55, 70], [-.35, -.05, 50]];
+  shot('H1c_wide', H1C_T0, H1C_T1, async (t, lt) => {
     paper(G, 'night');
-    await drawPlate(t, 'ship_wide_sunrise', 1 + lt, { view: { zoom: 1.02 }, hatch: { spacing: 6.5 } });
+    const rope = !H1C_OLD && TDC ? await h1cRope() : null;
+    if (!rope) await drawPlate(t, 'ship_wide_sunrise', 1 + lt, { view: { zoom: 1.02 }, hatch: { spacing: 6.5 } });
+    else {
+      const tq = drawClock(t, 12).tq;
+      await drawPlate(t, TDC.plate, tpC(t), { view: { zoom: 1.02 }, hatch: { spacing: 6.5 }, extra: (pen, F, view, dIdx) => {
+        const P = rope.at(tq), sd = rope.sideAt(tq), toS = (x, y) => view.toScreen(x / TDC.w - .5 / F.aw, y / TDC.h - .5 / F.ah);
+        const hide = rope.collide ? (s, X, Y, zz, u) => { if (!F.M || !(sd[Math.floor(u)] > 0 || sd[Math.ceil(u)] > 0)) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; }
+          : (s, X, Y, zz) => { if (!F.M || zz <= 0) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; };
+        drawCable(pen, P, toS, { w: 17 * (TDC.height / 360) * (view.scale / 3.12) * 1.6, light: [1, .35], seed: dIdx * 29 + 3, hide, rings: 6, persp: 900 * TDC.height / 360, cols: { body: 'white', shade: 'cobalt', hi: 'white' } });
+      } });
+    }
     const w = H1[1].words;
     lyricStack(t, [
       { s: 'ORBITAL SUNRISE', t: w[0][0], x: W / 2, y: H - 110, size: 150, align: 'center', style: 'rise', ls: 6 },

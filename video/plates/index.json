@@ -1012,5 +1012,14 @@
   "take": "still: media/plates/vzor_manual/take4.first.jpg (round 6: G3's cabin with both portholes, console removed, both in their own seats doing the math; the Seedance takes from it were rejected/lost)",
   "mattes": true,
   "gain": 1.658
+ },
+ "ship_wide_close": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take1.mp4",
+  "mattes": true,
+  "gain": 1.068
  }
 }

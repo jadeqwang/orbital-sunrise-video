@@ -6,6 +6,7 @@ renderer, and these plates have the generated one taken out:
 
     python3 tools/tether_r5.py n1     # tether_drift_t2 → tether_drift_r5 (+ video/data/tether_n1.json)
     python3 tools/tether_r5.py i6     # countdown_drift_t3 → countdown_drift_r5, hero_sunrise → hero_sunrise_r5 (+ tether_i6.json)
+    python3 tools/tether_r5.py h1c    # round 7: tracks for ship_wide_close (no tether generated) → tether_h1c.json
 
 n1: the line is cut out of every frame (its own matte pixels + the round-4 track, filled from a masked temporal median
 of the static shot) and so is he; he is pasted back moved along the hatch→him direction so that his distance from the
@@ -254,6 +255,53 @@ def i6():
         separators=(",", ":")))
 
 
+# ------------------------------------------------------------------------------------------------ H1c (round 7)
+def h1c():
+    """ship_wide_close (generated without a tether: him a couple of metres from the airlock, facing the sunrise): per plate
+    frame his hip (the cable's end: his back-left hip, toward the ship) and the anchor at the airlock's mouth (the hatch
+    lid; tracked by template, the camera is locked off), his height (for the collision depth), tether_h1c.json. Run after
+    tools/extract_plates.py ship_wide_close:1 and tools/plate_masks.py ship_wide_close. If the take drew a line anyway,
+    it is painted out like i6's hoop (thin matte parts between the ship and him)."""
+    pid = "ship_wide_close"
+    fs = frames(pid); n = len(fs)
+    ker = lambda r: cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * r + 1, 2 * r + 1))
+    im1 = cv2.imread(str(fs[0]))
+    AX, AY = H1C_ANCHOR                                      # frame 1: the lower lip of the airlock's open mouth
+    tpl = im1[AY - 24:AY + 16, AX - 30:AX + 20]
+    prev, cen, anc, hgt = None, [], [], []
+    for f in range(1, n + 1):
+        im = cv2.imread(str(fs[f - 1]))
+        M = matte(pid, f, n)
+        b = cv2.morphologyEx((M > .5).astype(np.uint8), cv2.MORPH_OPEN, ker(1))
+        k_, lab, st, c = cv2.connectedComponentsWithStats(b)
+        cand = [k for k in range(1, k_) if st[k][4] > 150 and c[k][0] > AX + 8]   # him: right of the airlock (the ship is left)
+        ref = prev if prev is not None else np.array(H1C_HIM)
+        k = min(cand, key=lambda k: np.hypot(*(c[k] - ref)))
+        ys, xs = np.nonzero(lab == k)
+        prev = np.array([xs.mean(), ys.mean()])
+        cen.append([xs.mean(), ys.mean(), np.sqrt(len(xs))]); hgt.append(float(ys.max() - ys.min()))
+        r = cv2.matchTemplate(im[AY - 80:AY + 80, AX - 110:AX + 110], tpl, cv2.TM_CCOEFF_NORMED)
+        _, sc, _, (mx, my) = cv2.minMaxLoc(r)
+        anc.append([AX - 110 + mx + 30, AY - 80 + my + 24] if sc > .6 else None)
+    good = [i for i, a in enumerate(anc) if a is not None]
+    for i in range(n):
+        if anc[i] is None:
+            anc[i] = anc[min(good, key=lambda g: abs(g - i))]
+    cen, anc = smooth1(np.array(cen), 2), smooth1(np.array(anc, float), 3)
+    off = np.array(H1C_HIP) - cen[0, :2]
+    hip = cen[:, :2] + off * (cen[:, 2:3] / cen[0, 2])
+    (DATA / "tether_h1c.json").write_text(json.dumps({"plate": pid, "w": WD, "h": HT, "fps": 24,
+        "hip": hip.round(2).tolist(), "anchor": anc.round(2).tolist(), "height": round(float(np.median(hgt)), 1),
+        "note": "plate px at 960x540 per plate frame: his hip (the cable's end) and the airlock mouth (tools/tether_r5.py h1c)"},
+        separators=(",", ":")))
+    print(f"tether_h1c.json: {n} frames, anchor {anc[0].round(1)} (matched {len(good)}/{n}), hip {hip[0].round(1)} → {hip[-1].round(1)}, his height {np.median(hgt):.0f} px")
+
+
+H1C_ANCHOR = (468, 137)     # plate px, frame 1: the bottom of the airlock's open mouth
+H1C_HIM = (553, 210)        # his centroid, frame 1 (roughly; picks his matte component)
+H1C_HIP = (546, 226)        # the cable's end on frame 1: his left hip, at his back (toward the ship)
+
+
 if __name__ == "__main__":
     for a in sys.argv[1:]:
-        {"n1": n1, "i6": i6}[a]()
+        {"n1": n1, "i6": i6, "h1c": h1c}[a]()
