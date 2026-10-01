@@ -106,11 +106,17 @@ a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; 
 }
 @supports (height: 1svh) { .screen { max-width: min(100%, calc((100svh - 150px) * 16 / 9)); } }
 @media (min-width: 900px) { .screen { min-width: 840px; } }
-.screen video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; display: block; }
+.screen > .poster, .screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; display: block; }
+.screen > .poster { object-fit: cover; }
+/* while there is no film yet: the poster still, and one quiet line set in her italic */
+.screen .soon {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0; padding: clamp(2.5rem, 8vw, 5rem) clamp(14px, 3vw, 28px) clamp(12px, 2.4vw, 22px);
+  background: linear-gradient(to bottom, rgba(13, 12, 16, 0), rgba(13, 12, 16, .78));
+  display: flex; align-items: baseline; gap: .4rem 1rem; flex-wrap: wrap;
+  font: italic 400 clamp(1.1rem, 3.2vw, 1.75rem)/1.1 var(--f-lyric); color: var(--cream);
+}
+.screen .soon span { font: 700 clamp(.62rem, 1.4vw, .78rem)/1 var(--f-cyr); font-style: normal; letter-spacing: .14em; color: var(--verm); }
 .film-notes { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .3rem 1.5rem; font: 400 .72rem/1.5 var(--f-mono); letter-spacing: .06em; color: var(--silver); font-variant-numeric: tabular-nums; }
-.film-notes .excerpt { color: var(--gold); }
-.film-notes .excerpt b { color: var(--void); background: var(--gold); padding: 0 .4em; margin-right: .5em; font-weight: 700; letter-spacing: .12em; }
-.film-notes [hidden] { display: none; }
 
 /* ── title ─────────────────────────────────────────────── */
 .title { max-width: 1280px; margin-inline: auto; padding-block: clamp(2.5rem, 7vw, 5rem) 1rem; display: grid; gap: 2rem; }
@@ -151,8 +157,7 @@ h2.big { font-family: var(--f-display); font-weight: 400; text-transform: upperc
 .ln .w { min-width: 0; overflow-wrap: anywhere; }
 .ln:hover .t, .ln:focus-visible .t { color: var(--gold); }
 .ln:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
-.ln[aria-disabled="true"] { cursor: default; }
-.ln[aria-disabled="true"] .t { text-decoration: line-through; text-decoration-color: var(--void-rule); }
+.song.static .ln { cursor: default; }
 .song.playing .ln { opacity: .42; }
 .song.playing .ln.now { opacity: 1; }
 .ln.now .t { color: var(--verm); }
@@ -304,12 +309,13 @@ footer.credits { max-width: 44rem; margin-inline: auto; padding-block: 3rem 4rem
 <main>
 <section class="film gutter" id="film" aria-label="The film">
   <div class="screen">
-    <video id="video" controls playsinline preload="metadata" poster="img/poster.webp"
-      aria-label="Orbital Sunrise, music video, 4 minutes 12 seconds. The song's lyrics are available as subtitles and are printed below."></video>
+    <img class="poster" src="img/poster.webp" width="1280" height="720" fetchpriority="high"
+      alt="Colored-pencil still from Orbital Sunrise, the film's poster frame.">
+    <p class="soon" id="soon">Film coming soon <span lang="ru">ВОСХОД-2</span></p>
+    <div id="yt" hidden></div>
   </div>
   <div class="film-notes">
-    <span class="excerpt" id="excerpt-note" hidden><b>PREVIEW</b><span id="excerpt-text"></span></span>
-    <span id="video-note">4:12 · 1920 × 1080 · 24 fps · subtitles: lyrics (CC)</span>
+    <span id="video-note">4:12 · 1920 × 1080 · 24 fps</span>
   </div>
 </section>
 
@@ -331,7 +337,7 @@ footer.credits { max-width: 44rem; margin-inline: auto; padding-block: 3rem 4rem
   <div class="lyrics-head">
     <p class="kicker">Lyrics · <span class="red">Jade Wang</span></p>
     <h2 class="big" id="lyrics-h">What she sings</h2>
-    <p>The extended cut, as sung. Tap a line to hear it; the line being sung lights up while the film plays.</p>
+    <p>The extended cut, as sung.<span id="sync-hint" hidden> Tap a line to hear it; the line being sung lights up while the film plays.</span></p>
   </div>
 
   <div class="song" id="song">
@@ -817,72 +823,47 @@ sin 1° × 130 m/s           ≈ <span class="r">2.3 m/s</span> up or down
 </div>
 
 <script>
-/* ── The one setting: where the film streams from. ───────────────────────────────────
-   An .mp4 plays directly; a URL ending in .m3u8 streams as HLS (hls.js, or the browser's own HLS on Safari/iOS).
-   VIDEO_STARTS_AT: the film time at the file's 0:00 (0 for the full film; a preview excerpt starts later). */
-const VIDEO_URL = 'media/orbital_sunrise_720p.mp4';
-const VIDEO_STARTS_AT = 0;
+/* ── The one setting: the film's YouTube video id (the part after watch?v=). ───────────
+   Empty: the frame shows the poster still and "Film coming soon", and the lyrics stay plain text.
+   Set it (e.g. 'dQw4w9WgXcQ'): the film plays from YouTube (privacy-enhanced youtube-nocookie.com)
+   and the lyric lines become play-from-here buttons that light up with the song. */
+const YOUTUBE_ID = '';
 
 (function () {
   'use strict';
-  const v = document.getElementById('video');
+  const song = document.getElementById('song');
+  const buttons = [...song.querySelectorAll('.ln')];
+
+  if (!YOUTUBE_ID) {
+    // no film yet: the lyrics as plain text, no timestamps, nothing to tap
+    song.classList.add('static');
+    buttons.forEach(b => {
+      const span = document.createElement('span');
+      span.className = b.className;
+      span.append(...b.childNodes);
+      b.replaceWith(span);
+    });
+    return;
+  }
+
   const note = document.getElementById('video-note');
   const fmt = s => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
-  const isHls = /\.m3u8(\?|#|$)/i.test(VIDEO_URL);
-
-  /* ── source ── */
-  function loadScript(src) {
-    return new Promise((ok, fail) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s); });
-  }
-  function attachHls() {
-    const native = v.canPlayType('application/vnd.apple.mpegurl') !== '';
-    const useNative = () => { v.src = VIDEO_URL; };
-    loadScript('https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js')
-      .catch(() => loadScript('https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js'))
-      .then(() => {
-        if (window.Hls && window.Hls.isSupported()) {
-          const hls = new window.Hls({ maxBufferLength: 30 });
-          hls.on(window.Hls.Events.ERROR, (e, d) => { if (d.fatal) note.textContent = 'The stream stopped (' + d.details + '). Reload the page to try again.'; });
-          hls.loadSource(VIDEO_URL); hls.attachMedia(v);
-        } else if (native) useNative();
-        else note.textContent = 'This browser cannot play the stream.';
-      })
-      .catch(() => { if (native) useNative(); else note.textContent = 'The player did not load. Reload the page to try again.'; });
-  }
-  if (isHls) attachHls(); else v.src = VIDEO_URL;
-  v.addEventListener('error', () => { if (v.error) note.textContent = 'The film did not load. Reload the page to try again.'; });
+  document.getElementById('soon').hidden = true;
+  document.getElementById('sync-hint').hidden = false;
+  note.textContent = '4:12 · 1920 × 1080 · 24 fps · on YouTube';
 
   /* ── lyric lines: times, seeking, highlight ── */
-  const song = document.getElementById('song');
-  const lines = [...song.querySelectorAll('.ln')].map(el => ({
+  const lines = buttons.map(el => ({
     el, t0: +el.dataset.t0, t1: +el.dataset.t1, text: el.querySelector('.w').textContent.replace(/\s+/g, ' ').trim()
   }));
-  const fileDur = () => (isFinite(v.duration) && v.duration > 0 ? v.duration : Infinity);
-  const inFile = ln => ln.t0 >= VIDEO_STARTS_AT && ln.t0 < VIDEO_STARTS_AT + fileDur() - 0.5;
   lines.forEach(ln => {
     ln.el.querySelector('.t').textContent = fmt(ln.t0);
     ln.el.setAttribute('aria-label', ln.text + ', at ' + fmt(ln.t0) + '. Play from here.');
+    ln.el.title = 'Play from ' + fmt(ln.t0);
   });
-  function markAvailability() {
-    lines.forEach(ln => {
-      const ok = inFile(ln);
-      ln.el.setAttribute('aria-disabled', ok ? 'false' : 'true');
-      ln.el.title = ok ? 'Play from ' + fmt(ln.t0) : 'Not in this preview excerpt';
-    });
-  }
-  markAvailability();
-  v.addEventListener('loadedmetadata', markAvailability);
 
-  // captions-friendly: the lyrics as a subtitle track (off until chosen from the player's CC menu)
-  function addTrack() {
-    if (!('addTextTrack' in v) || typeof VTTCue === 'undefined' || v.__lyrics) return;
-    const tr = v.addTextTrack('subtitles', 'Lyrics', 'en'); v.__lyrics = tr; tr.mode = 'disabled';
-    lines.forEach(ln => {
-      const a = ln.t0 - VIDEO_STARTS_AT, b = ln.t1 - VIDEO_STARTS_AT;
-      if (b > 0 && a < fileDur()) { try { tr.addCue(new VTTCue(Math.max(0, a), b, ln.text)); } catch (e) {} }
-    });
-  }
-  v.addEventListener('loadedmetadata', addTrack);
+  let player = null, ready = false, pendingSeek = null, poll = 0, playing = false;
+  const PLAYING = 1;
 
   let current = null;
   function setNow(ln) {
@@ -893,55 +874,86 @@ const VIDEO_STARTS_AT = 0;
     npLine.textContent = ln ? ln.text : '';
   }
   function tick() {
-    const t = v.currentTime + VIDEO_STARTS_AT;
+    if (!ready) return;
+    const t = player.getCurrentTime() || 0;
     setNow(lines.find(ln => t >= ln.t0 - 0.05 && t < ln.t1) || null);
     npT.textContent = fmt(t);
   }
-  let raf = 0;
-  const loop = () => { tick(); raf = v.paused ? 0 : requestAnimationFrame(loop); };
-  v.addEventListener('play', () => { song.classList.add('playing'); if (!raf) raf = requestAnimationFrame(loop); updateNp(); });
-  v.addEventListener('pause', () => { song.classList.remove('playing'); tick(); updateNp(); });
-  v.addEventListener('ended', () => { song.classList.remove('playing'); setNow(null); updateNp(); });
-  v.addEventListener('seeked', tick);
+  function seekPlay(t) {
+    if (!ready) { pendingSeek = t; loadApi(); return; }
+    player.seekTo(Math.max(0, t), true);
+    player.playVideo();
+    tick();
+  }
 
   song.addEventListener('click', e => {
     const el = e.target.closest('.ln'); if (!el) return;
     e.preventDefault();
     const ln = lines.find(l => l.el === el);
-    if (!ln || !inFile(ln)) return;
-    v.currentTime = Math.max(0, ln.t0 - VIDEO_STARTS_AT - 0.12);
-    const p = v.play(); if (p && p.catch) p.catch(() => {});
-    tick();
+    if (ln) seekPlay(ln.t0 - 0.12);
   });
+
+  /* ── the YouTube player (IFrame Player API) ── */
+  let apiRequested = false;
+  function loadApi() {
+    if (apiRequested) return; apiRequested = true;
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () { if (prev) prev(); build(); };
+    const s = document.createElement('script');
+    s.src = 'https://www.youtube.com/iframe_api';
+    s.onerror = () => { note.textContent = 'The YouTube player did not load. Reload the page to try again.'; };
+    document.head.appendChild(s);
+  }
+  function build() {
+    const host = document.getElementById('yt'); host.hidden = false;
+    const vars = { playsinline: 1, rel: 0, modestbranding: 1 };
+    if (/^https?:/.test(location.protocol)) vars.origin = location.origin;
+    player = new window.YT.Player('yt', {
+      host: 'https://www.youtube-nocookie.com',
+      videoId: YOUTUBE_ID,
+      width: '100%', height: '100%',
+      playerVars: vars,
+      events: {
+        onReady: () => {
+          ready = true;
+          const f = player.getIframe && player.getIframe();
+          if (f) f.title = 'Orbital Sunrise, music video, 4 minutes 12 seconds. The lyrics are printed below.';
+          if (pendingSeek !== null) { const t = pendingSeek; pendingSeek = null; seekPlay(t); }
+        },
+        onStateChange: e => {
+          playing = e.data === PLAYING;
+          song.classList.toggle('playing', playing);
+          clearInterval(poll); poll = 0;
+          if (playing) poll = setInterval(tick, 250);
+          if (e.data === 0) setNow(null); else tick();
+          updateNp();
+        },
+        onError: () => { note.textContent = 'The film did not load from YouTube. Reload the page to try again.'; }
+      }
+    });
+    // the API swaps the div for an iframe; give it a title right away for screen readers
+    const f = document.querySelector('.screen iframe');
+    if (f && !f.title) f.title = 'Orbital Sunrise, music video';
+  }
+  loadApi();
 
   /* ── now-playing strip, shown while the film plays out of view ── */
   const np = document.getElementById('np'), npT = document.getElementById('np-t'), npLine = document.getElementById('np-line');
   const npPause = document.getElementById('np-pause');
   let filmVisible = true;
   function updateNp() {
-    np.hidden = filmVisible || v.paused;
-    npPause.textContent = v.paused ? 'Play' : 'Pause';
+    np.hidden = filmVisible || !playing;
+    npPause.textContent = playing ? 'Pause' : 'Play';
   }
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(es => { filmVisible = es[0].intersectionRatio > 0.35; updateNp(); }, { threshold: [0, 0.35, 1] })
       .observe(document.querySelector('.screen'));
   }
-  npPause.addEventListener('click', () => { if (v.paused) v.play().catch(() => {}); else v.pause(); });
+  npPause.addEventListener('click', () => { if (!ready) return; if (playing) player.pauseVideo(); else player.playVideo(); });
   document.getElementById('np-up').addEventListener('click', () => {
     document.getElementById('film').scrollIntoView({ block: 'start' });
-    v.focus({ preventScroll: true });
+    const f = document.querySelector('.screen iframe'); if (f) f.focus({ preventScroll: true });
   });
-
-  /* ── preview excerpt label ── */
-  if (VIDEO_STARTS_AT > 0) {
-    const ex = document.getElementById('excerpt-note');
-    const show = () => {
-      document.getElementById('excerpt-text').textContent = 'A ' + Math.round(fileDur()) + '-second excerpt, ' + fmt(VIDEO_STARTS_AT) + '–' + fmt(VIDEO_STARTS_AT + fileDur()) + ' of the 4:12 film. The site streams the full film.';
-      ex.hidden = false;
-    };
-    if (isFinite(v.duration)) show(); else { ex.hidden = false; document.getElementById('excerpt-text').textContent = 'A short excerpt of the 4:12 film. The site streams the full film.'; v.addEventListener('loadedmetadata', show); }
-    note.textContent = 'Excerpt at 540p · lyric lines outside it are struck through';
-  }
 })();
 
 /* ── the math page's slider ── */
