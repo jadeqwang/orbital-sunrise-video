@@ -42,7 +42,6 @@ Can't think can't write but my hands still know
  Made it down —  
  home.  
  Made it down —  
- home.  
 \[Instrumental Outro\]  
 \[Soft piano from intro, ritardando at the end\]  
 
