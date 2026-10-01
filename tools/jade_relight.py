@@ -21,6 +21,19 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 import jade_location as JL, jade_fade as JFa
 
+LIPS = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291, 375, 321, 405, 314, 17, 84, 181, 91, 146]
+CHEEKS = ([145, 234, 93, 132, 58, 172, 61, 129], [374, 454, 323, 361, 288, 397, 291, 358])   # lower lid, oval down to the jaw, mouth corner, nose
+
+
+def cheeks_mask(L, w, h, feather):
+    """Both cheeks from under the lenses down to the jaw, where the take draws the closet's glasses-shadow, minus the lips."""
+    m = np.zeros((h, w), np.uint8)
+    for side in CHEEKS: cv2.fillPoly(m, [pts(L, w, h, side).astype(np.int32)], 255)
+    lips = np.zeros((h, w), np.uint8); cv2.fillPoly(lips, [pts(L, w, h, LIPS).astype(np.int32)], 255)
+    m[cv2.dilate(lips, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (31, 31))) > 0] = 0
+    return cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), feather)[..., None]
+
+
 STABLE = [33, 133, 159, 145, 263, 362, 386, 374, 70, 105, 107, 336, 334, 300, 6, 197, 195, 5, 4, 1, 168, 9, 10, 151, 234, 454, 127, 356]
 
 
@@ -51,8 +64,13 @@ def main(take, first, relit_model, out_dir, plate=None):
     R = np.asarray(Image.open(R_path).convert("RGB"), np.float32)
     h, w = A.shape[:2]
     sig = w / 220
-    ratio = np.clip((cv2.GaussianBlur(R, (0, 0), sig) + 2) / (cv2.GaussianBlur(A, (0, 0), sig) + 2), .4, 3.0)
+    blurR = cv2.GaussianBlur(R, (0, 0), sig)
+    ratio = np.clip((blurR + 2) / (cv2.GaussianBlur(A, (0, 0), sig) + 2), .4, 3.0)
     LA = JL.face_landmarks(A.astype(np.uint8)); PA = pts(LA, w, h, STABLE)
+    # colour from the ratio only on her skin; elsewhere (hair, jacket) mostly its brightness, so the take's gold rim turns
+    # neutral instead of the opposite tint
+    rl = ratio.mean(2, keepdims=True); skin = oval_mask(LA, w, h, 1.0, 8)[..., None]
+    ratio = rl * (ratio / rl) ** (skin + (1 - skin) * .35)
     F = frames(take)
     mats = np.array([JFa.matte(f) for f in F])
     mats = np.array([mats[max(0, i - 2):i + 3].mean(0) for i in range(len(mats))])
@@ -67,13 +85,17 @@ def main(take, first, relit_model, out_dir, plate=None):
         except RuntimeError:
             L, T = LA, np.float32([[1, 0, 0], [0, 1, 0]])
         warp = lambda im: cv2.warpAffine(im, T, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-        head = oval_mask(L, w, h, 1.35, 14)[..., None]
+        head = oval_mask(L, w, h, 1.15, 10)[..., None]
         g = head * warp(ratio) + (1 - head) * ratio
         Y = X * g
         cm = JL.cheek_mask(L, w, h, 10)
         Y = cm * warp(R) + (1 - cm) * Y
+        # the rest of the shadow band (Seedance draws it larger than the still): the still's light, the take's lines
+        ga = X.mean(2); det = np.clip((ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1), 0, 1.15)[..., None]
+        ck = cheeks_mask(L, w, h, 9) * (1 - cm)
+        Y = ck * warp(blurR) * det + (1 - ck) * Y
         m = cv2.GaussianBlur(cv2.dilate((mats[i] > .35).astype(np.uint8), k).astype(np.float32), (0, 0), 8)[..., None]
-        m = np.maximum(m, oval_mask(L, w, h, 1.5, 14)[..., None])
+        m = np.maximum(m, oval_mask(L, w, h, 1.2, 10)[..., None])
         Y = m * Y + (1 - m) * R
         im = Image.fromarray(np.clip(Y, 0, 255).astype(np.uint8))
         im.save(tmp / f"f{i + 1:04d}.png")
