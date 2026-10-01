@@ -89,6 +89,11 @@ TARGETS = {
             "cant": ("intro", 3, None, [26.26, 26.80, 27.38, 27.92, 29.13, 29.81, 30.38, 31.00]),
             "eternity": ("pre", 3, "Eternity inside the airlock door", [66.14, 67.06, 67.50, 67.99, 68.59]),
             "fall": ("hook3", 1, "Fall through the skies, bring me home", [159.83, 160.40, 160.79, 161.12, 162.93, 163.63, 163.86]),
+            # the first outro "home." (round 4, measured on the vocal stem, tools/vocal_stem.py --ss=190): "down" is held
+            # from ≈199.6 to its voicing end 204.63, the breathy /h/ 204.65-204.78, the vowel's onset 204.79 (on beat
+            # 204.81), held to 208.57. The map put it at 203.37, a note change inside the held "down". Optional 5th
+            # field: the line's t1.
+            "home1": ("outro", 3, None, [204.79], 208.57),
         },
         reworded={},
     ),
@@ -219,18 +224,20 @@ def retime():
         l["t0"], l["t1"] = r3(O(l["t0"])), r3(O(l["t1"]))
         l["words"] = [[r3(O(t)), w] for t, w in l["words"]]
     # new lines first (appended, then sorted in), so the indices of NEW_LINES count them
-    for key, (sec, i, text, ws) in NEW_LINES.items():
+    for key, (sec, i, text, ws, *_) in NEW_LINES.items():
         if key in INSERTED:                                          # the inserted intro lines
             tk = tokens(text); assert len(tk) == len(ws), key
             d["lines"].append({"sec": sec, "text": text, "t0": ws[0], "t1": None, "words": [[t, w] for t, w in zip(ws, tk)]})
     d["lines"].sort(key=lambda l: l["t0"])
-    for key, (sec, i, text, ws) in NEW_LINES.items():                # re-measured lines (and changed words)
+    for key, (sec, i, text, ws, *t1) in NEW_LINES.items():           # re-measured lines (and changed words)
         if key in INSERTED:
             continue
         l = [l for l in d["lines"] if l["sec"] == sec][i]
         tk = tokens(text) if text else [w for _, w in l["words"]]
         assert len(tk) == len(ws), key
         l.update({"text": text or l["text"], "t0": ws[0], "words": [[t, w] for t, w in zip(ws, tk)]})
+        if t1:
+            l["t1"] = t1[0]
     for sec, i, text, keep in REWORDED.values():
         l = [l for l in d["lines"] if l["sec"] == sec][i]
         tk = tokens(text); assert len(tk) == len(keep), text

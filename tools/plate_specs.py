@@ -431,6 +431,17 @@ PLATES.update({
         "like a rope drifting underwater, the loop opening and drooping and curling back, following his movements with a slight delay; never frozen, never rigid. "
         "The glowing thin band of the atmosphere along the dark Earth stays as it is: the sun does not rise, no flare, the light does not change. Very slow, steady camera, almost locked-off. "
         "One continuous shot, no cuts. " + LOOK),
+    # take 3 (round 4): I6 only ever showed the first second of a take (played backwards into hero_sunrise's first frame), where
+    # the hose barely moves. A loop instead: first AND last frame = hero_sunrise's first frame, the hose swaying in between,
+    # so I6 can play it forwards at 1x and land on hero_sunrise's first frame.
+    "countdown_drift_3": dict(duration=5, first_frame="media/plates/countdown_drift/take1.first.jpg", last_frame="media/plates/countdown_drift/take1.first.jpg",
+        refs=["LT", "LF", "SHIP"], out_id="countdown_drift", prompt=
+        "The video starts exactly on the first input image and ends exactly on the same image, with identical framing, lighting and composition; everything stays as it is unless described. "
+        f"{LEO} floats weightless and calm in open space beside the Voskhod-2 spacecraft on the right, in dim light, drifting very slightly and settling back. "
+        "His umbilical tether is a soft, limp, flexible white fabric-covered hose, not a stiff tube: its loose loop floats and sways freely in weightlessness the whole time, "
+        "slowly bending and changing shape, rippling gently along its length like a rope drifting underwater, swinging out and then drifting back into exactly the shape it has in the image at the end. "
+        "The glowing thin band of the atmosphere along the dark Earth stays as it is: the sun does not rise, no flare, the light does not change. Locked-off camera. "
+        "One continuous shot, no cuts. " + LOOK),
     # L5: his drawing was a small flat card (FACTS §4, the leonov_drawing plate), not a folded sheet (FACTCHECK P2-8). Continues fire_night_v2 (its frame at 2.2 s).
     "card_by_fire": dict(duration=6, first_frame="media/plates/card_by_fire/take1.first.jpg", refs=["DRAW", "LF"], prompt=START +
         f"Night in the frozen Ural taiga by a small fire. The man on the left is {LEO2}; the man on the right is the commander Pavel Belyayev. Both wear the soft quilted suit linings and fur boots as in the image. "
