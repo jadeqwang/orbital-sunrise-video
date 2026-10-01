@@ -6,7 +6,7 @@
 
 * ▶ **[`release/Orbital_Sunrise_1080p.mp4`](release/Orbital_Sunrise_1080p.mp4)** — 1920×1080, 24 fps, 4:02, HEVC
 * [`release/Orbital_Sunrise_720p_h264.mp4`](release/Orbital_Sunrise_720p_h264.mp4) — 1280×720, H.264, for players and sites that need H.264
-* **Extended cut** (this branch; the re-recorded extended mix, two new intro lines, 4:12):
+* **Extended cut** (this branch; the re-recorded extended mix, two new intro lines, her round 1–5 notes; 4:12, 252.28 s):
   [`release/extended/Orbital_Sunrise_extended_1080p.mp4`](release/extended/Orbital_Sunrise_extended_1080p.mp4) (HEVC) and
   [`release/extended/Orbital_Sunrise_extended_720p_h264.mp4`](release/extended/Orbital_Sunrise_extended_720p_h264.mp4) (H.264).
   How it was retimed: [`docs/ALTERNATE_CUT.md`](docs/ALTERNATE_CUT.md)

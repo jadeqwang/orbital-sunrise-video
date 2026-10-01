@@ -779,8 +779,13 @@ async function initShots2() {
   // the hatch is blown against a birch; the men (white suits, no helmets) rock it free
   shot('L2_home', HOME1.t0 - .05, MADE2.t0 - .05, async (t, lt) => {
     paper(G, 'snow');
-    await drawPlate(t, 'hatch_tree', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[W / 2 - 520, 150, W / 2 + 520, 420]], .8) } });
+    await drawPlate(t, 'hatch_tree', .5 + lt * .9, { paper: 'snow', view: { zoom: 1.03 }, ...SNOW_DUSK, hatch: { mask: quiet([[W / 2 - 520, 150, W / 2 + 520, 420], [40, H - 150, 1000, H - 40]], .8) } });
     lyricStack(t, [{ s: 'HOME', t: HOME1.t0, x: W / 2, y: 380, size: 280, align: 'center', col: 'graphite', style: 'rise' }]);
+    // viewers missed the jammed hatch (FACTS §3: blown by explosive bolts, wedged against a tree, rocked free, fell into the snow)
+    const Lt = typeLayer();
+    tele(Lt.g, 'THE HATCH BLEW OPEN — INTO A TREE.', 60, H - 104, t, HOME1.t0 + .7, { size: 24, weight: 800, col: 'graphite', dur: .7 });
+    tele(Lt.g, 'THEY ROCKED IT UNTIL IT FELL FREE.', 60, H - 66, t, HOME1.t0 + 1.7, { size: 24, weight: 800, col: 'graphite', dur: .7 });
+    typeFlush(Lt, drawClock(t, 12).n, .6);
   });
   // the hatch lies in the snow; Leonov climbs out and helps Belyayev
   shot('L3_madeit', MADE2.t0 - .05, HOME2.t0 - .05, async (t, lt) => {

@@ -229,6 +229,16 @@ functions of t) over plates with the generated one painted out (`tools/tether_r5
   1–120; the plate's push-in is followed with a per-frame zoom, the hull anchor extrapolated off frame), and **I1_poster**
   (hero_sunrise at 4.4 s, a moment inside H1a) draws that moment's cable: the hoop never returns. `?i6=r4` restores all three.
 
+## Round 4–5 release (2026-10-01)
+
+She approved all round-4/5 stills ("ship it"). Full re-render (252.28 s, 6055 frames) after rebuilding the round-5 plates
+(`tools/tether_r5.py n1 i6`; `jade_loc_day` frames checked against its committed take); `release/extended/` 1080p HEVC and
+720p H.264 re-encoded with `encode_release.sh` (audio unchanged, so the 320k MP3 stands). In this cut: 轨道日出 in the
+poster and end title, the unsung last "home." no longer typed, the first "home." on its sung onset, the relit 0:44 with no
+glasses-shadow band, and the simulated constant-length tether at 0:14 and through 0:33–0:38 (hoop painted out).
+Viewer feedback, added at release: `L2_home` (3:25) types a two-line caption bottom left in L6's mono style, "THE HATCH BLEW
+OPEN — INTO A TREE." / "THEY ROCKED IT UNTIL IT FELL FREE." (FACTS §3), clear of the HOME lyric.
+
 ## 0. Ask her first (only she can supply these)
 
 1. **The new lyric text**, line by line, and where each new line goes (which section, before/after which existing line).
