@@ -809,15 +809,23 @@ async function initShots2() {
     tele(Lt.g, 'ALTITUDE ~2.5 KM', 60, 100, t, d20 + .9, { size: 20, col: 'lead', dur: .4 });
     typeFlush(Lt, drawClock(t, 12).n, .3);
   });
-  shot('E2_map', bt2(16), D2[0].t0 - .3, async (t, lt) => {
+  // the chops hit on the sung words, which sit on the beat ("Off" n, "but" the and of n+3, "home" n+5; tools/retime.py
+  // offcourse1-3). Each hit is set .1 s early: drawn on twos, and a slam is half-opaque only .04 s in, so a hit set on
+  // the word shows 0.07-0.14 s after it; .1 s early it shows within 0.035 s of the beat (measured on the 24 fps render).
+  // ?offcourse=old: the round-4 times (the released cut's recogniser timing through the map: lines 2-3's OFF COURSE
+  // 0.4-0.6 s early, every (BUT I'M) 0.26-0.34 s early, lines 2-3's HOME 0.28-0.53 s late, as seen).
+  const OC_OLD = Q.get('offcourse') === 'old', OC_T0 = OC_OLD ? 176.433 : D2[0].t0;
+  const OC_HITS = OC_OLD ? [[176.433, 177.271, 178.253], [178.907, 180.292, 181.412], [181.632, 183.126, 184.542]]
+    : D2.map(l => [l.words[0][0], l.words[2][0], l.words[4][0]].map(x => x - .1));
+  shot('E2_map', bt2(16), OC_T0 - .3, async (t, lt) => {
     paper(G, 'snow');
     descentMap(t, bt2(16), { dur: 4.2 });
   });
-  shot('E3_offcourse', D2[0].t0 - .3, d21, async (t, lt) => {
+  shot('E3_offcourse', OC_T0 - .3, d21, async (t, lt) => {
     paper(G, 'snow');
     await drawPlate(t, 'descent_forest', .5 + lt * .5, { paper: 'snow', lines: { contrast: 2.4, white: .7 }, view: { zoom: 1.03, rot: Math.sin(lt * .5) * .03 } });
     const items = [];
-    for (const l of D2) { items.push([l.words[0][0], 'OFF COURSE', W / 2, 560, 240, 'verm']); items.push([l.words[2][0], "(BUT I'M)", W / 2, 520, 150, 'graphite']); items.push([l.words[4][0], 'HOME', W / 2, 600, 300, 'graphite']); }
+    for (const [a, b, c] of OC_HITS) { items.push([a, 'OFF COURSE', W / 2, 560, 240, 'verm']); items.push([b, "(BUT I'M)", W / 2, 520, 150, 'graphite']); items.push([c, 'HOME', W / 2, 600, 300, 'graphite']); }
     chopWords(t, items, { hold: .55 });
   });
 

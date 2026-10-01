@@ -94,6 +94,17 @@ TARGETS = {
             # 204.81), held to 208.57. The map put it at 203.37, a note change inside the held "down". Optional 5th
             # field: the line's t1.
             "home1": ("outro", 3, None, [204.79], 208.57),
+            # drop 2's three "Off course… (but I'm) home" (2026-10-01, measured on the vocal stem, tools/vocal_stem.py
+            # --ss=170 --t=20; the beat grid sits within 0.005 s of the instrumental's onsets here). Each line is two
+            # bars: "Off" beat n, "course" n+1, "but" the and of n+3, "I'm" n+4, "home" n+5. Sung onsets (stem):
+            # Off 176.43 / 179.35 / 182.27, course /k/ 176.78 / 179.70 / 182.61 (vowel 176.88 / 179.80 / 182.73),
+            # but 177.72 / 180.62 / 183.57, I'm 177.96 / 180.88 / 183.79 (after the /t/), home 178.32 / 181.24 / 184.13;
+            # stored snapped to the 8th-note grid of the measured beats (all within 0.07 s). The map's times (the
+            # released cut's recogniser timing) had lines 2-3's "Off" 0.5-0.7 s early (inside the previous "home"),
+            # "but" on the /s/ of "course" and lines 2-3's "home" on its later note change (+0.19 / +0.40 s).
+            "offcourse1": ("drop2", 0, None, [176.485, 176.849, 177.761, 177.944, 178.310], 179.04),
+            "offcourse2": ("drop2", 1, None, [179.402, 179.765, 180.677, 180.859, 181.222], 181.95),
+            "offcourse3": ("drop2", 2, None, [182.316, 182.682, 183.593, 183.775, 184.140]),
         },
         reworded={},
     ),
