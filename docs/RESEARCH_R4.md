@@ -1,5 +1,7 @@
 # Research R4: Voskhod 2 re-entry, the "Orbital Sunrise" drawing, and its copyright
 
+> Index of all research notes, and the short answer to "is the Vzor scene real?": [RESEARCH_NOTES.md](RESEARCH_NOTES.md).
+
 Compiled 2026-09-30. **Method note:** every page fetch in this session was blocked by the
 network egress proxy (Wikipedia, NASA SMA, Smithsonian, russianspaceweb, svengrahn,
 americaspace, lenta.ru all returned `EGRESS_BLOCKED`). Everything below comes from
@@ -298,7 +300,11 @@ What this settles:
   [RSW] p. 6–7: Sibiryakov's team skied in at 08:30–11:35 on 20 March; the crew skied out
   9 km on 21 March.
 
-#### G2 caption (round 6)
+#### G2 caption (round 6; removed in round 7)
+
+**Round 7 (2026-10-01):** at the songwriter's request the caption is gone. G2 is back to its
+original picture with no notes on screen, and the finding is summarised for viewers in
+[RESEARCH_NOTES.md](RESEARCH_NOTES.md). The round-6 text, for the record:
 
 The scene now carries a verbatim quote from [L05] p. 4. The brackets replace "he", and the
 ellipsis drops " in the spacecraft,":
