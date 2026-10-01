@@ -1,0 +1,28 @@
+{
+ "plate": "jade_loc_day",
+ "take": "take1.mp4",
+ "kind": "not a model take: media/plates/jade_loc/take1.mp4 relit frame by frame (same frames, same timing, same lips)",
+ "relit_still": {
+  "model": "google/nano-banana-pro",
+  "input": "media/plates/jade_loc/take1.first.jpg",
+  "prompt": "take1.prompt.txt (jade_location.FIXES[\"daylight\"])",
+  "params": {
+   "aspect_ratio": "16:9",
+   "image_size": "2K",
+   "output_format": "png"
+  },
+  "genlog_lines": [
+   524,
+   525
+  ],
+  "picked": "day_2 (chain/day_2_model.jpg; day_1 kept a stronger glasses-shadow band: chain/day_1_model_unused.jpg)",
+  "command": "python3 -c \"import sys; sys.path.insert(0,'tools'); import jade_location as J; J.fix('media/plates/jade_loc/take1.first.jpg', '<prefix>', 'daylight', n=2)\""
+ },
+ "first_frame": "take1.first.jpg = jade_location.restore_lines(jade_loc/take1.first.jpg, day_2.png, ..., skip_cheeks=True) (written by tools/jade_relight.py as <out>/first.jpg)",
+ "relight": "python3 tools/jade_relight.py media/plates/jade_loc/take1.mp4 media/plates/jade_loc/take1.first.jpg <day_2.png> <out_dir> --plate=jade_loc_day   (from chain/day_2_model.jpg the result is close, not identical: the model PNG is archived as JPEG)",
+ "timing": {
+  "unchanged": "same as jade_loc: take time = song time - (30.9 + lag), lag -0.22 (her G); ?h1dlag="
+ },
+ "shot": "H1d_home default (?h1d=loc = the golden-hour jade_loc as released)",
+ "note": "her round-4 note: relight for broad daylight, natural skin colour, no glasses-shadow (like 1:55/2:08 B3_never), looser sketch at the edges"
+}

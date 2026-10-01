@@ -634,12 +634,14 @@ async function initShots() {
     // looser at the edges: the engine's strokes fade out over the outer fifth of the frame (not on her: she is centred)
     const edgeLoose = exp === 'day' ? (X, Y) => { const dx = Math.max(0, Math.abs(X - W / 2) / (W / 2) - .62) / .38, dy = Math.max(0, Y / H - .78) / .22;
       return 1 - .85 * smooth(clamp(Math.hypot(dx, dy))); } : undefined;
+    // and lighter on her face, so the engine does not re-trace the old glasses-shadow's edge from the take's line work
+    const faceQuiet = exp === 'day' ? (X, Y) => 1 - .7 * smooth(clamp((1.15 - Math.hypot((X - 900) / 190, (Y - 430) / 235)) / .3)) : undefined;
     const lag = +(new URLSearchParams(location.search).get('h1dlag') ?? -.22);  // her pick by ear ("G"); ?h1dlag= tries others
     const tp = loc ? OI(t) - (30.9 + lag) : OI(t) - 32.05;   // take time runs on the released song's clock
     if (exp !== 'js') await paperTake(id, tp);
     if (exp !== 'plain') {
       G.save(); if (exp !== 'js') G.globalAlpha = .45;
-      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2, mask: edgeLoose } });
+      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2, mask: edgeLoose && ((X, Y) => edgeLoose(X, Y) * faceQuiet(X, Y)) }, ...(faceQuiet ? { contour: { mask: faceQuiet } } : {}) });
       G.restore();
     }
     const w = H1[1].words;
