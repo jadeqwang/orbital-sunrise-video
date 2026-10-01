@@ -15,7 +15,20 @@ function _rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>
 // o: { t0, t1, L, n, endA(t) → [x,y,z], endB(t) → [x,y,z], seed, turns, damp (per second), bend (0..1 per substep),
 //      sub (substeps per 1/24 s), iters, pre (seconds of settling before t0, ends held), drift (px/s of initial float) }
 function simulateRope(o) {
-  const n = o.n ?? 48, L = o.L, seg = L / n, rnd = _rng(o.seed ?? 7);
+  // o.via(A, B) → [[x,y,z], ...]: an initial route from end A to end B through these points (a Catmull-Rom curve); the
+  // cable's length is then that route's length (o.L ignored)
+  let route = null;
+  if (o.via) {
+    const A0 = o.endA(o.t0), B0 = o.endB(o.t0), W = [A0, ...o.via(A0, B0), B0], R = [];
+    for (let i = 0; i < W.length - 1; i++) {
+      const p0 = W[Math.max(0, i - 1)], p1 = W[i], p2 = W[i + 1], p3 = W[Math.min(W.length - 1, i + 2)];
+      for (let j = 0; j < 40; j++) { const s = j / 40; R.push([0, 1, 2].map(c => .5 * (2 * p1[c] + (p2[c] - p0[c]) * s + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * s * s + (3 * p1[c] - p0[c] - 3 * p2[c] + p3[c]) * s * s * s))); }
+    }
+    R.push(W[W.length - 1]);
+    const cum = [0]; for (let i = 1; i < R.length; i++) cum.push(cum[i - 1] + Math.hypot(R[i][0] - R[i - 1][0], R[i][1] - R[i - 1][1], R[i][2] - R[i - 1][2]));
+    route = { R, cum, len: cum[cum.length - 1] };
+  }
+  const n = o.n ?? 48, L = route ? route.len : o.L, seg = L / n, rnd = _rng(o.seed ?? 7);
   const sub = o.sub ?? 10, dt = 1 / 24 / sub, iters = o.iters ?? 30;
   const keep = Math.pow(1 - (o.damp ?? .5), dt);            // velocity kept per substep
   const bend = o.bend ?? .08;
@@ -34,7 +47,12 @@ function simulateRope(o) {
   };
   const len = R => { let s = 0, p = shape(R, 0); for (let i = 1; i <= n; i++) { const q = shape(R, i); s += Math.hypot(q[0] - p[0], q[1] - p[1], q[2] - p[2]); p = q; } return s; };
   let lo = 0, hi = L; for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (len(m) < L) lo = m; else hi = m; }
-  for (let i = 0; i <= n; i++) { const p = shape(lo, i); X.set(p, i * 3); }
+  for (let i = 0; i <= n; i++) {
+    if (!route) { X.set(shape(lo, i), i * 3); continue; }
+    const target = i * seg; let k = 1; while (k < route.cum.length - 1 && route.cum[k] < target) k++;
+    const f = (target - route.cum[k - 1]) / Math.max(1e-9, route.cum[k] - route.cum[k - 1]);
+    X.set([0, 1, 2].map(c => lerp(route.R[k - 1][c], route.R[k][c], f)), i * 3);
+  }
   // a slow float: each point starts with a small smooth velocity (the slack drifts, coils open and turn)
   const fv = Array.from({ length: 3 }, () => [rnd() * 6.283, (rnd() - .5) * 2]);
   for (let i = 0; i <= n; i++) for (let k = 0; k < 3; k++) {

@@ -664,8 +664,14 @@ async function initShots() {
     const [id0, tp] = i6Map(t), a = TD6[R5ID[id0]][key], x = clamp(tp * 24, 0, a.length - 1), i = Math.min(a.length - 2, Math.floor(x)), f = x - i;
     return [lerp(a[i][0], a[i + 1][0], f), lerp(a[i][1], a[i + 1][1], f)];
   };
-  const i6Rope = () => ROPE6 || (ROPE6 = simulateRope({ name: 'I6', t0: O(20.5), t1: hk0, L: 860, n: 72, seed: +(Q.get('i6seed') || 5), turns: 1.0, flat: .6,
-    endA: t => [...i6Track(t, 'anchor'), 70], endB: t => [...i6Track(t, 'hip'), 0], damp: .12, bend: .05, rMin: 50, iters: 60, sub: 12, pre: 1.5, drift: 30 }));
+  // the cable starts out (song time O(20.5)) wound loosely around him, after Gemini 4's photo: from the hull down past his
+  // right side, up over his head behind him, round his left shoulder and in front of his chest to the hip. Its length is
+  // that route's: ≈5.4 m at his scale (he is ≈1.7 m ≈ 360 plate px; Leonov's tether was 5.35 m).
+  const i6Rope = () => ROPE6 || (ROPE6 = simulateRope({ name: 'I6', t0: O(20.5), t1: hk0, n: 120, seed: +(Q.get('i6seed') || 5),
+    endA: t => [...i6Track(t, 'anchor'), 70], endB: t => [...i6Track(t, 'hip'), 0],
+    via: (A, H) => [[690, 370, 60], [630, 440, 30], [565, 340, 70], [600, 200, 40], [525, 95, 90], [420, 45, 60], [330, 115, 30], [225, 165, -20], [255, 265, -50], [345, 225, -70], [430, 335, -50]]
+      .map(([x, y, z]) => [x + H[0] - 503, y + H[1] - 300, z]),
+    damp: .15, bend: .015, rMin: 70, iters: 60, sub: 12, pre: .8, drift: 24 }));
   shot('I6_predawn', O(20.5), hk0, async (t, lt) => {
     paper(G, 'night');
     const tq = drawClock(t, 8).tq, [id0, tp] = i6Map(tq), pan = smooth(clamp((tq - (hk0 - I6_HERO)) / I6_HERO));
