@@ -436,6 +436,9 @@ async function initShots2() {
     // (~16 kN for ~45 s, Δv ~155 m/s), the 167 × 475 km orbit and its 90.9 min period
     const Lt = typeLayer(), eq = ['Δv ≈ 155 m/s', 't ≈ 45 s', 'T = 90.9 min', 'ОРИЕНТАЦИЯ — РУЧНАЯ', 'h = 167–475 km', 'F ≈ 16 kN'];
     eq.forEach((s, i) => { const a = spin + i / eq.length * TAU, r = 430; text(Lt.g, s, W / 2 + Math.cos(a) * r * 1.6, H / 2 + Math.sin(a) * r * .8, { font: FONT.serif(46), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * .9, align: 'center', rot: Math.sin(a) * .2 }); });
+    // the scene (Belyayev across both couches at the Vzor, Leonov holding him) is Leonov's account (docs/RESEARCH_R4.md §1):
+    // a quiet citation under everything, below the ring of figures (lowest ≈ y 884)
+    tele(Lt.g, 'Source: A. Leonov & D. Scott, Two Sides of the Moon (2004)', W / 2, H - 34, t, BD[1].t0 + .2, { size: 17, col: 'silver', alpha: .62, align: 'center', dur: .6 });
     typeFlush(Lt, drawClock(t, 12).n, .4);
     const w = BD[1].words;
     lyricStack(t, [{ s: 'DOING THE MATH', t: w[0][0], x: W / 2, y: 520, size: 150, align: 'center', style: 'rise' }, { s: 'WITH A SPINNING SUN', t: w[3][0], x: W / 2, y: 640, size: 110, align: 'center', style: 'rise', col: 'gold' }]);
@@ -573,11 +576,12 @@ async function initShots2() {
     paper(G, 'night');
     const ftp = 2.2 + lt * .55, z = 1.03, m = plateMeta('fire_night_v2', ftp), fu = m ? m.sun : [.43, .96];
     const fx = W / 2 + (fu[0] - .5) * W * z, fy = H / 2 + (fu[1] - .5) * H * z;
-    const firelight = (X, Y) => clamp(1.25 - Math.hypot((X - fx) / 1.3, Y - fy) / 950, .14, 1) * quiet([[60, 170, 700, 340]], .85)(X, Y);
+    // no lyric here: the re-record (alt2) does not sing the second "home." (the voice ends on "down" ≈211.3 s; what the
+    // vocal stem holds after it is the vibrato-free string line), so the fire and the caption carry the shot alone
+    const firelight = (X, Y) => clamp(1.25 - Math.hypot((X - fx) / 1.3, Y - fy) / 950, .14, 1);
     await drawPlate(t, 'fire_night_v2', ftp, { view: { zoom: z }, ana: { gain: .95 }, lines: { black: .14, contrast: 2.1 }, hatch: { mask: firelight },
       contour: { mask: (X, Y) => firelight(X, Y) > .35 ? 1 : 0 },
       extra: (pen, F, view, d) => flames(pen, fx, Math.min(H + 20, fy + 40), { size: 300, n: 54, seed: d * 3 + 1 }) });
-    lyricStack(t, [{ s: 'home', t: HOME2.t0, x: 110, y: 300, font: FONT.serif(150), col: 'gold', style: 'rise' }]);
     const Lt = typeLayer(); tele(Lt.g, 'TWO NIGHTS IN THE TAIGA · BELOW −25 °C', 60, H - 64, t, HOME2.t0 + 1, { size: 22, weight: 700, col: 'silver', dur: .7 }); typeFlush(Lt, drawClock(t, 12).n, .4);
   });
   // by the fire he takes a small flat card out of his suit lining, looks at it and smiles (card_by_fire, generated from
