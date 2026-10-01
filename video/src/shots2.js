@@ -74,12 +74,12 @@ async function leonovDrawing(t, k, view, o = {}) {
 const LD_MODE = new URLSearchParams(location.search).get('drawing') || 'redraw';
 const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
 const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
-const LD_CONTRAST = { black: 1.35, blue: 1.2, deep_blue: 1.12, light_blue: .95, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
+const LD_CONTRAST = { black: 1.35, blue: 1.2, deep_blue: 1.12, light_blue: 1, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
 const LD_CREDIT = 'A. Leonov, «Sunrise» (Восход), 1965 · Museum of the Yuri Gagarin Cosmonaut Training Centre, Star City';
 // per pencil: stroke length and width (card units), strokes per unit of pressure, how far a stroke leans off the field
 const LD_STYLE = {
   black: { len: [40, 110], w: [1.8, 3.2], k: 4.2, dev: .05 },
-  light_blue: { len: [30, 90], w: [1.6, 2.8], k: 8, dev: .06, ap: .5, th: .45 },   // the sunrise bands: dense, the card barely shows
+  light_blue: { len: [30, 90], w: [1.6, 2.8], k: 7, dev: .06, ap: .36, th: .45 },   // the sunrise bands: dense, the card barely shows
   yellow: { len: [36, 100], w: [1.6, 2.8], k: 9, dev: .04, ap: .55, th: .4 },
   orange_red: { len: [30, 90], w: [1.5, 2.6], k: 8.5, dev: .04, ap: .55, th: .42 },
   blue: { len: [36, 120], w: [1.6, 3], k: 6.5, dev: .08, ap: .5 },          // the Earth: cobalt and deep blue laid over each other,
@@ -116,11 +116,13 @@ function ldStrokes() {
     for (let j = 0; j < g.ny; j++) for (let i = 0; i < g.nx; i++) {
       const c = p.c[j * g.nx + i] / 255 * 1.25; if (c < .03) continue;
       const L0 = (st.len[0] + st.len[1]) / 2, W0 = (st.w[0] + st.w[1]) / 2;
-      const sunCell = p.name === 'orange_red' && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * .88;
-      let n = c * st.k * (sunCell ? 1.6 : 1) * cellA / (L0 * W0 * .55); n = Math.floor(n) + (r() < n % 1 ? 1 : 0);
+      const sunCell = p.name === 'orange_red' && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * .74;
+      // round the disc the band's own strokes thin out, so the denser band does not swell the sun past its size
+      const sunRim = p.name === 'orange_red' && !sunCell && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * 1.35;
+      let n = c * st.k * (sunCell ? 1.6 : sunRim ? .22 : 1) * cellA / (L0 * W0 * .55); n = Math.floor(n) + (r() < n % 1 ? 1 : 0);
       for (let s = 0; s < n; s++) {
         const x = g.x0 + (i + r()) * g.cell, y = g.y0 + (j + r()) * g.cell;
-        const inSun = p.name === 'orange_red' && Math.hypot(x - S.cx, y - S.cy) < S.r * .88;
+        const inSun = p.name === 'orange_red' && Math.hypot(x - S.cx, y - S.cy) < S.r * .74;
         const len = inSun ? 6 + r() * 14 : st.len[0] + (st.len[1] - st.len[0]) * Math.pow(r(), 1.4);
         const bend = (r() - .5) * .006, dev = (r() - .5) * 2 * st.dev, half = [[], []];
         const a0 = inSun ? 1.15 + (r() - .5) * .6 : ldDir(x, y) + dev;
@@ -132,7 +134,8 @@ function ldStrokes() {
             if (!inSun) { let b = ldDir(px, py) + dev; while (b - a > Math.PI / 2) b -= Math.PI; while (a - b > Math.PI / 2) b += Math.PI; if (Math.abs(b - a) > .45) break; a = a + (b - a) * .22 + bend * sg; }
             px += Math.cos(a) * step * sg; py += Math.sin(a) * step * sg; run += step;
             if (!inSun && cov(px, py) < .04 && r() < .5) break;
-            if (inSun && Math.hypot(px - S.cx, py - S.cy) > S.r * (.95 + .1 * r())) break;   // the disc keeps a round edge                        // ran off the band (ends a little ragged)
+            if (inSun && Math.hypot(px - S.cx, py - S.cy) > S.r * (.8 + .08 * r())) break;   // the disc keeps a round edge
+            if (!inSun && p.name === 'orange_red' && Math.hypot(px - S.cx, py - S.cy) < S.r * .8) break;   // the band runs just into the disc                        // ran off the band (ends a little ragged)
             pts.push(px, py);
           }
         }

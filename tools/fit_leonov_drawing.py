@@ -80,6 +80,13 @@ assert len(set(names)) == 5, names
 bi = names.index("blue"); mb = lbl == bi
 deep = mb & (mag > np.percentile(mag[mb], 60)) & ((R / illum)[..., 2] < np.percentile((R / illum)[..., 2][mb], 55))
 lbl[deep] = 5; names.append("deep_blue")
+# above the yellow band every blue is his light blue (the pale sky band under the black); the darker blue pixels there
+# are light blue under black pencil, which the film draws as its own black strokes
+yel = lbl == names.index("yellow")
+ycol = np.array([np.median(np.where(yel[:, x])[0]) if yel[:, x].any() else np.nan for x in range(CW)])
+ycol = np.interp(np.arange(CW), np.where(~np.isnan(ycol))[0], ycol[~np.isnan(ycol)])
+upper = np.arange(CH)[:, None] < ycol[None, :] - 6
+lbl[upper & ((lbl == bi) | (lbl == 5))] = names.index("light_blue")
 ORDER = ["black", "light_blue", "yellow", "orange_red", "blue", "deep_blue"]   # the bands from the top (space) down to the Earth
 
 ys0, xs0 = GY0 // CELL * CELL, GX0 // CELL * CELL
@@ -104,7 +111,16 @@ for nm in ORDER:
     full = np.percentile(mag[m], 92)
     strong = m & (mag > np.percentile(mag[m], 80)) & (mag < np.percentile(mag[m], 99))
     T = np.median((R / illum)[strong], 0).clip(0, 1)                 # what one full-pressure layer lets through
-    if "blue" in nm:
+    if nm == "light_blue":
+        # his pale band between the sunrise colours and the black: sample it there (above the yellow, below the black),
+        # white-balanced against the card, keeping its own pale hue (only a little of the neutral part removed)
+        Ap = A[m]; band = (mag[m] > np.percentile(mag[m], 40)) & (mag[m] < np.percentile(mag[m], 92))
+        ys_, xs_ = np.where(m)
+        yel = lbl == names.index("yellow"); ycol = np.array([np.median(np.where(yel[:, x])[0]) if yel[:, x].any() else np.nan for x in range(CW)])
+        above = ys_ < np.nan_to_num(ycol[xs_], nan=-1)
+        Ab = np.median(Ap[band & above], 0); Ab = Ab - .4 * Ab.min()
+        T = np.exp(-Ab).clip(0, 1)
+    elif "blue" in nm:
         # his blues are clean pigments: the grey in these pixels is black pencil (and shadow) laid over them, which the
         # film draws as its own black strokes. Sample the hue from the most saturated strokes (white-balanced against the
         # bare card) and take the neutral part out of the absorbance: what is left is the blue itself.
