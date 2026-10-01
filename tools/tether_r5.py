@@ -178,20 +178,18 @@ def hoop_mask(im, M):
     k_, lab, st, c = cv2.connectedComponentsWithStats(core)
     k = max(range(1, k_), key=lambda k: st[k][4] if c[k][0] < .62 * WD else 0)   # him, not the ship
     core = (lab == k).astype(np.uint8)
-    xs = np.nonzero(core)[1]; cx = xs.mean()
+    ys, xs = np.nonzero(core); cx, cy = xs.mean(), ys.mean()
     corex = cv2.dilate(core, ker(3)).astype(bool)
     hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
     V, S = hsv[..., 2].astype(int), hsv[..., 1].astype(int)
     B_, R_ = im[..., 0].astype(int), im[..., 2].astype(int)
-    left = np.zeros_like(corex); left[:, : int(cx)] = True
-    ok = (V > 28) & (S < 150) & (B_ <= R_ + 6) & ~corex & left
-    seed = (b.astype(bool) & ~corex & left) & ok
-    grow = seed.copy()
-    for _ in range(80):
-        g2 = cv2.dilate(grow.astype(np.uint8), ker(1)).astype(bool) & ok
-        if (g2 == grow).all():
-            break
-        grow = g2
+    left = np.zeros_like(corex); left[: int(cy) + 5, : int(cx)] = True   # the hose loops up-left of his waist
+    # the limb: its blue band (the biggest blue component), widened over its white and orange edges
+    blue = ((B_ > R_ + 6) & (V > 40)).astype(np.uint8)
+    k_, lab, st, _ = cv2.connectedComponentsWithStats(blue)
+    limb = (lab == max(range(1, k_), key=lambda k: st[k][4])) if k_ > 1 else np.zeros_like(corex)
+    limb = cv2.dilate(limb.astype(np.uint8), ker(9)).astype(bool)
+    grow = (V > 28) & (S < 150) & (B_ <= R_ + 6) & ~corex & left & ~limb
     # keep the pieces that are big enough (the hose), not stray stars
     k_, lab, st, _ = cv2.connectedComponentsWithStats(grow.astype(np.uint8))
     keep = np.zeros_like(grow)

@@ -967,5 +967,23 @@
   "take": "tether_drift_t2 without its tether, him moved to a constant-length cable (tools/tether_r5.py n1)",
   "mattes": true,
   "gain": 1.334
+ },
+ "countdown_drift_r5": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "countdown_drift_t3 without the generated hose (tools/tether_r5.py i6)",
+  "mattes": true,
+  "gain": 1.38
+ },
+ "hero_sunrise_r5": {
+  "n": 72,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "hero_sunrise without the generated hose (tools/tether_r5.py i6)",
+  "mattes": true,
+  "gain": 1.38
  }
 }

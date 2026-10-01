@@ -642,7 +642,16 @@ async function initShots() {
   // Round 4 (her note: the tether should float and sway, not hang rigid): countdown_drift take 3 (countdown_drift_t3) starts
   // AND ends on hero_sunrise's first frame with the hose swaying and turning in between, so it plays forwards, its last 2.2 s
   // at ≈1.7x easing to rest on that frame. ?i6=old: take 1 played backwards into its first frame (the hose barely moved).
-  const I6_OLD = new URLSearchParams(location.search).get('i6') === 'old';
+  // Round 5 (her note: "the tether is not a rigid object ... it should float around the cosmonaut like an umbilical cord"):
+  // the generated hose (a stiff hoop with a free end) is painted out of both plates (tools/tether_r5.py i6:
+  // countdown_drift_r5, hero_sunrise_r5) and a simulated cable (tether.js) runs from the hull, where the struts meet it, to his
+  // right hip: one constant length (≈2.5x the distance), stiff like Gemini 4's umbilical (her reference: big smooth loops,
+  // no kinks), no gravity, floating slowly in loops in front of and behind him. ?i6=r4: round 4 (take 3 and its hoop).
+  const I6_Q = new URLSearchParams(location.search).get('i6');
+  const I6_OLD = I6_Q === 'old', I6_R5 = !I6_OLD && I6_Q !== 'r4';
+  let TD6 = null, ROPE6 = null;
+  if (I6_R5) { try { TD6 = await loadJSON('data/tether_i6.json'); } catch (e) { console.warn('no data/tether_i6.json (tools/tether_r5.py i6)'); } }
+  const R5ID = { countdown_drift_t3: 'countdown_drift_r5', hero_sunrise: 'hero_sunrise_r5' };
   const I6_HERO = 1.4;                                        // seconds of hero_sunrise before the cut to H1a
   const i6Map = t => {                                        // → [plate, plate time]
     const s0 = O(20.5), tm = hk0 - I6_HERO;
@@ -651,10 +660,23 @@ async function initShots() {
     const D = I6_HERO, Hh = tpHero(hk0), c = (1 - 2 * Hh / D) / (D * D), a = (Hh - c * D * D * D) / (D * D), x = clamp(t - tm, 0, D);
     return ['hero_sunrise', a * x * x + c * x * x * x];      // h(0) = 0, h'(0) = 0, h(D) = tpHero(hk0), h'(D) = 1
   };
+  const i6Track = (t, key) => {   // his hip / the hull anchor (plate px) on the r5 plate shown at song time t
+    const [id0, tp] = i6Map(t), a = TD6[R5ID[id0]][key], x = clamp(tp * 24, 0, a.length - 1), i = Math.min(a.length - 2, Math.floor(x)), f = x - i;
+    return [lerp(a[i][0], a[i + 1][0], f), lerp(a[i][1], a[i + 1][1], f)];
+  };
+  const i6Rope = () => ROPE6 || (ROPE6 = simulateRope({ name: 'I6', t0: O(20.5), t1: hk0, L: 860, n: 72, seed: +(Q.get('i6seed') || 5), turns: 1.0, flat: .6,
+    endA: t => [...i6Track(t, 'anchor'), 70], endB: t => [...i6Track(t, 'hip'), 0], damp: .12, bend: .05, rMin: 50, iters: 60, sub: 12, pre: 1.5, drift: 30 }));
   shot('I6_predawn', O(20.5), hk0, async (t, lt) => {
     paper(G, 'night');
-    const tq = drawClock(t, 8).tq, [id, tp] = i6Map(tq), pan = smooth(clamp((tq - (hk0 - I6_HERO)) / I6_HERO));
-    await drawPlate(t, id, tp, { hold: tp, rate: 8, view: { zoom: 1.04, ox: 180 * pan }, hatch: { spacing: 7 } });
+    const tq = drawClock(t, 8).tq, [id0, tp] = i6Map(tq), pan = smooth(clamp((tq - (hk0 - I6_HERO)) / I6_HERO));
+    const rope = I6_R5 && TD6 ? i6Rope() : null, id = rope ? R5ID[id0] : id0;
+    await drawPlate(t, id, tp, { hold: tp, rate: 8, view: { zoom: 1.04, ox: 180 * pan }, hatch: { spacing: 7 },
+      ...(rope ? { extra: (pen, F, view, dIdx) => {
+        const P = rope.at(tq), toS = (x, y) => view.toScreen(x / TD6.w - .5 / F.aw, y / TD6.h - .5 / F.ah);
+        // behind him (z > 0) the cable is hidden by his matte; in front it crosses over him
+        const hide = (s, X, Y, zz) => { if (!F.M || zz <= 0) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; };
+        drawCable(pen, P, toS, { w: 17, light: [1, .35], seed: dIdx * 29 + 3, hide, rings: 9, persp: 900, cols: { body: 'white', shade: 'cobalt', hi: 'white' } });
+      } } : {}) });
     const Lt = typeLayer();
     const cd = [[B(Bn(60)), '3'], [B(Bn(61)), '2'], [B(Bn(62)), '1']];
     // bottom left, clear of his boots (he hangs centre frame, drifting right as the frame pans)
