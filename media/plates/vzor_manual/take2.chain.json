@@ -1,0 +1,22 @@
+{
+ "steps": [
+  {
+   "model": "google/nano-banana-pro",
+   "genlog_line": 529,
+   "prompt": "Edit the first image (a film frame inside the cramped Voskhod-2 capsule, 1965). Keep its camera angle, lens, warm hard sunlight, cabin walls, the round porthole with the bright sky high on the back wall, the cloth bag, cables, the grey instrument panel with its dials and the round optical sight on the right, and the photorealistic 35mm film look. Fix the seating: there are exactly TWO cosmonauts and each sits in his OWN separate seat, side by side, both facing the camera / instrument panel, as in the second image where the two men sit in two couches next to each other. On the left, the commander in his seat, leaning slightly forward, his gloved hands on the small orientation control handle and the panel in front of him, eyes on the round optical sight, concentrating. On the right, a clear gap away, the second cosmonaut sits upright in his own separate seat beside him, at the same depth and the same size, watching. Neither is behind, above or on top of the other; their helmets do not overlap; nobody lies across the seats. Both wear the white Berkut spacesuit with rust-orange harness straps and white helmets with red CCCP letters, visors open, faces visible, exactly like the helmets and suits in the first image. Medium-wide shot, both full upper bodies visible. Soviet markings only. No text, no captions, no watermark.",
+   "inputs": [
+    "media/plates/vzor_manual/chain/vzor_take1_0.5s.jpg (vzor_manual take1 at 0.5 s, 1280x720)",
+    "media/plates/vzor_manual/chain/g_force_take1_2.0s.jpg (g_force take1 at 2.0 s: seating layout)"
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output": "chain/seats_still_model.jpg (JPEG of the 2752x1536 PNG, 1920 wide)"
+  },
+  {
+   "local": "centre crop to 2731x1536 (16:9), resize 1920x1080 lanczos, JPEG q95 -> take2.first.jpg"
+  }
+ ]
+}

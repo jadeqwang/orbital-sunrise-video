@@ -1,0 +1,28 @@
+{
+ "model": "bytedance/seedance-2.5",
+ "input": {
+  "prompt": "The video starts exactly on the input image, with identical framing, lighting and composition; everything in it stays as it is unless described. Inside the cramped Voskhod-2 capsule, 1965, the manual orientation before re-entry. Two cosmonauts sit in their own two separate seats side by side, exactly as in the image, and stay in their own seats the whole time: nobody moves behind, over or across the other. The cosmonaut on the left grips the small orientation control handle with his gloved hand and makes small, careful corrections, nudging it, his eyes going between the round optical sight in front of him and the porthole; his other hand touches the panel. The cosmonaut on the right sits still in his seat, watching, breathing, a slight turn of his head. The capsule is slowly spinning: bright sunlight sweeps across the round porthole on the back wall and slides across the cabin, the suits and the helmets, then fades, and the sunlit sky in the porthole slowly turns. Static locked-off camera, no zoom, no push-in, no cuts, never a face close-up; the framing stays as in the image. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions.",
+  "duration": 8,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "reference_images": [
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(4067678 chars)"
+  ],
+  "image": "data:image/jpeg;base64,/9j/4AAQSkZJRgABA...(690443 chars)",
+  "use_virtual_avatar": true
+ },
+ "genlog_line": 530,
+ "genlog": {
+  "t": "2026-10-01T12:25:09",
+  "tag": "plate:vzor_manual",
+  "out": [
+   "media/plates/vzor_manual/take2.mp4"
+  ],
+  "secs": 232.6
+ },
+ "first_frame": "take2.first.jpg = chain/seats_still_model.jpg (Nano Banana, 2752x1536) centre-cropped to 16:9, 1920x1080, JPEG q95",
+ "reference_images": "plate_specs.R['CAB'] (media/env/env_capsule_interior.png, rebuilt from media/archive/sheets/env_capsule_interior.jpg)",
+ "use": "G2_math (2:24 'doing the math with a spinning sun'): her note 'just one cosmonaut on the seat and Belyayev back in his own seat'. Renderer plate vzor_manual_t2 = frames 1-165 (a hard cut to another shot follows at 6.9 s). G2 plays plate time 0.5 + shot time; cabinPorts draws the pencil sun in the porthole (VZ2_PORTS, static). ?g2=old = take 1.",
+ "recreate": "python3 tools/plates.py vzor_manual_2  (spec in tools/plate_specs.py, round 6)"
+}

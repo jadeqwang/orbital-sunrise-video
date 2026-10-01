@@ -510,6 +510,11 @@ async function initShots2() {
   const VZ_PORTS = [{ f: VZ_F, x: [506, 509, 513, 516, 519, 524, 528, 530, 534, 536], y: [98, 95, 94, 91, 90, 94, 96, 99, 100, 101], r: [56, 58, 59, 61, 63, 63, 65, 66, 68, 69], lag: .65, top: false,
     occ: [{ x: [454, 455, 457, 459, 459, 462, 464, 465, 466, 467], y: [156, 154, 153, 154, 155, 156, 159, 161, 163, 165], r: [87, 90, 93, 96, 99, 103, 105, 108, 111, 114] },
       { x: [574, 579, 584, 590, 595, 601, 608, 613, 619, 623], y: [180, 180, 181, 182, 184, 187, 191, 194, 196, 198], r: [73, 75, 77, 79, 81, 83, 85, 87, 91, 93] }] }];
+  // round 6 (her note: "just one cosmonaut on the seat and Belyayev back in his own seat"): vzor_manual take 2, both men in their own
+  // couches side by side, the commander on the orientation handle. Locked-off camera: the porthole between them is still (Hough fit
+  // of the glass, plate px), no helmet in front of it. ?g2=old brings back take 1 (the second helmet just behind him)
+  const G2_OLD = new URLSearchParams(location.search).get('g2') === 'old';
+  const VZ2_PORTS = [{ f: [1, 165], x: [582, 582], y: [84, 84], r: [58, 58], lag: .65, top: false }];
   const CAB_B0 = Bn(375), CAB_BEATS = 8, CAB_V = 400, CAB_ER = 200, CAB_EO = 185;   // ≈139.0 s; plate px/s; the Earth's radius, its centre below the path
   const track = (fs, vs, f) => { let i = 0; while (i < fs.length - 2 && f > fs[i + 1]) i++; return lerp(vs[i], vs[i + 1], clamp((f - fs[i]) / (fs[i + 1] - fs[i]))); };
   // where a line (base + u·(ca, sa)) is inside circle (ox, oy, r): [u0, u1] or null
@@ -674,8 +679,8 @@ async function initShots2() {
   shot('G2_math', BD[1].t0 - .05, BD[2].t0 - .05, async (t, lt) => {
     paper(G, 'night');
     const spin = lt * .35;
-    const { view } = await drawPlate(t, 'vzor_manual', .5 + lt, { view: { zoom: 1.1, rot: Math.sin(spin) * .06 } });
-    if (view) cabinPorts(t, view, (.5 + lt) * 24, VZ_PORTS);
+    const { view } = await drawPlate(t, G2_OLD ? 'vzor_manual' : 'vzor_manual_t2', .5 + lt, { view: { zoom: 1.1, rot: Math.sin(spin) * .06 } });
+    if (view) cabinPorts(t, view, (.5 + lt) * 24, G2_OLD ? VZ_PORTS : VZ2_PORTS);
     // hand-written orbital arithmetic circling the frame. Sourced figures only (docs/FACTCHECK.md §4.2): the TDU-1 retro-rocket
     // (~16 kN for ~45 s, Δv ~155 m/s), the 167 × 475 km orbit and its 90.9 min period
     const Lt = typeLayer(), eq = ['Δv ≈ 155 m/s', 't ≈ 45 s', 'T = 90.9 min', 'ОРИЕНТАЦИЯ — РУЧНАЯ', 'h = 167–475 km', 'F ≈ 16 kN'];

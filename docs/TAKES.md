@@ -250,7 +250,8 @@ at `media/chars/*.png`, `media/env/*.png`, which are **not in the repo** (gitign
 | `drawing_hand` | 2 | B1_split |
 | `leonov_drawing_hand` | 4 | A1_snow, A2_hands |
 | `porthole_spin` | 1 | G1_failed, G2_math |
-| `vzor_manual`, `capsule_spin` | 1 | G2_math |
+| `vzor_manual` | 1 (`?g2=old`), **2** (round 6) | G2_math |
+| `capsule_spin` | 1 | G2_math |
 | `g_force` | 1 | G2_math, G3_hold |
 | `reentry_fire` | 1 | F1_reentry |
 | `reentry_outside` | 2 | F1_reentry, F2_home |
@@ -296,6 +297,15 @@ Stills (`leg_*`, `leonov_drawing`) come from `media/stills/` (`tools/legacy_stil
 `leonov_drawing_hand` take 4 and `drawing_hand` take 2 used references (`DRAW`, `DRAWPH`, first frame `DRAWFF` =
 `media/refs/leonov_drawing_real_cabin_frame.png`) whose sent versions are gone (the museum photo is deliberately not
 committed; the card and cabin frame were replaced/never committed); the takes themselves are committed.
+
+### Round 6 take (2026-10-01): G2 with both cosmonauts in their own seats
+
+Her note on 2:24 `G2_math`: "can we depict just one cosmonaut on the seat and have Belyayev back in his own seat?" (take 1 had the
+second helmet right behind/over the commander). `vzor_manual` take 2 (spec `vzor_manual_2`, 8 s, refs `CAB`): first frame a Nano
+Banana edit of take 1 at 0.5 s with `g_force` take 1 at 2 s as the seating layout (`take2.chain.json`, `chain/`): both men in their
+own couches side by side, the left one on the orientation handle, the porthole between them; the sun sweeps the porthole at 3–6 s.
+A hard cut to another shot follows at 6.9 s, so the renderer plate `vzor_manual_t2` holds frames 1–165 only. In G2 the porthole is
+a static circle (`VZ2_PORTS`, no helmet in front of it); the ring of figures and the pencil sun are unchanged. `?g2=old` = take 1.
 
 ## Installing a take into the renderer
 
