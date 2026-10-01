@@ -239,7 +239,7 @@ the burn grow by the time the capsule lands.
 | Thrust yawed 3° (the Vzor "crab", step 4) | ~9 m/s sideways: tens of km crossrange |
 | Upper-air density ±20% (March, 60°N) | ∓30 to ∓70 km |
 | Modules joined down to ~100 km | < 1 km (the air above 100 km is too thin to matter) |
-| Parachute drift (5 km, 8–10 m/s, mean wind 7–15 m/s from the SW) | **~3.5–9.5 km**, toward the NE |
+| Parachute drift (drogue 5→2.5 km at 30–50 m/s, main 2.5 km→ground at 8–10 m/s, mean wind 7–15 m/s from the SW) | **~2–6 km**, toward the NE (≤ ~9.5 km if the main opened at 5 km) |
 | Earth turning during the 46 s delay | ~11 km (already in step 6) |
 
 **Reading the table:**
@@ -257,12 +257,22 @@ the burn grow by the time the capsule lands.
   100% cloud; snow depth **0.66 m** (grid mean). All of the 19th was the same steady SW
   flow: 10 m wind 2.8–4.6 m/s, 100 m wind 4.7–7.7 m/s, overcast throughout. It cooled to
   −3.6 °C by midnight and −4.4 °C by dawn on the 20th, their night in the forest.
+- **Two parachute altitudes.** Wikipedia's "Voskhod 2" page puts the start of the
+  parachute sequence at ~5 km; "Voskhod (spacecraft)" puts the main chute at ~2.5 km. We
+  read these as two stages of one sequence, not a contradiction: a drogue (braking) chute
+  first, at ~5 km, then the main canopy at ~2.5 km. Soviet mains also usually opened reefed
+  and then disreefed. A single canopy goes from command to fully open in seconds, a few
+  hundred metres at most, so that alone cannot close a 2.5 km gap; staging can. ESTIMATE
+  (our inference): we have seen no primary source for Voskhod 2's chute timing.
 - **Drift.** ERA5 here gives only the two lowest levels, so the winds aloft are an
-  assumption: wind usually grows with height, so take a column mean of **7–15 m/s**. Main
-  chute at ~5 km, falling 8–10 m/s: 500–625 s under canopy. 7 m/s × 500 s ≈ 3.5 km;
-  15 m/s × 625 s ≈ 9.4 km. So the wind moved the capsule **a few km to ~10 km toward the
-  NE**, against a 368–386 km overshoot. Wind decides which clearing, not which district;
-  the overshoot was the late manual burn.
+  assumption: wind usually grows with height, so take a column mean of **7–15 m/s** (a bit
+  lower below 2.5 km, but we keep it simple). Drogue from 5 to 2.5 km at an assumed
+  30–50 m/s: 50–85 s. Main from 2.5 km to the ground at 8–10 m/s: 250–310 s. Total
+  300–395 s. 7 m/s × 300 s ≈ 2.1 km; 15 m/s × 395 s ≈ 5.9 km. So the wind moved the
+  capsule **~2–6 km toward the NE**. The single-stage case (main open at 5 km, 500–625 s
+  under canopy, ~3.5–9.5 km) is an upper bound. Either way it is a few km against a
+  368–386 km overshoot. Wind decides which clearing, not which district; the overshoot
+  was the late manual burn.
 - **The data and the story disagree.** Russian Wikipedia gives −19 °C by day and 1.5–2 m
   of snow; ERA5 gives about −1 °C at landing and 0.66 m. Possible reasons: ERA5 for 1965
   is a model reconstruction with few Ural observations to pin it; one grid cell averages
@@ -305,6 +315,6 @@ Suggestions for the shot (these do not change the music):
 - Seen only as search excerpts, because the egress proxy blocked these pages: Wikipedia
   ("Voskhod 2", "Voskhod (spacecraft)", "S5.4"), Astronautix (Vostok, Voskhod 2), Sven Grahn
   "The Voskhod 2 mission revisited" (and its NASA mirror), Drew Ex Machina, braeunig.us.
-- Also blocked: planetarium.perm.ru, rgantd.ru. (ERA5 via Open-Meteo was later fetched; see Weather above.) The descent sphere's 2.3 m / 2,900 kg / chutes at 5 km / 8–10 m/s and the "150 km W of Solikamsk" aim are from Wikipedia (en/ru) search excerpts.
+- Also blocked: planetarium.perm.ru, rgantd.ru. (ERA5 via Open-Meteo was later fetched; see Weather above.) The descent sphere's 2.3 m / 2,900 kg / 8–10 m/s, the chute sequence starting at ~5 km ("Voskhod 2") and the main at ~2.5 km ("Voskhod (spacecraft)") and the "150 km W of Solikamsk" aim are from Wikipedia (en/ru) search excerpts.
 - Not seen: the 2020 Roscosmos document release and Siddiqi's own text. The 46 s and 386 km
   figures come to us only second-hand.
