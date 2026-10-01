@@ -152,6 +152,113 @@ adds only about 11–13 km.
 | 1,500 km | Crew's forecast *before* the burn: one lap's westward shift (step 6) | [L05] p. 3 |
 | 2,000 km | "Our orientation system indicated" (probably the Globus, wrong) | [L05] p. 4 |
 
+## Forecast versus outcome: Leonov's 1,500 km
+
+### What he was comparing
+
+Leonov's own words, written about the moment he found the fault, "just five minutes before"
+the automatic burn:
+
+> "We knew our landing would have to be performed during our next orbit and that, despite
+> our best efforts, we would be coming down off-target—1,500 kilometers west of where we were
+> supposed to land." ([L05] p. 3, DOCUMENTED)
+
+This is a **forecast made before the burn**, not a measurement of where they landed. The
+sources do not agree on which revolution was planned:
+
+- [RSW] and Russian Wikipedia say the automatic landing was planned "after 17 revolutions"
+  near Kustanay, where the search forces were waiting, and that the manual burn came on the
+  18th.
+- English Wikipedia says 16 and 18. That is probably a different counting convention.
+
+Either way, the burn slipped by **one lap**.
+
+**Our reconstruction (ESTIMATE).** A retro-burn always drops the ship at roughly the same
+point *along its own ground track*. Leonov's question was therefore where the next lap's
+track crosses the latitude of the old landing zone. The arithmetic is step 6: the track
+moves 23.0° of longitude per lap, which is **1,535 km at Kustanay's 53°N**. A navigator with
+a Globus and a feel for "about 23° a lap" gets "1,500 km west" in his head.
+
+```
+         one lap later the whole track has slid ~23° west
+   rev 18 track  /              / rev 17 track (planned)
+                /              /
+   Perm ● ----/ (landed ~180 km N of Perm, on this track)
+              /              /
+             /              ●  Kustanay zone, 53°N (search forces here)
+            /<-- 1,535 km ->/
+           /              /
+     burn point        burn point
+   (over Africa)      (over Africa)
+```
+
+### Why the actual miss was smaller
+
+**1,500 km describes the new track, not a miss on it.** Once they were on revolution 18,
+the crew and the ground chose a new aim point on that track. Leonov says it was "an area
+close to the city of Perm" ([L05] p. 4). Russian Wikipedia says the crew chose taiga "150 km
+west of Solikamsk", away from factories and power lines, and landed "about 70 km west of
+Solikamsk". We could not verify those two figures.
+
+The miss is measured against that new aim:
+
+| Distance | Meaning |
+|---|---|
+| 1,500 km | Lap-to-lap shift of the track (forecast before the burn) |
+| 368 / 386 km | Landing relative to the rev-18 aim. A 46 s late burn × 7.4 km/s ≈ 340 km |
+| ~77 km | Landing relative to "150 km W of Solikamsk", *if* that aim is right. Our split: about 60 km downrange, 50 km crossrange (ESTIMATE) |
+| > 800 km | [RSW]'s "planned landing area", which is unclear: possibly the original zone |
+
+The 77 km and 386 km figures cannot both be measured from the same aim point. The table
+shows how far apart the published "misses" are, not which one is right.
+
+## From the math to the snow: what else moves the landing point
+
+All of the following are **ESTIMATES** from a simple model: a 2-D point-mass ballistic
+descent with a standard atmosphere and no lift. We used Voskhod's 2.3 m, 2,900 kg descent
+sphere ([W]) with a drag coefficient of about 0.9, which gives **β = m/(C_D·A) ≈ 760 kg/m²**.
+The burn was treated as instantaneous, at 250 or 350 km. The model is not a reconstruction
+of the real trajectory: the burn point, the aim point and the exact Δv are not public. It
+gives sizes, not answers.
+
+**The model's sanity check:**
+- Burn to touchdown: 25–29 min and about 10,000–12,000 km of ground track.
+- Entry angle at 100 km: only 1.3°–2.5° below horizontal.
+- Peak deceleration: **8.7–10 g**, with no spin at all. Leonov's "10 Gs" is about what a
+  ballistic sphere pulls on its own.
+
+The shallow entry is the key. A shallow entry stretches the trajectory, so small errors at
+the burn grow by the time the capsule lands.
+
+| Error at or after the burn | Shift in landing point |
+|---|---|
+| Burn 1 s late | ≈ 7.4 km downrange (step 5); **46 s ≈ 340 km** |
+| Δv 1 m/s short (e.g. a short or weak burn) | +40 to +95 km |
+| Thrust pitched 1° off retrograde | ±50 to ±80 km |
+| Thrust pitched 3–5° "nose-up" | +150 to +450 km, plus a shallower trajectory, as [RSW] describes |
+| Thrust yawed 3° (the Vzor "crab", step 4) | ~9 m/s sideways: tens of km crossrange |
+| Upper-air density ±20% (March, 60°N) | ∓30 to ∓70 km |
+| Modules joined down to ~100 km | < 1 km (the air above 100 km is too thin to matter) |
+| Parachute drift (5 km, 8–10 m/s, wind 5–15 m/s) | **~2.5–9 km** |
+| Earth turning during the 46 s delay | ~11 km (already in step 6) |
+
+**Reading the table:**
+
+- **Timing** alone explains about 340 of the 368–386 km.
+- **Attitude** is the next-biggest unknown. [RSW] blames an "off-line" attitude caused by
+  the crew being out of their seats. A few degrees is enough to push the miss from about
+  340 km toward 800 km. We cannot say how many degrees it was.
+- **The spin** after the burn is frightening but did little to the path. The air above
+  100 km is too thin for the extra mass and shape to matter, and the tumble averages out.
+  Its cost was in g and in blood vessels, not in kilometres.
+- **Weather** comes last. Russian Wikipedia gives −19 °C by day and 1.5–2 m of snow, but we
+  found no wind record. Our attempt to pull ERA5 reanalysis for 59.6°N 55.5°E (via the
+  Open-Meteo archive API) was blocked by the proxy. ERA5 does cover 1965, so a reader with
+  access could look it up. Wind decides which clearing the capsule lands in, not which
+  district.
+- **Earth's shape and rotation** are built into any landing-point calculation, so the
+  planners would have included them. We did not model them.
+
 ## How this appears in the film
 
 G2_math (2:24, the `eq` list in `video/src/shots2.js`) draws this ring of equations:
@@ -181,5 +288,6 @@ Suggestions for the shot (these do not change the music):
 - Seen only as search excerpts, because the egress proxy blocked these pages: Wikipedia
   ("Voskhod 2", "Voskhod (spacecraft)", "S5.4"), Astronautix (Vostok, Voskhod 2), Sven Grahn
   "The Voskhod 2 mission revisited" (and its NASA mirror), Drew Ex Machina, braeunig.us.
+- Also blocked: planetarium.perm.ru, rgantd.ru, Open-Meteo's ERA5 archive (wind on 19 Mar 1965). The descent sphere's 2.3 m / 2,900 kg / chutes at 5 km / 8–10 m/s and the "150 km W of Solikamsk" aim are from Wikipedia (en/ru) search excerpts.
 - Not seen: the 2020 Roscosmos document release and Siddiqi's own text. The 46 s and 386 km
   figures come to us only second-hand.
