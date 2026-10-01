@@ -29,7 +29,7 @@ function simulateRope(o) {
   const shape = (R, i) => {
     const s = i / n, env = Math.pow(Math.sin(Math.PI * s), .7), a = ph + turns * 6.283 * s;
     const r = R * env * (1 + .25 * Math.sin(wob[0][0] + 6.283 * wob[0][1] * s));
-    const c1 = Math.cos(a) * r, c2 = Math.sin(a) * r * (o.flat ?? .8) + R * .15 * env * Math.sin(wob[1][0] + 9 * s);
+    const c1 = Math.cos(a) * r, c2 = Math.sin(a) * r * (o.flat ?? .8) + R * .2 * env * Math.sin(wob[1][0] + 2.5 * s);
     return [0, 1, 2].map(k => A[k] + d[k] * s + e1[k] * c1 + e2[k] * c2);
   };
   const len = R => { let s = 0, p = shape(R, 0); for (let i = 1; i <= n; i++) { const q = shape(R, i); s += Math.hypot(q[0] - p[0], q[1] - p[1], q[2] - p[2]); p = q; } return s; };
@@ -41,8 +41,19 @@ function simulateRope(o) {
     const s = i / n, v = (o.drift ?? 6) * Math.sin(Math.PI * s) * Math.sin(fv[k][0] + 5 * s) * fv[k][1];
     Xp[i * 3 + k] = X[i * 3 + k] - v * dt;
   }
+  // stiffness (Gemini 4's umbilical, her reference: big smooth loops, no kinks): no bend tighter than rMin, as a minimum
+  // distance between every other point, plus the gentle smoothing in step()
+  const rMin = o.rMin ?? 4 * seg, th = 2 * Math.asin(Math.min(1, seg / (2 * rMin))), dMin = 2 * seg * Math.cos(th / 2);
   const project = () => {   // restore every segment's length (ends pinned: infinite mass)
     for (let it = 0; it < iters; it++) {
+      if (it % 3 === 0) for (let j = 0; j + 2 <= n; j++) {
+        const a = j * 3, b = a + 6, dx = X[b] - X[a], dy = X[b + 1] - X[a + 1], dz = X[b + 2] - X[a + 2], l = Math.hypot(dx, dy, dz) || 1e-9;
+        if (l >= dMin) continue;
+        const wa = j === 0 ? 0 : 1, wb = j + 2 === n ? 0 : 1; if (!wa && !wb) continue;
+        const c = (l - dMin) / l / (wa + wb) * .5;
+        X[a] += wa * c * dx; X[a + 1] += wa * c * dy; X[a + 2] += wa * c * dz;
+        X[b] -= wb * c * dx; X[b + 1] -= wb * c * dy; X[b + 2] -= wb * c * dz;
+      }
       const fwd = it % 2 === 0;
       for (let jj = 0; jj < n; jj++) {
         const j = fwd ? jj : n - 1 - jj, a = j * 3, b = a + 3;
