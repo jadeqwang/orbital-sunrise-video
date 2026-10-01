@@ -940,5 +940,23 @@
   "take": "take1.mp4 (jade_loc take1 relit frame by frame for daylight: tools/jade_relight.py)",
   "mattes": false,
   "gain": 1.0
+ },
+ "countdown_drift_t3": {
+  "n": 121,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take3.mp4 of countdown_drift (round 4: first and last frame = hero_sunrise's first frame, the hose swaying in between)",
+  "mattes": true,
+  "gain": 1.38
+ },
+ "tether_drift_t2": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "take2.mp4 of tether_drift (round 4: slack curving tether, snaps taut at ~5.0 s and tugs him back)",
+  "mattes": true,
+  "gain": 1.334
  }
 }

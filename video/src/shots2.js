@@ -135,7 +135,7 @@ function ldStrokes() {
             px += Math.cos(a) * step * sg; py += Math.sin(a) * step * sg; run += step;
             if (!inSun && cov(px, py) < .04 && r() < .5) break;
             if (inSun && Math.hypot(px - S.cx, py - S.cy) > S.r * (.8 + .08 * r())) break;   // the disc keeps a round edge
-            if (!inSun && p.name === 'orange_red' && Math.hypot(px - S.cx, py - S.cy) < S.r * .8) break;   // the band runs just into the disc                        // ran off the band (ends a little ragged)
+            if (!inSun && p.name === 'orange_red' && Math.hypot(px - S.cx, py - S.cy) < S.r * .5) break;   // the band runs into the disc (no pale rim)                        // ran off the band (ends a little ragged)
             pts.push(px, py);
           }
         }
