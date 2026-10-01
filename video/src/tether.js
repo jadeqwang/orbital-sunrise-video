@@ -29,6 +29,15 @@ function simulateRope(o) {
     route = { R, cum, len: cum[cum.length - 1] };
   }
   const n = o.n ?? 48, L = route ? route.len : o.L, seg = L / n, rnd = _rng(o.seed ?? 7);
+  // o.collide (round 6): his body as a collision solid, from the plate's subject matte: field(t) → (x, y) → signed distance
+  // to his silhouette (sim units, < 0 inside) at time t (blended between matte frames, so it sweeps); the body is a slab
+  // of half-depth T about z = 0, thinning toward the silhouette edge (taper), plus a margin m (the cable's half-width).
+  // Every point has a side (-1 in front of him, +1 behind): it may change only outside the silhouette; inside, the point
+  // is pushed out of the body: sideways along the distance field near the edge (the body sweeps it along), in depth to its
+  // own side deeper in, so the cable can only get from front to back around his edge. exemptB points next to endB (the
+  // attachment on his edge) are not collided and take the side of the first collided point.
+  const C = o.collide || null, side = new Int8Array(n + 1);
+  const exB = C ? C.exemptB ?? 0 : 0;
   const sub = o.sub ?? 10, dt = 1 / 24 / sub, iters = o.iters ?? 30;
   const keep = Math.pow(1 - (o.damp ?? .5), dt);            // velocity kept per substep
   const bend = o.bend ?? .08;
@@ -62,8 +71,33 @@ function simulateRope(o) {
   // stiffness (Gemini 4's umbilical, her reference: big smooth loops, no kinks): no bend tighter than rMin, as a minimum
   // distance between every other point, plus the gentle smoothing in step()
   const rMin = o.rMin ?? 4 * seg, th = 2 * Math.asin(Math.min(1, seg / (2 * rMin))), dMin = 2 * seg * Math.cos(th / 2);
+  let fld = null;
+  const collide = () => {
+    if (!fld) return;
+    const T = C.T, m = C.m ?? 2, tp = C.taper ?? T, h = C.h ?? 1;
+    for (let i = 1; i < n - exB; i++) {
+      const a = i * 3, x = X[a], y = X[a + 1], d = fld(x, y);
+      if (d >= m) continue;
+      const s = side[i], zReq = T * Math.sqrt(Math.min(1, (m - d) / (m + tp))), pz = zReq - s * X[a + 2];
+      if (pz <= 0) continue;
+      const pxy = m - d;
+      if (pxy <= pz) {
+        let gx = fld(x + h, y) - fld(x - h, y), gy = fld(x, y + h) - fld(x, y - h); const gl = Math.hypot(gx, gy);
+        if (gl > 1e-6) { X[a] += gx / gl * pxy; X[a + 1] += gy / gl * pxy; continue; }
+      }
+      X[a + 2] += s * pz;
+    }
+  };
+  const sides = () => {     // a point changes side only outside his silhouette (+ margin); the exempt end inherits
+    if (!fld) return;
+    const m = C.m ?? 2;
+    for (let i = 1; i < n - exB; i++) { const a = i * 3; if (fld(X[a], X[a + 1]) > m) side[i] = X[a + 2] >= 0 ? 1 : -1; }
+    for (let i = Math.max(1, n - exB); i <= n; i++) side[i] = side[Math.max(0, n - exB - 1)];
+    side[0] = side[1];
+  };
   const project = () => {   // restore every segment's length (ends pinned: infinite mass)
     for (let it = 0; it < iters; it++) {
+      if (fld && it % 2 === 1) collide();
       if (it % 3 === 0) for (let j = 0; j + 2 <= n; j++) {
         const a = j * 3, b = a + 6, dx = X[b] - X[a], dy = X[b + 1] - X[a + 1], dz = X[b + 2] - X[a + 2], l = Math.hypot(dx, dy, dz) || 1e-9;
         if (l >= dMin) continue;
@@ -82,6 +116,7 @@ function simulateRope(o) {
         X[b] -= wb * c * dx; X[b + 1] -= wb * c * dy; X[b + 2] -= wb * c * dz;
       }
     }
+    collide();
   };
   const step = t => {
     const a = o.endA(t), b = o.endB(t);
@@ -92,21 +127,25 @@ function simulateRope(o) {
     if (bend > 0) for (let i = 1; i < n; i++) for (let k = 0; k < 3; k++) {   // stiffness: ease each point toward its neighbours' midpoint
       const j = i * 3 + k; X[j] += bend * ((X[j - 3] + X[j + 3]) / 2 - X[j]);
     }
+    fld = C ? C.field(t) : null;
+    sides();
     project();
   };
+  for (let i = 0; i <= n; i++) side[i] = X[i * 3 + 2] >= 0 ? 1 : -1;
   const pre = o.pre ?? 1;
   for (let s = 0, N = Math.round(pre * 24 * sub); s < N; s++) step(o.t0);
-  const out = [], N = Math.ceil((o.t1 - o.t0) * 24) + 1;
+  const out = [], outS = [], N = Math.ceil((o.t1 - o.t0) * 24) + 1;
   let maxErr = 0;
   for (let f = 0; f < N; f++) {
     const t = o.t0 + f / 24;
     if (f > 0) for (let s = 1; s <= sub; s++) step(t - 1 / 24 + s * dt);
-    out.push(Float32Array.from(X));
+    out.push(Float32Array.from(X)); outS.push(Int8Array.from(side));
     let l = 0; for (let i = 0; i < n; i++) l += Math.hypot(X[i * 3 + 3] - X[i * 3], X[i * 3 + 4] - X[i * 3 + 1], X[i * 3 + 5] - X[i * 3 + 2]);
     maxErr = Math.max(maxErr, Math.abs(l - L) / L);
   }
   console.log(`rope ${o.name ?? ''}: ${N} states, length error max ${(maxErr * 100).toFixed(2)} %`);
-  return { n, L, t0: o.t0, at: t => out[clamp(Math.round((t - o.t0) * 24), 0, out.length - 1)], frames: out, maxErr };
+  const fi = t => clamp(Math.round((t - o.t0) * 24), 0, out.length - 1);
+  return { n, L, t0: o.t0, at: t => out[fi(t)], sideAt: t => outS[fi(t)], frames: out, sidesAll: outS, maxErr, collide: !!C };
 }
 
 // Draw a cable in pencil. P: rope state (Float32Array xyz per point, plate px); toScreen(x, y) → [X, Y];
@@ -157,4 +196,104 @@ function drawCable(pen, P, toScreen, o = {}) {
     }
   }
   return S;   // the resampled screen curve (hatch end first), for traces over it
+}
+
+// ---------------------------------------------------------------------------------------------- round 6: his body (mattes)
+// Signed distance fields of his silhouette, one per subject matte (plates/<id>/m%04d.png: odd plate frames, 512x288), in
+// plate px (960x540): the matte thresholded at .5, the component nearest seed(f) (his hip / waist; the ship's hull is
+// another component in some plates), exact Euclidean distance (Felzenszwalb) on a grid of `cell` plate px over his
+// bounding box + pad; negative inside. Loaded once per shot (async), so the simulation stays a pure precompute.
+function _edt1(f, n, d, v, z) {   // 1D squared distance transform (Felzenszwalb & Huttenlocher)
+  let k = 0; v[0] = 0; z[0] = -1e20; z[1] = 1e20;
+  for (let q = 1; q < n; q++) {
+    let s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]);
+    while (s <= z[k]) { k--; s = ((f[q] + q * q) - (f[v[k]] + v[k] * v[k])) / (2 * q - 2 * v[k]); }
+    k++; v[k] = q; z[k] = s; z[k + 1] = 1e20;
+  }
+  k = 0;
+  for (let q = 0; q < n; q++) { while (z[k + 1] < q) k++; d[q] = (q - v[k]) * (q - v[k]) + f[v[k]]; }
+}
+function _edt(mask, w, h) {       // squared distance from every cell to the nearest cell where mask is 1
+  const INF = 1e12, D = new Float64Array(w * h), N = Math.max(w, h), f = new Float64Array(N), d = new Float64Array(N), v = new Int32Array(N), z = new Float64Array(N + 1);
+  for (let i = 0; i < w * h; i++) D[i] = mask[i] ? 0 : INF;
+  for (let x = 0; x < w; x++) { for (let y = 0; y < h; y++) f[y] = D[y * w + x]; _edt1(f, h, d, v, z); for (let y = 0; y < h; y++) D[y * w + x] = d[y]; }
+  for (let y = 0; y < h; y++) { for (let x = 0; x < w; x++) f[x] = D[y * w + x]; _edt1(f, w, d, v, z); for (let x = 0; x < w; x++) D[y * w + x] = d[x]; }
+  return D;
+}
+const _bc = { c: null, g: null };
+async function loadBodySDF(id, frames, seed, o = {}) {
+  const PW = o.pw ?? 960, PH = o.ph ?? 540, cell = o.cell ?? 2, pad = o.pad ?? 40, out = new Map();
+  if (!_bc.c) { _bc.c = makeCanvas(512, 288); _bc.g = _bc.c.getContext('2d', { willReadFrequently: true }); }
+  for (const f of frames) {
+    let im; try { im = await loadImage(`plates/${id}/m${String(f).padStart(4, '0')}.png`); } catch (e) { continue; }
+    const MW = im.width, MH = im.height; _bc.c.width = MW; _bc.c.height = MH; _bc.g.drawImage(im, 0, 0);
+    const px = _bc.g.getImageData(0, 0, MW, MH).data, on = new Uint8Array(MW * MH);
+    for (let i = 0; i < on.length; i++) on[i] = px[i * 4] > 127 ? 1 : 0;
+    // components (4-connected flood fill); his = the one nearest the seed
+    const lab = new Int32Array(MW * MH), st = [0]; let nl = 0;
+    const [sx, sy] = seed(f).map((c, k) => c * (k ? MH / PH : MW / PW));
+    let best = -1, bd = 1e30;
+    for (let i = 0; i < on.length; i++) if (on[i] && !lab[i]) {
+      nl++; st.length = 0; st.push(i); lab[i] = nl; let x0 = 1e9, y0 = 1e9, x1 = -1, y1 = -1, dmin = 1e30;
+      while (st.length) {
+        const j = st.pop(), x = j % MW, y = (j / MW) | 0;
+        x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+        dmin = Math.min(dmin, (x - sx) ** 2 + (y - sy) ** 2);
+        if (x > 0 && on[j - 1] && !lab[j - 1]) { lab[j - 1] = nl; st.push(j - 1); }
+        if (x < MW - 1 && on[j + 1] && !lab[j + 1]) { lab[j + 1] = nl; st.push(j + 1); }
+        if (y > 0 && on[j - MW] && !lab[j - MW]) { lab[j - MW] = nl; st.push(j - MW); }
+        if (y < MH - 1 && on[j + MW] && !lab[j + MW]) { lab[j + MW] = nl; st.push(j + MW); }
+      }
+      if (dmin < bd) { bd = dmin; best = { nl, x0, y0, x1, y1 }; }
+    }
+    if (best === -1) continue;
+    // grid over his bbox + pad, in plate px; a cell is inside when the matte pixel under its centre is his
+    const X0 = Math.floor(best.x0 * PW / MW - pad), Y0 = Math.floor(best.y0 * PH / MH - pad);
+    const gw = Math.ceil(((best.x1 + 1) * PW / MW + pad - X0) / cell), gh = Math.ceil(((best.y1 + 1) * PH / MH + pad - Y0) / cell);
+    const inside = new Uint8Array(gw * gh), outside = new Uint8Array(gw * gh);
+    for (let gy = 0; gy < gh; gy++) for (let gx = 0; gx < gw; gx++) {
+      const mx = Math.floor((X0 + (gx + .5) * cell) * MW / PW), my = Math.floor((Y0 + (gy + .5) * cell) * MH / PH);
+      const v = mx >= 0 && my >= 0 && mx < MW && my < MH && lab[my * MW + mx] === best.nl;
+      inside[gy * gw + gx] = v ? 1 : 0; outside[gy * gw + gx] = v ? 0 : 1;
+    }
+    const Di = _edt(outside, gw, gh), Do = _edt(inside, gw, gh), d = new Float32Array(gw * gh);
+    for (let i = 0; i < d.length; i++) d[i] = (inside[i] ? -(Math.sqrt(Di[i]) - .5) : Math.sqrt(Do[i]) - .5) * cell;
+    out.set(f, { X0, Y0, cell, gw, gh, d });
+  }
+  return out;
+}
+function sdfSample(B, x, y) {     // bilinear, plate px; beyond the grid: the edge value + the distance to the grid
+  let gx = (x - B.X0) / B.cell - .5, gy = (y - B.Y0) / B.cell - .5;
+  const cx = gx < 0 ? 0 : gx > B.gw - 1.001 ? B.gw - 1.001 : gx, cy = gy < 0 ? 0 : gy > B.gh - 1.001 ? B.gh - 1.001 : gy;
+  const xi = cx | 0, yi = cy | 0, fx = cx - xi, fy = cy - yi, i = yi * B.gw + xi, a = B.d;
+  const v = (a[i] * (1 - fx) + a[i + 1] * fx) * (1 - fy) + (a[i + B.gw] * (1 - fx) + a[i + B.gw + 1] * fx) * fy;
+  return v + Math.hypot(gx - cx, gy - cy) * B.cell;
+}
+// his body at plate frame position fp (1-based, fractional): blended between the bracketing mattes (the body moves through
+// the in-betweens, so a substep sees it part way); blend = false: the matte the renderer shows for that frame (plateMatte)
+function bodyAtFrame(S, fp, blend = true) {
+  const ks = [...S.keys()].sort((a, b) => a - b); if (!ks.length) return () => 1e9;
+  if (!blend) { let f = Math.round(fp); if (f % 2 === 0) f++; const k = ks.reduce((p, q) => Math.abs(q - f) < Math.abs(p - f) ? q : p); const B = S.get(k); return (x, y) => sdfSample(B, x, y); }
+  let k0 = Math.floor((fp - 1) / 2) * 2 + 1, a = (fp - k0) / 2;
+  const near = f => ks.reduce((p, q) => Math.abs(q - f) < Math.abs(p - f) ? q : p);
+  const B0 = S.get(near(k0)), B1 = S.get(near(k0 + 2)); if (B0 === B1 || a <= 0) return (x, y) => sdfSample(B0, x, y);
+  return (x, y) => (1 - a) * sdfSample(B0, x, y) + a * sdfSample(B1, x, y);
+}
+// clipping check (verification): per state, rope points (outside the exempt end) inside his silhouette (the displayed
+// matte, d < -1 plate px), and how many of those are pass-throughs: inside a run of points within the silhouette, the
+// drawn visibility changes from what it was where the run entered (the cable appears to go into / through his body).
+// fieldAt(f) → (x, y) → d (sim units), hidden(f, i, P, sides) → whether point i is drawn hidden
+function ropeClipStats(rope, fieldAt, hidden, exemptB = 0) {
+  const n = rope.n, inside = [], pass = [];
+  rope.frames.forEach((P, f) => {
+    const fld = fieldAt(f); let ins = 0, ps = 0, run = null;
+    for (let i = 1; i < n - exemptB; i++) {
+      const d = fld(P[i * 3], P[i * 3 + 1]);
+      if (d < -1) { ins++; const h = hidden(f, i, P, rope.sidesAll[f]); if (run === null) run = h; else if (h !== run) ps++; }
+      else run = null;
+    }
+    inside.push(ins); pass.push(ps);
+  });
+  const sum = a => a.reduce((x, y) => x + y, 0);
+  return { frames: inside.length, inside: sum(inside), pass: sum(pass), framesPass: pass.filter(x => x > 0).length, perFrame: pass };
 }
