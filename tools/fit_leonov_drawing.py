@@ -118,7 +118,10 @@ for nm in ORDER:
         ys_, xs_ = np.where(m)
         yel = lbl == names.index("yellow"); ycol = np.array([np.median(np.where(yel[:, x])[0]) if yel[:, x].any() else np.nan for x in range(CW)])
         above = ys_ < np.nan_to_num(ycol[xs_], nan=-1)
-        Ab0 = np.median(Ap[band & above], 0); Ab = Ab0 - .8 * Ab0.min(); Ab *= np.linalg.norm(Ab0) / np.linalg.norm(Ab) * .7   # sky blue, not grey
+        # (the grey in the median is black pencil over it: take the hue from its most saturated quarter, i.e. pure pigment)
+        Ap2 = Ap[band & above]; sat = Ap2.max(1) - Ap2.min(1)
+        Ab0 = np.median(Ap2[sat > np.percentile(sat, 75)], 0); Ab = Ab0 - .9 * Ab0.min()
+        print("  light blue band: median sat", round(float(np.median(1 - np.exp(-sat))), 3), "pigment", np.round(np.exp(-Ab), 3))
         T = np.exp(-Ab).clip(0, 1)
     elif "blue" in nm:
         # his blues are clean pigments: the grey in these pixels is black pencil (and shadow) laid over them, which the

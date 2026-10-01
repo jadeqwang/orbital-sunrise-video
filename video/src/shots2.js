@@ -116,16 +116,16 @@ function ldStrokes() {
     for (let j = 0; j < g.ny; j++) for (let i = 0; i < g.nx; i++) {
       const c = p.c[j * g.nx + i] / 255 * 1.25; if (c < .03) continue;
       const L0 = (st.len[0] + st.len[1]) / 2, W0 = (st.w[0] + st.w[1]) / 2;
-      const sunCell = p.name === 'orange_red' && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * .74;
+      const sunCell = p.name === 'orange_red' && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * .92;
       // round the disc the band's own strokes thin out, so the denser band does not swell the sun past its size
       const sunRim = p.name === 'orange_red' && !sunCell && Math.hypot(g.x0 + (i + .5) * g.cell - S.cx, g.y0 + (j + .5) * g.cell - S.cy) < S.r * 1.35;
-      let n = c * st.k * (sunCell ? 1.6 : sunRim ? .22 : 1) * cellA / (L0 * W0 * .55); n = Math.floor(n) + (r() < n % 1 ? 1 : 0);
+      let n = c * st.k * (sunCell ? 1.6 : sunRim ? .45 : 1) * cellA / (L0 * W0 * .55); n = Math.floor(n) + (r() < n % 1 ? 1 : 0);
       for (let s = 0; s < n; s++) {
         const x = g.x0 + (i + r()) * g.cell, y = g.y0 + (j + r()) * g.cell;
-        const inSun = p.name === 'orange_red' && Math.hypot(x - S.cx, y - S.cy) < S.r * .74;
+        const inSun = p.name === 'orange_red' && Math.hypot(x - S.cx, y - S.cy) < S.r * .92;
         const len = inSun ? 6 + r() * 14 : st.len[0] + (st.len[1] - st.len[0]) * Math.pow(r(), 1.4);
         const bend = (r() - .5) * .006, dev = (r() - .5) * 2 * st.dev, half = [[], []];
-        const a0 = inSun ? 1.15 + (r() - .5) * .6 : ldDir(x, y) + dev;
+        const a0 = inSun ? 1.15 + (r() - .5) * 1.4 : ldDir(x, y) + dev;
         for (const sg of [1, -1]) {
           let px = x, py = y, a = a0, run = 0;
           const pts = half[sg > 0 ? 0 : 1];
@@ -134,7 +134,7 @@ function ldStrokes() {
             if (!inSun) { let b = ldDir(px, py) + dev; while (b - a > Math.PI / 2) b -= Math.PI; while (a - b > Math.PI / 2) b += Math.PI; if (Math.abs(b - a) > .45) break; a = a + (b - a) * .22 + bend * sg; }
             px += Math.cos(a) * step * sg; py += Math.sin(a) * step * sg; run += step;
             if (!inSun && cov(px, py) < .04 && r() < .5) break;
-            if (inSun && Math.hypot(px - S.cx, py - S.cy) > S.r * (.8 + .08 * r())) break;   // the disc keeps a round edge
+            if (inSun && Math.hypot(px - S.cx, py - S.cy) > S.r * (.92 + .06 * r())) break;   // the disc keeps a round edge
             if (!inSun && p.name === 'orange_red' && Math.hypot(px - S.cx, py - S.cy) < S.r * .5) break;   // the band runs into the disc (no pale rim)                        // ran off the band (ends a little ragged)
             pts.push(px, py);
           }
