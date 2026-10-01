@@ -71,7 +71,7 @@ function simulateRope(o) {
   // stiffness (Gemini 4's umbilical, her reference: big smooth loops, no kinks): no bend tighter than rMin, as a minimum
   // distance between every other point, plus the gentle smoothing in step()
   const rMin = o.rMin ?? 4 * seg, th = 2 * Math.asin(Math.min(1, seg / (2 * rMin))), dMin = 2 * seg * Math.cos(th / 2);
-  let fld = null;
+  let fld = null, still = false;   // still: corrections carry no velocity (settling before t0: the start shape just yields)
   const collide = () => {
     if (!fld) return;
     const T = C.T, m = C.m ?? 2, tp = C.taper ?? T, h = C.h ?? 1;
@@ -83,9 +83,9 @@ function simulateRope(o) {
       const pxy = m - d;
       if (pxy <= pz) {
         let gx = fld(x + h, y) - fld(x - h, y), gy = fld(x, y + h) - fld(x, y - h); const gl = Math.hypot(gx, gy);
-        if (gl > 1e-6) { X[a] += gx / gl * pxy; X[a + 1] += gy / gl * pxy; continue; }
+        if (gl > 1e-6) { X[a] += gx / gl * pxy; X[a + 1] += gy / gl * pxy; if (still) { Xp[a] += gx / gl * pxy; Xp[a + 1] += gy / gl * pxy; } continue; }
       }
-      X[a + 2] += s * pz;
+      X[a + 2] += s * pz; if (still) Xp[a + 2] += s * pz;
     }
   };
   const sides = () => {     // a point changes side only outside his silhouette (+ margin); the exempt end inherits
@@ -133,7 +133,7 @@ function simulateRope(o) {
   };
   for (let i = 0; i <= n; i++) side[i] = X[i * 3 + 2] >= 0 ? 1 : -1;
   const pre = o.pre ?? 1;
-  for (let s = 0, N = Math.round(pre * 24 * sub); s < N; s++) step(o.t0);
+  still = true; for (let s = 0, N = Math.round(pre * 24 * sub); s < N; s++) step(o.t0); still = false;
   const out = [], outS = [], N = Math.ceil((o.t1 - o.t0) * 24) + 1;
   let maxErr = 0;
   for (let f = 0; f < N; f++) {
@@ -149,23 +149,23 @@ function simulateRope(o) {
 }
 
 // Draw a cable in pencil. P: rope state (Float32Array xyz per point, plate px); toScreen(x, y) → [X, Y];
-// o: { w (screen px), light [lx, ly] (screen direction the light comes from), hide(i, X, Y, z) → true where he covers it,
+// o: { w (screen px), light [lx, ly] (screen direction the light comes from), hide(s, X, Y, z, u) → true where he covers it (u: rope point index, fractional),
 //      seed, cols { body, shade, hi }, rings (spacing in screen px, 0 = none), alpha }
 function drawCable(pen, P, toScreen, o = {}) {
   const n = P.length / 3 - 1, rnd = _rng(o.seed ?? 1), w0 = o.w ?? 3;
   const pts = []; for (let i = 0; i <= n; i++) { const [X, Y] = toScreen(P[i * 3], P[i * 3 + 1]); pts.push([X, Y, P[i * 3 + 2]]); }
   // resample to ~3 px steps (Catmull-Rom through the rope points) so the strokes are smooth
-  const S = [];
+  const S = [], U = [];   // U: each resampled point's position along the rope (point index, fractional)
   for (let i = 0; i < n; i++) {
     const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(n, i + 2)];
     const k = Math.max(1, Math.ceil(Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) / 3));
-    for (let j = 0; j < k; j++) { const s = j / k; S.push([0, 1, 2].map(c => .5 * (2 * p1[c] + (p2[c] - p0[c]) * s + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * s * s + (3 * p1[c] - p0[c] - 3 * p2[c] + p3[c]) * s * s * s))); }
+    for (let j = 0; j < k; j++) { const s = j / k; S.push([0, 1, 2].map(c => .5 * (2 * p1[c] + (p2[c] - p0[c]) * s + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * s * s + (3 * p1[c] - p0[c] - 3 * p2[c] + p3[c]) * s * s * s))); U.push(i + s); }
   }
-  S.push(pts[n]);
+  S.push(pts[n]); U.push(n);
   const [lx, ly] = o.light ?? [1, -.4], ll = Math.hypot(lx, ly), Lx = lx / ll, Ly = ly / ll;
   // visible runs (split where he covers the cable)
   const runs = []; let cur = [];
-  S.forEach((p, i) => { const h = o.hide ? o.hide(i / (S.length - 1), p[0], p[1], p[2]) : false; if (h) { if (cur.length > 1) runs.push(cur); cur = []; } else cur.push(p); });
+  S.forEach((p, i) => { const h = o.hide ? o.hide(i / (S.length - 1), p[0], p[1], p[2], U[i]) : false; if (h) { if (cur.length > 1) runs.push(cur); cur = []; } else cur.push(p); });
   if (cur.length > 1) runs.push(cur);
   const C = { body: 'silver', shade: 'cobalt', hi: 'white', ...(o.cols || {}) }, A = o.alpha ?? 1;
   const jit = (o.jit ?? .35);
@@ -283,17 +283,19 @@ function bodyAtFrame(S, fp, blend = true) {
 // matte, d < -1 plate px), and how many of those are pass-throughs: inside a run of points within the silhouette, the
 // drawn visibility changes from what it was where the run entered (the cable appears to go into / through his body).
 // fieldAt(f) → (x, y) → d (sim units), hidden(f, i, P, sides) → whether point i is drawn hidden
-function ropeClipStats(rope, fieldAt, hidden, exemptB = 0) {
-  const n = rope.n, inside = [], pass = [];
+// body: { T, m, taper } as collide: inBody counts inside points nearer z = 0 than half the slab's depth there (in his volume)
+function ropeClipStats(rope, fieldAt, hidden, exemptB = 0, body = null) {
+  const n = rope.n, inside = [], pass = []; let inBody = 0;
   rope.frames.forEach((P, f) => {
     const fld = fieldAt(f); let ins = 0, ps = 0, run = null;
     for (let i = 1; i < n - exemptB; i++) {
       const d = fld(P[i * 3], P[i * 3 + 1]);
+      if (d < -1 && body) { const zr = body.T * Math.sqrt(Math.min(1, ((body.m ?? 2) - d) / ((body.m ?? 2) + (body.taper ?? body.T)))); if (Math.abs(P[i * 3 + 2]) < .5 * zr) inBody++; }
       if (d < -1) { ins++; const h = hidden(f, i, P, rope.sidesAll[f]); if (run === null) run = h; else if (h !== run) ps++; }
       else run = null;
     }
     inside.push(ins); pass.push(ps);
   });
   const sum = a => a.reduce((x, y) => x + y, 0);
-  return { frames: inside.length, inside: sum(inside), pass: sum(pass), framesPass: pass.filter(x => x > 0).length, perFrame: pass };
+  return { frames: inside.length, inside: sum(inside), inBody, lengthErrPct: +(rope.maxErr * 100).toFixed(3), pass: sum(pass), framesPass: pass.filter(x => x > 0).length, perFrame: pass };
 }

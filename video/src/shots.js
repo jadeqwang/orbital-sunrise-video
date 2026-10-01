@@ -337,7 +337,7 @@ async function initShots() {
     const rk = (X, Y, h) => clamp(Math.hypot(X - sun[0], Y - sun[1]) / 2000) * .75 + h * .25;
     const done = k >= 1;
     // round 5: the poster is a frame of H1a, so it has the same simulated cable (the hoop painted out); ?i6=r4: the hoop
-    const rope = I6_R5 && TD6 ? i6Rope() : null;
+    const rope = I6_R5 && TD6 ? await i6Rope() : null;
     const r = await drawPlate(t, rope ? 'hero_sunrise_r5' : 'hero_sunrise', 0, {
       hold: POSTER_TP, view, fixedSeed: done ? undefined : 11,
       ...(rope ? { extra: i6Cable(rope, POSTER_TP - sunBreak + H1[0].t0, clamp((k - .1) * 1.4)) } : {}),
@@ -497,6 +497,7 @@ async function initShots() {
   // ?n1=r4: round 4 (take 2 and its own line, the gold on TETHER2); ?n1=old: take 1.
   const N1_Q = new URLSearchParams(location.search).get('n1');
   const N1_OLD = N1_Q === 'old', N1_R4 = N1_Q === 'r4', N1_R5 = !N1_OLD && !N1_R4;
+  const TETHER_R6 = Q.get('tether') !== 'r5', TETHER_STATS = Q.has('tetherstats');
   const TETHER = N1_OLD ? TETHER1 : TETHER2;
   let TD1 = null, ROPE1 = null;
   if (N1_R5) { try { TD1 = await loadJSON('data/tether_n1.json'); } catch (e) { console.warn('no data/tether_n1.json (tools/tether_r5.py n1)'); } }
@@ -514,11 +515,25 @@ async function initShots() {
     out.push(P[P.length - 1]); return out;
   };
   // the cable over the whole shot, simulated once (both ends pinned: the hatch, his waist on the plate frame the shot shows)
-  const n1Rope = () => ROPE1 || (ROPE1 = (() => {
+  // Round 6 (her note on 0:33, "the cosmonaut clips through the tether", checked here too): his body is a collision solid in
+  // the simulation (tether.js, collide: a distance field per subject matte, blended between mattes so it sweeps the cable
+  // instead of jumping through it) and every cable point keeps a side (in front of / behind him) that changes only outside
+  // his silhouette; points behind are hidden by his matte. ?tether=r5: round 5 (no collision, depth from z alone).
+  // ?tetherstats: console.warn the clipping count (cable points inside his silhouette that pass through him) per rope.
+  const N1_EX = 6, N1_BODY = { T: 6, m: 1.5, taper: 6 };   // his half-depth, the cable's half-width (plate px)   // cable points next to his waist (the attachment, inside his silhouette) exempt from the collision
+  const n1Rope = () => ROPE1 || (ROPE1 = (async () => {
     const t0 = L1[1].t0 - .05, t1 = L1[2].t0 - .05, wa = TD1.waist;
     const tpAt = t => { const tp = 5.0 + (t - N1W[7][0]); return tp >= 4.94 && tp < 5.03 ? 5.042 : tp; };   // as the plate is shown
     const waist = t => { const x = clamp(tpAt(t) * 24, 0, wa.length - 1), i = Math.min(wa.length - 2, Math.floor(x)), f = x - i; return [lerp(wa[i][0], wa[i + 1][0], f), lerp(wa[i][1], wa[i + 1][1], f), 0]; };
-    return simulateRope({ name: 'N1', t0, t1, L: TD1.L, n: 56, endA: () => [TD1.hatch[0], TD1.hatch[1], 0], endB: waist, seed: 11, turns: 1.1, damp: .3, bend: .06, rMin: 16, iters: 80, sub: 16, pre: 1.2, drift: 6 });
+    const nP = PLATES[TD1.plate].n, need = new Set();
+    for (let t = t0 - 1.3; t <= t1 + .05; t += 1 / 96) { const fp = clamp(tpAt(t) * 24 + 1, 1, nP), k = Math.floor((fp - 1) / 2) * 2 + 1; need.add(k); if (k + 2 <= nP) need.add(k + 2); }
+    const SD = (TETHER_R6 || TETHER_STATS) ? await loadBodySDF(TD1.plate, [...need].sort((a, b) => a - b), f => wa[clamp(f - 1, 0, wa.length - 1)], { cell: 1, pad: 24 }) : null;
+    const field = (t, blend = true) => bodyAtFrame(SD, clamp(tpAt(t) * 24 + 1, 1, nP), blend);
+    const rope = simulateRope({ name: 'N1', t0, t1, L: TD1.L, n: 56, endA: () => [TD1.hatch[0], TD1.hatch[1], 0], endB: waist, seed: 11, turns: 1.1, damp: .3, bend: .06, rMin: 16, iters: 80, sub: 16, pre: 1.2, drift: 6,
+      ...(TETHER_R6 ? { collide: { field, ...N1_BODY, h: .75, exemptB: N1_EX } } : {}) });
+    if (TETHER_STATS) console.warn('tether N1 ' + (TETHER_R6 ? 'r6' : 'r5') + ' ' + JSON.stringify(ropeClipStats(rope, f => field(t0 + f / 24, false),
+      TETHER_R6 ? (f, i, P, sd) => sd[i] > 0 : (f, i, P) => P[i * 3 + 2] >= -1 && i / rope.n > .5, N1_EX, N1_BODY)));
+    return rope;
   })());
   shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
@@ -530,7 +545,7 @@ async function initShots() {
     const N1_SNAP = 5.0, tp2 = N1_SNAP + (drawClock(t, 12).tq - N1W[7][0]);   // on the 12 fps drawing clock (passed as hold)
     // the take's two motion-blurred in-between frames (4.96, 5.0 s) are skipped: the line snaps straight in one drawing
     const tpN1 = N1_OLD ? 1.2 + lt * 6.75 / dur : (tp2 >= 4.94 && tp2 < 5.03 ? 5.042 : tp2);
-    const rope = N1_R5 && TD1 ? n1Rope() : null;
+    const rope = N1_R5 && TD1 ? await n1Rope() : null;
     const d = drawClock(t, 12).n;
     // type: TIED / TO THE SHIP right-aligned in the sky right of the airlock ("SHIP" lands on "ship"); the serif line and the
     // caption right-aligned left of the tether, in the black between the ship and the limb
@@ -542,7 +557,10 @@ async function initShots() {
         if (rope) {   // round 5: the simulated cable, then the gold trace along it (by arc length from the hatch)
           const P = rope.at(drawClock(t, 12).tq), toS = (x, y) => view.toScreen(x / TD1.w - .5 / F.aw, y / TD1.h - .5 / F.ah);
           // he covers the cable where it passes behind him (z ≥ 0 inside his matte): it meets him at his waist, from behind
-          const hide = (s, X, Y, zz) => { if (!F.M || zz < -1) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5 && s > .5; };
+          // round 6: where the simulation keeps it behind him (its side, which changes only outside his silhouette)
+          const sd = rope.sideAt(drawClock(t, 12).tq);
+          const hide = rope.collide ? (s, X, Y, zz, u) => { if (!F.M || !(sd[Math.floor(u)] > 0 || sd[Math.ceil(u)] > 0)) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; }
+            : (s, X, Y, zz) => { if (!F.M || zz < -1) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5 && s > .5; };
           const S = drawCable(pen, P, toS, { w: 3.2, light: [1, -.3], seed: dIdx * 31 + 7, hide });
           const seg = S.slice(1).map((q, i) => Math.hypot(q[0] - S[i][0], q[1] - S[i][1]));
           let left = k * seg.reduce((x, y) => x + y, 0); const path = [S[0]];
@@ -671,7 +689,9 @@ async function initShots() {
     const z = i6Track(tq, 'zoom'); P = P.map((c, i) => i % 3 === 2 ? c * z : ZC[i % 3] + (c - ZC[i % 3]) * z);
     const toS = (x, y) => view.toScreen(x / TD6.w - .5 / F.aw, y / TD6.h - .5 / F.ah);
     // behind him (z > 0) the cable is hidden by his matte; in front it crosses over him
-    const hide = (s, X, Y, zz) => { if (!F.M || zz <= 0) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; };
+    const sd = rope.sideAt(tq);   // round 6: behind him = its side in the simulation (changes only outside his silhouette)
+    const hide = rope.collide ? (s, X, Y, zz, u) => { if (!F.M || !(sd[Math.floor(u)] > 0 || sd[Math.ceil(u)] > 0)) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; }
+      : (s, X, Y, zz) => { if (!F.M || zz <= 0) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; };
     drawCable(pen, P, toS, { w: 17 * z * (view.scale / 3.12), light: [1, .35], seed: dIdx * 29 + 3, hide, rings: 9, persp: 900, cols: { body: 'white', shade: 'cobalt', hi: 'white' } });
   };
   const i6Track = (t, key) => {   // his hip / the hull anchor (plate px) on the r5 plate shown at song time t
@@ -684,15 +704,40 @@ async function initShots() {
   // the cable starts out (song time O(20.5)) wound loosely around him, after Gemini 4's photo: from the hull down past his
   // right side, up over his head behind him, round his left shoulder and in front of his chest to the hip. Its length is
   // that route's: ≈5.4 m at his scale (he is ≈1.7 m ≈ 360 plate px; Leonov's tether was 5.35 m).
-  const i6Rope = () => ROPE6 || (ROPE6 = simulateRope({ name: 'I6', t0: O(20.5), t1: H1A_END, n: 120, seed: +(Q.get('i6seed') || 5),
-    endA: t => [...toWorld(i6Track(t, 'anchor'), t), 70], endB: t => [...toWorld(i6Track(t, 'hip'), t), 0],
-    via: (A, H) => [[690, 370, 60], [630, 440, 30], [565, 340, 70], [600, 200, 40], [525, 95, 90], [420, 45, 60], [330, 115, 30], [225, 165, -20], [255, 265, -50], [345, 225, -70], [430, 335, -50]]
-      .map(([x, y, z]) => [x + H[0] - 503, y + H[1] - 300, z]),
-    damp: .15, bend: .015, rMin: 70, iters: 60, sub: 12, pre: .8, drift: 24 }));
+  // Round 6 (her note: "the tether starts out looking right, but then the cosmonaut clips through the tether"): his body is a
+  // collision solid (tether.js collide: a distance field per subject matte of the plate shown, blended between mattes so his
+  // drift and the push-in sweep the cable along rather than tunnelling through it; a slab ±T deep in z, thinning to his
+  // edge), and every cable point keeps its side (in front / behind) and may change it only outside his silhouette, so a
+  // loop gets round him only past his edge; behind points are hidden by his matte. The three points at the hip (on his
+  // edge) are exempt. ?tether=r5: round 5 (no collision, hidden where z > 0).
+  const I6_EX = 3, I6_BODY = { T: 35, m: 5, taper: 30 };   // world units (plate px at countdown frame 81's scale)
+  const i6Plate = t => { const [id0, tp] = t < hk0 ? i6Map(t) : ['hero_sunrise', tpHero(t)]; return [R5ID[id0], tp]; };
+  const i6Rope = () => ROPE6 || (ROPE6 = (async () => {
+    const t0 = O(20.5), t1 = H1A_END, need = {};
+    for (let t = t0; t <= t1 + .05; t += 1 / 96) {
+      const [id, tp] = i6Plate(t), nP = PLATES[id].n, fp = clamp(tp * 24 + 1, 1, nP), k = Math.floor((fp - 1) / 2) * 2 + 1;
+      (need[id] ||= new Set()).add(k); if (k + 2 <= nP) need[id].add(k + 2);
+    }
+    const SD = {};
+    if (TETHER_R6 || TETHER_STATS) for (const id in need) SD[id] = await loadBodySDF(id, [...need[id]].sort((a, b) => a - b), f => TD6[id].hip[clamp(f - 1, 0, TD6[id].hip.length - 1)], { cell: 3, pad: 60 });
+    const field = (t, blend = true) => {   // in world units (the cable's): plate px about ZC divided by the push-in zoom
+      const [id, tp] = i6Plate(t), z = i6Track(t, 'zoom'), b = bodyAtFrame(SD[id], clamp(tp * 24 + 1, 1, PLATES[id].n), blend);
+      return (x, y) => b(ZC[0] + (x - ZC[0]) * z, ZC[1] + (y - ZC[1]) * z) / z;
+    };
+    const rope = simulateRope({ name: 'I6', t0, t1, n: 120, seed: +(Q.get('i6seed') || 5),
+      endA: t => [...toWorld(i6Track(t, 'anchor'), t), 70], endB: t => [...toWorld(i6Track(t, 'hip'), t), 0],
+      via: (A, H) => [[690, 370, 60], [630, 440, 30], [565, 340, 70], [600, 200, 40], [525, 95, 90], [420, 45, 60], [330, 115, 30], [225, 165, -20], [255, 265, -50], [345, 225, -70], [430, 335, -50]]
+        .map(([x, y, z]) => [x + H[0] - 503, y + H[1] - 300, z]),
+      damp: .15, bend: .015, rMin: 70, iters: 60, sub: 12, pre: .8, drift: 24,
+      ...(TETHER_R6 ? { collide: { field, ...I6_BODY, h: 2, exemptB: I6_EX } } : {}) });
+    if (TETHER_STATS) console.warn('tether I6 ' + (TETHER_R6 ? 'r6' : 'r5') + ' ' + JSON.stringify(ropeClipStats(rope, f => field(t0 + f / 24, false),
+      TETHER_R6 ? (f, i, P, sd) => sd[i] > 0 : (f, i, P) => P[i * 3 + 2] > 0, I6_EX, I6_BODY)));
+    return rope;
+  })());
   shot('I6_predawn', O(20.5), hk0, async (t, lt) => {
     paper(G, 'night');
     const tq = drawClock(t, 8).tq, [id0, tp] = i6Map(tq), pan = smooth(clamp((tq - (hk0 - I6_HERO)) / I6_HERO));
-    const rope = I6_R5 && TD6 ? i6Rope() : null, id = rope ? R5ID[id0] : id0;
+    const rope = I6_R5 && TD6 ? await i6Rope() : null, id = rope ? R5ID[id0] : id0;
     await drawPlate(t, id, tp, { hold: tp, rate: 8, view: { zoom: 1.04, ox: 180 * pan }, hatch: { spacing: 7 },
       ...(rope ? { extra: i6Cable(rope, tq) } : {}) });
     const Lt = typeLayer();
@@ -705,7 +750,7 @@ async function initShots() {
 
   shot('H1a_sunrise', hk0, H1[0].words[2][0] - .05, async (t, lt) => {
     paper(G, 'night');
-    const z = punch(t, .018), rope = I6_R5 && TD6 ? i6Rope() : null;   // round 5: the I6 cable continues (?i6=r4: the hoop)
+    const z = punch(t, .018), rope = I6_R5 && TD6 ? await i6Rope() : null;   // round 5: the I6 cable continues (?i6=r4: the hoop)
     await withZoom(z, () => drawPlate(t, rope ? 'hero_sunrise_r5' : 'hero_sunrise', tpHero(t), {
       view: { zoom: 1.04, ox: 180 }, hatch: { spacing: 6.5 }, ...(rope ? { extra: i6Cable(rope, drawClock(t, 12).tq) } : {}),
       under: (pen, F, v) => {
