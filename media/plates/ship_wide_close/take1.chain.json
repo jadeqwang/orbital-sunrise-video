@@ -1,0 +1,27 @@
+{
+ "steps": [
+  {
+   "local": "ffmpeg -ss 1.5 media/plates/ship_wide_sunrise/take1.mp4 -> chain/ship_wide_sunrise_t1_1.5s.jpg (1280x720)"
+  },
+  {
+   "model": "google/nano-banana-pro",
+   "prompt": "Edit the first image (an extremely wide film frame in orbit, 1965). Keep EXACTLY its camera position, lens, framing and composition: the Voskhod-2 spacecraft the same size at the same place in the upper part of the frame, its open cylindrical inflatable airlock (the Volga) pointing right, the enormous curve of the Earth below with its clouds, the thin glowing layered atmosphere along the limb, and the sunrise blazing at the right end of the horizon (top right). Change only the cosmonaut: remove the far-away tiny cosmonaut and the long straight line hanging below the ship completely (empty space and Earth where they were). Instead, Alexei Leonov in his white Berkut spacesuit (as in the second image: white suit, rust-orange harness straps, white helmet with red CCCP letters) floats CLOSE to the ship, only about two to three metres from the open mouth of the airlock, just to the right of and slightly below it, in empty black space above the horizon, at the correct scale for that distance (he is roughly a quarter of the ship's length tall). He is relaxed and weightless, his whole body turned toward the sunrise on the right, facing the rising sun, his visor catching its golden light, seen in three-quarter view from behind/side, arms slightly spread. There is NO tether, NO cable, NO hose, NO line anywhere in the image: nothing connects him to the ship. Keep the photorealistic 35mm film look, the colours and the light of the first image. Soviet markings only. No text, no captions, no watermark.",
+   "inputs": [
+    "chain/ship_wide_sunrise_t1_1.5s.jpg",
+    "media/archive/sheets/leonov_turnaround.jpg"
+   ],
+   "params": {
+    "aspect_ratio": "16:9",
+    "output_format": "png",
+    "image_size": "2K"
+   },
+   "output": "chain/nb_close_model.jpg (picked of 2: him close to the airlock, tether gone, ship/Earth/sun kept; but he faces the ship, and is too big)"
+  },
+  {
+   "note": "two more Nano Banana passes (turn him toward the sun / relight a composite) were rejected: the model kept him facing the ship, or enlarged him and turned him to the camera"
+  },
+  {
+   "local": "composite (scratchpad script): his figure cut from nb_close_model with rembg isnet-general-use, mirrored to face the sunrise, scaled 0.55, placed ~2 m right of / below the airlock mouth (1920 px: top-left 1035,330); where he was, the ship_wide_sunrise frame (colour-matched) -> take1.first.jpg"
+  }
+ ]
+}

@@ -510,3 +510,17 @@ the attachment (I6: 3 at the hip, on his edge; N1: 6 at the waist) are exempt. S
 the mattes load first), length error ≤ 0.1 % (I6) / 0.9 % (N1, as round 5). `?tether=r5` = round 5.
 Check (`--q=tetherstats`: cable points inside his displayed silhouette whose drawn side flips inside it): I6+H1a 720
 points in 60 of 144 frames → 0; points inside his body volume 361 → 0. N1: 0 → 0 (2 → 0 in his volume).
+
+## Round 7: H1c, him close to the ship with the umbilical (2026-10-01, her note on 0:41.4)
+
+"The wide ship shot under the second 'Orbital sunrise': can you have him close to the ship, facing the sunrise, cord
+floating around him consistent with the other umbilical-cord-like shot?" **H1c_wide** (41.41–44.36 s) now plays
+`ship_wide_close` (new plate: ship_wide_sunrise's framing, him ≈2 m from the airlock's mouth facing the sun on the right,
+generated with no tether; recipe in `TAKES.md`), plate time 0.3 s + shot time at 1x, with the I6 / H1a cable: the same
+`simulateRope` (constant length 329 px ≈ 5.4 m at his scale, length error 0.01 %), I6's parameters scaled by his size
+(101 px vs 360), from the bottom of the airlock's mouth to his left hip at his back (`video/data/tether_h1c.json`,
+`tools/tether_r5.py h1c`: hip tracked from his matte, the mouth by template, the camera is locked off), starting as one
+big loop down past his back, under his boots and up in front of his legs; his body collides (round 6: matte SDF, sides,
+hidden behind him), drawn by `drawCable` like I6 (white / cobalt, rings), 7 px wide at 1080p so it reads in the wide.
+`--q=tetherstats`: 0 pass-throughs, 0 points in his volume. The type is unchanged. `?h1c=old` = ship_wide_sunrise as before
+(D1 and D5 still use ship_wide_sunrise).

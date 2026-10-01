@@ -795,18 +795,19 @@ async function initShots() {
     const SD = (TETHER_R6 || TETHER_STATS) ? await loadBodySDF(TDC.plate, [...need].sort((a, b) => a - b), f => TDC.hip[clamp(f - 1, 0, TDC.hip.length - 1)], { cell: 1, pad: 30 }) : null;
     const field = (t, blend = true) => bodyAtFrame(SD, clamp(tpC(t) * 24 + 1, 1, nP), blend);
     const body = { T: 35 * s, m: Math.max(1.5, 5 * s), taper: 30 * s };
-    // the start route (x, y in his heights from the hip, z in plate px · s): out of the airlock, a big loop down below
-    // him, up past his front (toward the sun), over his head behind him, down his back to the hip
+    // the start route (x, y in his heights from the hip, z in plate px · s): out of the airlock's mouth, down past his
+    // back, a big loop under his boots in front of him, up in front of his legs toward the sun and back behind him to the
+    // hip (≈330 px ≈ 5.4 m: he is ≈1.9 m in the suit ≈ 1.15 x his matte's height, as he floats tilted)
     const rope = simulateRope({ name: 'H1c', t0, t1, n: 72, seed: +(Q.get('h1cseed') || 3),
       endA: t => [...trackC(t, 'anchor'), 0], endB: t => [...trackC(t, 'hip'), 0],
       via: (A, Hp) => H1C_VIA.map(([x, y, z]) => [Hp[0] + x * hh, Hp[1] + y * hh, z * s]),
       damp: .15, bend: .015, rMin: 70 * s, iters: 60, sub: 12, pre: .8, drift: 24 * s,
       ...(TETHER_R6 ? { collide: { field, ...body, h: .75, exemptB: 3 } } : {}) });
-    console.log(`H1c cable ${(rope.L / hh * 1.9).toFixed(2)} m (${rope.L.toFixed(0)} px, he ${hh} px)`);
+    console.warn(`H1c cable ${(rope.L / (1.15 * hh) * 1.9).toFixed(2)} m (${rope.L.toFixed(0)} px, he ${hh} px)`);
     if (TETHER_STATS) console.warn('tether H1c ' + JSON.stringify(ropeClipStats(rope, f => field(t0 + f / 24, false), (f, i, P, sd) => sd[i] > 0, 3, body)));
     return rope;
   })());
-  const H1C_VIA = [[-.55, -.25, 40], [-.5, .45, 30], [-.05, .8, -20], [.55, .55, -60], [.75, -.1, -70], [.5, -.75, -30], [-.05, -.95, 60], [-.45, -.55, 70], [-.35, -.05, 50]];
+  const H1C_VIA = [[-.55, -.35, -10], [-.45, .25, -25], [0, .62, -35], [.5, .55, -30], [.62, .1, -10], [.38, -.15, 25], [.14, -.08, 35]].map(([x, y, z]) => [x * .85, y * .85, z]);
   shot('H1c_wide', H1C_T0, H1C_T1, async (t, lt) => {
     paper(G, 'night');
     const rope = !H1C_OLD && TDC ? await h1cRope() : null;
@@ -817,7 +818,8 @@ async function initShots() {
         const P = rope.at(tq), sd = rope.sideAt(tq), toS = (x, y) => view.toScreen(x / TDC.w - .5 / F.aw, y / TDC.h - .5 / F.ah);
         const hide = rope.collide ? (s, X, Y, zz, u) => { if (!F.M || !(sd[Math.floor(u)] > 0 || sd[Math.ceil(u)] > 0)) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; }
           : (s, X, Y, zz) => { if (!F.M || zz <= 0) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; };
-        drawCable(pen, P, toS, { w: 17 * (TDC.height / 360) * (view.scale / 3.12) * 1.6, light: [1, .35], seed: dIdx * 29 + 3, hide, rings: 6, persp: 900 * TDC.height / 360, cols: { body: 'white', shade: 'cobalt', hi: 'white' } });
+        drawCable(pen, P, toS, { w: 7 * (view.scale / 3.06),   // I6's look, a little thicker than his scale so it reads in the wide
+          light: [1, .35], seed: dIdx * 29 + 3, hide, rings: 6, persp: 900 * TDC.height / 360, cols: { body: 'white', shade: 'cobalt', hi: 'white' } });
       } });
     }
     const w = H1[1].words;

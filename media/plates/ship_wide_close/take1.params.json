@@ -1,0 +1,16 @@
+{
+ "model": "bytedance/seedance-2.5",
+ "duration": 5,
+ "resolution": "720p",
+ "aspect_ratio": "16:9",
+ "generate_audio": false,
+ "use_virtual_avatar": true,
+ "image": "take1.first.jpg",
+ "reference_images": [
+  "media/env/env_voskhod2_orbit.png (SHIP)",
+  "media/chars/leonov_turnaround.png (LT)"
+ ],
+ "prompt": "take1.prompt.txt",
+ "genlog_tag": "plate:ship_wide_close",
+ "renderer": "H1c_wide: plate time 0.3 + (t - H1c start), 1x; frames 960x540 via tools/extract_plates.py ship_wide_close:1; tracks tools/tether_r5.py h1c"
+}

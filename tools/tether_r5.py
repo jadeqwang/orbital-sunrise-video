@@ -260,8 +260,8 @@ def h1c():
     """ship_wide_close (generated without a tether: him a couple of metres from the airlock, facing the sunrise): per plate
     frame his hip (the cable's end: his back-left hip, toward the ship) and the anchor at the airlock's mouth (the hatch
     lid; tracked by template, the camera is locked off), his height (for the collision depth), tether_h1c.json. Run after
-    tools/extract_plates.py ship_wide_close:1 and tools/plate_masks.py ship_wide_close. If the take drew a line anyway,
-    it is painted out like i6's hoop (thin matte parts between the ship and him)."""
+    tools/extract_plates.py ship_wide_close:1, tools/plate_meta.py ship_wide_close --force, tools/plate_masks.py
+    ship_wide_close (and extract_plates.py again for the mattes flag). The take drew no line, so nothing is painted out."""
     pid = "ship_wide_close"
     fs = frames(pid); n = len(fs)
     ker = lambda r: cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * r + 1, 2 * r + 1))

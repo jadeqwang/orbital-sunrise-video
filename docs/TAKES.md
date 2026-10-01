@@ -233,7 +233,8 @@ at `media/chars/*.png`, `media/env/*.png`, which are **not in the repo** (gitign
 | `glove_cu` | 1 | I4_hands, P4 flurry, D5 |
 | `visor_cu` | 1 | I5_face, P4 flurry, D5 |
 | `visor_sunrise` | 1 | H1b_gold |
-| `ship_wide_sunrise` | 1 | H1c_wide, D1, D5 |
+| `ship_wide_sunrise` | 1 | D1, D5 (H1c_wide with `?h1c=old`) |
+| `ship_wide_close` | 1 | H1c_wide (round 7) |
 | `camera_reach` | 1 | S1_reach |
 | `suit_balloon` | 1 | S2_balloon, P4 flurry |
 | `airlock_struggle` | 1 | S3_nofit |
@@ -321,6 +322,17 @@ runs the same one sun / one Earth at `CAB_V` across both on G3's beat grid: righ
 ≈145.3 s. Figures orbit both helmets (`VZ4_HEADS`); the lyric sits lower, clear of the faces. Seedance take 4 from that frame was
 rejected (the console faded back in, from the `CAB` reference; `media/archive/plates/vzor_manual_take4.*`); take 5 (`vzor_manual_5`,
 no refs) was refused once by the privacy filter and the retry's result lost to a local timeout: re-run it for a moving plate.
+
+### Round 7 take (2026-10-01): H1c, him close to the ship facing the sunrise
+
+Her note on 0:41.4 (`H1c_wide`): him close to the ship, facing the sunrise, the cord floating round him as in I6/H1a.
+`ship_wide_close` take 1 (5 s, Seedance, refs `SHIP`, `LT`, static camera, "no tether"): the first frame
+(`take1.chain.json`, `chain/`) is a Nano Banana edit of `ship_wide_sunrise` take 1 at 1.5 s that brought him next to the
+airlock and removed the line, but he faced the ship and was too big; two more Nano Banana passes (turn him / relight)
+failed (he stays facing the ship, or grows and turns to camera), so the first frame is a local composite: his figure cut
+out (rembg), **mirrored** to face the sun, scaled 0.55, ≈2 m right of / below the airlock mouth, the hole filled from the
+original frame. Installed with `extract_plates.py ship_wide_close:1`, `plate_meta.py`, `plate_masks.py`; the cable is
+the renderer's (`tools/tether_r5.py h1c`, `ALTERNATE_CUT.md` round 7). Spend: 6 Nano Banana images, 1 Seedance take.
 
 ## Installing a take into the renderer
 
