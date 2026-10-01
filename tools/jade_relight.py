@@ -91,9 +91,15 @@ def main(take, first, relit_model, out_dir, plate=None):
     # away from her face the ratio is only a broad wash (her hair and the edge of her head move against the still)
     ratio_far = cv2.GaussianBlur(ratio, (0, 0), 24)
     # the still's skin light, extended past her face edge with her median skin colour, so a moved jaw never pulls in sky or grass
+    # The model kept a faint diagonal glasses-shadow too, and restore_lines brings back the take's band outline below the
+    # cheeks: so her skin light is the still's skin smoothed broadly (a normalised blur over her skin only, sigma w/50): its
+    # colour and the large shading of her face, no band. The take's own lines go back on top (det below).
     inner = oval_mask(LA, w, h, 1.0, 1)[..., None]
+    skA = skin_mask(LA, w, h, 1)
     tone = np.median(blurR[(inner[..., 0] > .5) & (cheeks_mask(LA, w, h, 1)[..., 0] > .5)], axis=0)
-    skinR = inner * blurR + (1 - inner) * tone
+    sm = w / 50
+    smooth = cv2.GaussianBlur(R * skA, (0, 0), sm) / (cv2.GaussianBlur(skA[..., 0], (0, 0), sm)[..., None] + 1e-4)
+    skinR = inner * smooth + (1 - inner) * tone
     F = frames(take)
     mats = np.array([JFa.matte(f) for f in F])
     mats = np.array([mats[max(0, i - 2):i + 3].mean(0) for i in range(len(mats))])
