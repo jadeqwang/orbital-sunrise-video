@@ -210,6 +210,24 @@ pressure drop he went in head first). The round-3 plates (docs/TAKES.md "Round 3
   and HOME) now starts 204.74 s; L1_impact grows to 4.7 s, its treetops rate capped (≤ 2.3 s of plate, O3's .48) so the
   5.04 s plate does not run out.
 
+## Round 5: the tether as a cable (2026-10-01, her notes on 0:14 and 0:33)
+
+The generated plates never keep the cable's length, so both shots now draw a **simulated** tether (`video/src/tether.js`:
+constant-length rope, position-based dynamics, both ends pinned, no gravity, light damping, bending stiffness with a minimum
+bend radius after Gemini 4's umbilical, S65-30433; run once per shot at boot, stored per 1/24 s, so frames stay pure
+functions of t) over plates with the generated one painted out (`tools/tether_r5.py n1|i6`; frames not in git: rerun it).
+
+- **N1_tether**: `tether_drift_r5` = take 2 with its line removed (masked temporal median of the static shot) and him moved
+  along the hatch→him line: distance 0.42 L at the start (the rest coiled slack), coasting out to exactly L on "trace"
+  (18.59 s, the snap; the gold trace runs along the simulated cable and completes on it), held, a small rebound
+  (≥0.93 L, the line bows), taut again by ≈20.1 s and at 20.30 s. L = 199.7 plate px (`video/data/tether_n1.json`).
+  `?n1=r4` = round 4, `?n1=old` = take 1.
+- **I6_predawn**: the hoop removed from `countdown_drift_t3` / `hero_sunrise` (→ `countdown_drift_r5`, `hero_sunrise_r5`,
+  frames 1–72 only, used by I6 alone); a ≈5.4 m cable from the hull (where the struts meet it, tracked) to his right hip,
+  starting wound loosely around him and floating in big loops, in front of and behind him (hidden by his matte when behind).
+  `?i6=r4` = round 4, `?i6=old` = take 1. **H1a_sunrise still plays `hero_sunrise` with its hoop**: at the cut the hoop
+  returns and the cable vanishes (switch H1a to `hero_sunrise_r5` + extend the plate and the rope if she wants continuity).
+
 ## 0. Ask her first (only she can supply these)
 
 1. **The new lyric text**, line by line, and where each new line goes (which section, before/after which existing line).
