@@ -489,4 +489,15 @@ PLATES.update({
         "Warm sunlight drifts gently across the cabin and their suits as the capsule slowly spins. "
         "Completely static locked-off camera on a tripod: no zoom, no push-in, no pan, no shake; the walls and both round portholes stay exactly where they are in the frame. "
         "One continuous shot, no cuts. " + LOOK),
+    # G2_math, her note: "closer in on one guy so there's more facial expression and density of math" (the founder's intensity: trying
+    # not to hurl, trying not to die, only pure reason keeps the crew alive, while spinning). First frame = Nano Banana close-up from
+    # take3.first.jpg (take6.chain.json). Take numbers 4-5 were used by the two-porthole attempts.
+    "vzor_manual_6": dict(duration=8, first_frame="media/plates/vzor_manual/take6.first.jpg", refs=["CAB"], out_id="vzor_manual", prompt=START +
+        "A close-up inside the Voskhod-2 capsule, 1965: only this one cosmonaut, his face inside the open helmet, exactly as in the image. The capsule is spinning and he is "
+        "doing life-or-death orbital arithmetic in his head while fighting motion sickness. His expression keeps changing: eyes fixed and intent, then flicking left and right "
+        "and up as he works through the numbers, lips moving slightly as he counts under his breath; a hard swallow; a wince of nausea, a brief tightening of the jaw, a slow "
+        "controlled breath out through the nose; he blinks the sweat away and refocuses, fierce concentration. Sweat glistens on his forehead and upper lip. "
+        "Hard sunlight from the porthole swings slowly across his face as the capsule turns: it sweeps from one side of his face to the other, then the face falls into shadow, "
+        "and the light comes back round; the bright sky in the porthole on the left turns with it. "
+        "Static locked-off camera, no zoom, no push-in, one continuous shot, no cuts; he stays where he is in the frame, nobody else appears. " + LOOK),
 })
