@@ -97,7 +97,14 @@ begins in the song and the lag is her pick by ear. `?…lag=` in the renderer UR
   `take1.mp4` (committed) and the 1280x720 frames (`index.json` entry `jade_loc_day`).
 - Renderer: `?h1d=day` (default) adds an edge falloff to the engine's hatching (outer ~fifth of the frame) and a lighter engine
   on her face (`faceQuiet`, so it does not re-trace the old band from the take's line work). `?h1d=loc` = the golden-hour
-  version as released. Known: faint traces of the band's edge remain on the lower cheeks in the last ~0.5 s (head tilted).
+  version as released.
+- Round 5 (her note: band faint in the plate, but the pencil drew it darkly again): cause = the engine's contours trace every
+  edge of the take, and the plate still had the band (the still's skin light kept it below the lenses, the take's ±5 % texture
+  kept its hatched edges, its outer part sat outside the skin mask), so the 45 % pencil outlined it. Fix: `jade_relight.py`
+  now covers both cheeks under the lenses out to her outline, takes the skin light from the still closed over ~90 px and
+  blurred at w/12, and keeps no take texture inside her outline except her glasses' rims (`rims_mask`, at 80 %); the mouth,
+  eyes, brows and nose regions and the lips cut are unchanged. In `H1d_home` the contours on her face are quieter (`faceQuietC`,
+  88 % over a wider oval) so the rims stay light lines. The take's frown creases on the forehead are flattened too.
 
 ### 0:32 · `H1d_home` · "bring me home" · plate `jade_loc` (default)
 

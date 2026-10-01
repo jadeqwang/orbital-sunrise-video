@@ -749,13 +749,16 @@ async function initShots() {
       return 1 - .85 * smooth(clamp(Math.hypot(dx, dy))); } : undefined;
     // and lighter on her face, so the engine does not re-trace the old glasses-shadow's edge from the take's line work
     const faceQuiet = exp === 'day' ? (X, Y) => 1 - .7 * smooth(clamp((1.15 - Math.hypot((X - 900) / 190, (Y - 430) / 235)) / .3)) : undefined;
+    // round 5 (her note: "the JS drawing renders the glasses shadow darkly again"): the engine's contours trace every edge
+    // in the take, so the faint band left in the plate came back as dark outlines (and its rims doubled up): on her face the
+    // contours are quieter still and over a wider oval than the hatching, so her glasses' rims stay light pencil lines
+    const faceQuietC = exp === 'day' ? (X, Y) => 1 - .88 * smooth(clamp((1.25 - Math.hypot((X - 900) / 190, (Y - 430) / 235)) / .3)) : undefined;
     const lag = +(new URLSearchParams(location.search).get('h1dlag') ?? -.22);  // her pick by ear ("G"); ?h1dlag= tries others
     const tp = loc ? OI(t) - (30.9 + lag) : OI(t) - 32.05;   // take time runs on the released song's clock
     if (exp !== 'js') await paperTake(id, tp);
-    const DBG = new URLSearchParams(location.search).get('h1ddbg') || '';
-    if (exp !== 'plain' && DBG !== 'nopen') {
+    if (exp !== 'plain') {
       G.save(); if (exp !== 'js') G.globalAlpha = .45;
-      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: DBG === 'nohatch' ? false : { spacing: 6.2, mask: edgeLoose && ((X, Y) => edgeLoose(X, Y) * faceQuiet(X, Y)) }, ...(DBG === 'nocont' ? { contour: false } : faceQuiet ? { contour: { mask: faceQuiet } } : {}), ...(DBG === 'nosil' ? { silhouette: false } : {}) });
+      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2, mask: edgeLoose && ((X, Y) => edgeLoose(X, Y) * faceQuiet(X, Y)) }, ...(faceQuietC ? { contour: { mask: faceQuietC } } : {}) });
       G.restore();
     }
     const w = H1[1].words;
