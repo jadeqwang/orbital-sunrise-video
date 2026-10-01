@@ -168,6 +168,80 @@ def n1():
     print(f"wrote {out} ({n} frames), {DATA / 'tether_n1.json'}")
 
 
+# ------------------------------------------------------------------------------------------------ I6 (the hoop)
+def hoop_mask(im, M):
+    """the generated hose: thin parts of his matte plus bright, unsaturated pixels grown from them through the dark sky,
+    left of his body (never his body core, the limb's blue/orange band or the ship)"""
+    ker = lambda r: cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * r + 1, 2 * r + 1))
+    b = (M > .5).astype(np.uint8)
+    core = cv2.morphologyEx(b, cv2.MORPH_OPEN, ker(11))
+    k_, lab, st, c = cv2.connectedComponentsWithStats(core)
+    k = max(range(1, k_), key=lambda k: st[k][4] if c[k][0] < .62 * WD else 0)   # him, not the ship
+    core = (lab == k).astype(np.uint8)
+    xs = np.nonzero(core)[1]; cx = xs.mean()
+    corex = cv2.dilate(core, ker(3)).astype(bool)
+    hsv = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
+    V, S = hsv[..., 2].astype(int), hsv[..., 1].astype(int)
+    B_, R_ = im[..., 0].astype(int), im[..., 2].astype(int)
+    left = np.zeros_like(corex); left[:, : int(cx)] = True
+    ok = (V > 28) & (S < 150) & (B_ <= R_ + 6) & ~corex & left
+    seed = (b.astype(bool) & ~corex & left) & ok
+    grow = seed.copy()
+    for _ in range(80):
+        g2 = cv2.dilate(grow.astype(np.uint8), ker(1)).astype(bool) & ok
+        if (g2 == grow).all():
+            break
+        grow = g2
+    # keep the pieces that are big enough (the hose), not stray stars
+    k_, lab, st, _ = cv2.connectedComponentsWithStats(grow.astype(np.uint8))
+    keep = np.zeros_like(grow)
+    for k in range(1, k_):
+        if st[k][4] > 60:
+            keep |= lab == k
+    return keep, core
+
+
+def i6():
+    ker = lambda r: cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * r + 1, 2 * r + 1))
+    tracks = {}
+    ref = cv2.imread(str(PL / "countdown_drift_t3" / "f0081.jpg"))
+    AX, AY = 736, 232                                        # the anchor on the hull (where the struts meet it), frame 81
+    tpl = ref[AY - 40:AY + 40, AX - 50:AX + 30]
+    HIP81 = None
+    for src, dst, nmax in (("countdown_drift_t3", "countdown_drift_r5", None), ("hero_sunrise", "hero_sunrise_r5", 72)):
+        fs = frames(src); n0 = len(fs); n = nmax or n0
+        out = PL / dst
+        if out.exists():
+            shutil.rmtree(out)
+        out.mkdir(parents=True)
+        cen, anc = [], []
+        for f in range(1, n + 1):
+            im = cv2.imread(str(fs[f - 1]))
+            M = matte(src, f, n0)
+            hm, core = hoop_mask(im, M)
+            fill = cv2.dilate(hm.astype(np.uint8), ker(3))
+            im2 = cv2.inpaint(im, fill, 6, cv2.INPAINT_TELEA)
+            cv2.imwrite(str(out / f"f{f:04d}.jpg"), im2, [cv2.IMWRITE_JPEG_QUALITY, 92])
+            if f % 2:
+                Mn = M * (1 - cv2.dilate(hm.astype(np.uint8), ker(2)))
+                cv2.imwrite(str(out / f"m{f:04d}.png"), cv2.resize((Mn * 255).astype(np.uint8), (512, 288), interpolation=cv2.INTER_AREA))
+            ys, xs = np.nonzero(core)
+            cen.append([xs.mean(), ys.mean()])
+            r = cv2.matchTemplate(im[100:400, 560:900], tpl, cv2.TM_CCOEFF_NORMED)
+            _, _, _, (mx, my) = cv2.minMaxLoc(r)
+            anc.append([560 + mx + 50, 100 + my + 40])
+        cen, anc = smooth1(np.array(cen), 2), smooth1(np.array(anc, float), 3)
+        if HIP81 is None:
+            HIP81 = np.array([503, 300]) - cen[80]              # his right hip (toward the ship), relative to his centroid
+        hip = cen + HIP81
+        tracks[dst] = {"hip": hip.round(2).tolist(), "anchor": anc.round(2).tolist()}
+        install(src, dst, n, f"{src} without the generated hose (tools/tether_r5.py i6)")
+        print(f"wrote {out} ({n} frames)")
+    (DATA / "tether_i6.json").write_text(json.dumps({"w": WD, "h": HT, "fps": 24, **tracks,
+        "note": "plate px at 960x540 per plate frame: his right hip (the cable's end) and the anchor on the hull (tools/tether_r5.py i6)"},
+        separators=(",", ":")))
+
+
 if __name__ == "__main__":
     for a in sys.argv[1:]:
-        {"n1": n1}[a]()
+        {"n1": n1, "i6": i6}[a]()

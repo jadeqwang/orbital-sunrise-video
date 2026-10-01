@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import jade_location as JL, jade_fade as JFa
 
 import os
-SMOOTH, CLOSE, RIM, CHK, FLAT, DLO, DHI, SKF, SKG = float(os.environ.get('SM', 50)), int(os.environ.get('CL', 41)), float(os.environ.get('RIM', .86)), float(os.environ.get('CHK', 0)), int(os.environ.get('FLAT', 0)), float(os.environ.get('DLO', .94)), float(os.environ.get('DHI', 1.04)), float(os.environ.get('SKF', 15)), float(os.environ.get('SKG', 1.0))
+SMOOTH, CLOSE, RIM, CHK, FLAT, DLO, DHI, SKF, SKG, EYD, NOD = float(os.environ.get('SM', 50)), int(os.environ.get('CL', 41)), float(os.environ.get('RIM', .86)), float(os.environ.get('CHK', 0)), int(os.environ.get('FLAT', 0)), float(os.environ.get('DLO', .94)), float(os.environ.get('DHI', 1.04)), float(os.environ.get('SKF', 15)), float(os.environ.get('SKG', 1.0)), int(os.environ.get('EYD', 17)), int(os.environ.get('NOD', 9))
 LIPS = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291, 375, 321, 405, 314, 17, 84, 181, 91, 146]
 CHEEKS = ([145, 234, 93, 132, 58, 172, 61, 129], [374, 454, 323, 361, 288, 397, 291, 358])   # lower lid, oval down to the jaw, mouth corner, nose
 
@@ -50,11 +50,11 @@ def skin_mask(L, w, h, feather, grow=1.0):
     p = pts(L, w, h, JL.FACE_OVAL); c = p.mean(0); cv2.fillPoly(m, [(c + (p - c) * grow).astype(np.int32)], 255)
     cut = np.zeros((h, w), np.uint8)
     for side in EYES: cv2.fillConvexPoly(cut, cv2.convexHull(pts(L, w, h, side).astype(np.int32)), 255)
-    cut = cv2.dilate(cut, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (17, 17)))
+    cut = cv2.dilate(cut, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (EYD, EYD)))
     lips = np.zeros((h, w), np.uint8); cv2.fillPoly(lips, [pts(L, w, h, LIPS).astype(np.int32)], 255)
     cut = np.maximum(cut, cv2.dilate(lips, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))))
     nose = np.zeros((h, w), np.uint8); cv2.fillConvexPoly(nose, cv2.convexHull(pts(L, w, h, NOSE).astype(np.int32)), 255)
-    cut = np.maximum(cut, cv2.dilate(nose, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))))
+    cut = np.maximum(cut, cv2.dilate(nose, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (NOD, NOD))))
     m[cut > 0] = 0
     return cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), feather)[..., None]
 
