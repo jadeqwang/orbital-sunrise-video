@@ -349,6 +349,22 @@ FIXES = {
 }
 
 
+# 0:44 · her round-4 note on hook1 (jade_loc): "relight her: erase the shadow from her glasses, natural skin colour, like her
+# 2:08 shot but in broad daylight", and a looser sketch at the edges of the Hill Country. Applied to the take's first frame; the
+# take itself is relit frame by frame from this still (tools/jade_relight.py), so her lips and timing stay the approved take's.
+FIXES["daylight"] = ("Edit image 1, keeping it the same pencil drawing on cream paper with the same framing and composition, and "
+    "keeping her exactly as she is drawn: every pencil line of her face, her head size and shape, high forehead, eyebrows, "
+    "glasses, hair, pink headphones, jacket, pose, size and position. Do not redraw, move, resize, beautify or restyle her; no "
+    "makeup. Make four changes only. 1) Broad daylight instead of golden hour: a clear sunny early afternoon, the sun high "
+    "and out of the picture, a pale clear blue sky, the hills and grass in their natural daylight greens and straw colours, "
+    "no low sun, no orange glow. 2) Light her as she would really be lit standing in that daylight: soft, even, natural light on "
+    "her face from the front and above, and give her face, neck and hand a natural skin colour in light coloured pencil, as in "
+    "a coloured portrait drawing, not grey. 3) " + NO_GLASSES_SHADOW.replace("Remove that shadow", "Remove that shadow "
+    "completely: no dark band or grey patch under the lenses") + "4) Toward the left, right and bottom edges of the picture, "
+    "draw the Hill Country more loosely: quicker, freer graphite and coloured-pencil strokes, much less detail, simplified "
+    "shapes, more bare paper showing, strokes trailing off unfinished right at the edges, like a sketch around a finished "
+    "figure; near her it stays as it is. She stays the most finished thing in the picture. No text, no border.")
+
 FIXES["loosen_ref"] += FIXES["loosen"].replace("Edit image 1, keeping her exactly as she is:", "Edit image 1, keeping her exactly as "
     "she is and matching the references:").replace("headphones, jacket", "headphones (worn on her head, exactly her real pair "
     "from image 2), jacket")

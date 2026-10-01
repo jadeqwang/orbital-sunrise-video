@@ -16,8 +16,13 @@ OUT = ROOT / "media" / "plates"
 MAX_PAR = int(os.environ.get("PLATE_PAR", "6"))
 
 
+def folder(pid):
+    """A spec with out_id (a later take's prompt, e.g. "tether_drift_2") lands as the next take of that plate."""
+    return PLATES.get(pid, {}).get("out_id", pid)
+
+
 def takes(pid):
-    d = OUT / pid
+    d = OUT / folder(pid)
     return sorted(d.glob("take*.mp4")) if d.exists() else []
 
 
@@ -37,7 +42,7 @@ def run_plate(pid, force=False):
     if existing and not force:
         return pid, str(existing[-1]), "exists"
     n = max((int(p.stem[4:]) for p in existing), default=0) + 1  # rejects move to media/archive: never reuse a number
-    out = OUT / pid / f"take{n}.mp4"
+    out = OUT / folder(pid) / f"take{n}.mp4"
     inp = {
         "prompt": spec["prompt"],
         "duration": spec.get("duration", 5),
@@ -62,7 +67,7 @@ def run_plate(pid, force=False):
     refs = list(spec.get("refs", []))
     for attempt in range(4):
         try:
-            paths, res = cfai.gen(spec.get("model", "bytedance/seedance-2.5"), inp, out, tag="plate:" + pid, timeout=1500)
+            paths, res = cfai.gen(spec.get("model", "bytedance/seedance-2.5"), inp, out, tag="plate:" + folder(pid), timeout=1500)
             break
         except Exception as e:
             msg = str(e)
@@ -81,7 +86,7 @@ def run_plate(pid, force=False):
     else:
         return pid, None, "ERR retries exhausted"
     s = sheet(out)
-    (OUT / pid / f"take{n}.json").write_text(json.dumps({"spec": {k: v for k, v in spec.items()}, "secs": round(time.time() - t0)}, indent=1))
+    (OUT / folder(pid) / f"take{n}.json").write_text(json.dumps({"spec": {k: v for k, v in spec.items()}, "secs": round(time.time() - t0)}, indent=1))
     return pid, str(out), f"ok {time.time()-t0:.0f}s"
 
 
