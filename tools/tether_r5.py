@@ -206,7 +206,7 @@ def i6():
     AX, AY = 736, 232                                        # the anchor on the hull (where the struts meet it), frame 81
     tpl = ref[AY - 40:AY + 40, AX - 50:AX + 30]
     HIP81 = None
-    for src, dst, nmax in (("countdown_drift_t3", "countdown_drift_r5", None), ("hero_sunrise", "hero_sunrise_r5", 72)):
+    for src, dst, nmax in (("countdown_drift_t3", "countdown_drift_r5", None), ("hero_sunrise", "hero_sunrise_r5", 120)):
         fs = frames(src); n0 = len(fs); n = nmax or n0
         out = PL / dst
         if out.exists():
@@ -224,15 +224,29 @@ def i6():
                 Mn = M * (1 - cv2.dilate(hm.astype(np.uint8), ker(2)))
                 cv2.imwrite(str(out / f"m{f:04d}.png"), cv2.resize((Mn * 255).astype(np.uint8), (512, 288), interpolation=cv2.INTER_AREA))
             ys, xs = np.nonzero(core)
-            cen.append([xs.mean(), ys.mean()])
-            r = cv2.matchTemplate(im[100:400, 560:900], tpl, cv2.TM_CCOEFF_NORMED)
-            _, _, _, (mx, my) = cv2.minMaxLoc(r)
-            anc.append([560 + mx + 50, 100 + my + 40])
+            cen.append([xs.mean(), ys.mean(), np.sqrt(len(xs))])
+            r = cv2.matchTemplate(im[60:460, 520:960], tpl, cv2.TM_CCOEFF_NORMED)
+            _, sc, _, (mx, my) = cv2.minMaxLoc(r)
+            anc.append([520 + mx + 50, 60 + my + 40] if sc > .72 and mx + 50 < 440 - 30 else None)
+        # the hull leaves the frame as hero_sunrise pushes in: from the last confident match on, the anchor keeps moving
+        # as it was (its velocity over the last 8 good frames), off frame
+        good = [i for i, a in enumerate(anc) if a is not None]
+        g0 = good[-1]
+        v = (np.array(anc[g0]) - np.array(anc[good[max(0, len(good) - 9)]])) / max(1, g0 - good[max(0, len(good) - 9)])
+        for i in range(len(anc)):
+            if anc[i] is None:
+                prev = max([g for g in good if g < i], default=None)
+                anc[i] = (np.array(anc[prev]) + v * (i - prev)).tolist() if prev is not None else anc[good[0]]
+        if good[-1] < len(anc) - 1:
+            print(f"{dst}: anchor matched to frame {g0 + 1}, extrapolated after")
         cen, anc = smooth1(np.array(cen), 2), smooth1(np.array(anc, float), 3)
         if HIP81 is None:
-            HIP81 = np.array([503, 300]) - cen[80]              # his right hip (toward the ship), relative to his centroid
-        hip = cen + HIP81
-        tracks[dst] = {"hip": hip.round(2).tolist(), "anchor": anc.round(2).tolist()}
+            HIP81 = (np.array([503, 300]) - cen[80, :2], cen[80, 2])   # his right hip (toward the ship), relative to his centroid
+        hip = cen[:, :2] + HIP81[0] * (cen[:, 2:3] / HIP81[1])     # scaled with his size (the camera pushes in)
+        # the camera's push-in (hero_sunrise moves in on him): his size relative to countdown frame 81, smoothed, so the
+        # renderer can simulate the cable in fixed world units and magnify it with the plate
+        zoom = smooth1(cen[:, 2:3] / HIP81[1], 6)[:, 0]
+        tracks[dst] = {"hip": hip.round(2).tolist(), "anchor": anc.round(2).tolist(), "zoom": zoom.round(4).tolist()}
         install(src, dst, n, f"{src} without the generated hose (tools/tether_r5.py i6)")
         print(f"wrote {out} ({n} frames)")
     (DATA / "tether_i6.json").write_text(json.dumps({"w": WD, "h": HT, "fps": 24, **tracks,

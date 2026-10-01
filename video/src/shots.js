@@ -336,8 +336,11 @@ async function initShots() {
     const sun = [W / 2 + view.ox + (su[0] - .5) * W * view.zoom, H / 2 + view.oy + (su[1] - .5) * H * view.zoom];
     const rk = (X, Y, h) => clamp(Math.hypot(X - sun[0], Y - sun[1]) / 2000) * .75 + h * .25;
     const done = k >= 1;
-    const r = await drawPlate(t, 'hero_sunrise', 0, {
+    // round 5: the poster is a frame of H1a, so it has the same simulated cable (the hoop painted out); ?i6=r4: the hoop
+    const rope = I6_R5 && TD6 ? i6Rope() : null;
+    const r = await drawPlate(t, rope ? 'hero_sunrise_r5' : 'hero_sunrise', 0, {
       hold: POSTER_TP, view, fixedSeed: done ? undefined : 11,
+      ...(rope ? { extra: i6Cable(rope, POSTER_TP - sunBreak + H1[0].t0, clamp((k - .1) * 1.4)) } : {}),
       contour: { reveal: clamp(k * 1.6), revealKey: rk, hi: .14, lo: .06 },
       hatch: { reveal: clamp((k - .15) * 1.35), revealKey: rk, spacing: 6.5 },
       sil: { reveal: clamp(k * 1.8), revealKey: rk },
@@ -660,15 +663,29 @@ async function initShots() {
     const D = I6_HERO, Hh = tpHero(hk0), c = (1 - 2 * Hh / D) / (D * D), a = (Hh - c * D * D * D) / (D * D), x = clamp(t - tm, 0, D);
     return ['hero_sunrise', a * x * x + c * x * x * x];      // h(0) = 0, h'(0) = 0, h(D) = tpHero(hk0), h'(D) = 1
   };
-  const i6Track = (t, key) => {   // his hip / the hull anchor (plate px) on the r5 plate shown at song time t
-    const [id0, tp] = i6Map(t), a = TD6[R5ID[id0]][key], x = clamp(tp * 24, 0, a.length - 1), i = Math.min(a.length - 2, Math.floor(x)), f = x - i;
-    return [lerp(a[i][0], a[i + 1][0], f), lerp(a[i][1], a[i + 1][1], f)];
+  // the rope continues through H1a (same simulation, hero_sunrise_r5), and I1's poster (hero_sunrise at 4.4 s = inside H1a)
+  // draws the state at that moment, so the hoop never comes back and the cable is the same one
+  const H1A_END = H1[0].words[2][0] - .05;
+  const i6Cable = (rope, tq, reveal = 1) => (pen, F, view, dIdx) => {
+    let P = rope.at(tq); if (reveal < 1) P = P.slice(0, 3 * Math.max(2, Math.round(reveal * P.length / 3)));
+    const z = i6Track(tq, 'zoom'); P = P.map((c, i) => i % 3 === 2 ? c * z : ZC[i % 3] + (c - ZC[i % 3]) * z);
+    const toS = (x, y) => view.toScreen(x / TD6.w - .5 / F.aw, y / TD6.h - .5 / F.ah);
+    // behind him (z > 0) the cable is hidden by his matte; in front it crosses over him
+    const hide = (s, X, Y, zz) => { if (!F.M || zz <= 0) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; };
+    drawCable(pen, P, toS, { w: 17 * z * (view.scale / 3.12), light: [1, .35], seed: dIdx * 29 + 3, hide, rings: 9, persp: 900, cols: { body: 'white', shade: 'cobalt', hi: 'white' } });
   };
+  const i6Track = (t, key) => {   // his hip / the hull anchor (plate px) on the r5 plate shown at song time t
+    const [id0, tp] = t < hk0 ? i6Map(t) : ['hero_sunrise', tpHero(t)], a = TD6[R5ID[id0]][key], x = clamp(tp * 24, 0, a.length - 1), i = Math.min(a.length - 2, Math.floor(x)), f = x - i;
+    return typeof a[0] === 'number' ? lerp(a[i], a[i + 1], f) : [lerp(a[i][0], a[i + 1][0], f), lerp(a[i][1], a[i + 1][1], f)];
+  };
+  // the plate camera pushes in on him through hero_sunrise (zoom = his size vs. countdown frame 81): the cable lives in fixed
+  // world units (plate px at zoom 1, about the frame centre) and is magnified with the plate
+  const ZC = [480, 270], toWorld = (p, t) => { const z = i6Track(t, 'zoom'); return [ZC[0] + (p[0] - ZC[0]) / z, ZC[1] + (p[1] - ZC[1]) / z]; };
   // the cable starts out (song time O(20.5)) wound loosely around him, after Gemini 4's photo: from the hull down past his
   // right side, up over his head behind him, round his left shoulder and in front of his chest to the hip. Its length is
   // that route's: ≈5.4 m at his scale (he is ≈1.7 m ≈ 360 plate px; Leonov's tether was 5.35 m).
-  const i6Rope = () => ROPE6 || (ROPE6 = simulateRope({ name: 'I6', t0: O(20.5), t1: hk0, n: 120, seed: +(Q.get('i6seed') || 5),
-    endA: t => [...i6Track(t, 'anchor'), 70], endB: t => [...i6Track(t, 'hip'), 0],
+  const i6Rope = () => ROPE6 || (ROPE6 = simulateRope({ name: 'I6', t0: O(20.5), t1: H1A_END, n: 120, seed: +(Q.get('i6seed') || 5),
+    endA: t => [...toWorld(i6Track(t, 'anchor'), t), 70], endB: t => [...toWorld(i6Track(t, 'hip'), t), 0],
     via: (A, H) => [[690, 370, 60], [630, 440, 30], [565, 340, 70], [600, 200, 40], [525, 95, 90], [420, 45, 60], [330, 115, 30], [225, 165, -20], [255, 265, -50], [345, 225, -70], [430, 335, -50]]
       .map(([x, y, z]) => [x + H[0] - 503, y + H[1] - 300, z]),
     damp: .15, bend: .015, rMin: 70, iters: 60, sub: 12, pre: .8, drift: 24 }));
@@ -677,12 +694,7 @@ async function initShots() {
     const tq = drawClock(t, 8).tq, [id0, tp] = i6Map(tq), pan = smooth(clamp((tq - (hk0 - I6_HERO)) / I6_HERO));
     const rope = I6_R5 && TD6 ? i6Rope() : null, id = rope ? R5ID[id0] : id0;
     await drawPlate(t, id, tp, { hold: tp, rate: 8, view: { zoom: 1.04, ox: 180 * pan }, hatch: { spacing: 7 },
-      ...(rope ? { extra: (pen, F, view, dIdx) => {
-        const P = rope.at(tq), toS = (x, y) => view.toScreen(x / TD6.w - .5 / F.aw, y / TD6.h - .5 / F.ah);
-        // behind him (z > 0) the cable is hidden by his matte; in front it crosses over him
-        const hide = (s, X, Y, zz) => { if (!F.M || zz <= 0) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5; };
-        drawCable(pen, P, toS, { w: 17, light: [1, .35], seed: dIdx * 29 + 3, hide, rings: 9, persp: 900, cols: { body: 'white', shade: 'cobalt', hi: 'white' } });
-      } } : {}) });
+      ...(rope ? { extra: i6Cable(rope, tq) } : {}) });
     const Lt = typeLayer();
     const cd = [[B(Bn(60)), '3'], [B(Bn(61)), '2'], [B(Bn(62)), '1']];
     // bottom left, clear of his boots (he hangs centre frame, drifting right as the frame pans)
@@ -693,9 +705,9 @@ async function initShots() {
 
   shot('H1a_sunrise', hk0, H1[0].words[2][0] - .05, async (t, lt) => {
     paper(G, 'night');
-    const z = punch(t, .018);
-    await withZoom(z, () => drawPlate(t, 'hero_sunrise', tpHero(t), {
-      view: { zoom: 1.04, ox: 180 }, hatch: { spacing: 6.5 },
+    const z = punch(t, .018), rope = I6_R5 && TD6 ? i6Rope() : null;   // round 5: the I6 cable continues (?i6=r4: the hoop)
+    await withZoom(z, () => drawPlate(t, rope ? 'hero_sunrise_r5' : 'hero_sunrise', tpHero(t), {
+      view: { zoom: 1.04, ox: 180 }, hatch: { spacing: 6.5 }, ...(rope ? { extra: i6Cable(rope, drawClock(t, 12).tq) } : {}),
       under: (pen, F, v) => {
         const s = sunScreen('hero_sunrise', tpHero(t), v); if (!s) return;
         const burst = expoOut(clamp((t - hk0) / .5));
