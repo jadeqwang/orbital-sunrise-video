@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orbital Sunrise</title>
+<meta name="description" content="Orbital Sunrise, a music video by Jade Wang about Alexei Leonov's first spacewalk and the hand-flown landing of Voskhod-2. Every frame drawn in colored pencil by JavaScript.">
+<meta property="og:title" content="Orbital Sunrise">
+<meta property="og:description" content="Song and lyrics by Jade Wang. Every frame drawn in colored pencil by JavaScript.">
+<meta property="og:image" content="img/poster.jpg">
+<meta name="theme-color" content="#0d0c10">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600;700&family=Oswald:wght@700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&text=%E8%BD%A8%E9%81%93%E6%97%A5%E5%87%BA&display=swap">
+<style>
+/* Layout: the page is one sheet that turns over. It opens on the film's black paper (the void: video, title, lyrics,
+   the ring of equations) and lands on white paper for the reading (the math). Colors are the film's pencil box. */
+:root {
+  /* the void (fixed in both themes: the film's black paper) */
+  --void: #0d0c10;
+  --void-2: #16141b;
+  --void-rule: #2b2833;
+  --cream: #f4efe6;
+  --silver: #a9b0bd;
+  --dim: #77727f;
+  --gold: #ffc53d;
+  --orange: #ff7a1a;
+  --verm: #ef3b24;
+  --sky: #7fb3ff;
+  /* the paper (follows the viewer's theme) */
+  --paper: #f3efe6;
+  --paper-2: #e9e2d2;
+  --graphite: #2b2a2e;
+  --graphite-soft: #5d5a56;
+  --rule: #cfc5ad;
+  --cobalt: #1f4f9e;
+  --ultramarine: #3b3fae;
+  --vermilion: #c63a1f;
+  --chip-doc: #1f4f9e;
+  --chip-est: #8a5a00;
+  --chip-inf: #7a3a8c;
+  --calc-bg: #ebe4d3;
+  --grain: 0.09;
+  --f-display: "Anton", "Impact", "Haettenschweiler", "Arial Narrow Bold", sans-serif;
+  --f-cyr: "Oswald", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-cjk: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --f-lyric: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --f-body: "Source Serif 4", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1c1b20; --paper-2: #25242b; --graphite: #e8e1d0; --graphite-soft: #aaa497; --rule: #3c3b42;
+    --cobalt: #86a8ee; --ultramarine: #a9acf4; --vermilion: #f2805f;
+    --chip-doc: #86a8ee; --chip-est: #e0b45a; --chip-inf: #d39be2; --calc-bg: #26252d; --grain: 0.06;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1c1b20; --paper-2: #25242b; --graphite: #e8e1d0; --graphite-soft: #aaa497; --rule: #3c3b42;
+  --cobalt: #86a8ee; --ultramarine: #a9acf4; --vermilion: #f2805f;
+  --chip-doc: #86a8ee; --chip-est: #e0b45a; --chip-inf: #d39be2; --calc-bg: #26252d; --grain: 0.06;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--void); scroll-padding-top: 4rem; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0; background: var(--void); color: var(--cream);
+  font-family: var(--f-body); font-size: 1.0625rem; line-height: 1.62;
+  -webkit-text-size-adjust: 100%;
+}
+/* pencil tooth: one fixed sheet of grain over everything */
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50; opacity: var(--grain);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+img { max-width: 100%; height: auto; display: block; }
+[hidden] { display: none !important; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.gutter { padding-inline: 16px; }
+.mono { font-family: var(--f-mono); }
+.skip { position: absolute; left: 16px; top: -100px; z-index: 100; background: var(--cream); color: var(--void); padding: .4rem .7rem; font: 600 .8rem var(--f-mono); }
+.skip:focus { top: 12px; }
+
+/* ── top bar ───────────────────────────────────────────── */
+.bar {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  padding-block: 14px 12px; max-width: 1280px; margin-inline: auto;
+}
+.bar .mark { font-family: var(--f-display); font-size: 1.05rem; letter-spacing: .04em; text-decoration: none; color: var(--cream); }
+.bar .mark span { color: var(--verm); font: 700 .78rem var(--f-cyr); letter-spacing: .12em; margin-left: .5rem; }
+.bar nav { display: flex; gap: .25rem 1.1rem; flex-wrap: wrap; font: 600 .7rem/1.4 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; }
+.bar nav a { color: var(--silver); text-decoration: none; padding-block: .3rem; }
+.bar nav a:hover { color: var(--cream); }
+
+/* ── the film ──────────────────────────────────────────── */
+.film { max-width: 1280px; margin-inline: auto; display: grid; gap: 10px; }
+.screen {
+  position: relative; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; margin-inline: auto;
+  background: #000; box-shadow: 0 0 0 1px var(--void-rule), 0 40px 120px -40px rgba(255, 122, 26, .22);
+}
+@supports (height: 1svh) { .screen { max-width: min(100%, calc((100svh - 150px) * 16 / 9)); } }
+@media (min-width: 900px) { .screen { min-width: 840px; } }
+.screen video { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; display: block; }
+.film-notes { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .3rem 1.5rem; font: 400 .72rem/1.5 var(--f-mono); letter-spacing: .06em; color: var(--silver); font-variant-numeric: tabular-nums; }
+.film-notes .excerpt { color: var(--gold); }
+.film-notes .excerpt b { color: var(--void); background: var(--gold); padding: 0 .4em; margin-right: .5em; font-weight: 700; letter-spacing: .12em; }
+.film-notes [hidden] { display: none; }
+
+/* ── title ─────────────────────────────────────────────── */
+.title { max-width: 1280px; margin-inline: auto; padding-block: clamp(2.5rem, 7vw, 5rem) 1rem; display: grid; gap: 2rem; }
+@media (min-width: 900px) { .title { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; } }
+.stamp { display: flex; flex-wrap: wrap; gap: .3rem 1.2rem; font: 600 .72rem/1.4 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--silver); margin: 0 0 1rem; }
+.stamp .red { color: var(--verm); font-family: var(--f-cyr); font-weight: 700; letter-spacing: .1em; }
+h1 {
+  font-family: var(--f-display); font-weight: 400; text-transform: uppercase; margin: 0;
+  font-size: clamp(3.6rem, 15vw, 9.5rem); line-height: .84; letter-spacing: .005em; color: var(--cream);
+}
+.echo { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem 1rem; margin-top: .9rem; color: var(--verm); }
+.echo .ru { font: 700 clamp(1.05rem, 3.4vw, 1.75rem)/1.1 var(--f-cyr); letter-spacing: .12em; }
+.echo .zh { font: 700 clamp(.95rem, 2.8vw, 1.35rem)/1.1 var(--f-cjk); letter-spacing: .3em; }
+.by { font: italic 400 clamp(1.6rem, 4.5vw, 2.4rem)/1.1 var(--f-lyric); margin: 1rem 0 0; color: var(--cream); }
+.lede { display: grid; gap: .9rem; font-family: var(--f-lyric); font-size: clamp(1.2rem, 2.6vw, 1.42rem); line-height: 1.42; color: var(--cream); }
+.lede p { margin: 0; max-width: 38ch; }
+.lede em { color: var(--gold); }
+.lede .small { font: 400 .8rem/1.6 var(--f-mono); color: var(--silver); letter-spacing: .02em; max-width: 52ch; }
+
+/* ── lyrics ────────────────────────────────────────────── */
+.lyrics { max-width: 1280px; margin-inline: auto; padding-block: clamp(3rem, 8vw, 6rem) 2rem; }
+.kicker { font: 600 .72rem/1.4 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--silver); margin: 0 0 .6rem; }
+.kicker .red { color: var(--verm); }
+h2.big { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; font-size: clamp(2.6rem, 9vw, 5.2rem); line-height: .9; margin: 0; letter-spacing: .01em; text-wrap: balance; }
+.lyrics-head { display: grid; gap: 1rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+.lyrics-head p { margin: 0; font: 400 .8rem/1.6 var(--f-mono); color: var(--silver); max-width: 60ch; }
+.song { display: grid; gap: clamp(2.2rem, 5vw, 3.4rem); }
+.part { display: grid; gap: .35rem; }
+.part > h3 { margin: 0 0 .5rem; font: 600 .68rem/1.4 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); display: flex; gap: .8rem; align-items: baseline; flex-wrap: wrap; }
+.part > h3 i { font-style: normal; color: var(--silver); letter-spacing: .08em; text-transform: none; }
+.part ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
+.ln {
+  all: unset; box-sizing: border-box; display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); gap: .75rem; align-items: baseline;
+  width: 100%; cursor: pointer; padding: .18rem 0; border-radius: 2px; color: var(--cream);
+  transition: opacity .35s ease, color .35s ease;
+}
+.ln .t { font: 400 .7rem/1 var(--f-mono); color: var(--dim); letter-spacing: .04em; font-variant-numeric: tabular-nums; position: relative; }
+.ln .w { min-width: 0; overflow-wrap: anywhere; }
+.ln:hover .t, .ln:focus-visible .t { color: var(--gold); }
+.ln:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.ln[aria-disabled="true"] { cursor: default; }
+.ln[aria-disabled="true"] .t { text-decoration: line-through; text-decoration-color: var(--void-rule); }
+.song.playing .ln { opacity: .42; }
+.song.playing .ln.now { opacity: 1; }
+.ln.now .t { color: var(--verm); }
+.ln.now .t::before { content: ""; position: absolute; left: -12px; top: .1em; width: 6px; height: 6px; border-radius: 50%; background: var(--verm); }
+@media (max-width: 420px) { .ln { grid-template-columns: 2.7rem minmax(0, 1fr); gap: .5rem; } .ln.now .t::before { left: -9px; } }
+
+/* the film's type, by role */
+.her { font: italic 400 clamp(1.45rem, 4.4vw, 2.35rem)/1.15 var(--f-lyric); }
+.her.sub { font-size: clamp(1.2rem, 3vw, 1.55rem); color: #ded7ca; }
+.her.hand { font-size: clamp(2rem, 6.8vw, 3.8rem); line-height: 1.05; }
+.imp { font-family: var(--f-display); font-style: normal; font-weight: 400; text-transform: uppercase; letter-spacing: .01em; line-height: .92; }
+.her .imp { font-size: .9em; letter-spacing: .02em; }
+.hook { font-family: var(--f-display); text-transform: uppercase; font-size: clamp(2.1rem, 7.6vw, 4.5rem); line-height: .92; letter-spacing: .005em; display: block; text-wrap: balance; }
+.mid { font-family: var(--f-display); text-transform: uppercase; font-size: clamp(1.8rem, 6vw, 3.4rem); line-height: .95; display: block; }
+.gold { color: var(--gold); }
+.verm { color: var(--verm); }
+.soft { color: var(--silver); }
+.paren { font: italic 400 .5em/1 var(--f-lyric); text-transform: none; color: var(--silver); letter-spacing: 0; vertical-align: .25em; padding-inline: .2em; }
+.ru-echo { display: block; font: 700 clamp(.95rem, 2.6vw, 1.4rem)/1.2 var(--f-cyr); letter-spacing: .14em; color: var(--verm); margin: .35rem 0 0 calc(3.4rem + .75rem); }
+.ru-echo.white { color: var(--silver); font-weight: 700; }
+@media (max-width: 420px) { .ru-echo { margin-left: calc(2.7rem + .5rem); } }
+.instr { font: 400 .75rem/1.5 var(--f-mono); color: var(--dim); letter-spacing: .06em; margin-left: calc(3.4rem + .75rem); }
+@media (max-width: 420px) { .instr { margin-left: calc(2.7rem + .5rem); } }
+
+/* stills set into the lyric sheet */
+.still { margin: .4rem 0 0; display: grid; gap: .5rem; }
+.still img { width: 100%; box-shadow: 0 0 0 1px var(--void-rule); }
+.still figcaption { font: 400 .7rem/1.5 var(--f-mono); color: var(--dim); letter-spacing: .04em; }
+.still.inset { max-width: 40rem; margin-left: calc(3.4rem + .75rem); margin-top: 1.2rem; }
+@media (max-width: 420px) { .still.inset { margin-left: 0; } }
+
+/* ── the math in his head ──────────────────────────────── */
+.ring { max-width: 1280px; margin-inline: auto; padding-block: clamp(3rem, 8vw, 6rem) 0; }
+.ring figure { margin: 0; display: grid; gap: 1rem; }
+.ring img { width: 100%; box-shadow: 0 0 0 1px var(--void-rule); }
+.ring figcaption { display: grid; gap: .6rem; max-width: 46rem; }
+.ring .cap-lyric { font: italic 400 clamp(1.5rem, 4.6vw, 2.3rem)/1.15 var(--f-lyric); color: var(--cream); margin: 0; }
+.ring .cap-text { font: 400 .82rem/1.65 var(--f-mono); color: var(--silver); margin: 0; }
+.ring .cap-text a { color: var(--gold); }
+
+/* ── void to paper ─────────────────────────────────────── */
+.turn { height: clamp(9rem, 24vw, 16rem); background: linear-gradient(to bottom, var(--void) 0%, var(--void-2) 30%, var(--paper) 100%); display: grid; place-items: center; }
+.turn { place-items: start center; padding-top: clamp(2.5rem, 6vw, 4rem); }
+.turn p { margin: 0; font: 600 .68rem/1.6 var(--f-mono); letter-spacing: .2em; text-transform: uppercase; color: var(--silver); text-align: center; }
+.turn p span { color: var(--cream); }
+
+/* ── paper: the math (the published math page, folded in) ── */
+.paper { background: var(--paper); color: var(--graphite); }
+.math { max-width: 44rem; margin-inline: auto; padding-block: 1rem 3rem; }
+.math a { color: var(--cobalt); }
+.math a:focus-visible, .math input:focus-visible { outline: 2px solid var(--vermilion); outline-offset: 3px; }
+.math p, .math li { max-width: 65ch; }
+.math em { font-style: italic; }
+.math strong { font-weight: 600; }
+.math header.hero { padding-block: 1.5rem 2rem; }
+.math .eyebrow { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--graphite-soft); margin: 0 0 1rem; }
+.math h2.mh { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; font-size: clamp(2.6rem, 10vw, 5rem); line-height: 0.95; letter-spacing: 0.01em; margin: 0; text-wrap: balance; color: var(--graphite); }
+.math h2.mh .k { color: var(--vermilion); }
+.math .lyric { font-family: var(--f-lyric); font-style: italic; font-size: clamp(1.5rem, 4.6vw, 2.1rem); line-height: 1.25; margin: 1.5rem 0 1.25rem; color: var(--ultramarine); max-width: 30ch; }
+.math .lede-m { font-size: 1.125rem; }
+.math section { padding-block: 2.25rem 0.5rem; border-top: 1px solid var(--rule); margin-top: 1.5rem; }
+.math section > h3 { font-family: var(--f-display); font-weight: 400; text-transform: uppercase; font-size: clamp(1.7rem, 6vw, 2.4rem); line-height: 1.05; letter-spacing: 0.015em; margin: 0 0 1rem; text-wrap: balance; color: var(--graphite); }
+.math section > h3 .n { font-family: var(--f-mono); font-size: 0.9rem; color: var(--vermilion); vertical-align: 0.6em; margin-right: 0.5rem; letter-spacing: 0; }
+.math h4 { font-family: var(--f-body); font-size: 1.125rem; font-weight: 600; margin: 1.75rem 0 0.4rem; }
+.math .lead-in { font-weight: 600; }
+.chip { display: inline-block; font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.05em 0.5em; border: 1px solid currentColor; border-radius: 2px; white-space: nowrap; vertical-align: 0.12em; line-height: 1.5; }
+.chip.doc { color: var(--chip-doc); }
+.chip.est { color: var(--chip-est); }
+.chip.inf { color: var(--chip-inf); }
+.math .legend { display: grid; gap: 0.6rem; padding: 0; list-style: none; margin: 1rem 0; }
+.math .legend li { display: grid; grid-template-columns: 8.5rem 1fr; gap: 0.75rem; align-items: baseline; }
+.math .legend li > span:last-child { min-width: 0; }
+@media (max-width: 30rem) { .math .legend li { grid-template-columns: 1fr; gap: 0.15rem; } }
+.math blockquote.quote { margin: 1.25rem 0; padding: 0 0 0 1rem; border-left: 2px solid var(--vermilion); font-family: var(--f-lyric); font-style: italic; font-size: 1.35rem; line-height: 1.35; }
+.math blockquote.quote cite { display: block; font-family: var(--f-body); font-style: normal; font-size: 0.85rem; color: var(--graphite-soft); margin-top: 0.4rem; }
+.math .tbl { overflow-x: auto; margin: 1rem 0 1.25rem; }
+.math table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+.math th, .math td { text-align: left; vertical-align: top; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); }
+.math th { font-family: var(--f-mono); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--graphite-soft); }
+.math td.num, .math .mono { font-family: var(--f-mono); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+.math td.num { white-space: nowrap; }
+.math tr.hl td { color: var(--vermilion); font-weight: 600; }
+.math .calc { font-family: var(--f-mono); font-size: 0.9rem; line-height: 1.75; font-variant-numeric: tabular-nums; background: var(--calc-bg); padding: 1rem 1.1rem; margin: 1.1rem 0; overflow-x: auto; white-space: pre; border-radius: 2px; }
+.math .calc .c { color: var(--graphite-soft); }
+.math .calc .r { color: var(--vermilion); font-weight: 600; }
+.math .calc .b { color: var(--cobalt); font-weight: 600; }
+.math figure { margin: 1.5rem 0; }
+.math .fig-wrap { overflow-x: auto; }
+.math figure svg { display: block; width: 100%; height: auto; min-width: 320px; }
+.math figcaption { font-size: 0.88rem; color: var(--graphite-soft); margin-top: 0.5rem; max-width: 65ch; }
+.math svg text { font-family: var(--f-mono); fill: var(--graphite); }
+.math svg .soft { fill: var(--graphite-soft); }
+.math svg .lbl-r { fill: var(--vermilion); }
+.math svg .lbl-b { fill: var(--cobalt); }
+.math .dial { background: var(--paper-2); padding: 1.1rem 1.1rem 1.25rem; margin: 1.5rem 0; border: 1px solid var(--rule); border-radius: 2px; }
+.math .dial label { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--graphite-soft); display: block; }
+.math .dial-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 1rem; margin: 0.4rem 0 0.6rem; }
+.math .dial-out { font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-size: clamp(1.4rem, 5vw, 1.9rem); font-weight: 600; }
+.math .dial-out .s { color: var(--ultramarine); }
+.math .dial-out .km { color: var(--vermilion); }
+.math .dial-note { font-size: 0.92rem; color: var(--graphite-soft); margin: 0.5rem 0 0; min-height: 1.5em; }
+.math input[type="range"] { width: 100%; accent-color: var(--vermilion); margin: 0.25rem 0; }
+.math .ticks { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 0.7rem; color: var(--graphite-soft); }
+.math .learn { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 1.1rem; }
+.math .learn li { padding-left: 1.1rem; position: relative; }
+.math .learn li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 0.55rem; height: 2px; background: var(--vermilion); }
+.math .strike { text-decoration: line-through; text-decoration-color: var(--vermilion); text-decoration-thickness: 2px; }
+.math .sources td:first-child { min-width: 14rem; }
+.math .closing { font-family: var(--f-lyric); font-style: italic; font-size: 1.45rem; line-height: 1.35; color: var(--ultramarine); }
+
+/* ── landing: the last frame, then the credits ─────────── */
+.landing { max-width: 1280px; margin-inline: auto; padding-block: 2rem 0; }
+.landing figure { margin: 0; display: grid; gap: .6rem; }
+.landing img { width: 100%; box-shadow: 0 0 0 1px var(--rule); }
+.landing figcaption { font: 400 .72rem/1.5 var(--f-mono); color: var(--graphite-soft); letter-spacing: .04em; }
+footer.credits { max-width: 44rem; margin-inline: auto; padding-block: 3rem 4rem; display: grid; gap: 1.2rem; color: var(--graphite); }
+.credits .credit { font: italic 400 clamp(1.3rem, 3.6vw, 1.7rem)/1.3 var(--f-lyric); margin: 0; max-width: 40ch; }
+.credits .credit em { font-style: normal; }
+.credits .made { font: 400 .82rem/1.7 var(--f-mono); color: var(--graphite-soft); margin: 0; max-width: 62ch; }
+.credits .made a { color: var(--cobalt); }
+.credits .sig { font-family: var(--f-display); text-transform: uppercase; font-size: 1.1rem; letter-spacing: .04em; color: var(--graphite); display: flex; gap: .4rem 1rem; flex-wrap: wrap; align-items: baseline; }
+.credits .sig span { font: 700 .8rem var(--f-cyr); letter-spacing: .12em; color: var(--vermilion); }
+
+/* ── the now-playing strip (while the film plays out of view) ── */
+.np {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(13, 12, 16, .94); border-top: 1px solid var(--void-rule); color: var(--cream);
+  display: flex; align-items: center; gap: .9rem; backdrop-filter: blur(6px);
+}
+.np .np-t { font: 400 .7rem var(--f-mono); color: var(--verm); font-variant-numeric: tabular-nums; flex: none; }
+.np .np-line { flex: 1; min-width: 0; font: italic 400 1.1rem/1.2 var(--f-lyric); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.np button { all: unset; cursor: pointer; flex: none; font: 600 .66rem/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--cream); border: 1px solid var(--void-rule); padding: .55rem .7rem; border-radius: 2px; }
+.np button:hover { border-color: var(--silver); }
+.np button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#lyrics">Skip to the lyrics</a>
+
+<!-- ═══════════ THE VOID ═══════════ -->
+<header class="bar gutter">
+  <a class="mark" href="#film">Orbital Sunrise<span>ВОСХОД</span></a>
+  <nav aria-label="Sections"><a href="#film">Film</a><a href="#lyrics">Lyrics</a><a href="#math">The math</a></nav>
+</header>
+
+<main>
+<section class="film gutter" id="film" aria-label="The film">
+  <div class="screen">
+    <video id="video" controls playsinline preload="metadata" poster="img/poster.webp"
+      aria-label="Orbital Sunrise, music video, 4 minutes 12 seconds. The song's lyrics are available as subtitles and are printed below."></video>
+  </div>
+  <div class="film-notes">
+    <span class="excerpt" id="excerpt-note" hidden><b>PREVIEW</b><span id="excerpt-text"></span></span>
+    <span id="video-note">4:12 · 1920 × 1080 · 24 fps · subtitles: lyrics (CC)</span>
+  </div>
+</section>
+
+<section class="title gutter" aria-labelledby="t">
+  <div>
+    <p class="stamp"><span>18.03.1965</span><span class="red">Восход-2</span><span>Extended cut</span></p>
+    <h1 id="t">Orbital<br>Sunrise</h1>
+    <div class="echo" lang="ru"><span class="ru">ОРБИТАЛЬНЫЙ ВОСХОД</span><span class="zh" lang="zh-Hans">轨道日出</span></div>
+    <p class="by">Jade Wang</p>
+  </div>
+  <div class="lede">
+    <p>On 18 March 1965 Alexei Leonov stepped out of Voskhod&#8209;2, whose name means <em>sunrise</em>, and became the first person in open space. His suit ballooned until he could not get back in. He bled his own air out to fit through the airlock, the automatic guidance failed, and he and Pavel Belyayev flew the re&#8209;entry by hand and came down in the snow of the Ural taiga.</p>
+    <p>Somewhere in the middle of it, with colored pencils tied to his wrist, Leonov drew the orbital sunrise. Every frame of this film is drawn the same way.</p>
+  </div>
+</section>
+
+<!-- ═══════════ LYRICS ═══════════ -->
+<section class="lyrics gutter" id="lyrics" aria-labelledby="lyrics-h">
+  <div class="lyrics-head">
+    <p class="kicker">Lyrics · <span class="red">Jade Wang</span></p>
+    <h2 class="big" id="lyrics-h">What she sings</h2>
+    <p>The extended cut, as sung. Tap a line to hear it; the line being sung lights up while the film plays.</p>
+  </div>
+
+  <div class="song" id="song">
+    <div class="part">
+      <h3>Intro <i>filtered, low-passed, half-whispered</i></h3>
+      <ol>
+        <li><button class="ln" data-t0="7.97" data-t1="13.89"><span class="t"></span><span class="w her">First man floating in the void of space</span></button></li>
+        <li><button class="ln" data-t0="13.89" data-t1="20.51"><span class="t"></span><span class="w her">Tied to the ship by the slightest trace</span></button></li>
+        <li><button class="ln" data-t0="20.51" data-t1="26.26"><span class="t"></span><span class="w her">Pull him back to the ship&rsquo;s embrace</span></button></li>
+        <li><button class="ln" data-t0="26.26" data-t1="32.54"><span class="t"></span><span class="w her">Can&rsquo;t feel his hands, can&rsquo;t feel his face</span></button></li>
+      </ol>
+    </div>
+
+    <div class="part">
+      <h3>Chorus</h3>
+      <ol>
+        <li><button class="ln" data-t0="35.81" data-t1="41.46"><span class="t"></span><span class="w hook">Orbital sunrise, <span class="gold">burning gold</span></span></button></li>
+        <li><button class="ln" data-t0="41.46" data-t1="47.25"><span class="t"></span><span class="w hook">Orbital sunrise, bring me home</span></button></li>
+      </ol>
+      <span class="ru-echo" lang="ru" aria-hidden="true">ОРБИТАЛЬНЫЙ ВОСХОД</span>
+      <figure class="still inset">
+        <img src="img/burning_gold.webp" width="1024" height="576" loading="lazy" decoding="async"
+          alt="Colored-pencil frame: Leonov in his helmet, lit from the left, beside the words BURNING GOLD hatched in gold and orange pencil.">
+        <figcaption>0:40 · Burning gold</figcaption>
+      </figure>
+    </div>
+
+    <div class="part">
+      <h3>Pre-chorus <i>filter opens, snare roll builds</i></h3>
+      <ol>
+        <li><button class="ln" data-t0="56.43" data-t1="60.25"><span class="t"></span><span class="w her">So he <span class="imp">bleeds</span> the air out, breath by breath</span></button></li>
+        <li><button class="ln" data-t0="60.25" data-t1="63.13"><span class="t"></span><span class="w her">Dancing on the edge of a quiet death</span></button></li>
+        <li><button class="ln" data-t0="63.13" data-t1="66.14"><span class="t"></span><span class="w her">Let his air out through the <span class="imp">suit</span> he wore</span></button></li>
+        <li><button class="ln" data-t0="66.14" data-t1="70.17"><span class="t"></span><span class="w her"><span class="imp verm">Eternity</span> inside the airlock door</span></button></li>
+      </ol>
+    </div>
+
+    <div class="part">
+      <h3>Chorus</h3>
+      <ol>
+        <li><button class="ln" data-t0="71.53" data-t1="76.76"><span class="t"></span><span class="w hook">Orbital sunrise, <span class="gold">burning gold</span></span></button></li>
+        <li><button class="ln" data-t0="76.76" data-t1="82.96"><span class="t"></span><span class="w hook">Orbital sunrise, bring me home</span></button></li>
+      </ol>
+      <span class="ru-echo" lang="ru" aria-hidden="true">ОРБИТАЛЬНЫЙ ВОСХОД</span>
+    </div>
+
+    <div class="part">
+      <h3>Drop <i>instrumental, chopped vocal</i></h3>
+      <ol>
+        <li><button class="ln" data-t0="92.38" data-t1="100.47"><span class="t"></span><span class="w mid"><span class="gold">Sun-rise&hellip;</span> <span class="paren">(bring me)</span> home&hellip;</span></button></li>
+        <li><button class="ln" data-t0="105.77" data-t1="115.09"><span class="t"></span><span class="w mid"><span class="gold">Sun-rise&hellip;</span> <span class="paren">(bring me)</span> home&hellip;</span></button></li>
+      </ol>
+      <span class="ru-echo" lang="ru" aria-hidden="true">ВОСХОД-2</span>
+    </div>
+
+    <div class="part">
+      <h3>Breakdown <i>vocal-led, stripped to pads and her voice</i></h3>
+      <ol>
+        <li><button class="ln" data-t0="116.07" data-t1="119.54"><span class="t"></span><span class="w her sub">He bleeds the air out, breath by breath</span></button></li>
+        <li><button class="ln" data-t0="119.54" data-t1="122.32"><span class="t"></span><span class="w her sub">Dancing on the edge of a quiet death</span></button></li>
+        <li><button class="ln" data-t0="122.32" data-t1="125.79"><span class="t"></span><span class="w her sub">I&rsquo;ll never float where the sky turns red</span></button></li>
+        <li><button class="ln" data-t0="125.79" data-t1="129.09"><span class="t"></span><span class="w her sub">Never see what he saw ahead</span></button></li>
+      </ol>
+    </div>
+
+    <div class="part">
+      <h3>Chorus</h3>
+      <ol>
+        <li><button class="ln" data-t0="130.86" data-t1="136.05"><span class="t"></span><span class="w her hand">Art is a landing in the snow</span></button></li>
+        <li><button class="ln" data-t0="136.05" data-t1="140.88"><span class="t"></span><span class="w her">Can&rsquo;t think can&rsquo;t write but my hands still know</span></button></li>
+      </ol>
+      <figure class="still inset">
+        <img src="img/art_is_a_landing.webp" width="1280" height="720" loading="lazy" decoding="async"
+          alt="Colored-pencil frame on white paper: a hand with a pencil writing &ldquo;Art is a landing in&rdquo; in a sketchbook.">
+        <figcaption>2:13 · White paper. Her hand, writing the line</figcaption>
+      </figure>
+    </div>
+
+    <div class="part">
+      <h3>Build <i>rising riser, vocal repeats and stacks</i></h3>
+      <ol>
+        <li><button class="ln" data-t0="140.88" data-t1="143.67"><span class="t"></span><span class="w her"><span class="imp">Guidance failed</span> and the capsule spun</span></button></li>
+        <li><button class="ln" data-t0="143.67" data-t1="146.39"><span class="t"></span><span class="w mid">Doing the math <span class="gold">with a spinning sun</span></span></button></li>
+        <li><button class="ln" data-t0="146.39" data-t1="151.29"><span class="t"></span><span class="w mid">Hold on&hellip; hold on&hellip; <span class="gold">hold on&hellip;</span></span></button></li>
+      </ol>
+      <span class="ru-echo white" lang="ru" aria-hidden="true">ОТКАЗ СИСТЕМЫ УПРАВЛЕНИЯ</span>
+    </div>
+
+    <div class="part">
+      <h3>Final chorus</h3>
+      <ol>
+        <li><button class="ln" data-t0="154.16" data-t1="159.83"><span class="t"></span><span class="w hook">Orbital sunrise, <span class="gold">burning gold</span></span></button></li>
+        <li><button class="ln" data-t0="159.83" data-t1="165.46"><span class="t"></span><span class="w hook">Fall through the skies, bring me home</span></button></li>
+      </ol>
+    </div>
+
+    <div class="part">
+      <h3>Drop <i>counter-melody chop against the supersaws</i></h3>
+      <ol>
+        <li><button class="ln" data-t0="176.49" data-t1="179.04"><span class="t"></span><span class="w mid"><span class="verm">Off course&hellip;</span> <span class="paren">(but I&rsquo;m)</span> home&hellip;</span></button></li>
+        <li><button class="ln" data-t0="179.40" data-t1="181.95"><span class="t"></span><span class="w mid"><span class="verm">Off course&hellip;</span> <span class="paren">(but I&rsquo;m)</span> home&hellip;</span></button></li>
+        <li><button class="ln" data-t0="182.32" data-t1="186.13"><span class="t"></span><span class="w mid"><span class="verm">Off course&hellip;</span> <span class="paren">(but I&rsquo;m)</span> home&hellip;</span></button></li>
+      </ol>
+    </div>
+
+    <div class="part">
+      <h3>Strings <i>vocal-led, orchestral strings</i></h3>
+      <ol>
+        <li><button class="ln" data-t0="187.46" data-t1="193.36"><span class="t"></span><span class="w her"><span class="imp">Fifteen hundred <span class="verm">klicks</span></span> coming in hot</span></button></li>
+        <li><button class="ln" data-t0="193.55" data-t1="197.81"><span class="t"></span><span class="w her"><span class="imp">Fifteen hundred <span class="verm">klicks</span></span> we overshot</span></button></li>
+      </ol>
+    </div>
+
+    <div class="part">
+      <h3>Outro <i>decisive ending</i></h3>
+      <ol>
+        <li><button class="ln" data-t0="198.12" data-t1="204.6"><span class="t"></span><span class="w mid">Made it down &mdash;</span></button></li>
+        <li><button class="ln" data-t0="204.79" data-t1="208.57"><span class="t"></span><span class="w hook">Home.</span></button></li>
+        <li><button class="ln" data-t0="209.09" data-t1="211.53"><span class="t"></span><span class="w mid">Made it down &mdash;</span></button></li>
+      </ol>
+      <p class="instr">Instrumental outro · soft piano from the intro, ritardando to the last chord at 4:04</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ THE MATH IN HIS HEAD ═══════════ -->
+<section class="ring gutter" aria-labelledby="ring-h">
+  <figure>
+    <img src="img/g2_math_ring.webp" width="1600" height="900" loading="lazy" decoding="async"
+      alt="Colored-pencil close-up of Leonov in his helmet, surrounded by a ring of handwritten orbital equations: the orbit period T = 2π√(6699³/398 600) ≈ 90.9 min, a crossed-out Δv ≈ 155 m/s corrected to about 125, 46 s × 7.4 ≈ 340 km. Over it the lyric DOING THE MATH WITH A SPINNING SUN.">
+    <figcaption>
+      <p class="kicker" id="ring-h">2:25 · The math in his head</p>
+      <p class="cap-lyric">&ldquo;Doing the math with a spinning sun.&rdquo;</p>
+      <p class="cap-text">The ring is the math from the pages below: the orbit&rsquo;s period, the engine&rsquo;s push, how far the ground slides under a late burn. Where our first draft had a wrong figure, the film writes it, crosses it out and corrects it. Below, worked out in full: what Leonov could know in those five minutes, and what we know now. <a href="#math">Read the math&nbsp;&darr;</a></p>
+    </figcaption>
+  </figure>
+</section>
+
+<div class="turn gutter" aria-hidden="true"><p>Space is black paper · <span>Earth is white paper</span></p></div>
+
+<!-- ═══════════ PAPER ═══════════ -->
+<div class="paper">
+<article class="math gutter" id="math" aria-labelledby="math-h">
+<header class="hero">
+  <p class="eyebrow">Orbital Sunrise · Voskhod&#8209;2 · 19 March 1965</p>
+  <h2 class="mh" id="math-h">The math behind<br>&ldquo;fifteen hundred <span class="k">klicks</span>&rdquo;</h2>
+  <p class="lyric">&ldquo;Fifteen hundred klicks, coming in hot &hellip; we overshot.&rdquo;</p>
+  <p class="lede-m">For viewers of <em>Orbital Sunrise</em>. A &ldquo;klick&rdquo; is soldier&rsquo;s slang for a kilometre, so the song says Voskhod&nbsp;2 came down about 1,500&nbsp;km from where it should have. The 1,500&nbsp;km is Leonov&rsquo;s own number. But it measures something different from where the capsule finally came down.</p>
+</header>
+
+<section id="why">
+  <h3><span class="n">1</span>Why we did the math</h3>
+  <p>The song is told from inside Leonov&rsquo;s head, in the minutes after the automatics failed, when he had to work out by hand where they would come down. We wanted to know whether the line holds up. Where does the number come from? How far off did Alexei Leonov and Pavel Belyayev actually land in March 1965? And how much of the miss came from two men doing by hand what a machine was supposed to do?</p>
+  <p>The answer is better than &ldquo;right&rdquo; or &ldquo;wrong&rdquo;.</p>
+</section>
+
+<section id="sources">
+  <h3><span class="n">2</span>How we sourced the figures</h3>
+  <p>Every number below carries one of three labels:</p>
+  <ul class="legend">
+    <li><span><span class="chip doc">Documented</span></span><span>It is in a source we can point to.</span></li>
+    <li><span><span class="chip est">Estimate</span></span><span>Our own calculation from documented inputs. Nobody in 1965 wrote it down.</span></li>
+    <li><span><span class="chip inf">Our inference</span></span><span>A reading of the sources that seems the most likely to us, but that no source states outright.</span></li>
+  </ul>
+  <h4>What kinds of sources</h4>
+  <ul>
+    <li><em>Spacecraft data</em>: engine thrust, orbit, capsule size and weight, mostly from Wikipedia pages that cite the standard NASA history (Asif Siddiqi, <em>Challenge to Apollo</em>, NASA SP-2000-4408).</li>
+    <li><em>Mission accounts</em>: Anatoly Zak&rsquo;s RussianSpaceWeb history of the landing, read in full.</li>
+    <li><em>Memoir</em>: Leonov&rsquo;s own article &ldquo;The Nightmare of Voskhod 2&rdquo; (<em>Air &amp; Space</em>, January 2005), adapted from his book <em>Two Sides of the Moon</em>, also read in full.</li>
+    <li><em>Reanalysis weather</em>: ERA5, a modern computer reconstruction of past weather (a model, not a measurement). It rebuilds the weather hour by hour, anywhere on Earth, going back to 1940, which is why we could look up the afternoon of 19 March 1965 at the landing site.</li>
+  </ul>
+  <h4>When sources disagree</h4>
+  <p>The rule is to be accurate. Where honest accounts genuinely differ (Leonov&rsquo;s memory against the official record, say), the film may keep the more dramatic version, and the notes say so. Anything no source supports gets fixed.</p>
+  <h4>The main sources</h4>
+  <div class="tbl"><table class="sources">
+    <thead><tr><th>Source</th><th>What we used it for</th></tr></thead>
+    <tbody>
+      <tr><td>Leonov, <a href="https://www.smithsonianmag.com/air-space-magazine/the-nightmare-of-voskhod-2-8655378/">&ldquo;The Nightmare of Voskhod 2&rdquo;</a>, <em>Air &amp; Space</em>, 2005</td><td>The crew&rsquo;s view: the failure, the 1,500 km forecast, the cabin</td></tr>
+      <tr><td>Zak, <a href="https://www.russianspaceweb.com/voskhod2-landing.html">&ldquo;Voskhod-2 lands in the wild&rdquo;</a>, RussianSpaceWeb</td><td>Burn times, the &ldquo;800+ km&rdquo; overflight, the landing site</td></tr>
+      <tr><td>Wikipedia, <a href="https://en.wikipedia.org/wiki/Voskhod_2">&ldquo;Voskhod 2&rdquo;</a> and <a href="https://en.wikipedia.org/wiki/Voskhod_(spacecraft)">&ldquo;Voskhod (spacecraft)&rdquo;</a></td><td>Orbit, engine, capsule, parachutes, the 46 s and 386 km (citing Siddiqi)</td></tr>
+      <tr><td><a href="https://ru.wikipedia.org/wiki/%D0%92%D0%BE%D1%81%D1%85%D0%BE%D0%B4-2">Russian Wikipedia, &ldquo;Восход-2&rdquo;</a></td><td>Planned landing zone, &minus;19&nbsp;&deg;C and 1.5&ndash;2 m of snow</td></tr>
+      <tr><td><a href="http://www.spacefacts.de/mission/english/voskhod-2.htm">Spacefacts</a>, <a href="http://www.svengrahn.pp.se/histind/Voskhod2/Voskhod2.htm">Sven Grahn</a>, <a href="http://www.astronautix.com/v/voskhod2.html">Astronautix</a></td><td>Cross-checks; the cause of the sensor failure</td></tr>
+      <tr><td>ERA5 (Copernicus) via the <a href="https://archive-api.open-meteo.com/v1/archive?latitude=59.6&amp;longitude=55.5&amp;start_date=1965-03-18&amp;end_date=1965-03-20&amp;hourly=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,wind_speed_100m,wind_direction_100m,cloud_cover,snow_depth&amp;wind_speed_unit=ms&amp;timezone=Europe%2FMoscow">Open-Meteo archive</a></td><td>Wind, temperature and snow at the landing site</td></tr>
+    </tbody>
+  </table></div>
+  <p>Some of these pages we could only see as search excerpts; the detailed working notes say which.</p>
+</section>
+
+<section id="capsule">
+  <h3><span class="n">3</span>Inside the capsule: what they knew and what they had to work out</h3>
+
+  <p><span class="lead-in">The failure.</span> On 19 March 1965, the day after the spacewalk, the ship was due to point itself backwards and fire its braking rocket on its own. Leonov noticed &ldquo;just five minutes before&rdquo; that the automatic system wasn&rsquo;t working <span class="chip doc">Documented</span>. The likely cause was the Sun sensor the ship used to find its orientation; one account says gas from the explosive bolts that dropped the airlock had fogged it <span class="chip doc">Documented</span> (as a secondary account). Without it, the ship could not tell which way was &ldquo;backwards&rdquo;.</p>
+
+  <p><span class="lead-in">The new plan.</span> They would land by hand, one orbit later. Belyayev told the ground:</p>
+  <blockquote class="quote">&ldquo;We can make only one attempt at reentry.&rdquo;<cite>Pavel Belyayev <span class="chip doc">Documented</span></cite></blockquote>
+  <p>One orbit took <span class="mono">90.9</span> minutes.</p>
+
+  <p><span class="lead-in">Pointing the ship by eye.</span> The tool was the <em>Vzor</em>, a periscope sight looking down through a porthole in the floor. It had a ring of small windows round a central view. Belyayev would level the ship until the horizon showed evenly in all the ring windows, then turn it until the ground below &ldquo;flowed&rdquo; along the guide lines. Then the ship was lined up with its path. It only worked over the daylit side of the Earth.</p>
+
+  <p><span class="lead-in">The awkward cabin.</span> Voskhod was a Vostok capsule rebuilt for more crew, and the seats sat crosswise to the sight. In Leonov&rsquo;s words, Belyayev &ldquo;had to lean horizontally across both seats in the spacecraft, while I held him steady in front of the orientation porthole.&rdquo; Then: &ldquo;We then had to maneuver ourselves back into the correct positions in our seats very rapidly so that the spacecraft&rsquo;s center of gravity was correct during the reentry burn&rdquo; <span class="chip doc">Documented</span>. Their bodies were part of the ship&rsquo;s balance.</p>
+
+  <p><span class="lead-in">What they could not know.</span> No satellite navigation, no live position fix. They had a clock, the known orbit, a small turning globe on the panel (the <em>Globus</em>) and the ground&rsquo;s instructions. Leonov, &ldquo;as navigator&rdquo;, picked the landing area: &ldquo;an area close to the city of Perm&rdquo; <span class="chip doc">Documented</span>.</p>
+
+  <h4>Where &ldquo;1,500 km&rdquo; comes from</h4>
+  <p>Leonov wrote that they knew they &ldquo;would be coming down off-target&mdash;1,500 kilometers west of where we were supposed to land&rdquo; <span class="chip doc">Documented</span>. That was said <em>before</em> the burn. Here is a back-of-envelope way a cosmonaut could get that number. This is <strong>our reconstruction</strong>, not something the crew wrote down.</p>
+  <p>A spacecraft&rsquo;s path doesn&rsquo;t change much from one lap to the next, but the Earth turns underneath it. So each lap crosses the ground further west.</p>
+
+<div class="calc"><span class="c">// Earth turns once in about 1,436 minutes</span>
+360° ÷ 1,436 min          = 0.25° per minute
+<span class="c">// one lap takes 90.9 minutes</span>
+0.25° × 90.9              ≈ 22.8°
+<span class="c">// small extra drift from Earth's bulge (estimate)</span>
+22.8° + 0.2°              ≈ <span class="b">23° west per lap</span>
+<span class="c">// one degree of longitude at 53°N (the planned zone,</span>
+<span class="c">// near Kustanay in Kazakhstan)</span>
+111 km × cos 53°          ≈ 67 km
+<span class="c">// shift in one lap at that latitude</span>
+23 × 67 km                ≈ <span class="r">1,540 km</span></div>
+
+  <figure>
+    <div class="fig-wrap">
+    <svg viewBox="0 0 640 250" role="img" aria-labelledby="gt-t gt-d">
+      <title id="gt-t">Ground track shifting west by one lap</title>
+      <desc id="gt-d">Two identical ground-track arcs. The later lap crosses the 53 degrees north line 23 degrees of longitude further west, about 1,540 kilometres.</desc>
+      <!-- latitude line 53N -->
+      <line x1="20" y1="120" x2="620" y2="120" stroke="var(--graphite-soft)" stroke-width="1" stroke-dasharray="3 5"/>
+      <text x="22" y="112" font-size="11" class="soft">53°N</text>
+      <!-- earlier lap -->
+      <path d="M 300 30 Q 430 80 540 240" fill="none" stroke="var(--ultramarine)" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+      <text x="470" y="62" font-size="12" class="lbl-b">lap N</text>
+      <!-- next lap, shifted 23 deg = 180px -->
+      <path d="M 120 30 Q 250 80 360 240" fill="none" stroke="var(--vermilion)" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="118" y="22" font-size="12" class="lbl-r">lap N+1</text>
+      <!-- crossing points -->
+      <circle cx="438.9" cy="120" r="5" fill="var(--paper)" stroke="var(--ultramarine)" stroke-width="2"/>
+      <circle cx="258.9" cy="120" r="5" fill="var(--vermilion)"/>
+      <!-- shift arrow -->
+      <line x1="430" y1="146" x2="270" y2="146" stroke="var(--graphite)" stroke-width="1.5"/>
+      <path d="M 270 146 l 9 -5 v 10 z" fill="var(--graphite)"/>
+      <line x1="438.9" y1="128" x2="438.9" y2="152" stroke="var(--graphite-soft)" stroke-width="1"/>
+      <line x1="258.9" y1="128" x2="258.9" y2="152" stroke="var(--graphite-soft)" stroke-width="1"/>
+      <text x="398" y="170" font-size="13" text-anchor="middle">23° of longitude</text>
+      <text x="398" y="188" font-size="13" text-anchor="middle" class="lbl-r">≈ 1,540 km west</text>
+      <!-- motion arrows -->
+      <text x="620" y="236" font-size="11" text-anchor="end" class="soft">direction of flight →</text>
+      <text x="22" y="236" font-size="11" class="soft">← Earth turns east underneath</text>
+    </svg>
+    </div>
+    <figcaption>Schematic, not to scale. Waiting one lap moves the <em>whole path</em> about 23&deg; west. At the planned zone&rsquo;s latitude that is about 1,540&nbsp;km.</figcaption>
+  </figure>
+
+  <p>That is &ldquo;1,500 kilometres west&rdquo;, near enough (the detailed notes, with more decimals, get <span class="mono">1,535&nbsp;km</span>). Notice what it measures: not a miss, but how far the <em>whole path</em> moved by waiting one lap.</p>
+</section>
+
+<section id="hindsight">
+  <h3><span class="n">4</span>Working backwards: what we know now</h3>
+  <p>With hindsight we can do what the crew couldn&rsquo;t: start from where they landed and ask what happened.</p>
+
+  <p><span class="lead-in">Where they landed</span> <span class="chip doc">Documented</span>. In deep snow in the taiga, about 180&nbsp;km north of Perm, at roughly <span class="mono">59°34′N 55°28′E</span>, around <span class="mono">12:02&ndash;12:06</span> Moscow time (sources differ by 4 minutes).</p>
+
+  <p><span class="lead-in">How far off.</span> Flight-data accounts give <strong>368 or 386&nbsp;km</strong> beyond the aim point on the new orbit <span class="chip doc">Documented</span>. RussianSpaceWeb gives &ldquo;more than 800&nbsp;km&rdquo; past the <em>planned</em> landing area, probably the original zone in Kazakhstan; Kustanay to the landing site is about 865&nbsp;km by our check <span class="chip est">Estimate</span>.</p>
+
+  <p><span class="lead-in">The late burn.</span> The manual firing was planned for <span class="mono">11:35:44</span> Moscow time; Wikipedia gives <span class="mono">11:36:27</span> as the actual time. That is <strong>43 seconds late</strong>. The often-quoted figure is <strong>46 seconds</strong> for Belyayev to get back to his seat (from Siddiqi via Wikipedia; it is in neither of the two full texts we read).</p>
+
+  <p>How much does a late burn cost? A burn made late simply happens further along the path, and the whole descent slides forward with it. The point on the ground under the ship moves at about <strong>7.4&nbsp;km every second</strong> (a bit slower than the ship&rsquo;s own 7.5&ndash;7.9&nbsp;km/s, because the ship is a few hundred km up). So:</p>
+
+<div class="calc">46 s × 7.4 km/s            ≈ <span class="r">340 km</span>   <span class="c">// estimate</span></div>
+  <p>That covers most of the 368&ndash;386&nbsp;km <span class="chip est">Estimate</span>.</p>
+
+  <div class="dial">
+    <label for="late">Try it: seconds late at ignition</label>
+    <div class="dial-row">
+      <output class="dial-out" id="late-out" for="late"><span class="s" id="late-s">46 s</span> &times; 7.4 km/s &asymp; <span class="km" id="late-km">340 km</span></output>
+    </div>
+    <input type="range" id="late" min="0" max="60" step="0.1" value="46" aria-describedby="late-note">
+    <div class="ticks" aria-hidden="true"><span>0 s</span><span>15</span><span>30</span><span>45</span><span>60 s</span></div>
+    <p class="dial-note" id="late-note">The often-quoted 46&nbsp;s delay.</p>
+  </div>
+
+  <h4>How sensitive is the landing?</h4>
+  <p>We ran a simple model of a falling ball through a standard atmosphere. It gives sizes, not answers <span class="chip est">Estimate</span>. The key finding: Voskhod comes in very shallow, only about 1.5&ndash;2.5&deg; below horizontal at 100&nbsp;km, and a shallow entry stretches small errors into big ones.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>What goes wrong at the burn</th><th>How far the landing moves</th></tr></thead>
+    <tbody>
+      <tr><td>Burn 1 s late</td><td class="num">about 7.4 km further on</td></tr>
+      <tr><td>Burn gives 1 m/s too little push</td><td class="num">40 to 95 km further on</td></tr>
+      <tr><td>Thrust tilted 1&deg; up or down</td><td class="num">50 to 80 km either way</td></tr>
+      <tr><td>Thrust tilted 3&ndash;5&deg; nose-up</td><td class="num">150 to 450 km further on</td></tr>
+      <tr><td>Thrust turned 3&deg; sideways</td><td class="num">tens of km to the side</td></tr>
+      <tr><td>Upper air 20% thinner or thicker</td><td class="num">30 to 70 km</td></tr>
+      <tr><td>Parachute drift in the wind</td><td class="num">2 to 6 km</td></tr>
+    </tbody>
+  </table></div>
+  <p>RussianSpaceWeb says both men were &ldquo;apparently out of their seats&rdquo; when Belyayev pressed the ignition button, so the ship&rsquo;s balance was off and it flew a shallower path than planned <span class="chip doc">Documented</span>. A few degrees of tilt would be enough to stretch a 340&nbsp;km miss toward 800&nbsp;km. How many degrees it really was, we can&rsquo;t say.</p>
+
+  <p><span class="lead-in">The spin came later.</span> After the burn a cable kept the cabin joined to the equipment section, and the pair whirled until about 100&nbsp;km up <span class="chip doc">Documented</span>. The air up there is too thin for the tumble to change the path much <span class="chip est">Estimate</span>. It cost blood vessels, not kilometres.</p>
+
+  <h4>The weather (from ERA5, our retrieval)</h4>
+  <p>ERA5 reconstructs the weather hour by hour, anywhere on Earth, back to 1940; it is a model reconstruction, not a measurement. At noon on 19 March 1965, at the grid point nearest the landing site:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Item</th><th>ERA5 value</th></tr></thead>
+    <tbody>
+      <tr><td>Wind at 10 m</td><td class="num">4.0 m/s from the south-west (gusts 9.5 m/s)</td></tr>
+      <tr><td>Wind at 100 m</td><td class="num">6.1 m/s from the south-west</td></tr>
+      <tr><td>Temperature</td><td class="num">&minus;1.1 &deg;C, falling to about &minus;4 &deg;C by dawn on the 20th</td></tr>
+      <tr><td>Cloud</td><td class="num">Overcast all day</td></tr>
+      <tr><td>Snow depth</td><td class="num">0.66 m (average over a ~30 km grid cell)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Russian Wikipedia says &minus;19&nbsp;&deg;C and 1.5&ndash;2&nbsp;m of snow; Leonov wrote of &ldquo;two meters of thick snow&rdquo;. ERA5 for 1965 has few Ural weather stations to anchor it and averages over a wide area, and drifts in forest clearings run far deeper than the average. We don&rsquo;t pick a side: the film keeps the deep snow and the cold, and the notes say what the data says.</p>
+
+  <h4>Parachutes and drift</h4>
+  <p>One Wikipedia page puts the start of the parachute sequence at about 5&nbsp;km up; another puts the main parachute at about 2.5&nbsp;km. We read these as two stages, a small braking chute (a &ldquo;drogue&rdquo;) first and then the main canopy, rather than a contradiction <span class="chip inf">Our inference</span> (we have no primary source for the timing). The film&rsquo;s card now reads <span class="mono">MAIN PARACHUTE &mdash; OPEN · ALTITUDE ~2.5 KM</span>.</p>
+  <p>The drift, step by step <span class="chip est">Estimate</span>, with assumed winds aloft of 7&ndash;15&nbsp;m/s:</p>
+<div class="calc"><span class="c">// drogue: 5 km down to 2.5 km at 30–50 m/s</span>
+2,500 ÷ 50 = 50 s   to   2,500 ÷ 30 ≈ 85 s
+<span class="c">// main: 2.5 km to the ground at 8–10 m/s</span>
+2,500 ÷ 10 = 250 s  to   2,500 ÷ 8  ≈ 310 s
+<span class="c">// total 300–395 s under canopy</span>
+ 7 m/s × 300 s ≈ <span class="r">2.1 km</span>
+15 m/s × 395 s ≈ <span class="r">5.9 km</span></div>
+  <p>So the wind carried them <strong>about 2&ndash;6&nbsp;km to the north-east</strong>. The wind chose the clearing, not the district.</p>
+
+  <h4>Their knowledge against ours</h4>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>In the capsule, 1965</th><th>With hindsight</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Where they&rsquo;d land</strong></td><td>&ldquo;1,500 km west&rdquo; of the old zone; &ldquo;near Perm&rdquo;</td><td>180 km N of Perm, ~368&ndash;386 km past the new aim</td></tr>
+      <tr><td><strong>Why</strong></td><td>One extra lap, Earth turning underneath</td><td>Plus a ~43&ndash;46 s late burn and an off-balance ship</td></tr>
+      <tr><td><strong>Weather</strong></td><td>Unknown</td><td>Light SW wind, overcast, around freezing (ERA5)</td></tr>
+      <tr><td><strong>Where they actually were</strong></td><td>The instruments said 2,000 km beyond Perm</td><td>They weren&rsquo;t</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="hand">
+  <h3><span class="n">5</span>The human hand: timing by squeeze and button</h3>
+  <p><span class="lead-in">What was done by hand</span> <span class="chip doc">Documented</span>. Pointing the ship (Belyayev, with the hand controller and the Vzor), choosing the landing area (Leonov), and starting the engine: RussianSpaceWeb says Belyayev &ldquo;pressed the ignition button&rdquo;. Leonov wrote that they had to &ldquo;decide on the exact timing and duration of the retro-rocket firing&rdquo;.</p>
+  <p><span class="lead-in">What is unclear.</span> Our sources do not say how the burn was <em>stopped</em>: whether the ship&rsquo;s own system cut the engine once it had given enough push, or whether a crewman did. RussianSpaceWeb says only that the burn &ldquo;apparently lasted as scheduled&rdquo;. So below we show both cases.</p>
+  <p><span class="lead-in">Reaction time</span> <span class="chip est">Estimate</span> (general, not from the Voskhod sources). A rested person pressing a button on a cue takes about 0.2&ndash;0.3&nbsp;s; more under stress, in thick gloves and a pressurised suit (they landed in their Berkut suits). Call it 0.2 to 1 second.</p>
+
+  <h4>Starting late or early</h4>
+  <p>Each second costs about 7.4&nbsp;km along the path:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Timing error at ignition</th><th>Landing shift</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0.2 s</td><td class="num">about 1.5 km</td></tr>
+      <tr><td class="num">0.3 s</td><td class="num">about 2.2 km</td></tr>
+      <tr><td class="num">1 s</td><td class="num">about 7.4 km</td></tr>
+      <tr><td class="num">5 s</td><td class="num">about 37 km</td></tr>
+      <tr class="hl"><td class="num">43&ndash;46 s (the actual delay)</td><td class="num">about 320&ndash;340 km</td></tr>
+    </tbody>
+  </table></div>
+  <p>You might expect re-entry to magnify a timing error. In our model it doesn&rsquo;t: a late burn just slides the whole descent forward at ground-track speed. The magnifying happens with the <em>size</em> and <em>direction</em> of the push, below.</p>
+
+  <h4>Stopping late or early</h4>
+  <p>Only if a person stopped it <span class="chip est">Estimate</span>. The engine&rsquo;s 15.8&nbsp;kN thrust on a 5.7-tonne ship gives:</p>
+<div class="calc">15,830 N ÷ 5,682 kg        ≈ <span class="b">2.8 m/s</span> of speed change per second
+<span class="c">// each 1 m/s too little moves the landing 40–95 km</span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Cut-off error</th><th>Push missing</th><th>Landing shift</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0.2 s</td><td class="num">about 0.6 m/s</td><td class="num">about 20&ndash;50 km</td></tr>
+      <tr><td class="num">0.3 s</td><td class="num">about 0.8 m/s</td><td class="num">about 35&ndash;80 km</td></tr>
+      <tr><td class="num">0.5 s</td><td class="num">about 1.4 m/s</td><td class="num">about 55&ndash;130 km</td></tr>
+    </tbody>
+  </table></div>
+  <p>If the ship cut its own engine, these errors mostly disappear.</p>
+
+  <h4>Holding the ship straight by hand</h4>
+  <p><span class="chip est">Estimate</span> Pointing by eye through a periscope is good to a degree or two, perhaps a few. Two separate effects:</p>
+<div class="calc"><span class="c">// lost push is tiny</span>
+cos 1° = 99.98%  →  on 130 m/s, 0.02 m/s lost
+<span class="c">// even at 5°: under 0.5 m/s</span>
+
+<span class="c">// push in the wrong direction is what matters</span>
+sin 1° × 130 m/s           ≈ <span class="r">2.3 m/s</span> up or down
+<span class="c">// changes how steeply the capsule meets the air:</span>
+<span class="c">// worth 50–80 km per degree</span>
+3° sideways                ≈ 7–8 m/s → tens of km to one side</div>
+
+  <figure>
+    <div class="fig-wrap">
+    <svg viewBox="0 0 640 300" role="img" aria-labelledby="ob-t ob-d">
+      <title id="ob-t">How the overshoot breaks down</title>
+      <desc id="ob-d">Bars on one kilometre scale from 0 to 400. The 43 to 46 second delay is about 320 to 340 km. Hand timing at ignition is 1.5 to 7.4 km. A manual cut-off error, if a person stopped the engine, is 20 to 130 km. Parachute drift is 2 to 6 km. The documented overshoot is 368 to 386 km.</desc>
+      <!-- scale: x = 210 + km * 1.0 (0..400 km -> 210..610) -->
+      <g stroke="var(--rule)" stroke-width="1">
+        <line x1="210" y1="20" x2="210" y2="250"/>
+        <line x1="310" y1="20" x2="310" y2="250" stroke-dasharray="2 4"/>
+        <line x1="410" y1="20" x2="410" y2="250" stroke-dasharray="2 4"/>
+        <line x1="510" y1="20" x2="510" y2="250" stroke-dasharray="2 4"/>
+        <line x1="610" y1="20" x2="610" y2="250" stroke-dasharray="2 4"/>
+      </g>
+      <g font-size="11" text-anchor="middle" class="soft">
+        <text x="210" y="268" class="soft">0</text>
+        <text x="310" y="268" class="soft">100</text>
+        <text x="410" y="268" class="soft">200</text>
+        <text x="510" y="268" class="soft">300</text>
+        <text x="610" y="268" class="soft">400 km</text>
+      </g>
+      <!-- documented overshoot band 368-386 -->
+      <rect x="578" y="20" width="18" height="230" fill="var(--cobalt)" opacity="0.16"/>
+      <text x="614" y="288" font-size="11" text-anchor="end" class="lbl-b">368–386 km documented</text>
+      <!-- rows -->
+      <g font-size="12">
+        <text x="200" y="52" text-anchor="end">43–46 s late burn</text>
+        <rect x="210" y="40" width="320" height="16" fill="var(--vermilion)"/>
+        <rect x="530" y="40" width="20" height="16" fill="var(--vermilion)" opacity="0.45"/>
+        <text x="200" y="68" text-anchor="end" font-size="10" class="soft">documented · estimate</text>
+        <text x="530" y="34" class="lbl-r" font-size="11" text-anchor="middle">320–340</text>
+
+        <text x="200" y="104" text-anchor="end">Cut-off by hand?</text>
+        <rect x="230" y="92" width="110" height="16" fill="var(--ultramarine)" opacity="0.35"/>
+        <text x="200" y="120" text-anchor="end" font-size="10" class="soft">only if a person stopped it</text>
+        <text x="346" y="105" font-size="11">20–130</text>
+
+        <text x="200" y="156" text-anchor="end">Hand timing, ignition</text>
+        <rect x="211.5" y="144" width="6" height="16" fill="var(--graphite)"/>
+        <text x="200" y="172" text-anchor="end" font-size="10" class="soft">0.2–1 s reaction</text>
+        <text x="224" y="157" font-size="11">1.5–7.4</text>
+
+        <text x="200" y="208" text-anchor="end">Parachute drift</text>
+        <rect x="212" y="196" width="4" height="16" fill="var(--cobalt)"/>
+        <text x="200" y="224" text-anchor="end" font-size="10" class="soft">wind, 7–15 m/s aloft</text>
+        <text x="222" y="209" font-size="11">2–6</text>
+      </g>
+    </svg>
+    </div>
+    <figcaption>All bars on one kilometre scale (estimates, except the shaded documented overshoot). The wait to get back into the seats dwarfs everything a hand on a button can do. Tilt is left out: a few degrees could cost anywhere from tens to hundreds of km, and how many degrees it was, nobody can say.</figcaption>
+  </figure>
+
+  <h4>The honest conclusion</h4>
+  <p>A good hand on the button costs a few km. Even a clumsy one, a second or so, costs under 10&nbsp;km. If a person also had to cut the engine, a few tenths of a second there could cost tens of km. A few degrees of tilt could cost hundreds. But the big, documented error is the <strong>43&ndash;46 second delay</strong> while two men in spacesuits untangled themselves from the sight and got back into their seats. That, plus the ship flying off-balance, is what turned a planned landing into a few hundred kilometres of taiga.</p>
+</section>
+
+<section id="learnings">
+  <h3><span class="n">6</span>Learnings along the way</h3>
+  <p>Things we got wrong in our own first drafts of the video and of this page, and what changed.</p>
+  <ul class="learn">
+    <li><strong>The engine&rsquo;s push came from the wrong ship.</strong> Our first draft of the ring of equations that fills the screen while Leonov does the math said &Delta;v &asymp; 155&nbsp;m/s, Wikipedia&rsquo;s figure. That only works for Vostok&rsquo;s weight (4,725&nbsp;kg); with Voskhod&rsquo;s 5,682&nbsp;kg it is about 125&ndash;130&nbsp;m/s, so the on-screen math now writes <span class="mono strike">155</span>, crosses it out and lands on about 130.</li>
+    <li><strong>Invented numbers in the on-screen equations.</strong> Before that, the same ring of equations showed <span class="mono">&ldquo;Δv = 106 m/s · t = 22 s · h = 497 km · ±1°&rdquo;</span>, which matched neither the engine nor the orbit. We replaced them with sourced figures.</li>
+    <li><strong>&ldquo;Altitude ~500 km&rdquo; was the high point.</strong> Our first draft of the video labelled the orbit <span class="mono">ALTITUDE ~500 KM</span>, but the orbit ran from 167 to 475&nbsp;km. The caption now says <span class="mono">APOGEE</span> (the highest point) <span class="mono">~500 KM</span>.</li>
+    <li><strong>Ship speed vs ground speed.</strong> Our first draft of this math multiplied the 46&nbsp;s delay by the ship&rsquo;s 7.8&nbsp;km/s and got about 360&nbsp;km. The point on the ground beneath it moves slower, about 7.4&nbsp;km/s, so the answer is about 340&nbsp;km.</li>
+    <li><strong>The 46 seconds.</strong> Our first draft treated &ldquo;46&nbsp;s to get back to his seat&rdquo; as solid. Neither full account we read contains it, and the clock times give 43&nbsp;s, so we now mark 46&nbsp;s as second-hand.</li>
+    <li><strong>The weather we thought we couldn&rsquo;t get.</strong> Our first draft said there was no wind record, because our tools couldn&rsquo;t reach ERA5, the archive that reconstructs the weather hour by hour, anywhere on Earth, back to 1940 (a model, not a measurement). Once the songwriter retrieved the afternoon of 19 March 1965 at the landing site, the wind proved light and steady, worth only a few km of drift.</li>
+    <li><strong>One parachute or two?</strong> Our first draft had the main parachute opening at 5&nbsp;km, giving 3.5&ndash;9.5&nbsp;km of drift. The two published heights (5 and 2.5&nbsp;km) fit a small braking chute followed by the main one, so drift fell to 2&ndash;6&nbsp;km and the on-screen caption changed from <span class="mono">5 KM</span> to <span class="mono">~2.5 KM</span>.</li>
+    <li><strong>The Russian failure caption.</strong> Our first draft of the video labelled the failure <span class="mono">ОТКАЗ АВТОМАТИКИ</span> (&ldquo;automatics failure&rdquo;). A native speaker preferred <span class="mono">ОТКАЗ СИСТЕМЫ УПРАВЛЕНИЯ</span> (&ldquo;control system failure&rdquo;), and the video now uses it.</li>
+    <li><strong>&ldquo;1,500 km&rdquo; is a forecast, not a miss.</strong> Our first draft read Leonov&rsquo;s figure as an exaggerated overshoot. In his full article it is his prediction <em>before</em> the burn, and it matches one lap&rsquo;s westward shift almost exactly.</li>
+  </ul>
+</section>
+
+<section id="lands">
+  <h3><span class="n">7</span>Where the song&rsquo;s number lands</h3>
+  <p>The capsule came down a few hundred kilometres past its new aim: 368&ndash;386&nbsp;km by the flight data, more than 800&nbsp;km from the original zone by another count. Not 1,500.</p>
+  <p>But 1,500&nbsp;km is not made up. It is the number Leonov wrote down for the moment the automatics failed: the two of them, five minutes before the planned burn, realising they would have to wait a lap and come down far to the west. It is the math they did in their heads, and it is very nearly right for what it measured.</p>
+  <p>That is what the song is about: what was going through Leonov&rsquo;s head in those minutes, the sums and the reasoning, with too little to go on and only one try. This page is how we worked backwards to what was in his mind then.</p>
+  <p class="closing">The lyric&rsquo;s 1,500&nbsp;km is his forecast, made with what he knew at that moment. Our hindsight numbers don&rsquo;t correct it; they explain it.</p>
+</section>
+</article>
+
+<section class="landing gutter" aria-label="Landing">
+  <figure>
+    <img src="img/home.webp" width="1280" height="720" loading="lazy" decoding="async"
+      alt="Colored-pencil frame on white paper: snow-laden taiga drawn in graphite and blue, the word HOME in black capitals, and the caption THE HATCH BLEW OPEN — INTO A TREE.">
+    <figcaption>3:26 · Home. The Ural taiga, 19 March 1965</figcaption>
+  </figure>
+</section>
+
+<footer class="credits gutter">
+  <p class="credit"><em>Orbital Sunrise</em>. Song and lyrics by Jade Wang. Narrative arc inspired by John Green's essay “Orbital Sunrise” (<em>The Anthropocene Reviewed</em>).</p>
+  <p class="made">How it was made: every frame is drawn in colored pencil by JavaScript, twelve drawings a second, over reference footage that never appears on screen. Out of respect, until Leonov&rsquo;s family gives permission, the film shows a blank card where his drawing would be. The code, and the detailed working notes behind the math, are at <a href="https://github.com/jadeqwang/orbital-sunrise-video">github.com/jadeqwang/orbital-sunrise-video</a>.</p>
+  <p class="sig">Orbital Sunrise <span lang="ru">ОРБИТАЛЬНЫЙ ВОСХОД</span></p>
+</footer>
+</div>
+</main>
+
+<div class="np" id="np" hidden role="region" aria-label="Now playing">
+  <span class="np-t" id="np-t">0:00</span>
+  <span class="np-line" id="np-line" aria-live="off"></span>
+  <button type="button" id="np-pause">Pause</button>
+  <button type="button" id="np-up">Film &uarr;</button>
+</div>
+
+<script>
+/* ── The one setting: where the film streams from. ───────────────────────────────────
+   An .mp4 plays directly; a URL ending in .m3u8 streams as HLS (hls.js, or the browser's own HLS on Safari/iOS).
+   VIDEO_STARTS_AT: the film time at the file's 0:00 (0 for the full film; a preview excerpt starts later). */
+const VIDEO_URL = 'media/orbital_sunrise_720p.mp4';
+const VIDEO_STARTS_AT = 0;
+
+(function () {
+  'use strict';
+  const v = document.getElementById('video');
+  const note = document.getElementById('video-note');
+  const fmt = s => { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+  const isHls = /\.m3u8(\?|#|$)/i.test(VIDEO_URL);
+
+  /* ── source ── */
+  function loadScript(src) {
+    return new Promise((ok, fail) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s); });
+  }
+  function attachHls() {
+    const native = v.canPlayType('application/vnd.apple.mpegurl') !== '';
+    const useNative = () => { v.src = VIDEO_URL; };
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js')
+      .catch(() => loadScript('https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js'))
+      .then(() => {
+        if (window.Hls && window.Hls.isSupported()) {
+          const hls = new window.Hls({ maxBufferLength: 30 });
+          hls.on(window.Hls.Events.ERROR, (e, d) => { if (d.fatal) note.textContent = 'The stream stopped (' + d.details + '). Reload the page to try again.'; });
+          hls.loadSource(VIDEO_URL); hls.attachMedia(v);
+        } else if (native) useNative();
+        else note.textContent = 'This browser cannot play the stream.';
+      })
+      .catch(() => { if (native) useNative(); else note.textContent = 'The player did not load. Reload the page to try again.'; });
+  }
+  if (isHls) attachHls(); else v.src = VIDEO_URL;
+  v.addEventListener('error', () => { if (v.error) note.textContent = 'The film did not load. Reload the page to try again.'; });
+
+  /* ── lyric lines: times, seeking, highlight ── */
+  const song = document.getElementById('song');
+  const lines = [...song.querySelectorAll('.ln')].map(el => ({
+    el, t0: +el.dataset.t0, t1: +el.dataset.t1, text: el.querySelector('.w').textContent.replace(/\s+/g, ' ').trim()
+  }));
+  const fileDur = () => (isFinite(v.duration) && v.duration > 0 ? v.duration : Infinity);
+  const inFile = ln => ln.t0 >= VIDEO_STARTS_AT && ln.t0 < VIDEO_STARTS_AT + fileDur() - 0.5;
+  lines.forEach(ln => {
+    ln.el.querySelector('.t').textContent = fmt(ln.t0);
+    ln.el.setAttribute('aria-label', ln.text + ', at ' + fmt(ln.t0) + '. Play from here.');
+  });
+  function markAvailability() {
+    lines.forEach(ln => {
+      const ok = inFile(ln);
+      ln.el.setAttribute('aria-disabled', ok ? 'false' : 'true');
+      ln.el.title = ok ? 'Play from ' + fmt(ln.t0) : 'Not in this preview excerpt';
+    });
+  }
+  markAvailability();
+  v.addEventListener('loadedmetadata', markAvailability);
+
+  // captions-friendly: the lyrics as a subtitle track (off until chosen from the player's CC menu)
+  function addTrack() {
+    if (!('addTextTrack' in v) || typeof VTTCue === 'undefined' || v.__lyrics) return;
+    const tr = v.addTextTrack('subtitles', 'Lyrics', 'en'); v.__lyrics = tr; tr.mode = 'disabled';
+    lines.forEach(ln => {
+      const a = ln.t0 - VIDEO_STARTS_AT, b = ln.t1 - VIDEO_STARTS_AT;
+      if (b > 0 && a < fileDur()) { try { tr.addCue(new VTTCue(Math.max(0, a), b, ln.text)); } catch (e) {} }
+    });
+  }
+  v.addEventListener('loadedmetadata', addTrack);
+
+  let current = null;
+  function setNow(ln) {
+    if (ln === current) return;
+    if (current) current.el.classList.remove('now');
+    current = ln;
+    if (ln) ln.el.classList.add('now');
+    npLine.textContent = ln ? ln.text : '';
+  }
+  function tick() {
+    const t = v.currentTime + VIDEO_STARTS_AT;
+    setNow(lines.find(ln => t >= ln.t0 - 0.05 && t < ln.t1) || null);
+    npT.textContent = fmt(t);
+  }
+  let raf = 0;
+  const loop = () => { tick(); raf = v.paused ? 0 : requestAnimationFrame(loop); };
+  v.addEventListener('play', () => { song.classList.add('playing'); if (!raf) raf = requestAnimationFrame(loop); updateNp(); });
+  v.addEventListener('pause', () => { song.classList.remove('playing'); tick(); updateNp(); });
+  v.addEventListener('ended', () => { song.classList.remove('playing'); setNow(null); updateNp(); });
+  v.addEventListener('seeked', tick);
+
+  song.addEventListener('click', e => {
+    const el = e.target.closest('.ln'); if (!el) return;
+    e.preventDefault();
+    const ln = lines.find(l => l.el === el);
+    if (!ln || !inFile(ln)) return;
+    v.currentTime = Math.max(0, ln.t0 - VIDEO_STARTS_AT - 0.12);
+    const p = v.play(); if (p && p.catch) p.catch(() => {});
+    tick();
+  });
+
+  /* ── now-playing strip, shown while the film plays out of view ── */
+  const np = document.getElementById('np'), npT = document.getElementById('np-t'), npLine = document.getElementById('np-line');
+  const npPause = document.getElementById('np-pause');
+  let filmVisible = true;
+  function updateNp() {
+    np.hidden = filmVisible || v.paused;
+    npPause.textContent = v.paused ? 'Play' : 'Pause';
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => { filmVisible = es[0].intersectionRatio > 0.35; updateNp(); }, { threshold: [0, 0.35, 1] })
+      .observe(document.querySelector('.screen'));
+  }
+  npPause.addEventListener('click', () => { if (v.paused) v.play().catch(() => {}); else v.pause(); });
+  document.getElementById('np-up').addEventListener('click', () => {
+    document.getElementById('film').scrollIntoView({ block: 'start' });
+    v.focus({ preventScroll: true });
+  });
+
+  /* ── preview excerpt label ── */
+  if (VIDEO_STARTS_AT > 0) {
+    const ex = document.getElementById('excerpt-note');
+    const show = () => {
+      document.getElementById('excerpt-text').textContent = 'A ' + Math.round(fileDur()) + '-second excerpt, ' + fmt(VIDEO_STARTS_AT) + '–' + fmt(VIDEO_STARTS_AT + fileDur()) + ' of the 4:12 film. The site streams the full film.';
+      ex.hidden = false;
+    };
+    if (isFinite(v.duration)) show(); else { ex.hidden = false; document.getElementById('excerpt-text').textContent = 'A short excerpt of the 4:12 film. The site streams the full film.'; v.addEventListener('loadedmetadata', show); }
+    note.textContent = 'Excerpt at 540p · lyric lines outside it are struck through';
+  }
+})();
+
+/* ── the math page's slider ── */
+(function () {
+  var r = document.getElementById('late');
+  var s = document.getElementById('late-s');
+  var k = document.getElementById('late-km');
+  var n = document.getElementById('late-note');
+  if (!r) return;
+  function fmt(x) { return Math.round(x).toLocaleString('en-US'); }
+  function upd() {
+    var v = parseFloat(r.value);
+    var km = v * 7.4;
+    s.textContent = (v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)) + ' s';
+    k.textContent = (km < 10 ? km.toFixed(1) : fmt(km)) + ' km';
+    var note;
+    if (v === 0) note = 'On time: the burn happens where it was planned.';
+    else if (v <= 1) note = 'Human reaction time on a button (0.2–1 s): a few km at most.';
+    else if (v < 43) note = 'Every extra second slides the whole descent about 7.4 km further on.';
+    else if (v <= 46) note = 'The documented delay: 43 s by the clock times, 46 s as often quoted.';
+    else note = 'Longer than the documented delay.';
+    n.textContent = note;
+  }
+  r.addEventListener('input', upd);
+  upd();
+})();
+</script>
+</body>
+</html>
