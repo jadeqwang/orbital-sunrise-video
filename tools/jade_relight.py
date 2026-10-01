@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import jade_location as JL, jade_fade as JFa
 
 import os
-SMOOTH, CLOSE, RIM, CHK = float(os.environ.get('SM', 50)), int(os.environ.get('CL', 41)), float(os.environ.get('RIM', .86)), float(os.environ.get('CHK', 0))
+SMOOTH, CLOSE, RIM, CHK, FLAT, DLO, DHI, SKF, SKG = float(os.environ.get('SM', 50)), int(os.environ.get('CL', 41)), float(os.environ.get('RIM', .86)), float(os.environ.get('CHK', 0)), int(os.environ.get('FLAT', 0)), float(os.environ.get('DLO', .94)), float(os.environ.get('DHI', 1.04)), float(os.environ.get('SKF', 15)), float(os.environ.get('SKG', 1.0))
 LIPS = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291, 375, 321, 405, 314, 17, 84, 181, 91, 146]
 CHEEKS = ([145, 234, 93, 132, 58, 172, 61, 129], [374, 454, 323, 361, 288, 397, 291, 358])   # lower lid, oval down to the jaw, mouth corner, nose
 
@@ -44,10 +44,10 @@ NOSE = [6, 197, 195, 5, 4, 1, 19, 94, 2, 98, 327, 129, 358, 49, 279, 64, 294, 48
 EYES = ([70, 63, 105, 66, 107, 55, 133, 145, 153, 33, 130, 46], [300, 293, 334, 296, 336, 285, 362, 374, 380, 263, 359, 276])   # brow + eye, each side
 
 
-def skin_mask(L, w, h, feather):
+def skin_mask(L, w, h, feather, grow=1.0):
     """Her face oval minus the eyes with the brows above them, the nose and the lips, each grown a little."""
     m = np.zeros((h, w), np.uint8)
-    p = pts(L, w, h, JL.FACE_OVAL); c = p.mean(0); cv2.fillPoly(m, [(c + (p - c) * 1.0).astype(np.int32)], 255)
+    p = pts(L, w, h, JL.FACE_OVAL); c = p.mean(0); cv2.fillPoly(m, [(c + (p - c) * grow).astype(np.int32)], 255)
     cut = np.zeros((h, w), np.uint8)
     for side in EYES: cv2.fillConvexPoly(cut, cv2.convexHull(pts(L, w, h, side).astype(np.int32)), 255)
     cut = cv2.dilate(cut, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (17, 17)))
@@ -111,6 +111,7 @@ def main(take, first, relit_model, out_dir, plate=None):
     Rc = cv2.erode(cv2.dilate(Rc, ker), ker)                           # a closing: dark bands and lines narrower than ~40 px go
     smooth = cv2.GaussianBlur(Rc * skA, (0, 0), sm) / (cv2.GaussianBlur(skA[..., 0], (0, 0), sm)[..., None] + 1e-4)
     skinR = inner * smooth + (1 - inner) * tone
+    if FLAT: skinR = smooth   # FLAT: the normalised blur everywhere (no seam at the still's oval)
     F = frames(take)
     mats = np.array([JFa.matte(f) for f in F])
     mats = np.array([mats[max(0, i - 2):i + 3].mean(0) for i in range(len(mats))])
@@ -134,8 +135,8 @@ def main(take, first, relit_model, out_dir, plate=None):
         # edges are dropped). The eyes, brows, nose and mouth keep the take's own tones (relit by the ratio above).
         ga = X.mean(2); dl = (ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1)
         nm = 1 - oval_mask(L, w, h, RIM, 4)[..., None]   # her face's outline keeps its lines
-        det = (1 - nm) * np.clip(dl, .94, 1.04)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
-        sk = skin_mask(L, w, h, 15)
+        det = (1 - nm) * np.clip(dl, DLO, DHI)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
+        sk = skin_mask(L, w, h, SKF, SKG)
         if CHK: sk = np.maximum(sk, cheeks_mask(L, w, h, CHK))
         Y = sk * warp(skinR) * det + (1 - sk) * Y
         # the take's golden-hour rim on her hair, jacket and headphones: no low sun in daylight, so its gold goes grey

@@ -487,8 +487,16 @@ async function initShots() {
     [7.0, [0.4817, 0.2815], [0.4825, 0.3132], [0.483, 0.345], [0.4836, 0.3767], [0.4841, 0.4084], [0.4848, 0.4402], [0.4855, 0.4719], [0.4862, 0.5037], [0.4868, 0.5354], [0.4868, 0.5671], [0.4898, 0.5989]],
     [7.5, [0.4817, 0.2815], [0.4832, 0.3113], [0.4845, 0.3412], [0.4859, 0.371], [0.4873, 0.4009], [0.4887, 0.4307], [0.49, 0.4606], [0.4914, 0.4904], [0.4926, 0.5203], [0.4939, 0.5501], [0.4972, 0.58]],
     [8.0, [0.4816, 0.2815], [0.4834, 0.3114], [0.4848, 0.3412], [0.4862, 0.3711], [0.4877, 0.401], [0.4891, 0.4309], [0.4905, 0.4607], [0.4918, 0.4906], [0.4931, 0.5205], [0.4944, 0.5504], [0.4977, 0.5802]]];
-  const N1_OLD = new URLSearchParams(location.search).get('n1') === 'old';   // ?n1=old: take 1 (nearly straight line) as before
+  // Round 5 (her note: "the tether should have the same length through every frame ... it's a cable, not stretchy"): take 2
+  // stretches its line ~40 % on the way to the snap. The default now draws a simulated constant-length cable (tether.js) on
+  // tether_drift_r5 (tools/tether_r5.py n1: take 2 with its line painted out and him moved along the hatch→him direction so
+  // his distance is the cable's length L at the snap and at 20.30 s, and 0.42 L at the start, the rest of the cable slack).
+  // ?n1=r4: round 4 (take 2 and its own line, the gold on TETHER2); ?n1=old: take 1.
+  const N1_Q = new URLSearchParams(location.search).get('n1');
+  const N1_OLD = N1_Q === 'old', N1_R4 = N1_Q === 'r4', N1_R5 = !N1_OLD && !N1_R4;
   const TETHER = N1_OLD ? TETHER1 : TETHER2;
+  let TD1 = null, ROPE1 = null;
+  if (N1_R5) { try { TD1 = await loadJSON('data/tether_n1.json'); } catch (e) { console.warn('no data/tether_n1.json (tools/tether_r5.py n1)'); } }
   const tetherAt = tp => {   // the tether's points in plate uv at plate time tp
     let i = TETHER.findIndex(r => r[0] > tp); i = i < 0 ? TETHER.length - 1 : Math.max(1, i);
     const a = TETHER[i - 1], b = TETHER[i], f = clamp((tp - a[0]) / (b[0] - a[0]));
@@ -502,6 +510,13 @@ async function initShots() {
     }
     out.push(P[P.length - 1]); return out;
   };
+  // the cable over the whole shot, simulated once (both ends pinned: the hatch, his waist on the plate frame the shot shows)
+  const n1Rope = () => ROPE1 || (ROPE1 = (() => {
+    const t0 = L1[1].t0 - .05, t1 = L1[2].t0 - .05, wa = TD1.waist;
+    const tpAt = t => { const tp = 5.0 + (t - N1W[7][0]); return tp >= 4.94 && tp < 5.03 ? 5.042 : tp; };   // as the plate is shown
+    const waist = t => { const x = clamp(tpAt(t) * 24, 0, wa.length - 1), i = Math.min(wa.length - 2, Math.floor(x)), f = x - i; return [lerp(wa[i][0], wa[i + 1][0], f), lerp(wa[i][1], wa[i + 1][1], f), 0]; };
+    return simulateRope({ name: 'N1', t0, t1, L: TD1.L, n: 56, endA: () => [TD1.hatch[0], TD1.hatch[1], 0], endB: waist, seed: 11, turns: 2.2, damp: .35, bend: .03, pre: .8, drift: 5 });
+  })());
   shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
     const e = smooth(clamp(lt / dur)), z = lerp(1.03, 1.13, e);
@@ -512,14 +527,28 @@ async function initShots() {
     const N1_SNAP = 5.0, tp2 = N1_SNAP + (drawClock(t, 12).tq - N1W[7][0]);   // on the 12 fps drawing clock (passed as hold)
     // the take's two motion-blurred in-between frames (4.96, 5.0 s) are skipped: the line snaps straight in one drawing
     const tpN1 = N1_OLD ? 1.2 + lt * 6.75 / dur : (tp2 >= 4.94 && tp2 < 5.03 ? 5.042 : tp2);
+    const rope = N1_R5 && TD1 ? n1Rope() : null;
     const d = drawClock(t, 12).n;
     // type: TIED / TO THE SHIP right-aligned in the sky right of the airlock ("SHIP" lands on "ship"); the serif line and the
     // caption right-aligned left of the tether, in the black between the ship and the limb
     const rx = W - 120, sw = measure(G, 'SHIP', FONT.impact(120)), gap = measure(G, ' ', FONT.impact(120));
     const cap = 'TETHER · 5.35 M', capF = FONT.mono(24, 700), lx = 850;
-    await drawPlate(t, N1_OLD ? 'tether_drift' : 'tether_drift_t2', tpN1, { ...(N1_OLD ? {} : { hold: tpN1 }), view: { zoom: z, cy: .5 / z + .003 },
+    await drawPlate(t, N1_OLD ? 'tether_drift' : rope ? TD1.plate : 'tether_drift_t2', tpN1, { ...(N1_OLD ? {} : { hold: tpN1 }), view: { zoom: z, cy: .5 / z + .003 },
       hatch: { spacing: 6.5, mask: quiet([[rx - 520, 150, rx + 30, 450], [lx - 610, 440, lx + 20, 570]], .75) },
-      extra: (pen, F, view) => {
+      extra: (pen, F, view, dIdx) => {
+        if (rope) {   // round 5: the simulated cable, then the gold trace along it (by arc length from the hatch)
+          const P = rope.at(drawClock(t, 12).tq), toS = (x, y) => view.toScreen(x / TD1.w - .5 / F.aw, y / TD1.h - .5 / F.ah);
+          // he covers the cable where it passes behind him (z ≥ 0 inside his matte): it meets him at his waist, from behind
+          const hide = (s, X, Y, zz) => { if (!F.M || zz < -1) return false; const [px, py] = view.toPlate(X, Y); return samp(F, F.M, px, py) > .5 && s > .5; };
+          const S = drawCable(pen, P, toS, { w: 2.6, light: [1, -.3], seed: dIdx * 31 + 7, hide });
+          const seg = S.slice(1).map((q, i) => Math.hypot(q[0] - S[i][0], q[1] - S[i][1]));
+          let left = k * seg.reduce((x, y) => x + y, 0); const path = [S[0]];
+          for (let i = 0; i < seg.length && left > 0; i++) { const f = Math.min(1, left / seg[i]); path.push([lerp(S[i][0], S[i + 1][0], f), lerp(S[i][1], S[i + 1][1], f)]); left -= seg[i]; }
+          if (path.length < 2) return;
+          pen.poly(path, 'gold', 7, .28, .02); pen.poly(path, 'gold', 3.2, .95, .02);
+          if (k < 1) { const [hx, hy] = path[path.length - 1]; pen.dot(hx, hy, 4, 'white', .95); }
+          return;
+        }
         // the trace, on the frame being drawn: the tracked tether (the curve through its points) revealed by arc length,
         // a soft wide pass under a firm gold line, the pencil's point at its head. The pencil puts analysis pixel i at uv i / aw,
         // half a pixel up-left of the plate content it samples, so the trace takes the same half pixel to sit on the drawn line.

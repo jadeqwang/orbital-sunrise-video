@@ -958,5 +958,14 @@
   "take": "take2.mp4 of tether_drift (round 4: slack curving tether, snaps taut at ~5.0 s and tugs him back)",
   "mattes": true,
   "gain": 1.334
+ },
+ "tether_drift_r5": {
+  "n": 193,
+  "fps": 24,
+  "w": 960,
+  "h": 540,
+  "take": "tether_drift_t2 without its tether, him moved to a constant-length cable (tools/tether_r5.py n1)",
+  "mattes": true,
+  "gain": 1.334
  }
 }
