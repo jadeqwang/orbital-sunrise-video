@@ -154,7 +154,7 @@ adds only about 11–13 km.
 
 ## How this appears in the film
 
-G2_math (2:24, `video/src/shots2.js` around line 697) draws this ring of equations:
+G2_math (2:24, the `eq` list in `video/src/shots2.js`) draws this ring of equations:
 `Δv ≈ 155 m/s · t ≈ 45 s · T = 90.9 min · ОРИЕНТАЦИЯ — РУЧНАЯ · h = 167–475 km · F ≈ 16 kN`.
 
 | On screen | This doc | Verdict |
@@ -165,6 +165,8 @@ G2_math (2:24, `video/src/shots2.js` around line 697) draws this ring of equatio
 | t ≈ 45 s | 45 s (41 s if 250 kg at full thrust) | ✅ |
 | ОРИЕНТАЦИЯ — РУЧНАЯ | Manual orientation | ✅ |
 | **Δv ≈ 155 m/s** | 16 kN × 45 s on 5.4–5.7 t gives **≈ 125–135 m/s**; 155 fits the 4.7 t Vostok | ⚠️ **mismatch** |
+
+The newer `VZC_EQ` ring (work in progress in `shots2.js`) checks out against this doc: T = 5457 s ≈ 90.9 min, vₚ ≈ 7.89 / vₐ ≈ 7.54 km/s, e ≈ 0.023, ρ ≈ 77°, 22.8° per lap, 1 s late → 7.7 km (the perigee value; 7.0–7.7 across the orbit), 155/45 ≈ 3.4 m/s². "T ≈ 88 min" and "155 / 45 = 3.9" are deliberate crossed-out wrong tries. Its only disagreement is the same **Δv ≈ 155 m/s**, and putting it beside `Δv = F·t / m` with F ≈ 16 kN and t ≈ 45 s invites anyone who works it through to get ≈ 127 m/s.
 
 Suggestions for the shot (these do not change the music):
 - Change `Δv ≈ 155 m/s` to `Δv ≈ 130 m/s`, or keep 155 and drop `F ≈ 16 kN`/`t ≈ 45 s` so
