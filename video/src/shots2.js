@@ -540,10 +540,12 @@ async function initShots2() {
   // ============================== LANDED · 189.64 → 226.55 · the page turns white ==============================
   const [l0, l1] = S('landed').slice(1);
   const HOME1 = OU[3], MADE2 = OU[4], HOME2 = OU[5];
-  shot('L1_impact', l0, HOME1.t0 - .05, async (t, lt) => {
+  // runs through the held "down" to the sung "home" (204.79 s, round 4: 4.7 s); the plate rate stays O3's .48 at most so
+  // treetops (5.04 s) does not run out
+  shot('L1_impact', l0, HOME1.t0 - .05, async (t, lt, dur) => {
     paper(G, 'snow');
     const shake = Math.exp(-lt * 5) * 14, dn = drawClock(t, lt < .6 ? 24 : 12).n;
-    await drawPlate(t, 'treetops', 2.66 + lt * .7, { paper: 'snow', rate: lt < .6 ? 24 : 12, lines: { contrast: 2.2, white: .72 },
+    await drawPlate(t, 'treetops', 2.66 + lt * Math.min(.7, 2.3 / dur), { paper: 'snow', rate: lt < .6 ? 24 : 12, lines: { contrast: 2.2, white: .72 },
       view: { zoom: 1.05 + .06 * Math.exp(-lt * 3), ox: (hash(dn) - .5) * shake, oy: (hash(dn + 7) - .5) * shake },
       extra: (pen) => {
         const bx = W * .46, by = H * .86, e1 = Math.exp(-lt * 3.2), e2 = Math.sin(clamp(lt / 1.8) * Math.PI);

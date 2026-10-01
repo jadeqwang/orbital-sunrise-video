@@ -203,9 +203,12 @@ pressure drop he went in head first). The round-3 plates (docs/TAKES.md "Round 3
 - **The second "home." (OU[5], 211.58 s) is not sung** in alt2: the vocal stem (`vocal_stem.py --ss=190`) and Parakeet hear
   "Oh, made it down" with "down" at ≈211.0 s; the voice stops ≈211.3 s, and the C5 line the stem holds from there to ≈220 s
   has no vibrato (0 cents deviation for seconds, unlike every sung note before it) and steps with the strings: orchestra.
-  So `L4_fire` no longer types "home" (nor keeps its clearing); the timing line stays as the cut point. Noted, not changed:
-  in the same check the first "home." sounds ≈204.7 s (a new syllable after "down" held from ≈199.6 s), not at its timed
-  203.37 s; L2's HOME arrives ≈1.3 s early.
+  So `L4_fire` no longer types "home" (nor keeps its clearing); the timing line stays as the cut point.
+- **The first "home." (OU[3]) is sung at 204.79 s**, not the mapped 203.37 s (a note change inside the held "down"): "down"
+  voiced to 204.63, the breathy /h/ 204.65–204.78, the vowel from 204.79 (on beat 204.81), held to 208.57. `retime.py`
+  `TARGETS["alt2"]` `new_lines["home1"]` sets it (and, new, an optional t1), so `retime.py timing` writes it. L2_home (cut
+  and HOME) now starts 204.74 s; L1_impact grows to 4.7 s, its treetops rate capped (≤ 2.3 s of plate, O3's .48) so the
+  5.04 s plate does not run out.
 
 ## 0. Ask her first (only she can supply these)
 
