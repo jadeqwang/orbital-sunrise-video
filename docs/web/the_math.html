@@ -1,0 +1,514 @@
+<title>Fifteen Hundred Klicks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: one reading column on drawing paper; numbers in mono "telemetry" blocks; pencil-stroke accents. */
+:root {
+  --paper: #f4eedf;
+  --paper-2: #ebe3cf;
+  --graphite: #2c2b29;
+  --graphite-soft: #5d5a54;
+  --rule: #cfc5ad;
+  --cobalt: #1f4f9e;
+  --ultramarine: #3b3fae;
+  --vermilion: #cf3f22;
+  --chip-doc: #1f4f9e;
+  --chip-est: #8a5a00;
+  --chip-inf: #7a3a8c;
+  --calc-bg: #ece4d0;
+  --grain: 0.10;
+  --f-display: "Anton", "Impact", "Haettenschweiler", "Arial Narrow Bold", sans-serif;
+  --f-lyric: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --f-body: "Source Serif 4", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1b1b20; --paper-2: #24242b; --graphite: #e8e1d0; --graphite-soft: #aaa497; --rule: #3c3b42;
+    --cobalt: #86a8ee; --ultramarine: #a3a6f2; --vermilion: #f2805f;
+    --chip-doc: #86a8ee; --chip-est: #e0b45a; --chip-inf: #d39be2; --calc-bg: #25252d; --grain: 0.06;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #1b1b20; --paper-2: #24242b; --graphite: #e8e1d0; --graphite-soft: #aaa497; --rule: #3c3b42;
+  --cobalt: #86a8ee; --ultramarine: #a3a6f2; --vermilion: #f2805f;
+  --chip-doc: #86a8ee; --chip-est: #e0b45a; --chip-inf: #d39be2; --calc-bg: #25252d; --grain: 0.06;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper);
+  color: var(--graphite);
+  font-family: var(--f-body);
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  padding-inline: 16px;
+  padding-block: 0 4rem;
+  position: relative;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  opacity: var(--grain);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+main { position: relative; z-index: 1; max-width: 44rem; margin-inline: auto; }
+a { color: var(--cobalt); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, input:focus-visible { outline: 2px solid var(--vermilion); outline-offset: 3px; }
+p, li { max-width: 65ch; }
+em { font-style: italic; }
+strong { font-weight: 600; }
+
+/* Hero */
+header.hero { padding-block: 3.5rem 2rem; }
+.eyebrow {
+  font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--graphite-soft); margin: 0 0 1rem;
+}
+h1 {
+  font-family: var(--f-display); font-weight: 400; text-transform: uppercase;
+  font-size: clamp(2.8rem, 11vw, 5.6rem); line-height: 0.95; letter-spacing: 0.01em;
+  margin: 0; text-wrap: balance;
+}
+h1 .k { color: var(--vermilion); }
+.lyric {
+  font-family: var(--f-lyric); font-style: italic; font-size: clamp(1.5rem, 4.6vw, 2.1rem);
+  line-height: 1.25; margin: 1.5rem 0 1.25rem; color: var(--ultramarine); max-width: 30ch;
+}
+.lede { font-size: 1.125rem; }
+.credit { font-size: 0.9rem; color: var(--graphite-soft); margin-top: 1.25rem; }
+
+/* Sections */
+section { padding-block: 2.25rem 0.5rem; border-top: 1px solid var(--rule); margin-top: 1.5rem; }
+h2 {
+  font-family: var(--f-display); font-weight: 400; text-transform: uppercase;
+  font-size: clamp(1.7rem, 6vw, 2.4rem); line-height: 1.05; letter-spacing: 0.015em;
+  margin: 0 0 1rem; text-wrap: balance;
+}
+h2 .n { font-family: var(--f-mono); font-size: 0.9rem; color: var(--vermilion); vertical-align: 0.6em; margin-right: 0.5rem; letter-spacing: 0; }
+h3 { font-family: var(--f-body); font-size: 1.125rem; font-weight: 600; margin: 1.75rem 0 0.4rem; }
+.lead-in { font-weight: 600; }
+
+/* Label chips */
+.chip {
+  display: inline-block; font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 0.05em 0.5em; border: 1px solid currentColor; border-radius: 2px;
+  white-space: nowrap; vertical-align: 0.12em; line-height: 1.5;
+}
+.chip.doc { color: var(--chip-doc); }
+.chip.est { color: var(--chip-est); }
+.chip.inf { color: var(--chip-inf); }
+.legend { display: grid; gap: 0.6rem; padding: 0; list-style: none; margin: 1rem 0; }
+.legend li { display: grid; grid-template-columns: 8.5rem 1fr; gap: 0.75rem; align-items: baseline; }
+.legend li > span:last-child { min-width: 0; }
+@media (max-width: 30rem) { .legend li { grid-template-columns: 1fr; gap: 0.15rem; } }
+
+blockquote.quote {
+  margin: 1.25rem 0; padding: 0 0 0 1rem; border-left: 2px solid var(--vermilion);
+  font-family: var(--f-lyric); font-style: italic; font-size: 1.35rem; line-height: 1.35;
+}
+blockquote.quote cite { display: block; font-family: var(--f-body); font-style: normal; font-size: 0.85rem; color: var(--graphite-soft); margin-top: 0.4rem; }
+
+/* Tables */
+.tbl { overflow-x: auto; margin: 1rem 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; vertical-align: top; padding: 0.5rem 0.75rem 0.5rem 0; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--f-mono); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--graphite-soft); }
+td.num, .mono { font-family: var(--f-mono); font-size: 0.88rem; font-variant-numeric: tabular-nums; }
+td.num { white-space: nowrap; }
+tr.hl td { color: var(--vermilion); font-weight: 600; }
+
+/* Worked arithmetic */
+.calc {
+  font-family: var(--f-mono); font-size: 0.9rem; line-height: 1.75; font-variant-numeric: tabular-nums;
+  background: var(--calc-bg); padding: 1rem 1.1rem; margin: 1.1rem 0; overflow-x: auto; white-space: pre;
+  border-radius: 2px;
+}
+.calc .c { color: var(--graphite-soft); }
+.calc .r { color: var(--vermilion); font-weight: 600; }
+.calc .b { color: var(--cobalt); font-weight: 600; }
+
+/* Figures */
+figure { margin: 1.5rem 0; }
+.fig-wrap { overflow-x: auto; }
+figure svg { display: block; width: 100%; height: auto; min-width: 320px; }
+figcaption { font-size: 0.88rem; color: var(--graphite-soft); margin-top: 0.5rem; max-width: 65ch; }
+svg text { font-family: var(--f-mono); fill: var(--graphite); }
+svg .soft { fill: var(--graphite-soft); }
+svg .lbl-r { fill: var(--vermilion); }
+svg .lbl-b { fill: var(--cobalt); }
+
+/* Slider */
+.dial { background: var(--paper-2); padding: 1.1rem 1.1rem 1.25rem; margin: 1.5rem 0; border: 1px solid var(--rule); border-radius: 2px; }
+.dial label { font-family: var(--f-mono); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--graphite-soft); display: block; }
+.dial-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 1rem; margin: 0.4rem 0 0.6rem; }
+.dial-out { font-family: var(--f-mono); font-variant-numeric: tabular-nums; font-size: clamp(1.4rem, 5vw, 1.9rem); font-weight: 600; }
+.dial-out .s { color: var(--ultramarine); }
+.dial-out .km { color: var(--vermilion); }
+.dial-note { font-size: 0.92rem; color: var(--graphite-soft); margin: 0.5rem 0 0; min-height: 1.5em; }
+input[type="range"] { width: 100%; accent-color: var(--vermilion); margin: 0.25rem 0; }
+.ticks { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 0.7rem; color: var(--graphite-soft); }
+
+/* Learnings list */
+.learn { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 1.1rem; }
+.learn li { padding-left: 1.1rem; position: relative; }
+.learn li::before { content: ""; position: absolute; left: 0; top: 0.72em; width: 0.55rem; height: 2px; background: var(--vermilion); }
+.strike { text-decoration: line-through; text-decoration-color: var(--vermilion); text-decoration-thickness: 2px; }
+
+.sources td:first-child { min-width: 14rem; }
+footer { border-top: 1px solid var(--rule); margin-top: 3rem; padding-top: 1.5rem; font-size: 0.9rem; color: var(--graphite-soft); }
+footer p { margin: 0.4rem 0; }
+.closing { font-family: var(--f-lyric); font-style: italic; font-size: 1.45rem; line-height: 1.35; color: var(--ultramarine); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<main>
+<header class="hero">
+  <p class="eyebrow">Orbital Sunrise · Voskhod&#8209;2 · 19 March 1965</p>
+  <h1>The math behind<br>&ldquo;fifteen hundred <span class="k">klicks</span>&rdquo;</h1>
+  <p class="lyric">&ldquo;Fifteen hundred klicks, coming in hot &hellip; we overshot.&rdquo;</p>
+  <p class="lede">A companion page for viewers of <em>Orbital Sunrise</em>. A &ldquo;klick&rdquo; is soldier&rsquo;s slang for a kilometre, so the song says Voskhod&nbsp;2 came down about 1,500&nbsp;km from where it should have. The 1,500&nbsp;km is Leonov&rsquo;s own number. But it measures something different from where the capsule finally came down.</p>
+</header>
+
+<section id="why">
+  <h2><span class="n">1</span>Why this page exists</h2>
+  <p>We wanted to know whether that line holds up. Where does the number come from? How far off did Alexei Leonov and Pavel Belyayev actually land in March 1965? And how much of the miss came from two men doing by hand what a machine was supposed to do?</p>
+  <p>The answer is better than &ldquo;right&rdquo; or &ldquo;wrong&rdquo;.</p>
+</section>
+
+<section id="sources">
+  <h2><span class="n">2</span>How we sourced the figures</h2>
+  <p>Every number below carries one of three labels:</p>
+  <ul class="legend">
+    <li><span><span class="chip doc">Documented</span></span><span>It is in a source we can point to.</span></li>
+    <li><span><span class="chip est">Estimate</span></span><span>Our own calculation from documented inputs. Nobody in 1965 wrote it down.</span></li>
+    <li><span><span class="chip inf">Our inference</span></span><span>A reading of the sources that seems the most likely to us, but that no source states outright.</span></li>
+  </ul>
+  <h3>What kinds of sources</h3>
+  <ul>
+    <li><em>Spacecraft data</em>: engine thrust, orbit, capsule size and weight, mostly from Wikipedia pages that cite the standard NASA history (Asif Siddiqi, <em>Challenge to Apollo</em>, NASA SP-2000-4408).</li>
+    <li><em>Mission accounts</em>: Anatoly Zak&rsquo;s RussianSpaceWeb history of the landing, read in full.</li>
+    <li><em>Memoir</em>: Leonov&rsquo;s own article &ldquo;The Nightmare of Voskhod 2&rdquo; (<em>Air &amp; Space</em>, January 2005), adapted from his book <em>Two Sides of the Moon</em>, also read in full.</li>
+    <li><em>Reanalysis weather</em>: ERA5, a modern computer reconstruction of past weather, for the landing spot and day.</li>
+  </ul>
+  <h3>When sources disagree</h3>
+  <p>The rule is to be accurate. Where honest accounts genuinely differ (Leonov&rsquo;s memory against the official record, say), the film may keep the more dramatic version, and the notes say so. Anything no source supports gets fixed.</p>
+  <h3>The main sources</h3>
+  <div class="tbl"><table class="sources">
+    <thead><tr><th>Source</th><th>What we used it for</th></tr></thead>
+    <tbody>
+      <tr><td>Leonov, <a href="https://www.smithsonianmag.com/air-space-magazine/the-nightmare-of-voskhod-2-8655378/">&ldquo;The Nightmare of Voskhod 2&rdquo;</a>, <em>Air &amp; Space</em>, 2005</td><td>The crew&rsquo;s view: the failure, the 1,500 km forecast, the cabin</td></tr>
+      <tr><td>Zak, <a href="https://www.russianspaceweb.com/voskhod2-landing.html">&ldquo;Voskhod-2 lands in the wild&rdquo;</a>, RussianSpaceWeb</td><td>Burn times, the &ldquo;800+ km&rdquo; overflight, the landing site</td></tr>
+      <tr><td>Wikipedia, <a href="https://en.wikipedia.org/wiki/Voskhod_2">&ldquo;Voskhod 2&rdquo;</a> and <a href="https://en.wikipedia.org/wiki/Voskhod_(spacecraft)">&ldquo;Voskhod (spacecraft)&rdquo;</a></td><td>Orbit, engine, capsule, parachutes, the 46 s and 386 km (citing Siddiqi)</td></tr>
+      <tr><td><a href="https://ru.wikipedia.org/wiki/%D0%92%D0%BE%D1%81%D1%85%D0%BE%D0%B4-2">Russian Wikipedia, &ldquo;Восход-2&rdquo;</a></td><td>Planned landing zone, &minus;19&nbsp;&deg;C and 1.5&ndash;2 m of snow</td></tr>
+      <tr><td><a href="http://www.spacefacts.de/mission/english/voskhod-2.htm">Spacefacts</a>, <a href="http://www.svengrahn.pp.se/histind/Voskhod2/Voskhod2.htm">Sven Grahn</a>, <a href="http://www.astronautix.com/v/voskhod2.html">Astronautix</a></td><td>Cross-checks; the cause of the sensor failure</td></tr>
+      <tr><td>ERA5 (Copernicus) via the <a href="https://archive-api.open-meteo.com/v1/archive?latitude=59.6&amp;longitude=55.5&amp;start_date=1965-03-18&amp;end_date=1965-03-20&amp;hourly=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,wind_speed_100m,wind_direction_100m,cloud_cover,snow_depth&amp;wind_speed_unit=ms&amp;timezone=Europe%2FMoscow">Open-Meteo archive</a></td><td>Wind, temperature and snow at the landing site</td></tr>
+    </tbody>
+  </table></div>
+  <p>Some of these pages we could only see as search excerpts; the detailed working notes say which.</p>
+</section>
+
+<section id="capsule">
+  <h2><span class="n">3</span>Inside the capsule: what they knew and what they had to work out</h2>
+
+  <p><span class="lead-in">The failure.</span> On 19 March 1965, the day after the spacewalk, the ship was due to point itself backwards and fire its braking rocket on its own. Leonov noticed &ldquo;just five minutes before&rdquo; that the automatic system wasn&rsquo;t working <span class="chip doc">Documented</span>. The likely cause was the Sun sensor the ship used to find its orientation; one account says gas from the explosive bolts that dropped the airlock had fogged it <span class="chip doc">Documented</span> (as a secondary account). Without it, the ship could not tell which way was &ldquo;backwards&rdquo;.</p>
+
+  <p><span class="lead-in">The new plan.</span> They would land by hand, one orbit later. Belyayev told the ground:</p>
+  <blockquote class="quote">&ldquo;We can make only one attempt at reentry.&rdquo;<cite>Pavel Belyayev <span class="chip doc">Documented</span></cite></blockquote>
+  <p>One orbit took <span class="mono">90.9</span> minutes.</p>
+
+  <p><span class="lead-in">Pointing the ship by eye.</span> The tool was the <em>Vzor</em>, a periscope sight looking down through a porthole in the floor. It had a ring of small windows round a central view. Belyayev would level the ship until the horizon showed evenly in all the ring windows, then turn it until the ground below &ldquo;flowed&rdquo; along the guide lines. Then the ship was lined up with its path. It only worked over the daylit side of the Earth.</p>
+
+  <p><span class="lead-in">The awkward cabin.</span> Voskhod was a Vostok capsule rebuilt for more crew, and the seats sat crosswise to the sight. In Leonov&rsquo;s words, Belyayev &ldquo;had to lean horizontally across both seats in the spacecraft, while I held him steady in front of the orientation porthole.&rdquo; Then: &ldquo;We then had to maneuver ourselves back into the correct positions in our seats very rapidly so that the spacecraft&rsquo;s center of gravity was correct during the reentry burn&rdquo; <span class="chip doc">Documented</span>. Their bodies were part of the ship&rsquo;s balance.</p>
+
+  <p><span class="lead-in">What they could not know.</span> No satellite navigation, no live position fix. They had a clock, the known orbit, a small turning globe on the panel (the <em>Globus</em>) and the ground&rsquo;s instructions. Leonov, &ldquo;as navigator&rdquo;, picked the landing area: &ldquo;an area close to the city of Perm&rdquo; <span class="chip doc">Documented</span>.</p>
+
+  <h3>Where &ldquo;1,500 km&rdquo; comes from</h3>
+  <p>Leonov wrote that they knew they &ldquo;would be coming down off-target&mdash;1,500 kilometers west of where we were supposed to land&rdquo; <span class="chip doc">Documented</span>. That was said <em>before</em> the burn. Here is a back-of-envelope way a cosmonaut could get that number. This is <strong>our reconstruction</strong>, not something the crew wrote down.</p>
+  <p>A spacecraft&rsquo;s path doesn&rsquo;t change much from one lap to the next, but the Earth turns underneath it. So each lap crosses the ground further west.</p>
+
+<div class="calc"><span class="c">// Earth turns once in about 1,436 minutes</span>
+360° ÷ 1,436 min          = 0.25° per minute
+<span class="c">// one lap takes 90.9 minutes</span>
+0.25° × 90.9              ≈ 22.8°
+<span class="c">// small extra drift from Earth's bulge (estimate)</span>
+22.8° + 0.2°              ≈ <span class="b">23° west per lap</span>
+<span class="c">// one degree of longitude at 53°N (the planned zone,</span>
+<span class="c">// near Kustanay in Kazakhstan)</span>
+111 km × cos 53°          ≈ 67 km
+<span class="c">// shift in one lap at that latitude</span>
+23 × 67 km                ≈ <span class="r">1,540 km</span></div>
+
+  <figure>
+    <div class="fig-wrap">
+    <svg viewBox="0 0 640 250" role="img" aria-labelledby="gt-t gt-d">
+      <title id="gt-t">Ground track shifting west by one lap</title>
+      <desc id="gt-d">Two identical ground-track arcs. The later lap crosses the 53 degrees north line 23 degrees of longitude further west, about 1,540 kilometres.</desc>
+      <!-- latitude line 53N -->
+      <line x1="20" y1="120" x2="620" y2="120" stroke="var(--graphite-soft)" stroke-width="1" stroke-dasharray="3 5"/>
+      <text x="22" y="112" font-size="11" class="soft">53°N</text>
+      <!-- earlier lap -->
+      <path d="M 300 30 Q 430 80 540 240" fill="none" stroke="var(--ultramarine)" stroke-width="2.5" stroke-linecap="round" opacity="0.55"/>
+      <text x="470" y="62" font-size="12" class="lbl-b">lap N</text>
+      <!-- next lap, shifted 23 deg = 180px -->
+      <path d="M 120 30 Q 250 80 360 240" fill="none" stroke="var(--vermilion)" stroke-width="2.5" stroke-linecap="round"/>
+      <text x="118" y="22" font-size="12" class="lbl-r">lap N+1</text>
+      <!-- crossing points -->
+      <circle cx="438.9" cy="120" r="5" fill="var(--paper)" stroke="var(--ultramarine)" stroke-width="2"/>
+      <circle cx="258.9" cy="120" r="5" fill="var(--vermilion)"/>
+      <!-- shift arrow -->
+      <line x1="430" y1="146" x2="270" y2="146" stroke="var(--graphite)" stroke-width="1.5"/>
+      <path d="M 270 146 l 9 -5 v 10 z" fill="var(--graphite)"/>
+      <line x1="438.9" y1="128" x2="438.9" y2="152" stroke="var(--graphite-soft)" stroke-width="1"/>
+      <line x1="258.9" y1="128" x2="258.9" y2="152" stroke="var(--graphite-soft)" stroke-width="1"/>
+      <text x="349" y="170" font-size="13" text-anchor="middle">23° of longitude</text>
+      <text x="349" y="188" font-size="13" text-anchor="middle" class="lbl-r">≈ 1,540 km west</text>
+      <!-- motion arrows -->
+      <text x="620" y="236" font-size="11" text-anchor="end" class="soft">direction of flight →</text>
+      <text x="22" y="236" font-size="11" class="soft">← Earth turns east underneath</text>
+    </svg>
+    </div>
+    <figcaption>Schematic, not to scale. Waiting one lap moves the <em>whole path</em> about 23&deg; west. At the planned zone&rsquo;s latitude that is about 1,540&nbsp;km.</figcaption>
+  </figure>
+
+  <p>That is &ldquo;1,500 kilometres west&rdquo;, near enough (the detailed notes, with more decimals, get <span class="mono">1,535&nbsp;km</span>). Notice what it measures: not a miss, but how far the <em>whole path</em> moved by waiting one lap.</p>
+</section>
+
+<section id="hindsight">
+  <h2><span class="n">4</span>Working backwards: what we know now</h2>
+  <p>With hindsight we can do what the crew couldn&rsquo;t: start from where they landed and ask what happened.</p>
+
+  <p><span class="lead-in">Where they landed</span> <span class="chip doc">Documented</span>. In deep snow in the taiga, about 180&nbsp;km north of Perm, at roughly <span class="mono">59°34′N 55°28′E</span>, around <span class="mono">12:02&ndash;12:06</span> Moscow time (sources differ by 4 minutes).</p>
+
+  <p><span class="lead-in">How far off.</span> Flight-data accounts give <strong>368 or 386&nbsp;km</strong> beyond the aim point on the new orbit <span class="chip doc">Documented</span>. RussianSpaceWeb gives &ldquo;more than 800&nbsp;km&rdquo; past the <em>planned</em> landing area, probably the original zone in Kazakhstan; Kustanay to the landing site is about 865&nbsp;km by our check <span class="chip est">Estimate</span>.</p>
+
+  <p><span class="lead-in">The late burn.</span> The manual firing was planned for <span class="mono">11:35:44</span> Moscow time; Wikipedia gives <span class="mono">11:36:27</span> as the actual time. That is <strong>43 seconds late</strong>. The often-quoted figure is <strong>46 seconds</strong> for Belyayev to get back to his seat (from Siddiqi via Wikipedia; it is in neither of the two full texts we read).</p>
+
+  <p>How much does a late burn cost? A burn made late simply happens further along the path, and the whole descent slides forward with it. The point on the ground under the ship moves at about <strong>7.4&nbsp;km every second</strong> (a bit slower than the ship&rsquo;s own 7.5&ndash;7.9&nbsp;km/s, because the ship is a few hundred km up). So:</p>
+
+<div class="calc">46 s × 7.4 km/s            ≈ <span class="r">340 km</span>   <span class="c">// estimate</span></div>
+  <p>That covers most of the 368&ndash;386&nbsp;km <span class="chip est">Estimate</span>.</p>
+
+  <div class="dial">
+    <label for="late">Try it: seconds late at ignition</label>
+    <div class="dial-row">
+      <output class="dial-out" id="late-out" for="late"><span class="s" id="late-s">46 s</span> &times; 7.4 km/s &asymp; <span class="km" id="late-km">340 km</span></output>
+    </div>
+    <input type="range" id="late" min="0" max="60" step="0.1" value="46" aria-describedby="late-note">
+    <div class="ticks" aria-hidden="true"><span>0 s</span><span>15</span><span>30</span><span>45</span><span>60 s</span></div>
+    <p class="dial-note" id="late-note">The often-quoted 46&nbsp;s delay.</p>
+  </div>
+
+  <h3>How sensitive is the landing?</h3>
+  <p>We ran a simple model of a falling ball through a standard atmosphere. It gives sizes, not answers <span class="chip est">Estimate</span>. The key finding: Voskhod comes in very shallow, only about 1.5&ndash;2.5&deg; below horizontal at 100&nbsp;km, and a shallow entry stretches small errors into big ones.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>What goes wrong at the burn</th><th>How far the landing moves</th></tr></thead>
+    <tbody>
+      <tr><td>Burn 1 s late</td><td class="num">about 7.4 km further on</td></tr>
+      <tr><td>Burn gives 1 m/s too little push</td><td class="num">40 to 95 km further on</td></tr>
+      <tr><td>Thrust tilted 1&deg; up or down</td><td class="num">50 to 80 km either way</td></tr>
+      <tr><td>Thrust tilted 3&ndash;5&deg; nose-up</td><td class="num">150 to 450 km further on</td></tr>
+      <tr><td>Thrust turned 3&deg; sideways</td><td class="num">tens of km to the side</td></tr>
+      <tr><td>Upper air 20% thinner or thicker</td><td class="num">30 to 70 km</td></tr>
+      <tr><td>Parachute drift in the wind</td><td class="num">2 to 6 km</td></tr>
+    </tbody>
+  </table></div>
+  <p>RussianSpaceWeb says both men were &ldquo;apparently out of their seats&rdquo; when Belyayev pressed the ignition button, so the ship&rsquo;s balance was off and it flew a shallower path than planned <span class="chip doc">Documented</span>. A few degrees of tilt would be enough to stretch a 340&nbsp;km miss toward 800&nbsp;km. How many degrees it really was, we can&rsquo;t say.</p>
+
+  <p><span class="lead-in">The spin came later.</span> After the burn a cable kept the cabin joined to the equipment section, and the pair whirled until about 100&nbsp;km up <span class="chip doc">Documented</span>. The air up there is too thin for the tumble to change the path much <span class="chip est">Estimate</span>. It cost blood vessels, not kilometres.</p>
+
+  <h3>The weather (from ERA5, our retrieval)</h3>
+  <p>At noon on 19 March, at the nearest grid point:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Item</th><th>ERA5 value</th></tr></thead>
+    <tbody>
+      <tr><td>Wind at 10 m</td><td class="num">4.0 m/s from the south-west (gusts 9.5 m/s)</td></tr>
+      <tr><td>Wind at 100 m</td><td class="num">6.1 m/s from the south-west</td></tr>
+      <tr><td>Temperature</td><td class="num">&minus;1.1 &deg;C, falling to about &minus;4 &deg;C by dawn on the 20th</td></tr>
+      <tr><td>Cloud</td><td class="num">Overcast all day</td></tr>
+      <tr><td>Snow depth</td><td class="num">0.66 m (average over a ~30 km grid cell)</td></tr>
+    </tbody>
+  </table></div>
+  <p>Russian Wikipedia says &minus;19&nbsp;&deg;C and 1.5&ndash;2&nbsp;m of snow; Leonov wrote of &ldquo;two meters of thick snow&rdquo;. ERA5 for 1965 has few Ural weather stations to anchor it and averages over a wide area, and drifts in forest clearings run far deeper than the average. We don&rsquo;t pick a side: the film keeps the deep snow and the cold, and the notes say what the data says.</p>
+
+  <h3>Parachutes and drift</h3>
+  <p>One Wikipedia page puts the start of the parachute sequence at about 5&nbsp;km up; another puts the main parachute at about 2.5&nbsp;km. We read these as two stages, a small braking chute (a &ldquo;drogue&rdquo;) first and then the main canopy, rather than a contradiction <span class="chip inf">Our inference</span> (we have no primary source for the timing). The film&rsquo;s card now reads <span class="mono">MAIN PARACHUTE &mdash; OPEN · ALTITUDE ~2.5 KM</span>.</p>
+  <p>The drift, step by step <span class="chip est">Estimate</span>, with assumed winds aloft of 7&ndash;15&nbsp;m/s:</p>
+<div class="calc"><span class="c">// drogue: 5 km down to 2.5 km at 30–50 m/s</span>
+2,500 ÷ 50 = 50 s   to   2,500 ÷ 30 ≈ 85 s
+<span class="c">// main: 2.5 km to the ground at 8–10 m/s</span>
+2,500 ÷ 10 = 250 s  to   2,500 ÷ 8  ≈ 310 s
+<span class="c">// total 300–395 s under canopy</span>
+ 7 m/s × 300 s ≈ <span class="r">2.1 km</span>
+15 m/s × 395 s ≈ <span class="r">5.9 km</span></div>
+  <p>So the wind carried them <strong>about 2&ndash;6&nbsp;km to the north-east</strong>. The wind chose the clearing, not the district.</p>
+
+  <h3>Their knowledge against ours</h3>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>In the capsule, 1965</th><th>With hindsight</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Where they&rsquo;d land</strong></td><td>&ldquo;1,500 km west&rdquo; of the old zone; &ldquo;near Perm&rdquo;</td><td>180 km N of Perm, ~368&ndash;386 km past the new aim</td></tr>
+      <tr><td><strong>Why</strong></td><td>One extra lap, Earth turning underneath</td><td>Plus a ~43&ndash;46 s late burn and an off-balance ship</td></tr>
+      <tr><td><strong>Weather</strong></td><td>Unknown</td><td>Light SW wind, overcast, around freezing (ERA5)</td></tr>
+      <tr><td><strong>Where they actually were</strong></td><td>The instruments said 2,000 km beyond Perm</td><td>They weren&rsquo;t</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="hand">
+  <h2><span class="n">5</span>The human hand: timing by squeeze and button</h2>
+  <p><span class="lead-in">What was done by hand</span> <span class="chip doc">Documented</span>. Pointing the ship (Belyayev, with the hand controller and the Vzor), choosing the landing area (Leonov), and starting the engine: RussianSpaceWeb says Belyayev &ldquo;pressed the ignition button&rdquo;. Leonov wrote that they had to &ldquo;decide on the exact timing and duration of the retro-rocket firing&rdquo;.</p>
+  <p><span class="lead-in">What is unclear.</span> Our sources do not say how the burn was <em>stopped</em>: whether the ship&rsquo;s own system cut the engine once it had given enough push, or whether a crewman did. RussianSpaceWeb says only that the burn &ldquo;apparently lasted as scheduled&rdquo;. So below we show both cases.</p>
+  <p><span class="lead-in">Reaction time</span> <span class="chip est">Estimate</span> (general, not from the Voskhod sources). A rested person pressing a button on a cue takes about 0.2&ndash;0.3&nbsp;s; more under stress, in thick gloves and a pressurised suit (they landed in their Berkut suits). Call it 0.2 to 1 second.</p>
+
+  <h3>Starting late or early</h3>
+  <p>Each second costs about 7.4&nbsp;km along the path:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Timing error at ignition</th><th>Landing shift</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0.2 s</td><td class="num">about 1.5 km</td></tr>
+      <tr><td class="num">0.3 s</td><td class="num">about 2.2 km</td></tr>
+      <tr><td class="num">1 s</td><td class="num">about 7.4 km</td></tr>
+      <tr><td class="num">5 s</td><td class="num">about 37 km</td></tr>
+      <tr class="hl"><td class="num">43&ndash;46 s (the actual delay)</td><td class="num">about 320&ndash;340 km</td></tr>
+    </tbody>
+  </table></div>
+  <p>You might expect re-entry to magnify a timing error. In our model it doesn&rsquo;t: a late burn just slides the whole descent forward at ground-track speed. The magnifying happens with the <em>size</em> and <em>direction</em> of the push, below.</p>
+
+  <h3>Stopping late or early</h3>
+  <p>Only if a person stopped it <span class="chip est">Estimate</span>. The engine&rsquo;s 15.8&nbsp;kN thrust on a 5.7-tonne ship gives:</p>
+<div class="calc">15,830 N ÷ 5,682 kg        ≈ <span class="b">2.8 m/s</span> of speed change per second
+<span class="c">// each 1 m/s too little moves the landing 40–95 km</span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Cut-off error</th><th>Push missing</th><th>Landing shift</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0.2 s</td><td class="num">about 0.6 m/s</td><td class="num">about 20&ndash;50 km</td></tr>
+      <tr><td class="num">0.3 s</td><td class="num">about 0.8 m/s</td><td class="num">about 35&ndash;80 km</td></tr>
+      <tr><td class="num">0.5 s</td><td class="num">about 1.4 m/s</td><td class="num">about 55&ndash;130 km</td></tr>
+    </tbody>
+  </table></div>
+  <p>If the ship cut its own engine, these errors mostly disappear.</p>
+
+  <h3>Holding the ship straight by hand</h3>
+  <p><span class="chip est">Estimate</span> Pointing by eye through a periscope is good to a degree or two, perhaps a few. Two separate effects:</p>
+<div class="calc"><span class="c">// lost push is tiny</span>
+cos 1° = 99.98%  →  on 130 m/s, 0.02 m/s lost
+<span class="c">// even at 5°: under 0.5 m/s</span>
+
+<span class="c">// push in the wrong direction is what matters</span>
+sin 1° × 130 m/s           ≈ <span class="r">2.3 m/s</span> up or down
+<span class="c">// changes how steeply the capsule meets the air:</span>
+<span class="c">// worth 50–80 km per degree</span>
+3° sideways                ≈ 7–8 m/s → tens of km to one side</div>
+
+  <figure>
+    <div class="fig-wrap">
+    <svg viewBox="0 0 640 300" role="img" aria-labelledby="ob-t ob-d">
+      <title id="ob-t">How the overshoot breaks down</title>
+      <desc id="ob-d">Bars on one kilometre scale from 0 to 400. The 43 to 46 second delay is about 320 to 340 km. Hand timing at ignition is 1.5 to 7.4 km. A manual cut-off error, if a person stopped the engine, is 20 to 130 km. Parachute drift is 2 to 6 km. The documented overshoot is 368 to 386 km.</desc>
+      <!-- scale: x = 210 + km * 1.0 (0..400 km -> 210..610) -->
+      <g stroke="var(--rule)" stroke-width="1">
+        <line x1="210" y1="20" x2="210" y2="250"/>
+        <line x1="310" y1="20" x2="310" y2="250" stroke-dasharray="2 4"/>
+        <line x1="410" y1="20" x2="410" y2="250" stroke-dasharray="2 4"/>
+        <line x1="510" y1="20" x2="510" y2="250" stroke-dasharray="2 4"/>
+        <line x1="610" y1="20" x2="610" y2="250" stroke-dasharray="2 4"/>
+      </g>
+      <g font-size="11" text-anchor="middle" class="soft">
+        <text x="210" y="268" class="soft">0</text>
+        <text x="310" y="268" class="soft">100</text>
+        <text x="410" y="268" class="soft">200</text>
+        <text x="510" y="268" class="soft">300</text>
+        <text x="610" y="268" class="soft">400 km</text>
+      </g>
+      <!-- documented overshoot band 368-386 -->
+      <rect x="578" y="20" width="18" height="230" fill="var(--cobalt)" opacity="0.16"/>
+      <text x="614" y="288" font-size="11" text-anchor="end" class="lbl-b">368–386 km documented</text>
+      <!-- rows -->
+      <g font-size="12">
+        <text x="200" y="52" text-anchor="end">43–46 s late burn</text>
+        <rect x="210" y="40" width="320" height="16" fill="var(--vermilion)"/>
+        <rect x="530" y="40" width="20" height="16" fill="var(--vermilion)" opacity="0.45"/>
+        <text x="200" y="68" text-anchor="end" font-size="10" class="soft">documented · estimate</text>
+        <text x="530" y="34" class="lbl-r" font-size="11" text-anchor="middle">320–340</text>
+
+        <text x="200" y="104" text-anchor="end">Cut-off by hand?</text>
+        <rect x="230" y="92" width="110" height="16" fill="var(--ultramarine)" opacity="0.35"/>
+        <text x="200" y="120" text-anchor="end" font-size="10" class="soft">only if a person stopped it</text>
+        <text x="346" y="105" font-size="11">20–130</text>
+
+        <text x="200" y="156" text-anchor="end">Hand timing, ignition</text>
+        <rect x="211.5" y="144" width="6" height="16" fill="var(--graphite)"/>
+        <text x="200" y="172" text-anchor="end" font-size="10" class="soft">0.2–1 s reaction</text>
+        <text x="224" y="157" font-size="11">1.5–7.4</text>
+
+        <text x="200" y="208" text-anchor="end">Parachute drift</text>
+        <rect x="212" y="196" width="4" height="16" fill="var(--cobalt)"/>
+        <text x="200" y="224" text-anchor="end" font-size="10" class="soft">wind, 7–15 m/s aloft</text>
+        <text x="222" y="209" font-size="11">2–6</text>
+      </g>
+    </svg>
+    </div>
+    <figcaption>All bars on one kilometre scale (estimates, except the shaded documented overshoot). The wait to get back into the seats dwarfs everything a hand on a button can do. Tilt is left out: a few degrees could cost anywhere from tens to hundreds of km, and how many degrees it was, nobody can say.</figcaption>
+  </figure>
+
+  <h3>The honest conclusion</h3>
+  <p>A good hand on the button costs a few km. Even a clumsy one, a second or so, costs under 10&nbsp;km. If a person also had to cut the engine, a few tenths of a second there could cost tens of km. A few degrees of tilt could cost hundreds. But the big, documented error is the <strong>43&ndash;46 second delay</strong> while two men in spacesuits untangled themselves from the sight and got back into their seats. That, plus the ship flying off-balance, is what turned a planned landing into a few hundred kilometres of taiga.</p>
+</section>
+
+<section id="learnings">
+  <h2><span class="n">6</span>Learnings along the way</h2>
+  <p>Things we got wrong first, and what fixing them changed.</p>
+  <ul class="learn">
+    <li><strong>The engine&rsquo;s push came from the wrong ship.</strong> The film&rsquo;s first sourced equation ring said &Delta;v &asymp; 155&nbsp;m/s, the figure on Wikipedia. Working it through with Voskhod&rsquo;s actual launch weight, 5,682&nbsp;kg, gives <span class="mono">15,830 N × 45 s ÷ 5,682 kg ≈ 125 m/s</span> (about 128 with the rocket equation). 155&nbsp;m/s comes out exactly for 4,725&nbsp;kg, which is Vostok&rsquo;s weight: it looks like a Vostok number carried over. The on-screen math now writes <span class="mono strike">155</span>, crosses it out, and arrives at about 130 (an older version of the shot still shows 155). The landing story doesn&rsquo;t change.</li>
+    <li><strong>Invented numbers on screen.</strong> The first version of that ring showed <span class="mono">&ldquo;Δv = 106 m/s · t = 22 s · h = 497 km · ±1°&rdquo;</span>, matching neither engine nor orbit. Replaced with sourced figures.</li>
+    <li><strong>&ldquo;Altitude ~500 km&rdquo; was the high point.</strong> An orbit caption said <span class="mono">ALTITUDE ~500 KM</span>. The orbit actually ran from 167 to 475&nbsp;km. The card now says <span class="mono">APOGEE</span> (the highest point) <span class="mono">~500 KM</span>, a rounded popular figure.</li>
+    <li><strong>Orbital speed vs ground speed.</strong> An early check multiplied 46&nbsp;s by 7.8&nbsp;km/s and got about 360&nbsp;km. The point on the ground moves slower than the ship, about 7.4&nbsp;km/s, which gives about 340&nbsp;km. Same conclusion, better number.</li>
+    <li><strong>The 46 seconds.</strong> We first took &ldquo;46&nbsp;s to get back to his seat&rdquo; as solid. Reading both full texts, it is in neither; RussianSpaceWeb even says both men were still out of their seats at ignition. The clock times give 43&nbsp;s. We now mark 46&nbsp;s as second-hand.</li>
+    <li><strong>The weather was blocked, then found.</strong> At first the internet proxy blocked the ERA5 weather archive, and the notes said &ldquo;no wind record&rdquo;. The songwriter later fetched it. The wind turned out to be light and steady, worth a few km of drift.</li>
+    <li><strong>One parachute or two?</strong> We first assumed the main chute opened at 5&nbsp;km, giving 3.5&ndash;9.5&nbsp;km of drift. The two Wikipedia figures (5&nbsp;km and 2.5&nbsp;km) fit a drogue-then-main sequence better. Drift dropped to 2&ndash;6&nbsp;km, and the screen card changed from <span class="mono">5 KM</span> to <span class="mono">~2.5 KM</span>.</li>
+    <li><strong>The Russian caption.</strong> The failure card first read <span class="mono">ОТКАЗ АВТОМАТИКИ</span> (&ldquo;automatics failure&rdquo;). A native speaker preferred <span class="mono">ОТКАЗ СИСТЕМЫ УПРАВЛЕНИЯ</span> (&ldquo;control system failure&rdquo;), and the film changed it.</li>
+    <li><strong>&ldquo;1,500 km&rdquo; is a forecast, not a miss.</strong> We first read Leonov&rsquo;s figure as an exaggerated overshoot. In the full text it is his prediction <em>before</em> the burn, and it matches one lap&rsquo;s westward shift almost exactly.</li>
+  </ul>
+</section>
+
+<section id="lands">
+  <h2><span class="n">7</span>Where the song&rsquo;s number lands</h2>
+  <p>The capsule came down a few hundred kilometres past its new aim: 368&ndash;386&nbsp;km by the flight data, more than 800&nbsp;km from the original zone by another count. Not 1,500.</p>
+  <p>But 1,500&nbsp;km is not made up. It is the number Leonov wrote down for the moment the automatics failed: the two of them, five minutes before the planned burn, realising they would have to wait a lap and come down far to the west. It is the math they did in their heads, and it is very nearly right for what it measured.</p>
+  <p class="closing">The song is about that hour, so it keeps Leonov&rsquo;s number. This page is for anyone who wants the rest of the arithmetic.</p>
+</section>
+
+<footer>
+  <p><strong>Orbital Sunrise</strong>. Song by Jade Wang. Lyrics: a found poem from John Green&rsquo;s essay &ldquo;Orbital Sunrise&rdquo; (<em>The Anthropocene Reviewed</em>).</p>
+  <p>The detailed working notes, with every equation, accompany the film&rsquo;s project files.</p>
+</footer>
+</main>
+
+<script>
+(function () {
+  var r = document.getElementById('late');
+  var s = document.getElementById('late-s');
+  var k = document.getElementById('late-km');
+  var n = document.getElementById('late-note');
+  if (!r) return;
+  function fmt(x) { return Math.round(x).toLocaleString('en-US'); }
+  function upd() {
+    var v = parseFloat(r.value);
+    var km = v * 7.4;
+    s.textContent = (v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)) + ' s';
+    k.textContent = (km < 10 ? km.toFixed(1) : fmt(km)) + ' km';
+    var note;
+    if (v === 0) note = 'On time: the burn happens where it was planned.';
+    else if (v <= 1) note = 'Human reaction time on a button (0.2–1 s): a few km at most.';
+    else if (v < 43) note = 'Every extra second slides the whole descent about 7.4 km further on.';
+    else if (v <= 46) note = 'The documented delay: 43 s by the clock times, 46 s as often quoted.';
+    else note = 'Longer than the documented delay.';
+    n.textContent = note;
+  }
+  r.addEventListener('input', upd);
+  upd();
+})();
+</script>
