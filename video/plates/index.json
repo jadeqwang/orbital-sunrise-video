@@ -931,5 +931,14 @@
   "take": "take2.mp4",
   "mattes": true,
   "gain": 1.171
+ },
+ "jade_loc_day": {
+  "n": 121,
+  "fps": 24,
+  "w": 1280,
+  "h": 720,
+  "take": "take1.mp4 (jade_loc take1 relit frame by frame for daylight: tools/jade_relight.py)",
+  "mattes": false,
+  "gain": 1.0
  }
 }

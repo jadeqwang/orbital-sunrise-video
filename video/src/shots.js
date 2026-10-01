@@ -624,16 +624,22 @@ async function initShots() {
     paper(G, 'snow');
     // On location (her pick): the model drew the Hill Country around her kept drawing, her own face kept, animated singing,
     // with the film's pencil engine over it at half strength so she boils like the other shots (as in "1B").
+    // Default (round 4, her note): jade_loc_day = the same take relit frame by frame for broad daylight (natural skin colour,
+    // no glasses-shadow, the Hill Country loose toward the edges; tools/jade_relight.py), so lips and lag are unchanged; the
+    // pencil thins out toward the frame edges too. ?h1d=loc: the golden-hour take as released.
     // Review variants: ?h1d=over (1B: the plain-paper take), ?h1d=plain, ?h1d=js (engine only; loses her face), ?h1d=locfade
-    const exp = new URLSearchParams(location.search).get('h1d') ?? 'loc';
+    const exp = new URLSearchParams(location.search).get('h1d') ?? 'day';
     // ?h1d=locfade: everything but her face and hair faded toward the paper (tools/jade_fade.py --head); she found it goofy
-    const loc = exp === 'loc' || exp === 'locfade', id = loc ? (exp === 'loc' ? 'jade_loc' : 'jade_locfade') : 'jade_sing3';
+    const loc = exp === 'day' || exp === 'loc' || exp === 'locfade', id = loc ? ({ day: 'jade_loc_day', loc: 'jade_loc' }[exp] ?? 'jade_locfade') : 'jade_sing3';
+    // looser at the edges: the engine's strokes fade out over the outer fifth of the frame (not on her: she is centred)
+    const edgeLoose = exp === 'day' ? (X, Y) => { const dx = Math.max(0, Math.abs(X - W / 2) / (W / 2) - .62) / .38, dy = Math.max(0, Y / H - .78) / .22;
+      return 1 - .85 * smooth(clamp(Math.hypot(dx, dy))); } : undefined;
     const lag = +(new URLSearchParams(location.search).get('h1dlag') ?? -.22);  // her pick by ear ("G"); ?h1dlag= tries others
     const tp = loc ? OI(t) - (30.9 + lag) : OI(t) - 32.05;   // take time runs on the released song's clock
     if (exp !== 'js') await paperTake(id, tp);
     if (exp !== 'plain') {
       G.save(); if (exp !== 'js') G.globalAlpha = .45;
-      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2 } });
+      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2, mask: edgeLoose } });
       G.restore();
     }
     const w = H1[1].words;

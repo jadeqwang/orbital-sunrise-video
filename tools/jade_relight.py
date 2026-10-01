@@ -34,6 +34,22 @@ def cheeks_mask(L, w, h, feather):
     return cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), feather)[..., None]
 
 
+EYES = ([70, 63, 105, 66, 107, 55, 133, 145, 153, 33, 130, 46], [300, 293, 334, 296, 336, 285, 362, 374, 380, 263, 359, 276])   # brow + eye, each side
+
+
+def skin_mask(L, w, h, feather):
+    """Her face oval (slightly inset) minus the eyes with the brows above them and the lips, grown a little."""
+    m = np.zeros((h, w), np.uint8)
+    p = pts(L, w, h, JL.FACE_OVAL); c = p.mean(0); cv2.fillPoly(m, [(c + (p - c) * .95).astype(np.int32)], 255)
+    cut = np.zeros((h, w), np.uint8)
+    for side in EYES: cv2.fillConvexPoly(cut, cv2.convexHull(pts(L, w, h, side).astype(np.int32)), 255)
+    cut = cv2.dilate(cut, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (17, 17)))
+    lips = np.zeros((h, w), np.uint8); cv2.fillPoly(lips, [pts(L, w, h, LIPS).astype(np.int32)], 255)
+    cut = np.maximum(cut, cv2.dilate(lips, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))))
+    m[cut > 0] = 0
+    return cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), feather)[..., None]
+
+
 STABLE = [33, 133, 159, 145, 263, 362, 386, 374, 70, 105, 107, 336, 334, 300, 6, 197, 195, 5, 4, 1, 168, 9, 10, 151, 234, 454, 127, 356]
 
 
@@ -71,10 +87,16 @@ def main(take, first, relit_model, out_dir, plate=None):
     # neutral instead of the opposite tint
     rl = ratio.mean(2, keepdims=True); skin = oval_mask(LA, w, h, 1.0, 8)[..., None]
     ratio = rl * (ratio / rl) ** (skin + (1 - skin) * .35)
+    # away from her face the ratio is only a broad wash (her hair and the edge of her head move against the still)
+    ratio_far = cv2.GaussianBlur(ratio, (0, 0), 24)
+    # the still's skin light, extended past her face edge with her median skin colour, so a moved jaw never pulls in sky or grass
+    inner = oval_mask(LA, w, h, .95, 1)[..., None]
+    tone = np.median(blurR[(inner[..., 0] > .5) & (cheeks_mask(LA, w, h, 1)[..., 0] > .5)], axis=0)
+    skinR = inner * blurR + (1 - inner) * tone
     F = frames(take)
     mats = np.array([JFa.matte(f) for f in F])
     mats = np.array([mats[max(0, i - 2):i + 3].mean(0) for i in range(len(mats))])
-    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))
+    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13))
     fdir = ROOT / "video" / "plates" / plate if plate else None
     if fdir: fdir.mkdir(parents=True, exist_ok=True)
     tmp = out_dir / "frames"; tmp.mkdir(exist_ok=True)
@@ -86,15 +108,23 @@ def main(take, first, relit_model, out_dir, plate=None):
             L, T = LA, np.float32([[1, 0, 0], [0, 1, 0]])
         warp = lambda im: cv2.warpAffine(im, T, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
         head = oval_mask(L, w, h, 1.15, 10)[..., None]
-        g = head * warp(ratio) + (1 - head) * ratio
+        g = head * warp(ratio) + (1 - head) * ratio_far
         Y = X * g
-        cm = JL.cheek_mask(L, w, h, 10)
-        Y = cm * warp(R) + (1 - cm) * Y
-        # the rest of the shadow band (Seedance draws it larger than the still): the still's light, the take's lines
-        ga = X.mean(2); det = np.clip((ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1), 0, 1.15)[..., None]
-        ck = cheeks_mask(L, w, h, 9) * (1 - cm)
-        Y = ck * warp(blurR) * det + (1 - ck) * Y
-        m = cv2.GaussianBlur(cv2.dilate((mats[i] > .35).astype(np.uint8), k).astype(np.float32), (0, 0), 8)[..., None]
+        # her skin (the face oval minus the eyes and brows, which change with her expression, and the lips, which sing): the
+        # still's skin light carried with her head, times the take's line detail, so the closet's glasses-shadow (Seedance
+        # draws it larger than the still) goes; on the cheeks only the take's faint texture is kept (the shadow's hatched edge
+        # is dropped). The eyes, brows and mouth keep the take's own tones (relit by the ratio above).
+        ga = X.mean(2); dl = (ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1)
+        ckm = np.maximum(JL.cheek_mask(L, w, h, 10), cheeks_mask(L, w, h, 9))
+        det = (ckm * np.clip(dl, .84, 1.08)[..., None] + (1 - ckm) * np.clip(dl, 0, 1.15)[..., None])
+        sk = skin_mask(L, w, h, 7)
+        Y = sk * warp(skinR) * det + (1 - sk) * Y
+        # the take's golden-hour rim on her hair, jacket and headphones: no low sun in daylight, so its gold goes grey
+        hsv = cv2.cvtColor(np.clip(Y, 0, 255).astype(np.uint8), cv2.COLOR_RGB2HSV).astype(np.float32)
+        gold = np.clip(1 - np.abs(hsv[..., 0] - 19) / 5, 0, 1) * (1 - oval_mask(L, w, h, 1.0, 6))
+        hsv[..., 1] *= 1 - .8 * gold
+        Y = cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2RGB).astype(np.float32)
+        m = cv2.GaussianBlur(cv2.dilate((mats[i] > .35).astype(np.uint8), k).astype(np.float32), (0, 0), 5)[..., None]
         m = np.maximum(m, oval_mask(L, w, h, 1.2, 10)[..., None])
         Y = m * Y + (1 - m) * R
         im = Image.fromarray(np.clip(Y, 0, 255).astype(np.uint8))

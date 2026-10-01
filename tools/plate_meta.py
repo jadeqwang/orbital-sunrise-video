@@ -118,7 +118,8 @@ def faceless(pid):
     try:
         sys.path.insert(0, str(ROOT / "tools"))
         from plate_specs import PLATES
-        return PLATES.get(pid, {}).get("faces", True) is False
+        import re   # an alternate take installed as <id>_t<N> follows its plate's spec
+        return PLATES.get(re.sub(r"_t\d+$", "", pid), {}).get("faces", True) is False
     except Exception:
         return False
 
