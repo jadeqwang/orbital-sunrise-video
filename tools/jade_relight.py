@@ -10,9 +10,10 @@ and timing (no new Seedance take, so her approved lip lag stays).
    - light: the still's low-frequency light ratio (blur(relit) / blur(first), sigma = w/220, as restore_lines) follows her head
      inside a widened face oval (a broad wash elsewhere; its colour only on her skin); frame_i * ratio keeps every line, the
      eyes and the singing mouth of the take;
-   - her skin (face oval minus eyes+brows, nose and lips): the relit still's skin light, closed (dark bands under ~40 px go)
-     and smoothed, carried with her head, times the take's faint texture (full line detail only along her face's outline):
-     this is what removes the closet's glasses-shadow, which Seedance draws larger than the still;
+   - her skin (face oval minus eyes+brows, nose and lips, plus both cheeks under the lenses): the relit still's skin light,
+     closed (dark bands under ~90 px go) and smoothed broadly, carried with her head; no take texture inside her outline but
+     her glasses' rims (full line detail only along her face's outline): this is what removes the closet's glasses-shadow,
+     which Seedance draws larger than the still;
    - the take's golden-hour gold rim on hair / jacket / headphones loses most of its saturation;
    - background: outside her person matte (jade_fade.matte, smoothed over 5 frames, grown) the relit still itself (the
      location redrawn in daylight, loose at the edges), so only she moves, as in the take.
@@ -25,8 +26,13 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
 import jade_location as JL, jade_fade as JFa
 
-import os
-SMOOTH, CLOSE, RIM, CHK, FLAT, DLO, DHI, SKF, SKG, EYD, NOD = float(os.environ.get('SM', 50)), int(os.environ.get('CL', 41)), float(os.environ.get('RIM', .86)), float(os.environ.get('CHK', 0)), int(os.environ.get('FLAT', 0)), float(os.environ.get('DLO', .94)), float(os.environ.get('DHI', 1.04)), float(os.environ.get('SKF', 15)), float(os.environ.get('SKG', 1.0)), int(os.environ.get('EYD', 17)), int(os.environ.get('NOD', 9))
+# round 5 (her note: the glasses-shadow still faintly there): the skin light is the still's skin closed over ~90 px and blurred
+# broadly (sigma w/12, no seam at the still's oval: the model's still keeps a faint band too); her skin covers the cheeks
+# under the lenses down to the jaw and out to her outline (the take draws the band there); inside her outline the take's
+# texture is dropped (any of it re-traced the band's hatched edges) except the rims of her glasses, kept as lighter lines
+SMOOTH, CLOSE, RIM, CHK = 12, 91, .96, 6                 # skin-light blur w/SMOOTH, closing px, outline-line zone, cheek feather
+DLO, DHI, SKF, SKG, EYD, NOD = 1., 1., 8, 1.03, 9, 5     # texture clip inside the outline; skin feather, grow; eye / nose cut px
+RIMS_AREA, RIMK = 60, .8                                 # rims: min run (px), strength
 LIPS = [61, 185, 40, 39, 37, 0, 267, 269, 270, 409, 291, 375, 321, 405, 314, 17, 84, 181, 91, 146]
 CHEEKS = ([145, 234, 93, 132, 58, 172, 61, 129], [374, 454, 323, 361, 288, 397, 291, 358])   # lower lid, oval down to the jaw, mouth corner, nose
 
@@ -57,6 +63,16 @@ def skin_mask(L, w, h, feather, grow=1.0):
     cut = np.maximum(cut, cv2.dilate(nose, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (NOD, NOD))))
     m[cut > 0] = 0
     return cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), feather)[..., None]
+
+
+
+def rims_mask(ga, dl, min_area=RIMS_AREA):
+    """Her glasses' rims in a take frame: the darkest thin lines (dl < .8 and dark in absolute terms), only connected runs
+    of at least min_area px (the shadow band's hatching is lighter and broken into short strokes)."""
+    m = ((dl < .86) & (ga < 150)).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(m, connectivity=8)
+    keep = np.zeros(n, bool); keep[1:] = st[1:, cv2.CC_STAT_AREA] >= min_area
+    return cv2.GaussianBlur(cv2.dilate(keep[lab].astype(np.uint8), np.ones((3, 3), np.uint8)).astype(np.float32), (0, 0), .8)
 
 
 STABLE = [33, 133, 159, 145, 263, 362, 386, 374, 70, 105, 107, 336, 334, 300, 6, 197, 195, 5, 4, 1, 168, 9, 10, 151, 234, 454, 127, 356]
@@ -100,18 +116,18 @@ def main(take, first, relit_model, out_dir, plate=None):
     ratio_far = cv2.GaussianBlur(ratio, (0, 0), 24)
     # the still's skin light, extended past her face edge with her median skin colour, so a moved jaw never pulls in sky or grass
     # The model kept a faint diagonal glasses-shadow too, and restore_lines brings back the take's band outline below the
-    # cheeks: so her skin light is the still's skin closed (dark features under ~40 px removed) and smoothed broadly (a
-    # normalised blur over her skin only, sigma w/50): its colour and the large shading of her face, no band. The take's own lines go back on top (det below).
+    # cheeks: so her skin light is the still's skin closed (dark features under ~90 px removed) and smoothed broadly (a
+    # normalised blur over her skin only, sigma w/12): its colour and the large shading of her face, no band. Only her
+    # outline and her glasses' rims come back from the take on top (det below).
     inner = oval_mask(LA, w, h, 1.0, 1)[..., None]
     skA = skin_mask(LA, w, h, 1)
     tone = np.median(blurR[(inner[..., 0] > .5) & (cheeks_mask(LA, w, h, 1)[..., 0] > .5)], axis=0)
     sm = w / SMOOTH
     Rc = np.where(skA > .5, R, tone)                                   # outside her skin: her skin tone (no hair, glasses)
     ker = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (CLOSE, CLOSE))
-    Rc = cv2.erode(cv2.dilate(Rc, ker), ker)                           # a closing: dark bands and lines narrower than ~40 px go
+    Rc = cv2.erode(cv2.dilate(Rc, ker), ker)                           # a closing: dark bands and lines narrower than ~90 px go
     smooth = cv2.GaussianBlur(Rc * skA, (0, 0), sm) / (cv2.GaussianBlur(skA[..., 0], (0, 0), sm)[..., None] + 1e-4)
-    skinR = inner * smooth + (1 - inner) * tone
-    if FLAT: skinR = smooth   # FLAT: the normalised blur everywhere (no seam at the still's oval)
+    skinR = smooth                                                     # the normalised blur everywhere
     F = frames(take)
     mats = np.array([JFa.matte(f) for f in F])
     mats = np.array([mats[max(0, i - 2):i + 3].mean(0) for i in range(len(mats))])
@@ -131,13 +147,16 @@ def main(take, first, relit_model, out_dir, plate=None):
         Y = X * g
         # her skin (the face oval minus the eyes and brows, which change with her expression, and the lips, which sing): the
         # still's skin light carried with her head, times the take's line detail, so the closet's glasses-shadow (Seedance
-        # draws it larger than the still) goes; inside her outline only the take's faint texture is kept (the shadow's hatched
-        # edges are dropped). The eyes, brows, nose and mouth keep the take's own tones (relit by the ratio above).
+        # draws it larger than the still) goes; inside her outline only her glasses' rims are kept from the take (even a faint
+        # texture re-traced the shadow's hatched edges, and the pencil engine darkened them again). The eyes, brows, nose and mouth keep the take's own tones (relit by the ratio above).
         ga = X.mean(2); dl = (ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1)
         nm = 1 - oval_mask(L, w, h, RIM, 4)[..., None]   # her face's outline keeps its lines
-        det = (1 - nm) * np.clip(dl, DLO, DHI)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
+        inside = np.clip(dl, DLO, DHI)
+        rm = rims_mask(ga, dl)   # her glasses' rims (long, dark, thin) keep the take's line where her skin is otherwise flat
+        inside = inside * (1 - rm) + rm * np.minimum(1 - RIMK * (1 - dl), inside)
+        det = (1 - nm) * inside[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
         sk = skin_mask(L, w, h, SKF, SKG)
-        if CHK: sk = np.maximum(sk, cheeks_mask(L, w, h, CHK))
+        sk = np.maximum(sk, cheeks_mask(L, w, h, CHK))                 # the band's whole area, under the lenses
         Y = sk * warp(skinR) * det + (1 - sk) * Y
         # the take's golden-hour rim on her hair, jacket and headphones: no low sun in daylight, so its gold goes grey
         hsv = cv2.cvtColor(np.clip(Y, 0, 255).astype(np.uint8), cv2.COLOR_RGB2HSV).astype(np.float32)
