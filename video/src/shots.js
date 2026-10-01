@@ -695,9 +695,10 @@ async function initShots() {
     const lag = +(new URLSearchParams(location.search).get('h1dlag') ?? -.22);  // her pick by ear ("G"); ?h1dlag= tries others
     const tp = loc ? OI(t) - (30.9 + lag) : OI(t) - 32.05;   // take time runs on the released song's clock
     if (exp !== 'js') await paperTake(id, tp);
-    if (exp !== 'plain') {
+    const DBG = new URLSearchParams(location.search).get('h1ddbg') || '';
+    if (exp !== 'plain' && DBG !== 'nopen') {
       G.save(); if (exp !== 'js') G.globalAlpha = .45;
-      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: { spacing: 6.2, mask: edgeLoose && ((X, Y) => edgeLoose(X, Y) * faceQuiet(X, Y)) }, ...(faceQuiet ? { contour: { mask: faceQuiet } } : {}) });
+      await drawPlate(t, loc ? id : 'jade_sing3_169', tp, { paper: 'snow', matte: false, face: false, view: { zoom: 1 }, hatch: DBG === 'nohatch' ? false : { spacing: 6.2, mask: edgeLoose && ((X, Y) => edgeLoose(X, Y) * faceQuiet(X, Y)) }, ...(DBG === 'nocont' ? { contour: false } : faceQuiet ? { contour: { mask: faceQuiet } } : {}), ...(DBG === 'nosil' ? { silhouette: false } : {}) });
       G.restore();
     }
     const w = H1[1].words;

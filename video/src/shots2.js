@@ -648,12 +648,16 @@ async function initShots2() {
     // (~16 kN for ~45 s, Δv ~155 m/s), the 167 × 475 km orbit and its 90.9 min period
     const Lt = typeLayer(), eq = ['Δv ≈ 155 m/s', 't ≈ 45 s', 'T = 90.9 min', 'ОРИЕНТАЦИЯ — РУЧНАЯ', 'h = 167–475 km', 'F ≈ 16 kN'];
     eq.forEach((s, i) => { const a = spin + i / eq.length * TAU, r = 430; text(Lt.g, s, W / 2 + Math.cos(a) * r * 1.6, H / 2 + Math.sin(a) * r * .8, { font: FONT.serif(46), col: i === 3 ? 'verm' : 'cream', alpha: clamp((lt - i * .15) / .3) * .9, align: 'center', rot: Math.sin(a) * .2 }); });
-    // the scene (Belyayev across both couches at the Vzor, Leonov holding him) is Leonov's account (docs/RESEARCH_R4.md §1):
-    // a quiet citation under everything, below the ring of figures (lowest ≈ y 884)
-    // (a soft night-paper fade along the bottom edge and an outline keep it legible over the hatching)
-    { const gr = Lt.g.createLinearGradient(0, H - 90, 0, H); gr.addColorStop(0, rgba(P.night, 0)); gr.addColorStop(.55, rgba(P.night, .72)); gr.addColorStop(1, rgba(P.night, .8));
-      Lt.g.fillStyle = gr; Lt.g.fillRect(0, H - 90, W, 90); }
-    text(Lt.g, 'Source: A. Leonov & D. Scott, Two Sides of the Moon (2004)', W / 2, H - 34, { font: FONT.mono(17, 400), col: 'silver', alpha: .88 * clamp((lt - .2) / .3), align: 'center', ls: 1.5, stroke: 6, strokeCol: 'night' });
+    // the scene itself (Belyayev across both couches at the Vzor, Leonov holding him) is Leonov's account (docs/RESEARCH_R4.md §1),
+    // so the caption says what is shown and credits the memoir for THAT, up in the top-left band the ring of figures never
+    // reaches (its top ≈ y 196), on screen from the cut while the two men are the picture. The figures are from the TDU-1 and
+    // orbit data (docs/FACTCHECK.md §4.2), not the memoir, so they carry no credit line of their own.
+    // (a soft night-paper fade along the top edge and an outline keep it legible over the hatching)
+    { const gr = Lt.g.createLinearGradient(0, 0, 0, 130); gr.addColorStop(0, rgba(P.night, .8)); gr.addColorStop(.5, rgba(P.night, .66)); gr.addColorStop(1, rgba(P.night, 0));
+      Lt.g.fillStyle = gr; Lt.g.fillRect(0, 0, W, 130); }
+    const capA = clamp((lt + .02) / .25);
+    text(Lt.g, 'BELYAYEV LAY ACROSS BOTH SEATS TO SIGHT THE VZOR; LEONOV HELD HIM IN PLACE.', 60, 58, { font: FONT.mono(22, 800), col: 'cream', alpha: .95 * capA, ls: 1.5, stroke: 6, strokeCol: 'night' });
+    text(Lt.g, '— A. Leonov & D. Scott, Two Sides of the Moon (2004)', 60, 90, { font: FONT.mono(16, 400), col: 'silver', alpha: .88 * capA, ls: 1.5, stroke: 6, strokeCol: 'night' });
     typeFlush(Lt, drawClock(t, 12).n, .4);
     const w = BD[1].words;
     lyricStack(t, [{ s: 'DOING THE MATH', t: w[0][0], x: W / 2, y: 520, size: 150, align: 'center', style: 'rise' }, { s: 'WITH A SPINNING SUN', t: w[3][0], x: W / 2, y: 640, size: 110, align: 'center', style: 'rise', col: 'gold' }]);
