@@ -124,7 +124,8 @@ def main(take, first, relit_model, out_dir, plate=None):
         ga = X.mean(2); dl = (ga + 1) / (cv2.GaussianBlur(ga, (0, 0), sig) + 1)
         nose = np.zeros((h, w), np.uint8); cv2.fillConvexPoly(nose, cv2.convexHull(pts(L, w, h, NOSE).astype(np.int32)), 255)
         nm = cv2.GaussianBlur(cv2.dilate(nose, np.ones((9, 9), np.uint8)).astype(np.float32) / 255, (0, 0), 5)[..., None]
-        det = (1 - nm) * np.clip(dl, .84, 1.08)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
+        nm = np.maximum(nm, 1 - oval_mask(L, w, h, .86, 4)[..., None])   # the nose and her face's outline keep their lines
+        det = (1 - nm) * np.clip(dl, .94, 1.04)[..., None] + nm * np.clip(dl, 0, 1.15)[..., None]
         sk = skin_mask(L, w, h, 15)
         Y = sk * warp(skinR) * det + (1 - sk) * Y
         # the take's golden-hour rim on her hair, jacket and headphones: no low sun in daylight, so its gold goes grey
