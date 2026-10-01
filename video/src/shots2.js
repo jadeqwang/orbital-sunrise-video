@@ -583,15 +583,15 @@ async function initShots2() {
   // visible top (above the helmet), travelled at a constant CAB_V; each window shows it as it passes, the wall hides it between,
   // so it takes the gap's width / CAB_V to reach the left window. One turn = CAB_BEATS beats, the right port crossed on
   // CAB_B0 + CAB_BEATS·k; u: how far along the path the sun is, C: one turn's length. The turn index k changes while it's hidden
-  function cabPath(t, pf) {
-    const [A, Q] = CAB_PORTS, T = (P, v) => track(P.f, v, pf);
-    const o = [T(A, A.x), T(A, A.y)], q = [T(Q, Q.x), T(Q, Q.y) - .7 * T(Q, Q.r)], D = Math.hypot(q[0] - o[0], q[1] - o[1]);
+  function cabPath(t, pf, ports = CAB_PORTS) {   // ports with .path (G2's two-porthole plate) share it
+    const [A, Q] = ports, T = (P, v) => track(P.f, v, pf);
+    const o = [T(A, A.x), T(A, A.y)], q = [T(Q, Q.x), T(Q, Q.y) - (Q.top ? .7 : 0) * T(Q, Q.r)], D = Math.hypot(q[0] - o[0], q[1] - o[1]);
     const e = [(q[0] - o[0]) / D, (q[1] - o[1]) / D], ph = (beatPos(t) - CAB_B0) / CAB_BEATS, C = CAB_V * CAB_BEATS * TM.beat;
     return { o, e, n: [e[1], -e[0]], u: ph * C, C, k: Math.floor(ph - .75) };   // n: across the path, down
   }
   function cabinPorts(t, view, pf, ports = CAB_PORTS) {
     const d = drawClock(t, 12).n, cyc = SPIN_BEATS * TM.beat / SPIN_HALF;   // one turn of the tumble in half-crossings
-    const path = ports === CAB_PORTS ? cabPath(t, pf) : null;
+    const path = ports === CAB_PORTS || ports.path ? cabPath(t, pf, ports) : null;
     const disc = (P, o) => { const x = track(P.f, o.x, pf), y = track(P.f, o.y, pf), r = track(P.f, o.r, pf), [cx, cy] = view.toScreen(x / 960, y / 540), [ex, ey] = view.toScreen((x + r) / 960, y / 540); return [cx, cy, Math.hypot(ex - cx, ey - cy)]; };
     for (const P0 of ports) {
       const [cx, cy, R0] = disc(P0, P0), R = R0 * .96;
