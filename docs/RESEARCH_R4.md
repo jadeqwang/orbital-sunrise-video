@@ -79,6 +79,76 @@ also points to the independent history:
 
 > `Sources: Leonov & Scott (2004); Siddiqi, Challenge to Apollo (2000)` (67 characters)
 
+### Round 5: exact memoir wording, the caption, and reference footage (2026-10-01)
+
+**Exact quote: not found.** The fetches were blocked again: smithsonianmag.com,
+archive.org (the book is borrowable there as `twosidesofmoonou0000scot`) and
+drewexmachina.com all returned `EGRESS_BLOCKED` or 403. So this round also relies on
+search excerpts. No excerpt gave a verbatim sentence or a page number from *Two Sides of
+the Moon* or from the Jan 2005 *Air & Space* piece ("The Nightmare of Voskhod 2") for
+the Vzor scene. The wording that comes back in every excerpt is the encyclopedic
+paraphrase: "Belyayev had to lie across the seats to use the Vzor while Leonov held him
+in place", and "Leonov held Belyayev steady as he leant across the seats to check
+Voskhod-2's alignment using the awkwardly positioned orientation porthole". The paraphrase
+quoted in §1 ("lean horizontally across both seats… held him steady in front of the
+orientation porthole") is the closest thing to the memoir's own words, but it is
+unverified. **Do not put any of these on screen as a quote.**
+
+- **Who held whom:** Leonov held Belyayev, in every source.
+- **"Across his lap": not supported.** No source says Leonov held him across his lap.
+  The sources say Belyayev lay or leant across *both seats* (the couches sat side by side
+  and crosswise to the Vzor), and Leonov held him steady or in place. Since Leonov was in
+  one of those seats, a lap may be the physical reality, but no source says so.
+- **Why it mattered:** getting back into his seat to fire the TDU-1 took about 46 s. That
+  is the source of the roughly 2,000 km / 386 km overshoot (§1).
+
+**Where G2's on-screen figures come from (not the memoir, and not the flight log
+either).** Δv ≈ 155 m/s, t ≈ 45 s and F ≈ 16 kN are TDU-1 engine data. h = 167–475 km and
+T = 90.9 min are the orbit. All of them come from the Wikipedia "Voskhod" and "Voskhod 2"
+articles, per docs/FACTCHECK.md §4.2 ([W-Voskhod], [W-V2]). They replaced invented
+values in round 3. ОРИЕНТАЦИЯ — РУЧНАЯ ("orientation: manual") is the flight fact. The
+1965 crew report and flight log that Roscosmos declassified in 2020 back the manual
+orientation, but the screen numbers were not taken from them. So the figures get no
+on-screen credit. A "flight logs" credit would be inaccurate.
+
+**New G2 caption (shots2.js, G2_math).** It sits top-left, in the band the ring of figures
+never reaches, and is on screen from the cut, while the two men fill the picture:
+
+> `BELYAYEV LAY ACROSS BOTH SEATS TO SIGHT THE VZOR; LEONOV HELD HIM IN PLACE.`
+> `— A. Leonov & D. Scott, Two Sides of the Moon (2004)`
+
+The old bottom-centre `Source: …` line was removed. It sat under the equations and read
+as a citation for the maths.
+
+**Footage and photos of the scene (for corroboration or a reference still; nothing here
+is cleared for use).**
+
+- **No authentic image found.** No search turned up a 1965 photo or film of Belyayev at
+  the Vzor during descent. The on-board cine camera material (used in the documentary
+  *В скафандре над планетой*) covers the spacewalk.
+- ***Время первых* (*Vremya pervykh*, "Spacewalk"/"The Spacewalker", 2017; dir. Dmitry
+  Kiselev; producers Timur Bekmambetov and Yevgeny Mironov; Mironov as Leonov,
+  Khabensky as Belyayev; Leonov was a consultant).** Reviews say the film "clearly shows
+  the work with the Vzor" during the manual orientation for retrofire. A full-scale Vzor
+  mock-up was built in the Moscow studios. This is in the descent section near the end
+  of the film. **The timestamp is not verified**; check a legal stream (Kinopoisk / Okko /
+  Netflix in some regions). It is © 2017 Bazelevs / TABBAK / Channel One. A clip or still
+  needs a licence from them. It can be used privately as a pose and lighting reference,
+  but do not trace it into a plate. Sources: ru.wikipedia "Время первых";
+  mirf.ru "«Время первых»: что правда, а что вымысел"; kinopoisk.ru article 2927241
+  ("История создания"); habr.com/ru/articles/402997; lozga.livejournal.com/144362.html
+  (a space historian's review of technical accuracy).
+- ***Притяжение земли* (2023, in the anthology *Молотов коктейль*)** dramatises the
+  Perm-taiga landing (59.ru, 2023-04-12). It is not known whether it shows the Vzor
+  scene. Rights: its producers.
+- **Hardware references:** the Vostok/Voskhod Vzor (a floor-mounted periscope porthole
+  with a central field and a ring of eight ports) is on display in descent-module
+  exhibits. Examples are the RKK Energia museum (Korolyov), the Tsiolkovsky State Museum
+  (Kaluga) and the Memorial Museum of Cosmonautics (Moscow). Museum photos are usually
+  the photographer's or the museum's copyright. Wikimedia Commons may have freely
+  licensed ones; check each file's licence. The 2020 Roscosmos release (rg.ru,
+  2020-03-18) includes documents and photos; check whether any show the cabin.
+
 ---
 
 ## 2. The sunrise drawing: where is it, what is it called, and was it drawn in flight?
