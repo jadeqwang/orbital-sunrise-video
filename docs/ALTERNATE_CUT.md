@@ -225,8 +225,9 @@ functions of t) over plates with the generated one painted out (`tools/tether_r5
 - **I6_predawn**: the hoop removed from `countdown_drift_t3` / `hero_sunrise` (→ `countdown_drift_r5`, `hero_sunrise_r5`,
   frames 1–72 only, used by I6 alone); a ≈5.4 m cable from the hull (where the struts meet it, tracked) to his right hip,
   starting wound loosely around him and floating in big loops, in front of and behind him (hidden by his matte when behind).
-  `?i6=r4` = round 4, `?i6=old` = take 1. **H1a_sunrise still plays `hero_sunrise` with its hoop**: at the cut the hoop
-  returns and the cable vanishes (switch H1a to `hero_sunrise_r5` + extend the plate and the rope if she wants continuity).
+  `?i6=r4` = round 4, `?i6=old` = take 1. The same simulation continues through **H1a_sunrise** (`hero_sunrise_r5`, frames
+  1–120; the plate's push-in is followed with a per-frame zoom, the hull anchor extrapolated off frame), and **I1_poster**
+  (hero_sunrise at 4.4 s, a moment inside H1a) draws that moment's cable: the hoop never returns. `?i6=r4` restores all three.
 
 ## 0. Ask her first (only she can supply these)
 
