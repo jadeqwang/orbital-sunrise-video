@@ -1,0 +1,31 @@
+{
+ "model": "bytedance/seedance-2.5",
+ "input": {
+  "prompt": "The video starts exactly on the input image, with identical framing, lighting and composition; everything in it stays as it is unless described. the cosmonaut Alexei Leonov (face and suit exactly as in the first two reference images) floats weightless and calm in open space beside the Voskhod-2 spacecraft on the right, in dim light. He drifts very slowly and naturally: a small gentle turn of his body, his arms rising and settling a little, his head turning slightly to look out at the horizon. His umbilical tether is a soft, limp, flexible white fabric-covered hose, not a stiff tube: from the first moment its loose loop floats and sways freely in weightlessness, slowly bending, uncurling and changing shape all the time, rippling gently along its length in lazy waves like a rope drifting underwater, the loop opening and drooping and curling back, following his movements with a slight delay; never frozen, never rigid. The glowing thin band of the atmosphere along the dark Earth stays as it is: the sun does not rise, no flare, the light does not change. Very slow, steady camera, almost locked-off. One continuous shot, no cuts. Photorealistic, shot on 35mm film, IMAX documentary realism in the spirit of Apollo 11 (2019) and Gravity. Accurate 1965 Soviet hardware: the white Berkut spacesuit with rust-orange harness straps, a white helmet with red CCCP letters above the visor, Soviet markings only. Hard directional sunlight, deep black space, crisp silhouettes. No on-screen text, no captions.",
+  "duration": 5,
+  "resolution": "720p",
+  "aspect_ratio": "16:9",
+  "generate_audio": false,
+  "reference_images": [
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(4595682 chars)",
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(3078906 chars)",
+   "data:image/png;base64,iVBORw0KGgoAAAANSU...(2666666 chars)"
+  ],
+  "image": "data:image/jpeg;base64,/9j//gAPTGF2YzYxL...(71907 chars)",
+  "use_virtual_avatar": true
+ },
+ "genlog_line": 527,
+ "genlog": {
+  "t": "2026-10-01T00:03:54",
+  "tag": "plate:countdown_drift",
+  "out": [
+   "media/plates/countdown_drift/take2.mp4"
+  ],
+  "secs": 221.0
+ },
+ "first_frame": "take1.first.jpg (= hero_sunrise take1 frame 1)",
+ "reference_images": "plate_specs.R keys in order ['LT', 'LF', 'SHIP']",
+ "spec": "countdown_drift_2",
+ "archived": "media/archive/plates/countdown_drift_take2.*", "use": "not used (the hose loop curled into a double coil; I6 only ever showed the first second of a take)",
+ "recreate": "python3 tools/plates.py countdown_drift_2  (lands as the next take of countdown_drift)"
+}

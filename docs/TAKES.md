@@ -268,6 +268,19 @@ Specs in `tools/plate_specs.py` (round 3), made with `python3 tools/plates.py <i
 | `countdown_drift` | 1 (5 s) | I6 countdown: gentle drift of him and the coiled tether, orbital night, no sunrise (gain pinned to hero_sunrise's 1.38) | first frame = `hero_sunrise` take1 frame 1 |
 | `card_by_fire` | 1 (6 s) | L5: he takes a small flat card (not a folded sheet, FACTS §4) from his lining by the fire and smiles; push-in onto the card | first frame = `fire_night_v2` take1 at 2.2 s; refs DRAW, LF |
 
+### Round 4 takes (2026-10-01, her notes on 0:14 and 0:33; defaults in the film, old versions behind flags)
+
+Specs `tether_drift_2`, `countdown_drift_3` (and the unused `countdown_drift_2`) in `tools/plate_specs.py`; a spec with
+`out_id` lands as the next take of that plate (`python3 tools/plates.py tether_drift_2` → `media/plates/tether_drift/take2.mp4`).
+Alternate takes are installed as their own renderer plates `<id>_t<N>` (960x540 frames, `plate_meta.py`, `plate_masks.py`;
+`plate_meta.faceless()` follows the base spec), so the old take stays reachable.
+
+| plate (renderer id) | take | what | in the film |
+|---|---|---|---|
+| `tether_drift` (`tether_drift_t2`) | 2 (8 s, genlog 526) | a soft cable hanging slack in loose curves as he drifts down, **snapping taut at 4.95–5.04 s** (the 1965 footage's held breath) with a tug that rebounds him toward the ship and lets the line bow again, re-taut by ~6.4 s | N1: 1x from 0.25 s so the snap lands on "trace" (18.59 s) and the gold trace completes on it; the two motion-blurred in-between frames are skipped (one-drawing snap). `TETHER2` re-measured (11 points, rows every 0.5 s and every 1/12 s through 4.5–6.5 s). `?n1=old` = take 1 |
+| `countdown_drift` (`countdown_drift_t3`) | 3 (5 s, genlog 528) | **first and last frame = hero_sunrise frame 1** (`last_frame_image`, first use here: accepted); the hose loop sways, turns edge-on and back | I6: forwards 2.8 → 5.0 s (≈1.7x easing to rest) landing on hero_sunrise's first frame; gain pinned 1.38 like take 1. `?i6=old` = take 1 backwards |
+| `countdown_drift` | 2 (genlog 527) | the hose curled into a double coil | unused: `media/archive/plates/countdown_drift_take2.*` |
+
 New legacy stills (`tools/legacy_stills.py`, round 3): `leg_tiangong` (T-shaped Tiangong, take 2: take 1 had a hard edge on
 the Earth), `leg_shenzhou7` (Zhai Zhigang in Feitian waving the flag, Liu Boming in Orlan-M at the hatch, 27 Sep 2008;
 replaces `leg_yang_liwei`), `leg_curiosity` (sky crane touchdown, Gale Crater, 6 Aug 2012 UTC).

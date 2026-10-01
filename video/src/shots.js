@@ -611,14 +611,14 @@ async function initShots() {
   // first frame; hero_sunrise then takes over and eases up to 1x so that it reaches the sunrise on "Orbital" exactly as H1a
   // plays it (tpHero). The frame pans to H1a's framing (ox 180) over the hero part, so the cut to H1a has no jump.
   // Round 4 (her note: the tether should float and sway, not hang rigid): countdown_drift take 3 (countdown_drift_t3) starts
-  // AND ends on hero_sunrise's first frame with the hose swaying and turning in between, so it plays forwards, its last 1.6 s
-  // at ≈1.4x easing to rest on that frame. ?i6=old: take 1 played backwards into its first frame (the hose barely moved).
+  // AND ends on hero_sunrise's first frame with the hose swaying and turning in between, so it plays forwards, its last 2.2 s
+  // at ≈1.7x easing to rest on that frame. ?i6=old: take 1 played backwards into its first frame (the hose barely moved).
   const I6_OLD = new URLSearchParams(location.search).get('i6') === 'old';
   const I6_HERO = 1.4;                                        // seconds of hero_sunrise before the cut to H1a
   const i6Map = t => {                                        // → [plate, plate time]
     const s0 = O(20.5), tm = hk0 - I6_HERO;
     if (t < tm) { const u = clamp((t - s0) / (tm - s0));
-      return I6_OLD ? ['countdown_drift', (tm - s0) * .6 * (1 - u) * (1 - u)] : ['countdown_drift_t3', 5.0 - 1.6 * Math.pow(1 - u, 1.5)]; }
+      return I6_OLD ? ['countdown_drift', (tm - s0) * .6 * (1 - u) * (1 - u)] : ['countdown_drift_t3', 5.0 - 2.2 * Math.pow(1 - u, 1.3)]; }
     const D = I6_HERO, Hh = tpHero(hk0), c = (1 - 2 * Hh / D) / (D * D), a = (Hh - c * D * D * D) / (D * D), x = clamp(t - tm, 0, D);
     return ['hero_sunrise', a * x * x + c * x * x * x];      // h(0) = 0, h'(0) = 0, h(D) = tpHero(hk0), h'(D) = 1
   };
