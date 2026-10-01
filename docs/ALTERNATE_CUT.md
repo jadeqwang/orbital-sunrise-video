@@ -496,3 +496,17 @@ rembg model). It installs / checks:
   with `extend_ending.py` + `vocal_stem.py`, not byte-identical).
 - Needs her: the new lyrics and their placement, the new master (+ stem), suit/sleeve, ending/ritardando choice, which
   lines she appears in, every face/lip pick, the relay secret and gateway credit.
+
+## Round 6: the cable collides with him (2026-10-01, her note on 0:33)
+
+"The cosmonaut clips through the tether." The round-5 cable only hid itself behind him where its z > 0, so a loop could
+change sides inside his silhouette and his drift / the push-in swept him through it. Now (both N1 and I6 → H1a) his
+body is a collision solid in the simulation (`tether.js` `collide`): a signed distance field per subject matte of the plate
+shown (`loadBodySDF`: his component of `m%04d.png`, exact EDT), blended between mattes per substep so he sweeps the cable
+along instead of tunnelling, as a slab ±T deep thinning to his edge. Every cable point keeps a side (in front / behind)
+that changes only outside his silhouette, so a loop gets round him only past his edge; behind points are hidden by his
+matte. Inside, points are pushed sideways along the field near the edge, in depth to their side deeper in. The points at
+the attachment (I6: 3 at the hip, on his edge; N1: 6 at the waist) are exempt. Still precomputed once per shot (async now,
+the mattes load first), length error ≤ 0.1 % (I6) / 0.9 % (N1, as round 5). `?tether=r5` = round 5.
+Check (`--q=tetherstats`: cable points inside his displayed silhouette whose drawn side flips inside it): I6+H1a 720
+points in 60 of 144 frames → 0; points inside his body volume 361 → 0. N1: 0 → 0 (2 → 0 in his volume).
