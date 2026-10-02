@@ -88,6 +88,13 @@ function simulateRope(o) {
       X[a + 2] += s * pz; if (still) Xp[a + 2] += s * pz;
     }
   };
+  // o.keepOut(x, y, i) → the corrected [x, y] for point i, or null where it is clear: a no-go region in the picture (e.g.
+  // the ship's hull: N1's slack must not drift up along it, where it reads as a second cord flickering against the outline)
+  const keepOut = () => {
+    if (!o.keepOut) return;
+    for (let i = 1; i < n; i++) { const a = i * 3, q = o.keepOut(X[a], X[a + 1], i); if (!q) continue;
+      if (still) { Xp[a] += q[0] - X[a]; Xp[a + 1] += q[1] - X[a + 1]; } X[a] = q[0]; X[a + 1] = q[1]; }
+  };
   const sides = () => {     // a point changes side only outside his silhouette (+ margin); the exempt end inherits
     if (!fld) return;
     const m = C.m ?? 2;
@@ -98,6 +105,7 @@ function simulateRope(o) {
   const project = () => {   // restore every segment's length (ends pinned: infinite mass)
     for (let it = 0; it < iters; it++) {
       if (fld && it % 2 === 1) collide();
+      keepOut();
       if (it % 3 === 0) for (let j = 0; j + 2 <= n; j++) {
         const a = j * 3, b = a + 6, dx = X[b] - X[a], dy = X[b + 1] - X[a + 1], dz = X[b + 2] - X[a + 2], l = Math.hypot(dx, dy, dz) || 1e-9;
         if (l >= dMin) continue;
@@ -116,7 +124,7 @@ function simulateRope(o) {
         X[b] -= wb * c * dx; X[b + 1] -= wb * c * dy; X[b + 2] -= wb * c * dz;
       }
     }
-    collide();
+    collide(); keepOut();
   };
   const step = t => {
     const a = o.endA(t), b = o.endB(t);
