@@ -249,6 +249,17 @@ frame-identical to the round 4–5 render (checked against it), so `release/exte
 from that render with the redraw's 270 drawing frames re-rendered from the main tree (`FRAMES=<dir> tools/encode_release.sh`);
 audio unchanged, so the 320k MP3 stands. The blank-card encodes are kept outside the repo.
 
+## Release 2026-10-02: montage names, the N1 tether fix
+
+Two shots changed since the 2026-10-01 files (25e2120), and only those were re-rendered onto that release's own frames
+(decoded from its 1080p HEVC, so the untouched shots carry one extra generation of compression):
+- `N1_tether` (0:13.9–0:20.5, frames 333–491): the simulated tether's slack no longer drifts up along the hull (`keepOut`
+  in `simulateRope`), and the generated ship's under-hull fitting (no such part on the real Voskhod 2) is no longer outlined.
+- `L7_legacy` (3:45–3:56, frames 5401–5664): the 12 milestones with the names of the people on human missions (1969 Apollo 11
+  … 2024 Polaris Dawn; Gemini 4 and Artemis II out, Salyut 7 / Savitskaya and Hayabusa in), new stills for Apollo 11,
+  Savitskaya and Hayabusa (`tools/legacy_stills.py` round 4). `docs/SHOTLIST.md` has the list.
+Edge frames of the neighbouring shots (332, 492, 5399, 5400, 5665) are the 2026-10-01 frames. Audio unchanged.
+
 ## 0. Ask her first (only she can supply these)
 
 1. **The new lyric text**, line by line, and where each new line goes (which section, before/after which existing line).

@@ -10,6 +10,8 @@
   [`release/extended/Orbital_Sunrise_extended_1080p.mp4`](release/extended/Orbital_Sunrise_extended_1080p.mp4) (HEVC) and
   [`release/extended/Orbital_Sunrise_extended_720p_h264.mp4`](release/extended/Orbital_Sunrise_extended_720p_h264.mp4) (H.264).
   Leonov's drawing (1:40, 3:59) is shown as a colored-pencil redraw while permission to show the original is pending with the museum and his family.
+  Release of 2026-10-02: the montage names the people on each human mission (Savitskaya and Hayabusa in), and the tether
+  at 0:14 stays off the hull.
   How it was retimed: [`docs/ALTERNATE_CUT.md`](docs/ALTERNATE_CUT.md)
 
 A colored-pencil drawing redrawn twelve times a second is about the hardest thing there is to
