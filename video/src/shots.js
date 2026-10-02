@@ -536,6 +536,11 @@ async function initShots() {
       TETHER_R6 ? (f, i, P, sd) => sd[i] > 0 : (f, i, P) => P[i * 3 + 2] >= -1 && i / rope.n > .5, N1_EX, N1_BODY)));
     return rope;
   })());
+  // a small fitting under the hull of the generated ship (no such part on the real Voskhod 2): its faint outline blinked on
+  // and off with the drawing; no contour strokes centred inside these boxes (plate px at 960x540; the plate is a locked-off shot)
+  const N1_KNOB = [[282, 122, 316, 150], [348, 156, 366, 172]], DBG_KNOB = Q.has('knob');
+  const n1Knob = (X, Y, z) => { const x = ((X - W / 2) / (W * z) + .5) * 960, y = ((Y - H / 2) / (H * z) + .5 / z + .003) * 540;
+    return N1_KNOB.some(([x0, y0, x1, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1) ? 0 : 1; };
   shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
     paper(G, 'night');
     const e = smooth(clamp(lt / dur)), z = lerp(1.03, 1.13, e);
@@ -554,7 +559,9 @@ async function initShots() {
     const cap = 'TETHER · 5.35 M', capF = FONT.mono(24, 700), lx = 850;
     await drawPlate(t, N1_OLD ? 'tether_drift' : rope ? TD1.plate : 'tether_drift_t2', tpN1, { ...(N1_OLD ? {} : { hold: tpN1 }), view: { zoom: z, cy: .5 / z + .003 },
       hatch: { spacing: 6.5, mask: quiet([[rx - 520, 150, rx + 30, 450], [lx - 610, 440, lx + 20, 570]], .75) },
+      contour: { mask: (X, Y) => n1Knob(X, Y, z) }, sil: { mask: (X, Y) => n1Knob(X, Y, z) },
       extra: (pen, F, view, dIdx) => {
+        if (DBG_KNOB) for (const [x0, y0, x1, y1] of N1_KNOB) { const s = (x, y) => [W / 2 + (x / 960 - .5) * W * z, H / 2 + (y / 540 - (.5 / z + .003)) * H * z], [a0, b0] = s(x0, y0), [a1, b1] = s(x1, y1); pen.poly([[a0, b0], [a1, b0], [a1, b1], [a0, b1], [a0, b0]], 'verm', 2, 1, 0); }
         if (rope) {   // round 5: the simulated cable, then the gold trace along it (by arc length from the hatch)
           const P = rope.at(drawClock(t, 12).tq), toS = (x, y) => view.toScreen(x / TD1.w - .5 / F.aw, y / TD1.h - .5 / F.ah);
           // he covers the cable where it passes behind him (z ≥ 0 inside his matte): it meets him at his waist, from behind
