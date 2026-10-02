@@ -71,6 +71,20 @@ STILLS.update({
         "and lowers the car-sized six-wheeled Curiosity rover on three thin nylon cables and an umbilical; the rover's six wheels are unfolded and just about to touch the dust, its mast and the "
         "white finned power unit at its back visible. Mount Sharp rises hazy in the background under a butterscotch-pink sky. " + LOOK,
 })
+# round 4 (2026-10-02): Apollo 11 without an Earth on the horizon (at Tranquility Base it stood high overhead), the first
+# woman in open space, and Japan's first asteroid sample coming home. Real people are drawn suited, visors down, no faces.
+STILLS.update({
+    "leg_moon": "20 July 1969, Apollo 11 at Tranquility Base on the Moon: the gold-foil-wrapped Apollo lunar module Eagle stands on its four spindly legs on flat grey dusty regolith; "
+        "beside it one astronaut in a white Apollo A7L moonsuit with a white backpack and a lowered gold visor (no face visible) takes a step, leaving deep boot prints in the fine dust. "
+        "Low sun from behind the camera, long black shadows. Pure black sky above with no Earth, no stars and no horizon objects in it. Only one astronaut in frame. " + LOOK,
+    "leg_savitskaya": "25 July 1984, the first spacewalk by a woman: outside the Soviet Salyut 7 space station (a long grey-green and white cylindrical station with three large dark-blue solar panels), "
+        "a cosmonaut in a white Soviet Orlan semi-rigid spacesuit with a white backpack built into the suit's back; the opaque mirror-gold sun visor is fully lowered over the whole face opening, so no face, skin or eyes can be seen at all, only the reflection of the Earth in the gold works at a small grey test panel on the hull "
+        "with a hand-held electron-beam welding tool connected by a cable to a boxy instrument case, a bright blue-white spark at its tip. A second cosmonaut in the same suit, also with an opaque fully lowered gold visor, holds a handrail a little behind her, filming. Plain white suits with no patches, flags or emblems. "
+        "The curved blue Earth below, black sky, hard sunlight. " + LOOK,
+    "leg_hayabusa": "13 June 2010, night over the Woomera desert in South Australia: the Japanese Hayabusa probe returns from asteroid Itokawa and burns up in the atmosphere as a long, brilliant, "
+        "fragmenting orange-white fireball streaking diagonally across a starry night sky, shedding glowing pieces; just ahead of it a single small, separate, steady bright point of light, "
+        "the sample capsule, falling safely on its own path. Below, the dark flat red-earth outback horizon with a few low scrub bushes in silhouette. Long-exposure astrophotography look. " + LOOK,
+})
 REFS = {"leg_survivors": ["media/chars/leonov_faces.png", "media/chars/belyayev_faces.png"]}
 
 

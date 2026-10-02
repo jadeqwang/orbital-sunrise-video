@@ -1157,22 +1157,22 @@ async function initShots2() {
   });
   // skiers in sheepskin coats bring warm clothes; the cosmonauts by the fire in their linings
   // The montage keeps its span, beats LEG_END − 30 → LEG_END (≈214.9 → 225.8 s, after L6's rescue), so twelve milestones share
-  // 30 beats: the six with the longer lines get 3 beats, the others 2 (alternating, so the cuts stay on the beat without a
-  // monotone rhythm). Years in order; every line names its mission.
+  // 30 beats: the six with the longer lines (and a crew line) get 3 beats, the others 2. Years in order; every line names
+  // its mission, and a human mission names its people: the headline names who did the first, the smaller crew line the rest.
   const LEG_SPAN = 30, LEG_END = Bn(610);                                            // the legacy montage ends on beat 610 (≈225.81 s)
-  const LEG = [   // [year, line (≤ 8 words after the mission name, docs/FACTS.md §6), plate, framing (cx, cy, zoom) in the right-hand panel, beats]
-    ['1965', 'GEMINI 4 — ED WHITE WALKS IN SPACE', 'leg_gemini', [.64, .5, 1.1], 3],
-    ['1969', 'APOLLO 11 — PEOPLE WALK ON THE MOON', 'leg_moon', [.68, .47, 1.08], 2],
-    ['1975', 'APOLLO–SOYUZ — LEONOV SHAKES HANDS IN ORBIT', 'leg_handshake', [.63, .52, 1.3], 3],
-    ['2000', 'ISS — FIFTEEN NATIONS, ONE STATION', 'leg_station', [.56, .5, 1.06], 2],
-    ['2008', "SHENZHOU 7 — ZHAI ZHIGANG, CHINA'S FIRST SPACEWALK", 'leg_shenzhou7', [.6, .46, 1.1], 3],   // 27 Sep 2008, Feitian suit
-    ['2012', 'CURIOSITY — A SKY CRANE LOWERS A ROVER ONTO MARS', 'leg_curiosity', [.65, .5, 1.12], 2],    // 6 Aug 2012 UTC, Gale Crater
-    ['2014', 'ROSETTA / PHILAE — A LANDER ON A COMET', 'leg_philae', [.72, .56, 1.7], 2],
-    ['2019', "CHANG'E 4 — FIRST SOFT LANDING ON THE MOON'S FAR SIDE", 'leg_change4', [.6, .5, 1.08], 3],
-    ['2022', "TIANGONG — CHINA'S SPACE STATION IS COMPLETE", 'leg_tiangong', [.65, .42, 1.06], 2],      // T shape, Mengtian berthed Nov 2022
-    ['2023', "CHANDRAYAAN-3 — INDIA LANDS NEAR THE MOON'S SOUTH POLE", 'leg_chandrayaan3', [.68, .45, 1.1], 3],   // Chandrayaan-3 landed at ~69°S: near, not at, the pole
-    ['2024', 'POLARIS DAWN — THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.62, .5, 1.12], 2],
-    ['2026', 'ARTEMIS II — FOUR PEOPLE AROUND THE MOON AGAIN', 'leg_artemis', [.68, .5, 1.12], 3],
+  const LEG = [   // [year, line (docs/FACTS.md §6), plate, framing (cx, cy, zoom) in the right-hand panel, beats, crew line or '']
+    ['1969', 'APOLLO 11 — ARMSTRONG AND ALDRIN WALK ON THE MOON', 'leg_moon', [.72, .45, 1.0], 3, 'COLLINS FLIES COLUMBIA OVERHEAD'],
+    ['1975', 'APOLLO–SOYUZ — LEONOV AND STAFFORD SHAKE HANDS IN ORBIT', 'leg_handshake', [.63, .52, 1.3], 3, 'WITH KUBASOV, BRAND AND SLAYTON'],   // 17 Jul 1975
+    ['1984', 'SALYUT 7 — SVETLANA SAVITSKAYA, THE FIRST WOMAN IN OPEN SPACE', 'leg_savitskaya', [.6, .52, 1.3], 3, 'WITH VLADIMIR DZHANIBEKOV'],   // 25 Jul 1984, 3 h 35 min
+    ['2000', 'ISS — FIFTEEN NATIONS, ONE STATION', 'leg_station', [.56, .5, 1.06], 2, 'EXPEDITION 1: SHEPHERD, GIDZENKO, KRIKALEV MOVE IN'],   // 2 Nov 2000
+    ['2008', "SHENZHOU 7 — ZHAI ZHIGANG, CHINA'S FIRST SPACEWALK", 'leg_shenzhou7', [.6, .46, 1.1], 3, 'WITH LIU BOMING AND JING HAIPENG'],   // 27 Sep 2008, Feitian suit
+    ['2010', 'HAYABUSA — A CRIPPLED PROBE BRINGS HOME THE FIRST ASTEROID DUST', 'leg_hayabusa', [.62, .45, 1.08], 3, ''],   // Itokawa; capsule landed at Woomera, 13 Jun 2010
+    ['2012', 'CURIOSITY — A SKY CRANE LOWERS A ROVER ONTO MARS', 'leg_curiosity', [.65, .5, 1.12], 2, ''],    // 6 Aug 2012 UTC, Gale Crater
+    ['2014', 'ROSETTA / PHILAE — A LANDER ON A COMET', 'leg_philae', [.72, .56, 1.7], 2, ''],
+    ['2019', "CHANG'E 4 — FIRST SOFT LANDING ON THE MOON'S FAR SIDE", 'leg_change4', [.6, .5, 1.08], 2, ''],
+    ['2022', "TIANGONG — CHINA'S SPACE STATION IS COMPLETE", 'leg_tiangong', [.65, .42, 1.06], 2, 'CHEN DONG, LIU YANG AND CAI XUZHE ABOARD'],   // Shenzhou 14 crew; Mengtian berthed Nov 2022
+    ['2023', "CHANDRAYAAN-3 — INDIA LANDS NEAR THE MOON'S SOUTH POLE", 'leg_chandrayaan3', [.68, .45, 1.1], 2, ''],   // Chandrayaan-3 landed at ~69°S: near, not at, the pole
+    ['2024', 'POLARIS DAWN — ISAACMAN AND GILLIS MAKE THE FIRST COMMERCIAL SPACEWALK', 'leg_commercial', [.62, .5, 1.12], 3, 'WITH POTEET AND MENON'],   // 12 Sep 2024
   ];
   const LEG_B0 = LEG_END - LEG_SPAN, lg0 = B(LEG_B0), lg1 = B(LEG_END), PX = 640;
   const LEG_AT = LEG.reduce((a, it) => [...a, a[a.length - 1] + it[4]], [0]);          // each item's first beat, from LEG_B0
@@ -1185,7 +1185,7 @@ async function initShots2() {
   // team Earth: one milestone per LEG item, cut on the beat
   shot('L7_legacy', lg0, lg1, async (t, lt) => {
     paper(G, 'night');
-    const bb = beatPos(t) + 1e-4 - LEG_B0, i = clamp(LEG_AT.findIndex(b => b > bb) - 1, 0, LEG.length - 1), [yr, line, plate, fr] = LEG[i], it0 = B(LEG_B0 + LEG_AT[i]), age = t - it0;
+    const bb = beatPos(t) + 1e-4 - LEG_B0, i = clamp(LEG_AT.findIndex(b => b > bb) - 1, 0, LEG.length - 1), [yr, line, plate, fr, , crew] = LEG[i], it0 = B(LEG_B0 + LEG_AT[i]), age = t - it0;
     if (PLATES[plate]) {
       // the drawing grows out from the subject over the first beat, then keeps boiling
       const rv = easeOut(clamp(age / .4)), cx = PX + (W - PX) / 2, cy = H / 2, R0 = Math.hypot(W - PX, H) / 2;
@@ -1196,6 +1196,11 @@ async function initShots2() {
     const Lt = typeLayer();
     text(Lt.g, yr, 110, 420, { font: FONT.impact(230), col: 'white', alpha: clamp(age / .1) });
     tele(Lt.g, line, 116, 500, t, it0 + .06, { size: 30, weight: 800, col: 'white', dur: .35, wrap: 470 });
+    if (crew) {   // the crew, smaller, under however many lines the headline wrapped to (tele's own wrap rule)
+      const f = FONT.mono(30, 800); let n = 1, cur = '';
+      for (const w of line.split(' ')) { const tryL = cur ? cur + ' ' + w : w; if (cur && measure(Lt.g, tryL, f, 1.5) > 470) { n++; cur = w; } else cur = tryL; }
+      tele(Lt.g, crew, 116, 500 + n * 30 * 1.35 + 16, t, it0 + .3, { size: 22, weight: 700, col: 'silver', dur: .3, wrap: 470 });
+    }
     typeFlush(Lt, drawClock(t, 12).n, .3);
   });
 
