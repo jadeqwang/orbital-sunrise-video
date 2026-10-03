@@ -249,6 +249,21 @@ frame-identical to the round 4–5 render (checked against it), so `release/exte
 from that render with the redraw's 270 drawing frames re-rendered from the main tree (`FRAMES=<dir> tools/encode_release.sh`);
 audio unchanged, so the 320k MP3 stands. The blank-card encodes are kept outside the repo.
 
+## Your own drawing on the two cards (1:40 and 3:59)
+
+The songwriter may draw the sunrise herself (coloured pencils and crayons) to stand in for Leonov's card. Nothing else in the
+film needs to change, and nothing else is re-rendered:
+1. Put the photo or scan of her card anywhere in the repo (e.g. `media/refs/user_drawing_photo.jpg`; a phone photo at an
+   angle on a table is fine) and run `python3 tools/install_user_drawing.py <photo> [--credit="..."]`. Look at
+   `video/data/user_drawing_check.jpg`: the red outline must sit on the card's four edges (if not, pass `--corners=x,y,...`,
+   the card's corners in photo pixels). It writes `video/data/user_drawing.jpg` + `.json` (commit both).
+2. Proof: `node render.mjs --sheet=101,102.5,105.5,239.5,240.5,244.5 --cols=3 --q=drawing=user --out=out/user.jpg` (in `video/`).
+   Her drawing is shown as it is (its own texture), in the card's place at its own aspect, wiping on from the left during the
+   shot, with the credit line from the `.json` under it (default "Drawing: Jade Wang, after Alexei Leonov's «Sunrise» (1965)").
+3. Make it the default: `LD_DEFAULT = 'user'` in `video/src/shots2.js` (or keep passing `--q=drawing=user`).
+4. Release: `python3 tools/splice_release.py D5_the_drawing C1_drawing` (re-renders only those two shots onto the current
+   release's frames and re-encodes both files; those two shots use no plates, so nothing else has to be rebuilt).
+
 ## Release 2026-10-02: montage names, the N1 tether fix
 
 Two shots changed since the 2026-10-01 files (25e2120), and only those were re-rendered onto that release's own frames

@@ -74,7 +74,12 @@ async function leonovDrawing(t, k, view, o = {}) {
 //   ?drawing=v1      the round-3 version (leonovDrawing, needs the plate; also not for public use)
 //   ?drawing=photo   the museum photo of the real drawing, for a licensed cut: needs media/refs/leonov_drawing_real_photo.jpg
 //                    (served by render.mjs as refs/...); without it, it falls back to the redraw. It carries the credit line.
-const LD_MODE = (m => ['blank', 'public'].includes(m) ? 'public' : ['v1', 'photo'].includes(m) ? m : 'redraw')(new URLSearchParams(location.search).get('drawing'));
+//   ?drawing=user    the songwriter's own drawing of the sunrise (also ?drawing=mine): video/data/user_drawing.jpg + .json,
+//                    installed from a photo or scan by tools/install_user_drawing.py; shown as it is (its own pencil and crayon
+//                    texture), in the card's place at its own aspect, with the draw-on wipe, a hair of boil and her credit line.
+//                    Without the file: the redraw. To make it the default, set LD_DEFAULT to 'user'.
+const LD_DEFAULT = 'redraw';
+const LD_MODE = (m => ['blank', 'public'].includes(m) ? 'public' : ['user', 'mine'].includes(m) ? 'user' : ['v1', 'photo', 'redraw', 'crayon'].includes(m) ? (m === 'crayon' ? 'redraw' : m) : LD_DEFAULT)(new URLSearchParams(location.search).get('drawing'));
 const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
 const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
 const LD_CONTRAST = { black: 1.35, black_over: 1.35, blue: 1.2, deep_blue: 1.12, light_blue: 1, yellow: 1.1, orange_red: 1.4 };   // and flat: T^γ per pencil
@@ -89,9 +94,13 @@ const LD_STYLE = {
   deep_blue: { len: [40, 130], w: [1.6, 3.2], k: 5, dev: .06, ap: .55, th: .85 },   // pressed harder where it is darkest
   black_over: { len: [30, 100], w: [1.4, 2.6], k: 1.6, dev: .07, ap: .32, th: .9 },   // black laid over the blues where he did
 };
-let LD = null, LD_PHOTO = null;
+let LD = null, LD_PHOTO = null, LD_USER = null;
 async function ldInit() {
   if (LD_MODE === 'v1' || LD_MODE === 'public') return;
+  if (LD_MODE === 'user') {
+    try { const m = await loadJSON('data/user_drawing.json'); LD_USER = { ...m, img: await loadImage('data/user_drawing.jpg') }; }
+    catch (e) { console.warn('drawing=user: no video/data/user_drawing.jpg/.json (tools/install_user_drawing.py); drawing the redraw'); }
+  }
   try { LD = await loadJSON('data/leonov_drawing.json'); } catch (e) { console.warn('no data/leonov_drawing.json: the v1 drawing'); return; }
   const dec = s => Uint8Array.from(atob(s), c => c.charCodeAt(0)), G0 = LD.grid;
   LD.pencils.forEach(p => { p.c = dec(p.cov); p.Tc = p.T.map(v => Math.pow(v, LD_CONTRAST[p.name] ?? 1.2)); });
@@ -242,6 +251,7 @@ function ldCard(cw, k, d) {
 // the card on screen: centre (cx, cy), width cw px, rotation rot; k: draw-on progress; returns the card's screen height.
 // Photo mode (licensed): the museum photo of the card (cropped above the pencil box that covers its lower edge) in its place.
 function drawLeonovCard(t, k, cx, cy, cw, rot = 0, o = {}) {
+  if (LD_USER) return drawUserCard(t, k, cx, cy, cw, rot, o);
   const d = drawClock(t, o.rate ?? 12).n, photo = LD_MODE === 'photo' && LD_PHOTO;
   const ch = cw * LD.card.h / LD.card.w * (photo ? LD.card.photo_crop_v : 1), u = cw / LD.card.w;
   G.save(); G.translate(cx, cy); G.rotate(rot);
@@ -263,8 +273,31 @@ function drawLeonovCard(t, k, cx, cy, cw, rot = 0, o = {}) {
   G.save(); G.translate(cx, cy); G.rotate(rot); G.strokeStyle = o.night ? 'rgba(255,255,255,.10)' : 'rgba(60,50,40,.28)'; G.lineWidth = 1.2; G.strokeRect(-cw / 2, -ch / 2, cw, ch); G.restore();
   return ch;
 }
-const ldPhoto = () => LD_MODE === 'photo' && !!LD_PHOTO;
-const ldRedraw = () => LD_MODE !== 'v1' && !!LD;
+// ?drawing=user: her drawing (a straightened, white-balanced photo of her card) in the card's place. Its own aspect: the width
+// given, unless the card would be taller than o.maxH (then narrower). k: the draw-on, a soft ragged wipe from the left (the
+// redraw's order), so the drawing still appears while the shot plays; then a hair of boil (half a pixel, on the drawing clock).
+function drawUserCard(t, k, cx, cy, cw, rot = 0, o = {}) {
+  const U = LD_USER, d = drawClock(t, o.rate ?? 12).n;
+  let w = cw, h = cw * U.h / U.w; const maxH = o.maxH ?? 900; if (h > maxH) { w *= maxH / h; h = maxH; }
+  G.save(); G.translate(cx + (hash(d * 7 + 1) - .5) * .9, cy + (hash(d * 7 + 2) - .5) * .9); G.rotate(rot);
+  G.save(); G.shadowColor = o.night ? 'rgba(0,0,0,.6)' : 'rgba(40,30,20,.22)'; G.shadowBlur = o.night ? 40 : 34; G.shadowOffsetY = o.night ? 10 : 12;
+  G.fillStyle = rgbHex(...U.rgb); G.fillRect(-w / 2, -h / 2, w, h); G.restore();
+  G.beginPath();
+  if (k >= 1) G.rect(-w / 2, -h / 2, w, h);
+  else {   // the wipe's edge: ragged, a few pencil-widths deep, leaning like the strokes
+    const x = -w / 2 + (w + 120) * k - 60, n = 24;
+    G.moveTo(-w / 2, -h / 2); for (let i = 0; i <= n; i++) { const y = -h / 2 + h * i / n; G.lineTo(x + (i / n - .5) * 50 + (hash2(i, 77) - .5) * 46, y); } G.lineTo(-w / 2, h / 2);
+  }
+  G.clip(); G.imageSmoothingEnabled = true; G.imageSmoothingQuality = 'high';
+  G.drawImage(U.img, -w / 2, -h / 2, w, h);
+  G.restore();
+  G.save(); G.translate(cx, cy); G.rotate(rot); G.strokeStyle = o.night ? 'rgba(255,255,255,.10)' : 'rgba(60,50,40,.28)'; G.lineWidth = 1.2; G.strokeRect(-w / 2, -h / 2, w, h); G.restore();
+  return h;
+}
+const ldUser = () => !!LD_USER;
+const ldPhoto = () => (LD_MODE === 'photo' && !!LD_PHOTO) || ldUser();                       // a credit line under the card
+const ldCredit = () => LD_USER ? LD_USER.credit : LD_CREDIT;
+const ldRedraw = () => LD_MODE !== 'v1' && (!!LD || ldUser());
 
 // ---- ?drawing=blank: no likeness of his drawing (the blank-card cut, default from f77f594 until the crayon redraw returned) ----
 // The songwriter's decision then: his «Sunrise» is not shown, nor any imitation of it (the crayon redraw is a derivative of his
@@ -543,10 +576,10 @@ async function initShots2() {
     if (ldRedraw()) {
       // round 4: his card at its own shape and tone, large, the drawing laid on stroke by stroke (drawLeonovCard)
       const dx = Math.sin(lt * .6) * 12, dy = Math.cos(lt * .5) * 8, rot = Math.sin(lt * .4) * .022, ph = ldPhoto();
-      drawLeonovCard(t, easeOut(clamp(lt / (dur * .7))), W / 2 + dx, (ph ? H / 2 - 44 : H / 2 - 26) + dy, 1330, rot, { night: true });
+      drawLeonovCard(t, easeOut(clamp(lt / (dur * .7))), W / 2 + dx, (ph ? H / 2 - 44 : H / 2 - 26) + dy, 1330, rot, { night: true, maxH: 860 });
       const Lt = typeLayer();
       tele(Lt.g, 'THE FIRST WORK OF ART MADE IN SPACE', W / 2 - 330, ph ? H - 78 : H - 40, t, bt(49), { size: 28, weight: 800, col: 'gold', dur: .8 });
-      if (ph) tele(Lt.g, LD_CREDIT, W / 2, H - 34, t, bt(48), { size: 16, col: 'silver', alpha: .7, align: 'center', instant: true });
+      if (ph) tele(Lt.g, ldCredit(), W / 2, H - 34, t, bt(48), { size: 16, col: 'silver', alpha: .7, align: 'center', instant: true });
       typeFlush(Lt, d, .3);
       return;
     }
@@ -1224,8 +1257,8 @@ async function initShots2() {
       // round 4: the card itself on the page, large, under the handwritten line
       paper(G, 'snow');
       const ph = ldPhoto();
-      drawLeonovCard(t, easeOut(clamp(lt / 1.6)), W / 2, ph ? 600 : 652, 1100, -.012, { rate: 8 });
-      if (ph) { const Lt = typeLayer(); tele(Lt.g, LD_CREDIT, W / 2, H - 40, t, CARD1, { size: 16, col: 'lead', alpha: .85, align: 'center', instant: true }); typeFlush(Lt, drawClock(t, 8).n, .3); }
+      drawLeonovCard(t, easeOut(clamp(lt / 1.6)), W / 2, ph ? 600 : 652, 1100, -.012, { rate: 8, maxH: 640 });
+      if (ph) { const Lt = typeLayer(); tele(Lt.g, ldCredit(), W / 2, H - 40, t, CARD1, { size: 16, col: 'lead', alpha: .85, align: 'center', instant: true }); typeFlush(Lt, drawClock(t, 8).n, .3); }
     } else { paper(G, 'snow'); await leonovDrawing(t, easeOut(clamp(lt / 1.6)), { zoom: .8, ox: 120, oy: 130 }, { rate: 8 }); }
     handwrite(t, 'The cosmonauts and the artwork survived.', W / 2, 200, CARD1 + .6, CARD1 + 3.0, { size: 88, align: 'center', col: 'graphite' });
   });
