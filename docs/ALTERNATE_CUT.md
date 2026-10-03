@@ -264,6 +264,15 @@ film needs to change, and nothing else is re-rendered:
 4. Release: `python3 tools/splice_release.py D5_the_drawing C1_drawing` (re-renders only those two shots onto the current
    release's frames and re-encodes both files; those two shots use no plates, so nothing else has to be rebuilt).
 
+## Release 2026-10-03: her skin colour at 0:44, the hull's underside at 0:15–0:18
+
+Spliced onto the 2026-10-02 release's own frames (the pre-encode frame set, so no extra generation for the rest):
+- `N1_tether` (frames 334–491) re-rendered: no outline for the generated hull's shadowed underside (`maskClip`), the cable's
+  slack kept well below the hull.
+- `H1d_home` (0:44, frames 1065–1111) graded with `tools/skin_grade.py` (her pick "B + even 1": k 0.35, flat 0.45). This is a
+  post step the renderer does not do: a full render or a re-render of that shot must run it after
+  (`tools/splice_release.py H1d_home --grade=H1d_home`); never on already graded frames.
+
 ## Release 2026-10-02: montage names, the N1 tether fix
 
 Two shots changed since the 2026-10-01 files (25e2120), and only those were re-rendered onto that release's own frames
