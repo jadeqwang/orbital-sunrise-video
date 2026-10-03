@@ -530,7 +530,7 @@ async function initShots() {
     const SD = (TETHER_R6 || TETHER_STATS) ? await loadBodySDF(TD1.plate, [...need].sort((a, b) => a - b), f => wa[clamp(f - 1, 0, wa.length - 1)], { cell: 1, pad: 24 }) : null;
     const field = (t, blend = true) => bodyAtFrame(SD, clamp(tpAt(t) * 24 + 1, 1, nP), blend);
     const rope = simulateRope({ name: 'N1', t0, t1, L: TD1.L, n: 56, endA: () => [TD1.hatch[0], TD1.hatch[1], 0], endB: waist, seed: 11, turns: 1.1, damp: .3, bend: .06, rMin: 16, iters: 80, sub: 16, pre: 1.2, drift: 6,
-      keepOut: (x, y, i) => { const yMin = TD1.hatch[1] + Math.min(18, 4.5 * i); return y < yMin ? [x, yMin] : null; },   // off the hull: the cable leaves the hatch downward (its bottom edge is the hatch's row)
+      keepOut: (x, y, i) => { const yMin = TD1.hatch[1] + Math.min(18, 4.5 * i) + (x < TD1.hatch[0] - 14 ? 52 * smooth(clamp((TD1.hatch[0] - 14 - x) / 24)) : 0); return y < yMin ? [x, yMin] : null; },   // off the hull: the cable leaves the hatch downward (its bottom edge is the hatch's row), and under the ship (left of the hatch) it stays ~70 px below the hull, so slack never lies along it
       ...(TETHER_R6 ? { collide: { field, ...N1_BODY, h: .75, exemptB: N1_EX } } : {}) });
     if (TETHER_STATS) console.warn('tether N1 ' + (TETHER_R6 ? 'r6' : 'r5') + ' ' + JSON.stringify(ropeClipStats(rope, f => field(t0 + f / 24, false),
       TETHER_R6 ? (f, i, P, sd) => sd[i] > 0 : (f, i, P) => P[i * 3 + 2] >= -1 && i / rope.n > .5, N1_EX, N1_BODY)));
@@ -562,7 +562,7 @@ async function initShots() {
     const cap = 'TETHER · 5.35 M', capF = FONT.mono(24, 700), lx = 850;
     await drawPlate(t, N1_OLD ? 'tether_drift' : rope ? TD1.plate : 'tether_drift_t2', tpN1, { ...(N1_OLD ? {} : { hold: tpN1 }), view: { zoom: z, cy: .5 / z + .003 },
       hatch: { spacing: 6.5, mask: quiet([[rx - 520, 150, rx + 30, 450], [lx - 610, 440, lx + 20, 570]], .75) },
-      contour: { mask: (X, Y) => n1Knob(X, Y, z) }, sil: { mask: (X, Y) => n1Knob(X, Y, z) },
+      contour: { mask: (X, Y) => n1Knob(X, Y, z), maskClip: true }, sil: { mask: (X, Y) => n1Knob(X, Y, z) },
       extra: (pen, F, view, dIdx) => {
         if (DBG_KNOB) for (const [x0, y0, x1, y1] of N1_KNOB) { const s = (x, y) => [W / 2 + (x / 960 - .5) * W * z, H / 2 + (y / 540 - (.5 / z + .003)) * H * z], [a0, b0] = s(x0, y0), [a1, b1] = s(x1, y1); pen.poly([[a0, b0], [a1, b0], [a1, b1], [a0, b1], [a0, b0]], 'verm', 2, 1, 0); }
         if (rope) {   // round 5: the simulated cable, then the gold trace along it (by arc length from the hatch)

@@ -293,7 +293,20 @@ function contourField(pen, F, view, o = {}) {
       acc += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]);
       if (acc >= stepA || k === pts.length - 1) { sp.push(view.toScreen(pts[k][0] / aw, pts[k][1] / ah)); acc = 0; }
     }
-    let m = 1; if (mask) { const mid = sp[sp.length >> 1]; m = mask(mid[0], mid[1]); if (m < .05) continue; }
+    let m = 1; if (mask) {
+      const mid = sp[sp.length >> 1]; m = mask(mid[0], mid[1]); if (m < .05) continue;
+      // o.maskClip: a stroke that runs into a cleared region (its midpoint outside it: one long stroke starting on a kept edge)
+      // is cut there, keeping its longest run of points outside every cleared region
+      if (o.maskClip) {
+        let best = [0, 0], s0 = -1;
+        for (let k = 0; k <= sp.length; k++) {
+          const ok = k < sp.length && mask(sp[k][0], sp[k][1]) >= .05;
+          if (ok && s0 < 0) s0 = k; else if (!ok && s0 >= 0) { if (k - s0 > best[1] - best[0]) best = [s0, k]; s0 = -1; }
+        }
+        if (best[1] - best[0] < 3) continue;
+        if (best[1] - best[0] < sp.length) sp.splice(0, sp.length, ...sp.slice(best[0], best[1]));
+      }
+    }
     if (o.reveal !== undefined && o.reveal < 1) {
       const mid = sp[sp.length >> 1], key = o.revealKey ? o.revealKey(mid[0], mid[1], hash(i)) : hash(i);
       if (key > o.reveal) continue;
