@@ -536,9 +536,12 @@ async function initShots() {
       TETHER_R6 ? (f, i, P, sd) => sd[i] > 0 : (f, i, P) => P[i * 3 + 2] >= -1 && i / rope.n > .5, N1_EX, N1_BODY)));
     return rope;
   })());
-  // a small fitting under the hull of the generated ship (no such part on the real Voskhod 2): its faint outline blinked on
-  // and off with the drawing; no contour strokes centred inside these boxes (plate px at 960x540; the plate is a locked-off shot)
-  const N1_KNOB = [[282, 122, 316, 150], [348, 156, 366, 172]], DBG_KNOB = Q.has('knob');
+  // the generated ship's faint parts that the contour and silhouette passes caught on some drawings only, so they blinked:
+  // a small fitting under the hull (no such part on the real Voskhod 2), and the hull's shadowed underside below its drawn
+  // bottom line (a curve hanging under the ship that read as loose tether; the cable is drawn separately and is unaffected).
+  // No contour strokes centred inside these boxes (plate px at 960x540; the plate is a locked-off shot); the box below the
+  // hull stops short of the hatch (x 462) so nothing of the airlock's rim is lost
+  const N1_KNOB = [[282, 122, 316, 150], [348, 156, 366, 172], [326, 154, 454, 184]], DBG_KNOB = Q.has('knob');
   const n1Knob = (X, Y, z) => { const x = ((X - W / 2) / (W * z) + .5) * 960, y = ((Y - H / 2) / (H * z) + .5 / z + .003) * 540;
     return N1_KNOB.some(([x0, y0, x1, y1]) => x >= x0 && x <= x1 && y >= y0 && y <= y1) ? 0 : 1; };
   shot('N1_tether', L1[1].t0 - .05, L1[2].t0 - .05, async (t, lt, dur) => {
