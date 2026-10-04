@@ -9,6 +9,10 @@
 * **Extended cut** (this branch; the re-recorded extended mix, two new intro lines, her round 1–5 notes; 4:12, 252.28 s):
   [`release/extended/Orbital_Sunrise_extended_1080p.mp4`](release/extended/Orbital_Sunrise_extended_1080p.mp4) (HEVC) and
   [`release/extended/Orbital_Sunrise_extended_720p_h264.mp4`](release/extended/Orbital_Sunrise_extended_720p_h264.mp4) (H.264).
+  The renderer defaults to the supplied original artwork for the cards at 1:40 and 3:59.
+  The prepared PNG retains the approved crop, colors and pencil texture from the local artwork edit.
+  The committed releases and earlier exports still have the placeholder; use exports with `original_artwork` in their names.
+  Details: [`docs/ARTWORK_EXPORTS.md`](docs/ARTWORK_EXPORTS.md).
   Leonov's drawing (1:40, 3:59) is shown as a colored-pencil redraw while permission to show the original is pending with the museum and his family.
   Release of 2026-10-03: the montage names the people on each human mission (Savitskaya and Hayabusa in), the tether at
   0:14–0:20 stays clear of the hull, and the singer's skin colour at 0:44 is warmer and more natural.
@@ -106,6 +110,34 @@ Open `video/studio.html` through any static server to scrub the film interactive
 The analysis data (`video/plates/*/meta.json`, `index.json`) is in the repo; the plate
 frames and mattes are regenerated from the Seedance takes with `tools/pipeline.sh`
 (the takes themselves are not committed).
+
+### High-quality 4K upload master
+
+`bash tools/encode_youtube.sh` renders the approved 4:12 extended cut to lossless 1080p PNGs, reapplies the approved
+skin correction at 0:44, then upscales with Lanczos to 3840×2160 at 24 fps. The H.264 encode uses CRF 12, the slow preset,
+grain tuning, 4:2:0 and BT.709. The committed extended AAC audio is copied without another audio encode.
+The output is `video/out/masters/Orbital_Sunrise_extended_original_artwork_4K_master.mp4`; it and the resumable frames are gitignored.
+This master is not constrained by the repository's 100 MB file limit.
+
+For a fresh checkout, restore the plate frames and masks first with `tools/prepare_upload_assets.py` in a Python environment
+with Pillow, OpenCV, NumPy, rembg/ONNX Runtime and MediaPipe 0.10.14. It uses the committed takes, the approved index and
+the original airlock/tether preparation tools, preserving the edit's metadata. The skin grade also needs the face model
+listed in `tools/setup_env.sh`. In this workspace those dependencies are isolated under `video/out/.venv`, with ffmpeg
+and the duration probe on `video/out/bin` and the models under `/tmp/work`.
+Set `PYTHON`, `CHROME`, `FRAMES`, `OUT`, `WORKERS` or `CRF` to override the defaults. Frame rendering resumes;
+the two artwork shots and the skin shot are rendered afresh so a retry cannot keep stale art or grade the same pixels twice.
+
+For smaller upload copies, run `video/out/.venv/bin/python tools/encode_uploads.py youtube` and
+`video/out/.venv/bin/python tools/encode_uploads.py x`. These reuse the approved graded PNG frames and make separate
+H.264 copies at 4K/45 Mbps (YouTube, about 1.43 GB) and 1080p/12 Mbps (X, about 390 MB), using two-pass variable bitrate,
+the slow preset and grain tuning. The X copy uses High profile, level 4.1, four reference frames, and a 16 Mbps
+maximum video bitrate to improve upload compatibility after the 4K/35 Mbps copy failed to upload.
+The extended AAC mix is copied, each complete file is decoded and verified,
+and the archival master checksum is checked before and after. Outputs and logs are under `video/out/uploads/`;
+the script refuses to overwrite existing exports. The corrected filenames include `original_artwork`.
+The encoder verifies the artwork and cached card-frame hashes before and after encoding to prevent using stale placeholder
+frames. Add `--sample=skin --start=44.375 --duration=4` to review a short sample.
+`video/out/.venv/bin/python tools/encode_artwork_master.py` makes a separate corrected CRF-12 master under `video/out/masters/`.
 
 ## Facts on screen
 

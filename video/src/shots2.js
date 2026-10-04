@@ -68,17 +68,17 @@ async function leonovDrawing(t, k, view, o = {}) {
 // the stroke direction field, the sun disc). Here that becomes a few thousand generated pencil strokes, each pencil
 // laid on a supersampled card layer and pressed into the card's tooth: light pressure catches only the grain's peaks,
 // heavy pressure fills the valleys (the waxy look). The card is 1000 units wide.
-//   (default)        this redraw (also ?drawing=crayon / redraw): the public cut while permission to show the original is
+//   ?drawing=redraw  this redraw (also ?drawing=crayon): the earlier cut while permission to show the original was
 //                    pending with the museum and his family
 //   ?drawing=blank   no likeness of his drawing at all: his blank card (pubCabin / pubPage below; also ?drawing=public)
 //   ?drawing=v1      the round-3 version (leonovDrawing, needs the plate; also not for public use)
 //   ?drawing=photo   the museum photo of the real drawing, for a licensed cut: needs media/refs/leonov_drawing_real_photo.jpg
 //                    (served by render.mjs as refs/...); without it, it falls back to the redraw. It carries the credit line.
-//   ?drawing=user    the songwriter's own drawing of the sunrise (also ?drawing=mine): video/data/user_drawing.jpg + .json,
+//   ?drawing=user    the supplied sunrise card (also ?drawing=mine): video/data/user_drawing.json names its image,
 //                    installed from a photo or scan by tools/install_user_drawing.py; shown as it is (its own pencil and crayon
 //                    texture), in the card's place at its own aspect, with the draw-on wipe, a hair of boil and her credit line.
-//                    Without the file: the redraw. To make it the default, set LD_DEFAULT to 'user'.
-const LD_DEFAULT = 'redraw';
+//                    This is the default; a missing supplied asset fails rendering instead of substituting the redraw.
+const LD_DEFAULT = 'user';
 const LD_MODE = (m => ['blank', 'public'].includes(m) ? 'public' : ['user', 'mine'].includes(m) ? 'user' : ['v1', 'photo', 'redraw', 'crayon'].includes(m) ? (m === 'crayon' ? 'redraw' : m) : LD_DEFAULT)(new URLSearchParams(location.search).get('drawing'));
 const LD_SS = +(new URLSearchParams(location.search).get('ldss') || 2);       // card layer supersampling
 const LD_GAIN = 1.39;                                                         // the photo is dim: card × 1.39
@@ -98,8 +98,8 @@ let LD = null, LD_PHOTO = null, LD_USER = null;
 async function ldInit() {
   if (LD_MODE === 'v1' || LD_MODE === 'public') return;
   if (LD_MODE === 'user') {
-    try { const m = await loadJSON('data/user_drawing.json'); LD_USER = { ...m, img: await loadImage('data/user_drawing.jpg') }; }
-    catch (e) { console.warn('drawing=user: no video/data/user_drawing.jpg/.json (tools/install_user_drawing.py); drawing the redraw'); }
+    try { const m = await loadJSON('data/user_drawing.json'); LD_USER = { ...m, img: await loadImage('data/' + (m.image || 'user_drawing.jpg')) }; }
+    catch (e) { throw new Error('drawing=user: supplied artwork unavailable; install video/data/user_drawing.json and its image', { cause: e }); }
   }
   try { LD = await loadJSON('data/leonov_drawing.json'); } catch (e) { console.warn('no data/leonov_drawing.json: the v1 drawing'); return; }
   const dec = s => Uint8Array.from(atob(s), c => c.charCodeAt(0)), G0 = LD.grid;

@@ -1,0 +1,12 @@
+{
+  "image": "supplied_drawing_rectified.png",
+  "w": 950,
+  "h": 510,
+  "rgb": [180, 177, 157],
+  "credit": "A. Leonov, «Sunrise» (Восход), 1965 · Museum of the Yuri Gagarin Cosmonaut Training Centre, Star City",
+  "source": "sunrise_cropped_card.png",
+  "corners": [[38, 48], [970, 12], [991, 652], [29, 670]],
+  "rectified_size": [950, 630],
+  "crop": [0, 0, 950, 510],
+  "paper": "keep"
+}

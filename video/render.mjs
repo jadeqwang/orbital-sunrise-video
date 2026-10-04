@@ -3,6 +3,7 @@
 //   node render.mjs --stills=0.8,3,23.8 --out=out/test                          full-res stills (JPEG)
 //   node render.mjs --clip=0:6 [--fps=24] --out=out/test.mp4                    short clip with the song
 //   node render.mjs --frames=0:237.8 --workers=4                                full-res JPEG frames → out/frames (resumable)
+//   node render.mjs --frames=0:252.28 --format=png --dir=out/master_frames     lossless frames for an upload master
 //   node render.mjs --encode [--out=out/orbital_sunrise.mp4]                     frames + song → MP4
 //   node render.mjs ... --norit                                                  without the outro ritardando (the pre-2026-09-30 film)
 // Every frame is a pure function of song time t, so frames can be rendered in any order. All times given here (and frame
@@ -32,15 +33,18 @@ const probeDur = f => { try { return +execFileSync('ffprobe', ['-v', 'error', '-
 const DUR = probeDur(SONG), fps = +(args.fps || 24);
 console.log(`audio ${SONG.replace(resolve('..') + '/', '')} (${DUR.toFixed(2)} s, ${Math.ceil(DUR * fps)} frames), time map ${RIT ? 'on' : 'off (--norit)'}`);
 const FRAMES_DIR = args.dir || 'out/frames';
+const FORMAT = args.format || 'jpg';
+if (!['jpg', 'png'].includes(FORMAT)) throw new Error('--format must be jpg or png');
+const FRAME_TYPE = FORMAT === 'png' ? 'image/png' : 'image/jpeg';
 const W = +(args.width || 1920), H = +(args.height || 1080);
 
 const run = (cmd, a) => new Promise((ok, bad) => { const p = spawn(cmd, a, { stdio: 'inherit' }); p.on('close', c => c ? bad(new Error(cmd + ' exited ' + c)) : ok()); });
 
 if (args.encode) {
-  const out = args.out || 'out/orbital_sunrise.mp4', n = readdirSync(FRAMES_DIR).filter(f => f.endsWith('.jpg')).length;
+  const out = args.out || 'out/orbital_sunrise.mp4', n = readdirSync(FRAMES_DIR).filter(f => f.endsWith('.' + FORMAT)).length;
   mkdirSync(dirname(out), { recursive: true });
   console.log(`encoding ${n} frames → ${out}`);
-  await run('ffmpeg', ['-y', '-loglevel', 'error', '-stats', '-framerate', String(fps), '-i', `${FRAMES_DIR}/f%05d.jpg`, '-i', SONG,
+  await run('ffmpeg', ['-y', '-loglevel', 'error', '-stats', '-framerate', String(fps), '-i', `${FRAMES_DIR}/f%05d.${FORMAT}`, '-i', SONG,
     '-map', '0:v', '-map', '1:a', '-c:v', 'libx264', '-preset', args.preset || 'slow', '-crf', String(args.crf || 16), '-pix_fmt', 'yuv420p',
     '-c:a', 'aac', '-b:a', '256k', '-movflags', '+faststart', '-shortest', out]);
   console.log('wrote ' + out);
@@ -69,8 +73,13 @@ async function openPage(tag = '') {
   await page.setViewport({ width: 1280, height: 720 });
   page.on('console', m => { if (['error', 'warn'].includes(m.type()) || args.verbose) console.log(`[page${tag}]`, m.text()); });
   page.on('pageerror', e => console.log(`[page error${tag}]`, e.message));
-  await page.goto(`http://127.0.0.1:${PORT}/studio.html?render&w=${W}&h=${H}${RIT ? '' : '&norit'}${args.q ? '&' + args.q : ''}`, { waitUntil: 'load' });
-  await page.waitForFunction('window.ready === true', { timeout: 900000, polling: 500 });
+  await Promise.race([
+    (async () => {
+      await page.goto(`http://127.0.0.1:${PORT}/studio.html?render&w=${W}&h=${H}${RIT ? '' : '&norit'}${args.q ? '&' + args.q : ''}`, { waitUntil: 'load' });
+      await page.waitForFunction('window.ready === true', { timeout: 900000, polling: 500 });
+    })(),
+    new Promise((_, reject) => page.once('pageerror', reject))
+  ]);
   return page;
 }
 const frameOf = async (page, t, type, q) => {
@@ -107,8 +116,8 @@ try {
   } else if (args.stills) {
     const page = await openPage(), out = args.out || 'out/stills'; mkdirSync(out, { recursive: true });
     for (const s of times(args.stills)) {
-      const t0 = Date.now(), buf = await frameOf(page, s, 'image/jpeg', 0.95);
-      const f = `${out}/t${s.toFixed(2).replace('.', '_')}.jpg`; writeFileSync(f, buf);
+      const t0 = Date.now(), buf = await frameOf(page, s, FRAME_TYPE, 0.95);
+      const f = `${out}/t${s.toFixed(2).replace('.', '_')}.${FORMAT}`; writeFileSync(f, buf);
       console.log(`${f}  ${Date.now() - t0} ms`);
     }
   } else if (args.frames) {
@@ -116,20 +125,20 @@ try {
     const [a, b] = String(args.frames).split(':').map(Number), workers = +(args.workers || 4);
     mkdirSync(FRAMES_DIR, { recursive: true });
     const first = Math.round(a * fps), last = Math.min(Math.ceil(DUR * fps) - 1, Math.round(b * fps) - 1);
-    const todo = []; for (let i = first; i <= last; i++) { const f = `${FRAMES_DIR}/f${String(i).padStart(5, '0')}.jpg`; if (args.force || !existsSync(f) || statSync(f).size < 1000) todo.push(i); }
+    const todo = []; for (let i = first; i <= last; i++) { const f = `${FRAMES_DIR}/f${String(i).padStart(5, '0')}.${FORMAT}`; if (args.force || !existsSync(f) || statSync(f).size < 1000) todo.push(i); }
     console.log(`${todo.length} frames to render (${last - first + 1 - todo.length} already done), ${workers} workers`);
     let next = 0, done = 0; const start = Date.now();
     const work = async w => {
       if (next >= todo.length) return;
       let page = await openPage('#' + w);
       while (next < todo.length) {
-        const i = todo[next++], f = `${FRAMES_DIR}/f${String(i).padStart(5, '0')}.jpg`;
+        const i = todo[next++], f = `${FRAMES_DIR}/f${String(i).padStart(5, '0')}.${FORMAT}`;
         let buf;
-        try { buf = await frameOf(page, i / fps, 'image/jpeg', 0.93); }
+        try { buf = await frameOf(page, i / fps, FRAME_TYPE, 0.93); }
         catch (e) { // a crashed or hung page: open a fresh one and retry this frame once
           console.log(`worker ${w}: frame ${i} failed (${e.message}); reopening page`);
           try { await page.close(); } catch (e2) { }
-          page = await openPage('#' + w); buf = await frameOf(page, i / fps, 'image/jpeg', 0.93);
+          page = await openPage('#' + w); buf = await frameOf(page, i / fps, FRAME_TYPE, 0.93);
         }
         writeFileSync(f + '.tmp', buf); renameSync(f + '.tmp', f);
         if (++done % 48 === 0 || done === todo.length) {

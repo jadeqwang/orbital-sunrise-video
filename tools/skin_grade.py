@@ -1,6 +1,6 @@
 """Natural skin colour on her face in finished frames (H1d_home, 0:44 "bring me home"; her pick 2026-10-03: "B + even 1").
 
-    python3 tools/skin_grade.py <frames dir> <first frame> <last frame> [--k=0.35] [--flat=0.45]
+    python3 tools/skin_grade.py <frames dir> <first frame> <last frame> [--k=0.35] [--flat=0.45] [--ext=png]
 
 Grades video/out/<dir>/f%05d.jpg in place. Her drawing there is nearly grey, so a hue test cannot find her skin: the mask is her
 face from MediaPipe face landmarks (FACE_MODEL, default /tmp/work/models/face_landmarker.task, as tools/plate_meta.py),
@@ -69,14 +69,20 @@ def grade(img, m, k=.35, flat=.45):
 def main(a):
     pos = [x for x in a if not x.startswith("--")]; opt = dict(x[2:].split("=", 1) for x in a if x.startswith("--"))
     d, f0, f1 = pathlib.Path(pos[0]), int(pos[1]), int(pos[2]); k, flat = float(opt.get("k", .35)), float(opt.get("flat", .45))
+    ext = opt.get("ext", "jpg")
+    if ext not in ("jpg", "png"): sys.exit("--ext must be jpg or png")
     miss = []
     for i in range(f0, f1 + 1):
-        p = d / f"f{i:05d}.jpg"; img = cv2.imread(str(p))
+        p = d / f"f{i:05d}.{ext}"; img = cv2.imread(str(p))
         if img is None: miss.append(i); continue
         m = face_mask(img)
         if m is None: miss.append(i); continue
-        cv2.imwrite(str(p), grade(img, m, k, flat), [cv2.IMWRITE_JPEG_QUALITY, 95])
+        options = [cv2.IMWRITE_PNG_COMPRESSION, 3] if ext == "png" else [cv2.IMWRITE_JPEG_QUALITY, 95]
+        if not cv2.imwrite(str(p), grade(img, m, k, flat), options):
+            sys.exit(f"could not write {p}")
     print(f"graded frames {f0}–{f1} (k {k}, flat {flat}); no face / no file: {miss or 'none'}")
+    if miss and opt.get("strict") == "1":
+        sys.exit("skin grade incomplete: " + ", ".join(map(str, miss)))
 
 
 if __name__ == "__main__":
