@@ -33,6 +33,7 @@ the singer's now, until at the landing they are the same drawing.
 | Treatment | [`docs/TREATMENT.md`](docs/TREATMENT.md) |
 | Style bible (paper, pencil box, strokes, type, motion) | [`docs/STYLE_BIBLE.md`](docs/STYLE_BIBLE.md) |
 | Shot list mapped to the beat grid | [`docs/SHOTLIST.md`](docs/SHOTLIST.md) |
+| Russian lyrics (three singable versions for a Suno cover) | [`lyrics/ru/`](lyrics/ru/) |
 | Design boards (style frames, character and set sheets) | [`media/boards/`](media/boards/) |
 
 ## Downloads

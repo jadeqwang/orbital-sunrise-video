@@ -1,0 +1,585 @@
+<title>Orbital Sunrise in Russian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&family=Oswald:wght@500;600;700&family=PT+Sans:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: one lyric sheet on the film's paper. Each section is a grid, English in the first column and
+   one column per Russian option, so lines align across options; at phone width each option becomes its own stanza.
+   Light = the film's Snow paper, dark = its Night paper; colours come from the film's pencil box. */
+:root {
+  --paper: #f3efe6; --sheet: #ebe5d8; --ink: #2b2a2e; --muted: #64626a; --rule: #d6cdbb;
+  --accent: #c32e1c; --link: #2f52c4; --gold: #ffc53d; --wash: rgba(255, 197, 61, .30); --pick-wash: 9%;
+  --oA: #3d63dd; --oB: #c9301c; --oC: #d4600c; --oD: #a8122a; --oE: #26318f;
+  --display: "Oswald", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --ru: "PT Serif", Georgia, "Times New Roman", serif;
+  --en: "Instrument Serif", "PT Serif", Georgia, serif;
+  --body: "PT Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --band: linear-gradient(90deg, #a8122a, #ef3b24 14%, #ff7a1a 28%, #ffc53d 42%, #f4efe6 54%, #7fb3ff 66%, #3d63dd 80%, #26318f 92%, #0d0c10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0d0c10; --sheet: #16141b; --ink: #f4efe6; --muted: #a9b0bd; --rule: #2c2934;
+    --accent: #ef3b24; --link: #7fb3ff; --gold: #ffc53d; --wash: rgba(255, 197, 61, .16); --pick-wash: 14%;
+    --oA: #7fb3ff; --oB: #ef3b24; --oC: #ff7a1a; --oD: #e8546a; --oE: #9aa3ff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0d0c10; --sheet: #16141b; --ink: #f4efe6; --muted: #a9b0bd; --rule: #2c2934;
+  --accent: #ef3b24; --link: #7fb3ff; --gold: #ffc53d; --wash: rgba(255, 197, 61, .16); --pick-wash: 14%;
+  --oA: #7fb3ff; --oB: #ef3b24; --oC: #ff7a1a; --oD: #e8546a; --oE: #9aa3ff;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 16px/1.5 var(--body); }
+a { color: var(--link); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 120px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+#units { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; }
+
+/* header */
+header { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.telemetry { font: 600 11px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font: 700 clamp(40px, 7vw, 76px)/.9 var(--display); text-transform: uppercase; letter-spacing: .01em; text-wrap: balance; }
+.echo { font: 600 clamp(18px, 2.8vw, 28px)/1 var(--display); color: var(--accent); letter-spacing: .04em; }
+.band { height: 6px; border-radius: 3px; background: var(--band); max-width: 520px; }
+.lead { max-width: 64ch; font-size: 18px; margin: 4px 0 0; }
+
+.intro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 16px 32px; }
+.intro-grid > * { min-width: 0; }
+.box h2, .options h2, .mix h2, .suno h2 { font: 600 14px/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px; }
+.box p, .box ol { margin: 0 0 8px; max-width: 64ch; }
+.box ol { padding-left: 20px; }
+.ru-note { font-family: var(--ru); }
+.status { font-size: 14px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 10px; }
+.status strong { color: var(--ink); }
+
+.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px 28px; }
+.options > div { min-width: 0; }
+.opt-head { display: flex; align-items: baseline; gap: 10px; }
+.letter { font: 700 30px/1 var(--display); color: var(--c); }
+.opt-name { font: 700 18px/1.2 var(--ru); }
+.opt-en { font-size: 13px; color: var(--muted); }
+.options p { margin: 6px 0 0; font-size: 15px; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; font-size: 14px; color: var(--muted); }
+.controls label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.legend { font-size: 14px; color: var(--muted); max-width: 90ch; }
+.legend .syl, .legend .end { color: var(--ink); }
+
+/* sections */
+section.unit { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; scroll-margin-top: 12px; }
+.unit-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; border-bottom: 2px solid var(--ink); padding-bottom: 6px; }
+.unit-head h2 { margin: 0; font: 700 28px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; }
+.unit-sub { color: var(--muted); font-size: 14px; }
+.unit-time { font: 400 12px/1 var(--mono); color: var(--muted); margin-left: auto; }
+
+.play { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--rule); background: var(--paper); border-radius: 999px; padding: 3px 10px 3px 8px; font: 600 12px/1.4 var(--mono); cursor: pointer; color: var(--ink); }
+.play:hover { border-color: var(--ink); }
+.play svg { width: 10px; height: 10px; fill: currentColor; }
+.play[disabled] { opacity: .45; cursor: default; }
+
+.cmp { display: grid; grid-template-columns: minmax(0, .82fr) repeat(var(--n), minmax(0, 1fr)); column-gap: 0; }
+.cell { grid-row: var(--r); grid-column: var(--col); padding: 8px 14px; min-width: 0; border-left: 1px solid var(--rule); transition: background-color .2s; }
+.cell.c1 { border-left: 0; padding-left: 0; }
+.cell.row:not(.picked) { background: color-mix(in srgb, var(--ink) 4%, transparent); }
+.cell.picked { background: color-mix(in srgb, var(--c) var(--pick-wash), transparent); }
+.cell.hot { background: var(--wash); }
+.cell.picked.hot { background: color-mix(in srgb, var(--gold) 30%, color-mix(in srgb, var(--c) var(--pick-wash), transparent)); }
+
+.col-head { display: grid; gap: 6px; padding-bottom: 10px; }
+.col-head .row1 { display: flex; align-items: baseline; gap: 8px; }
+.col-head .letter { font-size: 24px; }
+.col-head .opt-name { font-size: 16px; }
+.col-head .underline { height: 3px; border-radius: 2px; background: var(--c); opacity: .85; width: 56px; }
+.en-head { font: 600 12px/1.4 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); align-self: end; }
+
+.pick { justify-self: start; border: 1.5px solid var(--c); color: var(--c); background: transparent; border-radius: 999px; padding: 2px 12px; font: 600 13px/1.5 var(--body); cursor: pointer; }
+.pick[aria-pressed="true"] { background: var(--c); color: var(--paper); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; min-height: 0; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+.chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--dot, var(--muted)); display: inline-block; }
+
+.en-line { display: grid; gap: 4px; }
+.en-text { font: italic 400 20px/1.25 var(--en); }
+.role { font: 600 10px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.en-meta { display: flex; gap: 10px; align-items: center; }
+.ru-line { display: grid; gap: 2px; }
+.ru-text { font: 400 18px/1.35 var(--ru); }
+.gloss { font: italic 400 13.5px/1.35 var(--body); color: var(--muted); }
+.meta { font: 400 11px/1.4 var(--mono); color: var(--muted); display: flex; gap: 8px; }
+.ask { font-size: 13px; line-height: 1.35; color: var(--accent); }
+.ask b { font-family: var(--mono); font-size: 11px; }
+.note { font-size: 13.5px; line-height: 1.45; color: var(--muted); padding-top: 10px; }
+body.no-gloss .gloss, body.no-gloss .note { display: none; }
+
+.extra { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.extra-title { font: 600 13px/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.extra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 0; border-top: 1px solid var(--rule); }
+.card { padding: 10px 14px; display: grid; gap: 8px; border-left: 1px solid var(--rule); min-width: 0; }
+.card:first-child { border-left: 0; padding-left: 0; }
+.card.picked { background: color-mix(in srgb, var(--c) var(--pick-wash), transparent); }
+
+.talk { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; }
+.talk label { font: 600 12px/1.4 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); color: var(--ink); font: 15px/1.45 var(--body); padding: 8px 10px; }
+textarea:focus { border-color: var(--ink); outline: none; }
+.others { display: grid; gap: 6px; font-size: 14px; align-content: start; }
+.others .who { font-weight: 700; }
+.others .empty { color: var(--muted); }
+
+/* mix */
+.mix { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.mix-table { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 8px; }
+.mix-table div { border: 1px solid var(--rule); border-radius: 6px; padding: 8px 10px; display: grid; gap: 2px; }
+.mix-table .u { font: 600 12px/1.3 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.mix-table .v { font: 700 16px/1.3 var(--ru); }
+.mix-table .v.unset { color: var(--muted); font-weight: 400; font-style: italic; font-family: var(--body); font-size: 14px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tabs button { border: 1px solid var(--rule); background: transparent; border-radius: 999px; padding: 4px 12px; cursor: pointer; font-size: 14px; }
+.tabs button[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+#sheet { min-height: 360px; font: 14px/1.55 var(--mono); background: var(--sheet); }
+.row-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn { border: 0; background: var(--accent); color: #fff; border-radius: 6px; padding: 8px 16px; font: 700 15px/1.2 var(--body); cursor: pointer; }
+.btn.secondary { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+.flash { font-size: 14px; color: var(--muted); }
+
+.suno ol { margin: 0; padding-left: 20px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; max-width: 72ch; }
+code { overflow-wrap: anywhere; }
+.suno code { font: 13px/1.4 var(--mono); background: var(--sheet); padding: 1px 5px; border-radius: 4px; }
+footer { font-size: 13px; color: var(--muted); display: grid; gap: 6px; max-width: 90ch; }
+
+/* player */
+.player { position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; background: var(--sheet); border-top: 1px solid var(--rule);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); }
+.player-in { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; gap: 14px; min-width: 0; }
+.pp { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--ink); color: var(--paper); display: grid; place-items: center; cursor: pointer; flex: none; }
+.pp svg { width: 14px; height: 14px; fill: currentColor; }
+.pp[disabled] { opacity: .4; cursor: default; }
+.clock { font: 600 13px/1 var(--mono); flex: none; font-variant-numeric: tabular-nums; }
+.now { min-width: 0; flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: italic 17px/1.3 var(--en); }
+.now small { font: 400 12px/1 var(--mono); color: var(--muted); font-style: normal; margin-right: 8px; }
+.seek { flex: 0 1 260px; min-width: 80px; accent-color: var(--accent); }
+
+@media (max-width: 760px) {
+  .cmp { display: flex; flex-direction: column; }
+  .cell { order: calc(var(--col) * 100 + var(--r)); border-left: 0; padding-left: 10px; padding-right: 10px; }
+  .cell.c1 { padding-left: 0; }
+  .cell.head:not(.c1) { margin-top: 14px; border-top: 1px solid var(--rule); padding-top: 12px; }
+  .cell.c1:not(.head) { padding-block: 4px; }
+  .talk { grid-template-columns: minmax(0, 1fr); }
+  .card { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); }
+  .seek { display: none; }
+  .unit-time { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .cell { transition: none; } }
+</style>
+
+<audio id="song" preload="metadata">
+  <source src="audio/orbital_sunrise.mp3" type="audio/mpeg">
+  <source src="../../release/extended/Orbital_Sunrise_extended.mp3" type="audio/mpeg">
+</audio>
+
+<div class="wrap">
+  <header>
+    <div class="telemetry">18.03.1965 · Восход-2 · extended cut 4:12 · 164 bpm</div>
+    <h1>Orbital Sunrise</h1>
+    <div class="echo">ОРБИТАЛЬНЫЙ ВОСХОД · ПО-РУССКИ</div>
+    <div class="band" aria-hidden="true"></div>
+    <p class="lead">Three singable Russian versions of the lyric. Pick the best version of each section; you can mix sections from different versions, and the mix at the bottom becomes the lyric sheet for Suno.</p>
+  </header>
+
+  <div class="intro-grid">
+    <div class="box">
+      <h2>How to judge</h2>
+      <ol>
+        <li>For each section, pick the version you would rather hear sung.</li>
+        <li>Write a note for anything that sounds translated, clumsy, unintentionally funny, or stressed on the wrong syllable.</li>
+        <li>Lines in red carry a specific question.</li>
+        <li><b>▶</b> plays that line of the English song. Try singing the Russian over it.</li>
+      </ol>
+      <p class="status" id="status">Your picks are saved in this browser.</p>
+    </div>
+    <div class="box ru-note" lang="ru">
+      <h2>Для носителя языка</h2>
+      <p>Здесь три варианта русского текста к песне о выходе Леонова в открытый космос. Это не подстрочник: текст должен петься на ту же мелодию, поэтому важны ритм, ударения и рифма.</p>
+      <p>Для каждого фрагмента отметьте вариант, который звучит лучше всего. Напишите, если что-то звучит неестественно, как перевод, смешно, или если ударение падает не туда. Кнопка ▶ включает эту строку песни по-английски: попробуйте напеть русский вариант поверх.</p>
+    </div>
+  </div>
+
+  <div class="options" id="options"></div>
+
+  <div class="controls">
+    <label><input type="checkbox" id="opt-stress" checked> Stress marks</label>
+    <label><input type="checkbox" id="opt-gloss" checked> Back-translations and notes</label>
+  </div>
+  <p class="legend">Stress is marked with an accent (ё is always stressed). <span class="syl">9/9</span> = syllables in the Russian line / in the English line it replaces. <span class="end">↓</span> = the line ends on a stressed syllable, so that vowel gets the long note the English holds.</p>
+
+  <div id="units"></div>
+
+  <section class="mix" id="mix">
+    <h2>Your mix</h2>
+    <div class="mix-table" id="mix-table"></div>
+    <div class="tabs" role="group" aria-label="Sheet to show">
+      <button type="button" data-sheet="mix" aria-pressed="true">My mix</button>
+      <button type="button" data-sheet="A" aria-pressed="false">Full A</button>
+      <button type="button" data-sheet="B" aria-pressed="false">Full B</button>
+      <button type="button" data-sheet="C" aria-pressed="false">Full C</button>
+      <button type="button" data-sheet="picks" aria-pressed="false">My picks as text</button>
+    </div>
+    <textarea id="sheet" readonly spellcheck="false" aria-label="Lyric sheet"></textarea>
+    <div class="row-actions">
+      <button type="button" class="btn" id="copy">Copy</button>
+      <span class="flash" id="flash" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="suno">
+    <h2>Using it in Suno</h2>
+    <ol>
+      <li>Start from the 4:12 extended mix (<code>release/extended/Orbital_Sunrise_extended.mp3</code>) with Suno's Cover, using your voice persona as usual.</li>
+      <li>Paste the sheet above as the lyrics. Keep the bracketed section tags; they are the same tags as the English sheet.</li>
+      <li>Add <code>Russian vocals</code> to your usual style prompt.</li>
+      <li>The pasted sheet has no stress marks, because accent marks don't help Suno. If Suno stresses a word wrongly, write that word's stressed vowel as a capital and generate again, e.g. <code>добралИсь</code>, <code>крУжится</code>. Change only the words it gets wrong.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <div>Details in the lines come from the project's fact sheet (<code>docs/FACTS.md</code>) and from Leonov's own accounts: silence that rang in his ears, hearing his heart, sweat up to his knees, choosing «карандаш, хорошая бумага». Real overshoot: a few hundred kilometres; «полторы тыщи вёрст» keeps the song's own figure.</div>
+    <div>Source of truth: <code>lyrics/ru/lines.json</code> in the repo; <code>tools/ru_lyrics.py</code> rebuilds the Suno sheets and this page's data from it.</div>
+  </footer>
+</div>
+
+<div class="player" role="region" aria-label="Song player">
+  <div class="player-in">
+    <button type="button" class="pp" id="pp" aria-label="Play"><svg viewBox="0 0 10 10" id="pp-icon"><path d="M2 1l7 4-7 4z"/></svg></button>
+    <span class="clock" id="clock">0:00 / 4:12</span>
+    <input type="range" class="seek" id="seek" min="0" max="252" step="0.1" value="0" aria-label="Position in song">
+    <span class="now" id="now"><small>▶ on any line</small>to hear it</span>
+  </div>
+</div>
+
+<script id="lyrics-data" type="application/json">{"audio":"release/extended/Orbital_Sunrise_extended.mp3","options":{"A":{"name":"Close to the English","ru":"Близко к тексту","file":"A_close.txt","concept":"Same images, same rhyme scheme and roughly the same syllable count, line by line. Keeps «Орбитальный восход», the red Cyrillic already on screen in the film."},"B":{"name":"Leonov's voice","ru":"Голос Леонова","file":"B_leonov.txt","concept":"Built from the record and from Leonov's own words: the 5-metre tether (фал), the pressure he dropped without telling the ground, sweat to the knees, head first into the airlock, steering by eye, the extra orbit, two nights in the taiga. The hook doubles as a radio call to the ship, because «Восход» means sunrise and is also the ship's name."},"C":{"name":"Russian song first","ru":"Песня","file":"C_song.txt","concept":"Written to sound like a Russian song rather than a translation: softer images, and words chosen so the stressed syllables land where the English stresses do. The hook «Вижу восход» echoes Gagarin's «Вижу Землю»."},"D":{"name":"Hook only: Первый восход","ru":"Первый восход","hookOnly":true,"concept":"C's hook with «Первый» ('first') in place of «Вижу», echoing «Первый человек» from the intro. Stressed on the first and fourth syllables, like 'Ór-bi-tal sun-ríse'."},"E":{"name":"Hook only: Солнце встаёт","ru":"Солнце встаёт","hookOnly":true,"concept":"A plain-speech hook ('the sun is rising'). Sings very easily, but loses the word «восход» and with it the ship's name."}},"units":[{"id":"intro","label":"Intro","en":[{"t":"First man floating in the void of space","syl":9,"t0":7.97,"t1":13.89},{"t":"Tied to the ship by the slightest trace","syl":9,"t0":13.89,"t1":20.51},{"t":"Pull him back to the ship's embrace","syl":8,"t0":20.51,"t1":26.26},{"t":"Can't feel his hands, can't feel his face","syl":8,"t0":26.26,"t1":32.54}],"A":{"lines":[{"ru":"Пе́рвый челове́к над пустото́й","plain":"Первый человек над пустотой","gloss":"The first man, above the void","syl":9,"end":true},{"ru":"Свя́зан с кораблём струно́й одно́й","plain":"Связан с кораблём струной одной","gloss":"Tied to the ship by a single string","syl":9,"end":true},{"ru":"Наза́д зовёт кора́бль родно́й","plain":"Назад зовёт корабль родной","gloss":"His dear ship calls him back","syl":8,"end":true},{"ru":"Не чу́ет рук, лица́ — едва́ живо́й","plain":"Не чует рук, лица — едва живой","gloss":"He can't feel his hands or his face; barely alive","syl":10,"end":true}],"note":"Keeps the English single rhyme (all four lines end in «-ой»). «Корабль родной» ('dear ship', literally 'native ship') is a warm, very Russian way to speak of a ship. «Едва живой» ('barely alive') is an everyday phrase for being utterly spent."},"B":{"lines":[{"ru":"Пе́рвый челове́к — и тишина́","plain":"Первый человек — и тишина","gloss":"The first man, and silence","syl":9,"end":true},{"ru":"Пять ме́тров фа́ла — то́нкая струна́","plain":"Пять метров фала — тонкая струна","gloss":"Five metres of tether, a thin string","syl":10,"end":true},{"ru":"Наза́д, к кораблю́ — а дверь тесна́","plain":"Назад, к кораблю — а дверь тесна","gloss":"Back to the ship, but the door is too tight","syl":9,"end":true},{"ru":"В перча́тках па́льцам — пустота́ одна́","plain":"В перчатках пальцам — пустота одна","gloss":"In the gloves, his fingers find only emptiness","syl":10,"end":true}],"note":"Leonov: «тишина такая, что звенит в ушах» (silence so deep it rang in his ears). «Фал» is the word Russian accounts use for his tether (5.35 m). As the suit ballooned, his fingertips no longer reached the glove tips.","ask":{"3":"Does «пальцам — пустота одна» read as fingers lost inside ballooned gloves?"}},"C":{"lines":[{"ru":"Пе́рвый челове́к в пустоте́ пари́т","plain":"Первый человек в пустоте парит","gloss":"The first man soars in the void","syl":10,"end":true},{"ru":"То́нкой ни́тью к кораблю́ приши́т","plain":"Тонкой нитью к кораблю пришит","gloss":"Sewn to the ship with a thin thread","syl":9,"end":true},{"ru":"Кора́бль к себе́ его́ мани́т","plain":"Корабль к себе его манит","gloss":"The ship beckons him back to itself","syl":8,"end":true},{"ru":"Рук не слы́шит — лишь се́рдце стучи́т","plain":"Рук не слышит — лишь сердце стучит","gloss":"He can't feel his hands, only his heart beating","syl":9,"end":true}],"note":"Single rhyme on «-ит». «Не слышать рук» is the idiom for numb hands. Leonov said that outside he could hear his own heart: «я слышал, как работает моё сердце»."}},{"id":"hook","label":"Hook","en":[{"t":"Orbital sunrise, burning gold","syl":8,"t0":35.81,"t1":40.99,"also":[[71.53,76.76],[154.16,159.24]]},{"t":"Orbital sunrise, bring me home","syl":8,"t0":41.46,"t1":47.25,"also":[[76.76,82.96]]},{"t":"Fall through the skies, bring me home","syl":7,"t0":159.83,"t1":165.46,"role":"Final chorus, line 2"},{"t":"Sun-rise… (bring me) home…","syl":5,"t0":92.38,"t1":100.47,"role":"Drop 1 chop","also":[[105.77,108.13],[108.13,110.99],[110.99,115.09]]}],"A":{"lines":[{"ru":"Орбита́льный восхо́д — золото́й","plain":"Орбитальный восход — золотой","gloss":"Orbital sunrise, golden","syl":9,"end":true},{"ru":"Орбита́льный восхо́д, верни́ домо́й","plain":"Орбитальный восход, верни домой","gloss":"Orbital sunrise, bring me home","syl":10,"end":true},{"ru":"Вниз сквозь небеса́ — верни́ домо́й","plain":"Вниз сквозь небеса — верни домой","gloss":"Down through the heavens, bring me home","syl":9,"end":true},{"ru":"Восхо́д… (верни́) домо́й…","plain":"Восход… (верни) домой…","gloss":"Sunrise… (bring me) home…","syl":6,"end":true}],"note":"Matches the film's on-screen «ОРБИТАЛЬНЫЙ ВОСХОД». «Золотой / домой» is a full rhyme. The cost: «Орбитальный» is four syllables where the melody has three quick notes for 'Or-bi-tal', and its stress falls on the third syllable while the melody leans on the first. D is the singer's alternative.","ask":{"0":"Does «Орбитальный» feel too long or too technical for a hook?"}},"B":{"lines":[{"ru":"Над Землёй восхо́д золото́й","plain":"Над Землёй восход золотой","gloss":"A golden sunrise over the Earth","syl":8,"end":true},{"ru":"«Восхо́д», «Восхо́д», верни́ домо́й","plain":"«Восход», «Восход», верни домой","gloss":"Voskhod, Voskhod, bring me home","syl":8,"end":true},{"ru":"Сквозь ого́нь, «Восхо́д», верни́ домо́й","plain":"Сквозь огонь, «Восход», верни домой","gloss":"Through the fire, Voskhod, bring me home","syl":9,"end":true},{"ru":"Восхо́д… (верни́) домо́й…","plain":"Восход… (верни) домой…","gloss":"Sunrise… (bring me) home…","syl":6,"end":true}],"note":"The first line is the sunrise; in the second, «Восход» is the ship, called like a radio call. (Not the real call sign: the crew were «Алмаз», the ground «Заря».) Five syllables before the comma, like 'Orbital sunrise'.","ask":{"1":"Does «Восход, Восход» sound like a radio call to the ship?"}},"C":{"lines":[{"ru":"Ви́жу восхо́д — ого́нь золото́й","plain":"Вижу восход — огонь золотой","gloss":"I see the sunrise, golden fire","syl":9,"end":true},{"ru":"Ви́жу восхо́д — верни́ домо́й","plain":"Вижу восход — верни домой","gloss":"I see the sunrise, bring me home","syl":8,"end":true},{"ru":"Па́даю вниз — верни́ домо́й","plain":"Падаю вниз — верни домой","gloss":"I'm falling, bring me home","syl":8,"end":true},{"ru":"Восхо́д… (верни́) домо́й…","plain":"Восход… (верни) домой…","gloss":"Sunrise… (bring me) home…","syl":6,"end":true}],"note":"«Ви́жу» puts the stress on the first note, as 'Ór-bi-tal' does, and the long note lands on «-хо́д». «Вижу…» echoes Gagarin's «Вижу Землю!».","ask":{"0":"Does «Вижу восход» call Gagarin's «Вижу Землю» to mind?"}},"D":{"lines":[{"ru":"Пе́рвый восхо́д — ого́нь золото́й","plain":"Первый восход — огонь золотой","gloss":"The first sunrise, golden fire","syl":9,"end":true},{"ru":"Пе́рвый восхо́д, верни́ домо́й","plain":"Первый восход, верни домой","gloss":"The first sunrise, bring me home","syl":8,"end":true},{"ru":"Па́даю вниз — верни́ домо́й","plain":"Падаю вниз — верни домой","gloss":"I'm falling, bring me home","syl":8,"end":true},{"ru":"Восхо́д… (верни́) домо́й…","plain":"Восход… (верни) домой…","gloss":"Sunrise… (bring me) home…","syl":6,"end":true}],"note":"The first sunrise anyone watched from open space. Stresses fall where the melody's do, and the long note lands on «-хо́д»."},"E":{"lines":[{"ru":"Со́лнце встаёт — ого́нь золото́й","plain":"Солнце встаёт — огонь золотой","gloss":"The sun is rising, golden fire","syl":9,"end":true},{"ru":"Со́лнце встаёт — верни́ домо́й","plain":"Солнце встаёт — верни домой","gloss":"The sun is rising, bring me home","syl":8,"end":true},{"ru":"Па́даю вниз — верни́ домо́й","plain":"Падаю вниз — верни домой","gloss":"I'm falling, bring me home","syl":8,"end":true},{"ru":"Восхо́д… (верни́) домо́й…","plain":"Восход… (верни) домой…","gloss":"Sunrise… (bring me) home…","syl":6,"end":true}],"note":"Everyday words, with the stress pattern of 'Orbital sunrise'."}},{"id":"pre","label":"Pre-chorus","sub":"Lines 1–2 come back at the start of the breakdown","en":[{"t":"So he bleeds the air out, breath by breath","syl":9,"t0":56.43,"t1":60.25,"also":[[116.07,119.54]]},{"t":"Dancing on the edge of a quiet death","syl":10,"t0":60.25,"t1":63.13,"also":[[119.54,122.32]]},{"t":"Let his air out through the suit he wore","syl":9,"t0":63.13,"t1":66.39},{"t":"Eternity inside the airlock door","syl":10,"t0":66.14,"t1":70.17}],"A":{"lines":[{"ru":"Он стра́вливает во́здух не спеша́","plain":"Он стравливает воздух не спеша","gloss":"He bleeds out the air, slowly, carefully","syl":10,"end":true},{"ru":"Танцу́ет с ти́хой сме́ртью, чуть дыша́","plain":"Танцует с тихой смертью, чуть дыша","gloss":"He dances with a quiet death, barely breathing","syl":10,"end":true},{"ru":"Сквозь скафа́ндр — на во́лю, на просто́р","plain":"Сквозь скафандр — на волю, на простор","gloss":"Through the suit, out to freedom, to open space","syl":9,"end":true},{"ru":"Ве́чность в шлю́зе — те́сный коридо́р","plain":"Вечность в шлюзе — тесный коридор","gloss":"Eternity in the airlock, a narrow corridor","syl":9,"end":true}],"note":"«Стравливать» is the engineer's verb for venting pressure; «не спеша» ('without hurrying') carries 'breath by breath'. «Простор / коридор» sets open space against the cramped airlock tube."},"B":{"lines":[{"ru":"Давле́нье вниз — и ни сло́ва Земле́","plain":"Давленье вниз — и ни слова Земле","gloss":"Pressure down, and not a word to Earth","syl":10,"end":true},{"ru":"Танцу́ет с ти́хой сме́ртью во мгле","plain":"Танцует с тихой смертью во мгле","gloss":"He dances with a quiet death in the dark","syl":9,"end":true},{"ru":"В поту́ по коле́но, се́рдце бьёт в наба́т","plain":"В поту по колено, сердце бьёт в набат","gloss":"Sweat up to his knees, his heart sounding the alarm","syl":11,"end":true},{"ru":"В шлюз голово́й вперёд — наза́д, наза́д","plain":"В шлюз головой вперёд — назад, назад","gloss":"Into the airlock head first, back, back","syl":10,"end":true}],"note":"Leonov dropped his suit from 0.40 to 0.27 atm without asking the ground. His words: «в скафандре воды было по колено» (water up to my knees in the suit). His memoir says he went in head first against the plan (his 1965 report says feet first)."},"C":{"lines":[{"ru":"Он во́здух из скафа́ндра го́нит прочь","plain":"Он воздух из скафандра гонит прочь","gloss":"He drives the air out of the suit","syl":10,"end":true},{"ru":"Та́нец на краю́, где смерть тиха́, как ночь","plain":"Танец на краю, где смерть тиха, как ночь","gloss":"A dance on the edge, where death is quiet as night","syl":11,"end":true},{"ru":"Скафа́ндр всё мя́гче, се́рдце всё сильне́й","plain":"Скафандр всё мягче, сердце всё сильней","gloss":"The suit grows softer, his heart beats harder","syl":10,"end":true},{"ru":"И ве́чность в шлю́зе — ме́жду двух двере́й","plain":"И вечность в шлюзе — между двух дверей","gloss":"And eternity in the airlock, between two doors","syl":10,"end":true}],"note":"«Смерть тиха, как ночь» is the closest image to 'a quiet death'. As the pressure fell the suit went soft, and his pulse climbed."}},{"id":"brk","label":"Breakdown","sub":"After the two pre-chorus lines; the singer's own voice","en":[{"t":"I'll never float where the sky turns red","syl":9,"t0":122.32,"t1":125.79},{"t":"Never see what he saw ahead","syl":8,"t0":125.79,"t1":129.09}],"A":{"lines":[{"ru":"Мне не плыть, где а́лый небосво́д","plain":"Мне не плыть, где алый небосвод","gloss":"I'm not meant to float where the sky is scarlet","syl":9,"end":true},{"ru":"Не уви́деть, как он, тот восхо́д","plain":"Не увидеть, как он, тот восход","gloss":"Never to see that sunrise as he did","syl":9,"end":true}],"note":"«Тот восход» ('that sunrise') points back to the hook."},"B":{"lines":[{"ru":"Мне не плыть, где свет гори́т дуго́й","plain":"Мне не плыть, где свет горит дугой","gloss":"I won't float where the light burns in an arc","syl":9,"end":true},{"ru":"Не уви́деть горизо́нт тако́й","plain":"Не увидеть горизонт такой","gloss":"Never see a horizon like that","syl":9,"end":true}],"note":"His sunrise drawing is a single arc of colour bands."},"C":{"lines":[{"ru":"Мне не пари́ть, где але́ет край","plain":"Мне не парить, где алеет край","gloss":"I won't soar where the edge of the world glows red","syl":9,"end":true},{"ru":"Не ви́деть то, что ви́дел он, — пуска́й","plain":"Не видеть то, что видел он, — пускай","gloss":"Won't see what he saw. So be it.","syl":10,"end":true}],"note":"«Пускай» ('so be it') makes the line an acceptance rather than a regret."}},{"id":"art","label":"Art","sub":"Labelled [Chorus / Hook] in the Suno sheet","en":[{"t":"Art is a landing in the snow","syl":8,"t0":130.86,"t1":135.98},{"t":"Can't think, can't write, but my hands still know","syl":9,"t0":136.05,"t1":140.88}],"A":{"lines":[{"ru":"Иску́сство — э́то поса́дка в снегу́","plain":"Искусство — это посадка в снегу","gloss":"Art is a landing in the snow","syl":10,"end":true},{"ru":"Ни строки́ — а ру́ки зна́ют: смогу́","plain":"Ни строки — а руки знают: смогу","gloss":"Not a line, but my hands know: I'll manage","syl":10,"end":true}],"note":"«Ни строки» ('not a line') stands in for 'can't think, can't write'; «смогу» is 'I'll manage'.","ask":{"0":"«посадка в снегу» or «посадка в снег»? The rhyme with «смогу» needs «снегу»."}},"B":{"lines":[{"ru":"Иску́сство — э́то поса́дка в снег","plain":"Искусство — это посадка в снег","gloss":"Art is a landing in the snow","syl":9,"end":true},{"ru":"Ни слов, ни мы́слей — ру́ки по́мнят наве́к","plain":"Ни слов, ни мыслей — руки помнят навек","gloss":"No words, no thoughts, but my hands remember, for good","syl":11,"end":true}],"note":"His coloured pencils flew tied to his wrist. Leonov on choosing them: «остаётся только одно — карандаш, хорошая бумага» (that leaves only one thing: a pencil and good paper). «Руки помнят» is how Russians say muscle memory."},"C":{"lines":[{"ru":"Иску́сство — поса́дка в снег, что не та́ет","plain":"Искусство — посадка в снег, что не тает","gloss":"Art is a landing in snow that doesn't melt","syl":11,"end":false},{"ru":"Ни мы́слей, ни слов — а рука́ зна́ет","plain":"Ни мыслей, ни слов — а рука знает","gloss":"No thoughts, no words, but my hand knows","syl":10,"end":false}],"note":"Adds one idea: snow that doesn't melt, the way the drawing survived. Both lines end on an unstressed syllable, which suits this part of the melody, where 'snow' and 'know' are each a long note followed by a short one."}},{"id":"build","label":"Build","en":[{"t":"Guidance failed and the capsule spun","syl":8,"t0":140.88,"t1":143.67},{"t":"Doing the math with a spinning sun","syl":9,"t0":143.67,"t1":146.39},{"t":"Hold on… hold on… hold on…","syl":6,"t0":146.39,"t1":151.29}],"A":{"lines":[{"ru":"Сбой автома́тики — мы кувырко́м","plain":"Сбой автоматики — мы кувырком","gloss":"Guidance failure, we're tumbling head over heels","syl":10,"end":true},{"ru":"Счёт в уме́ — а со́лнце колесо́м","plain":"Счёт в уме — а солнце колесом","gloss":"Doing sums in our heads, and the sun cartwheeling","syl":9,"end":true},{"ru":"Держи́сь… держи́сь… держи́сь…","plain":"Держись… держись… держись…","gloss":"Hold on… hold on… hold on…","syl":6,"end":true}],"note":"The capsule tumbled until the cable to the instrument module burned through, and the sun wheeled past the porthole. «Держись» has the same stress shape as 'hold on'."},"B":{"lines":[{"ru":"Отка́з автома́тики — са́ми, на глаз","plain":"Отказ автоматики — сами, на глаз","gloss":"The automatics fail; we do it ourselves, by eye","syl":11,"end":true},{"ru":"Со́лнце пля́шет — ещё вито́к, ещё раз","plain":"Солнце пляшет — ещё виток, ещё раз","gloss":"The sun is dancing; one more orbit, one more time","syl":11,"end":true},{"ru":"Держи́сь… держу́… держи́сь…","plain":"Держись… держу… держись…","gloss":"Hold on… I've got you… hold on…","syl":6,"end":true}],"note":"This was the first manual orientation, done through the Vzor sight, and the retrofire came one orbit late. Belyayev had to lie across both seats to use the sight while Leonov held him: «держу» means 'I've got you'."},"C":{"lines":[{"ru":"Курс поте́рян — ве́ртится мир","plain":"Курс потерян — вертится мир","gloss":"Course lost, the world is spinning","syl":8,"end":true},{"ru":"В уме́ расчёт, а со́лнце — ориенти́р","plain":"В уме расчёт, а солнце — ориентир","gloss":"Sums in my head, and the sun as my landmark","syl":11,"end":true},{"ru":"Держи́сь… держи́сь… держи́сь…","plain":"Держись… держись… держись…","gloss":"Hold on… hold on… hold on…","syl":6,"end":true}],"note":"«Ориентир» is a landmark or reference point; manual orientation is literally «ручная ориентация»."}},{"id":"drop2","label":"Drop 2","en":[{"t":"Off course… (but I'm) home…","syl":5,"t0":176.49,"t1":179.04,"also":[[179.4,181.95],[182.32,186.13]]}],"A":{"lines":[{"ru":"Не туда́… (но я) до́ма…","plain":"Не туда… (но я) дома…","gloss":"Wrong place… (but I'm) home…","syl":7,"end":false}],"note":"«Не туда» ('the wrong way') puts its stress on the long note, where 'course' sits."},"B":{"lines":[{"ru":"Тайга́… (но мы) до́ма…","plain":"Тайга… (но мы) дома…","gloss":"Taiga… (but we're) home…","syl":6,"end":false}],"note":"They came down in the taiga of Perm oblast, hundreds of kilometres from the target. «Тайга́» is stressed on its second syllable, like 'off course'."},"C":{"lines":[{"ru":"Не там… (зато́) до́ма…","plain":"Не там… (зато) дома…","gloss":"Not where we meant… (but at least) home…","syl":6,"end":false}],"note":"«Зато» is a shrug of consolation ('but on the bright side')."}},{"id":"outro","label":"Strings","sub":"[Vocal led, orchestral strings]","en":[{"t":"Fifteen hundred klicks, coming in hot","syl":9,"t0":187.46,"t1":193.36},{"t":"Fifteen hundred klicks, we overshot","syl":9,"t0":193.55,"t1":197.81}],"A":{"lines":[{"ru":"Полторы́ ты́щи вёрст — гори́т восхо́д","plain":"Полторы тыщи вёрст — горит восход","gloss":"Fifteen hundred versts, the sunrise burning","syl":10,"end":true},{"ru":"Полторы́ ты́щи вёрст — перелёт","plain":"Полторы тыщи вёрст — перелёт","gloss":"Fifteen hundred versts, overshot","syl":9,"end":true}],"note":"A «верста» is the old Russian mile (about 1.07 km). It sounds folksy, the way 'klicks' sounds slangy. «Перелёт» is the gunnery word for a shot that lands long (it also just means 'a long flight'). The song's own figure; the real overshoot was a few hundred kilometres.","ask":{"0":"Is «вёрст» charming or odd for 1965? And «тыщи» (colloquial) or «тысячи»?"}},"B":{"lines":[{"ru":"Со́тни вёрст — ми́мо це́ли, в огне́","plain":"Сотни вёрст — мимо цели, в огне","gloss":"Hundreds of versts past the target, through fire","syl":9,"end":true},{"ru":"Две но́чи в тайге́, в снегу́, в тишине́","plain":"Две ночи в тайге, в снегу, в тишине","gloss":"Two nights in the taiga, in the snow, in the silence","syl":10,"end":true}],"note":"Uses the real figures: the overshoot was a few hundred kilometres (about 386 km by one count), and they spent two nights in the forest at around −25 °C."},"C":{"lines":[{"ru":"Полторы́ ты́щи вёрст — горя́чий путь","plain":"Полторы тыщи вёрст — горячий путь","gloss":"Fifteen hundred versts, a burning road","syl":10,"end":true},{"ru":"Полторы́ ты́щи вёрст — ми́мо чуть-чу́ть","plain":"Полторы тыщи вёрст — мимо чуть-чуть","gloss":"Fifteen hundred versts: missed by just a little","syl":10,"end":true}],"note":"Deadpan understatement in the bard manner: fifteen hundred versts, «мимо чуть-чуть» (missed by a bit).","ask":{"1":"Does the irony of «мимо чуть-чуть» land?"}}},{"id":"end","label":"Ending","sub":"Sung twice","en":[{"t":"Made it down —","syl":3,"t0":198.12,"t1":201.16,"also":[[209.09,211.58]]},{"t":"home.","syl":1,"t0":204.79,"t1":208.57,"also":[[211.58,213.17]]}],"A":{"lines":[{"ru":"На земле́ —","plain":"На земле —","gloss":"On the ground —","syl":3,"end":true},{"ru":"до́ма.","plain":"дома.","gloss":"home.","syl":2,"end":false}],"note":"«До́ма» means 'at home', as in arrived. The long final note sits on «до́-»."},"B":{"lines":[{"ru":"Мы смогли́ —","plain":"Мы смогли —","gloss":"We made it —","syl":3,"end":true},{"ru":"до́ма.","plain":"дома.","gloss":"home.","syl":2,"end":false}],"note":"«Смогли» means 'we managed', 'we pulled it off'."},"C":{"lines":[{"ru":"Добрали́сь —","plain":"Добрались —","gloss":"We got there —","syl":3,"end":true},{"ru":"до́ма.","plain":"дома.","gloss":"home.","syl":2,"end":false}],"note":"«Добрались» means arriving after a hard journey.","ask":{"0":"добрали́сь or добра́лись?"}}}],"sheet":[["tag","[Intro — filtered, low-passed vocal, half-whispered]"],["line","intro",0],["line","intro",1],["line","intro",2],["line","intro",3],["tag","[Chorus / Hook]"],["line","hook",0],["line","hook",1],["tag","[Pre-Chorus — filter opens, snare roll builds]"],["line","pre",0],["line","pre",1],["line","pre",2],["line","pre",3],["tag","[Chorus / Hook]"],["line","hook",0],["line","hook",1],["tag","[Drop 1 — instrumental, chopped vocal]"],["line","hook",3],["line","hook",3],["tag","[Breakdown — vocal-led, stripped to pads and your voice]"],["line","pre",0],["line","pre",1],["line","brk",0],["line","brk",1],["tag","[Chorus / Hook]"],["line","art",0],["line","art",1],["tag","[Build — rising riser, vocal repeats and stacks]"],["line","build",0],["line","build",1],["line","build",2],["tag","[Final Chorus]"],["line","hook",0],["line","hook",2],["tag","[Drop 2 — new counter-melody chop against the supersaws]"],["line","drop2",0],["line","drop2",0],["tag","[Vocal led, orchestral strings]"],["line","outro",0],["line","outro",1],["tag","[Outro — decisive ending]"],["line","end",0],["line","end",1],["line","end",0],["line","end",1],["tag","[Instrumental Outro]"],["tag","[Soft piano from intro, ritardando at the end]"]]}</script>
+<script>
+(() => {
+  const DATA = JSON.parse(document.getElementById('lyrics-data').textContent);
+  const OPTS = DATA.options;
+  const FULL = ['A', 'B', 'C'];
+  const UNITS = DATA.units;
+  const KEY = 'orbital-sunrise-ru-picks-v1';
+  const $ = (s, el = document) => el.querySelector(s);
+  const h = (tag, attrs = {}, ...kids) => {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'style') el.setAttribute('style', v);
+      else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : String(kid));
+    return el;
+  };
+  const fmt = t => { t = Math.max(0, t || 0); return Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0'); };
+  const optColor = k => `var(--o${k})`;
+  const unitKeys = u => Object.keys(OPTS).filter(k => u[k]);
+
+  /* ---------- state ---------- */
+  const state = { picks: {}, notes: {}, general: '', others: [], uid: null, db: null, user: null, mode: 'local', names: {} };
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved && typeof saved === 'object') { state.picks = saved.picks || {}; state.notes = saved.notes || {}; }
+  } catch (e) {}
+  const saveLocal = () => { try { localStorage.setItem(KEY, JSON.stringify({ picks: state.picks, notes: state.notes })); } catch (e) {} };
+
+  /* ---------- options summary ---------- */
+  const optBox = $('#options');
+  for (const k of FULL) {
+    const o = OPTS[k];
+    optBox.append(h('div', { style: `--c:${optColor(k)}` },
+      h('div', { class: 'opt-head' }, h('span', { class: 'letter' }, k), h('span', { class: 'opt-name', lang: 'ru' }, o.ru), h('span', { class: 'opt-en' }, o.name)),
+      h('p', {}, o.concept)));
+  }
+
+  /* ---------- sections ---------- */
+  const unitsEl = $('#units');
+  const ranges = [];           // [{t0,t1,u,i}] for highlighting
+  const playButtons = [];
+  const playBtn = (t0, t1, label) => {
+    const b = h('button', { type: 'button', class: 'play', 'aria-label': `Play from ${fmt(t0)}`, onclick: () => playRange(t0, t1) },
+      svgPlay(), label || fmt(t0));
+    playButtons.push(b);
+    return b;
+  };
+  function svgPlay() { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 10 10'); s.innerHTML = '<path d="M2 1l7 4-7 4z"/>'; return s; }
+
+  const ruLine = (ln, ask) => h('div', { class: 'ru-line' },
+    h('div', { class: 'ru-text', lang: 'ru', 'data-ru': ln.ru, 'data-plain': ln.plain }, ln.ru),
+    h('div', { class: 'gloss' }, ln.gloss),
+    ask ? h('div', { class: 'ask' }, h('b', {}, '? '), ask) : null);
+
+  for (const u of UNITS) {
+    const keys = unitKeys(u).filter(k => !OPTS[k].hookOnly);
+    const extras = unitKeys(u).filter(k => OPTS[k].hookOnly);
+    // section play range: first line through the lines that follow it closely
+    let end = u.en[0].t1;
+    for (let i = 1; i < u.en.length; i++) { if (u.en[i].t0 - end < 6) end = u.en[i].t1; else break; }
+    const sec = h('section', { class: 'unit', id: 'u-' + u.id });
+    sec.append(h('div', { class: 'unit-head' },
+      h('h2', {}, u.label), u.sub ? h('span', { class: 'unit-sub' }, u.sub) : null,
+      h('span', { class: 'unit-time' }, `${fmt(u.en[0].t0)}–${fmt(end)}`),
+      playBtn(u.en[0].t0, end, 'Play section')));
+
+    const grid = h('div', { class: 'cmp', style: `--n:${keys.length}` });
+    const cell = (r, c, cls, k, ...kids) => h('div', { class: `cell c${c} ${cls || ''}`, style: `--r:${r};--col:${c}` + (k ? `;--c:${optColor(k)}` : ''), 'data-u': u.id, 'data-row': r, 'data-k': k || '' }, ...kids);
+    grid.append(cell(1, 1, 'head', null, h('div', { class: 'en-head' }, 'English')));
+    keys.forEach((k, j) => {
+      const c = cell(1, j + 2, 'head col-head', k,
+        h('div', { class: 'row1' }, h('span', { class: 'letter' }, k), h('span', { class: 'opt-name', lang: 'ru' }, OPTS[k].ru)),
+        h('div', { class: 'underline' }),
+        h('button', { type: 'button', class: 'pick', 'data-u': u.id, 'data-k': k, 'aria-pressed': 'false', onclick: () => togglePick(u.id, k) }, 'Pick ' + k),
+        h('div', { class: 'chips', 'data-u': u.id, 'data-k': k }));
+      grid.append(c);
+    });
+    u.en.forEach((en, i) => {
+      const r = i + 2;
+      ranges.push({ t0: en.t0, t1: en.t1, u: u.id, i });
+      (en.also || []).forEach(([a, b]) => ranges.push({ t0: a, t1: b, u: u.id, i }));
+      grid.append(cell(r, 1, '', null, h('div', { class: 'en-line' },
+        en.role ? h('span', { class: 'role' }, en.role) : null,
+        h('span', { class: 'en-text', lang: 'en' }, en.t),
+        h('span', { class: 'en-meta' }, playBtn(en.t0, en.t1), h('span', { class: 'meta' }, en.syl + ' syl')))));
+      keys.forEach((k, j) => {
+        const ln = u[k].lines[i];
+        const ask = (u[k].ask || {})[String(i)];
+        grid.append(cell(r, j + 2, '', k, ruLine(ln, ask),
+          h('div', { class: 'meta' }, h('span', { class: 'syl', title: 'Russian syllables / English syllables' }, `${ln.syl}/${en.syl}`), ln.end ? h('span', { class: 'end', title: 'Ends on a stressed syllable' }, '↓') : null)));
+      });
+    });
+    const last = u.en.length + 2;
+    grid.append(cell(last, 1, '', null));
+    keys.forEach((k, j) => grid.append(cell(last, j + 2, '', k, h('div', { class: 'note' }, u[k].note || ''))));
+    sec.append(grid);
+
+    if (extras.length) {
+      const ex = h('div', { class: 'extra' }, h('div', { class: 'extra-title' }, 'Two more hook ideas'));
+      const eg = h('div', { class: 'extra-grid' });
+      for (const k of extras) {
+        eg.append(h('div', { class: 'card', 'data-u': u.id, 'data-k': k, style: `--c:${optColor(k)}` },
+          h('div', { class: 'col-head' },
+            h('div', { class: 'row1' }, h('span', { class: 'letter' }, k), h('span', { class: 'opt-name', lang: 'ru' }, OPTS[k].ru)),
+            h('div', { class: 'underline' })),
+          ...u[k].lines.map((ln, i) => h('div', {},
+            u.en[i].role ? h('span', { class: 'role' }, u.en[i].role) : null, ruLine(ln),
+            h('div', { class: 'meta' }, h('span', { class: 'syl' }, `${ln.syl}/${u.en[i].syl}`), ln.end ? h('span', { class: 'end' }, '↓') : null))),
+          h('div', { class: 'note' }, u[k].note || ''),
+          h('button', { type: 'button', class: 'pick', 'data-u': u.id, 'data-k': k, 'aria-pressed': 'false', onclick: () => togglePick(u.id, k) }, 'Pick ' + k),
+          h('div', { class: 'chips', 'data-u': u.id, 'data-k': k })));
+      }
+      ex.append(eg);
+      sec.append(ex);
+    }
+
+    const ta = h('textarea', { id: 'note-' + u.id, placeholder: 'What works, what doesn’t, a better word…' });
+    ta.value = state.notes[u.id] || '';
+    ta.addEventListener('input', () => { state.notes[u.id] = ta.value; saveLocal(); schedulePush(); });
+    ta.addEventListener('blur', () => flushPush());
+    sec.append(h('div', { class: 'talk' },
+      h('div', {}, h('label', { for: 'note-' + u.id }, 'Your note on this section'), ta),
+      h('div', {}, h('label', {}, 'Others'), h('div', { class: 'others', 'data-u': u.id }, h('span', { class: 'empty' }, 'No one else has left a note yet.')))));
+    unitsEl.append(sec);
+
+    // row hover: highlight the same line across options
+    grid.addEventListener('mouseover', e => { const c = e.target.closest('.cell'); if (!c) return; markRow(grid, c.dataset.row, 'row'); });
+    grid.addEventListener('mouseleave', () => markRow(grid, null, 'row'));
+  }
+  function markRow(grid, row, cls) {
+    grid.querySelectorAll('.cell').forEach(el => el.classList.toggle(cls, row != null && el.dataset.row === String(row) && !el.classList.contains('head')));
+  }
+
+  /* ---------- toggles ---------- */
+  const stressBox = $('#opt-stress'), glossBox = $('#opt-gloss');
+  try { const t = JSON.parse(localStorage.getItem(KEY + '-view') || '{}'); if (t.stress === false) stressBox.checked = false; if (t.gloss === false) glossBox.checked = false; } catch (e) {}
+  function applyView() {
+    document.querySelectorAll('.ru-text').forEach(el => { el.textContent = stressBox.checked ? el.dataset.ru : el.dataset.plain; });
+    document.body.classList.toggle('no-gloss', !glossBox.checked);
+    try { localStorage.setItem(KEY + '-view', JSON.stringify({ stress: stressBox.checked, gloss: glossBox.checked })); } catch (e) {}
+  }
+  stressBox.addEventListener('change', applyView); glossBox.addEventListener('change', applyView);
+  applyView();
+
+  /* ---------- picks ---------- */
+  function togglePick(uid, k) {
+    state.picks[uid] = state.picks[uid] === k ? undefined : k;
+    if (!state.picks[uid]) delete state.picks[uid];
+    saveLocal(); renderPicks(); renderMix(); flushPush();
+  }
+  async function renderPicks() {
+    document.querySelectorAll('.pick').forEach(b => b.setAttribute('aria-pressed', String(state.picks[b.dataset.u] === b.dataset.k)));
+    document.querySelectorAll('.cell[data-k]').forEach(el => { if (el.dataset.k) el.classList.toggle('picked', state.picks[el.dataset.u] === el.dataset.k); });
+    document.querySelectorAll('.card').forEach(el => el.classList.toggle('picked', state.picks[el.dataset.u] === el.dataset.k));
+    const ids = state.others.map(o => o.id);
+    const profiles = ids.length && state.user ? await state.user.profiles(ids) : {};
+    document.querySelectorAll('.chips').forEach(box => {
+      box.textContent = '';
+      for (const o of state.others) {
+        if ((o.picks || {})[box.dataset.u] !== box.dataset.k) continue;
+        const p = profiles[o.id] || {};
+        const dot = h('i'); if (p.color) dot.style.setProperty('--dot', p.color);
+        box.append(h('span', { class: 'chip' }, dot, (p.name || 'Someone') + ' picked this'));
+      }
+    });
+    document.querySelectorAll('.others').forEach(box => {
+      box.textContent = '';
+      const withNotes = state.others.filter(o => ((o.notes || {})[box.dataset.u] || '').trim());
+      if (!withNotes.length) { box.append(h('span', { class: 'empty' }, state.db ? 'No one else has left a note yet.' : 'Notes from others appear here when this page is opened on claude.ai.')); return; }
+      for (const o of withNotes) {
+        const p = profiles[o.id] || {};
+        const pick = (o.picks || {})[box.dataset.u];
+        box.append(h('div', {}, h('span', { class: 'who' }, (p.name || 'Someone') + (pick ? ` (picked ${pick})` : '') + ': '), String(o.notes[box.dataset.u]).slice(0, 2000)));
+      }
+    });
+  }
+
+  /* ---------- mix / sheets ---------- */
+  const unitById = Object.fromEntries(UNITS.map(u => [u.id, u]));
+  function sheetFor(pick) {
+    return DATA.sheet.map(item => item[0] === 'tag' ? item[1] : unitById[item[1]][pick(item[1])].lines[item[2]].plain).join('\n') + '\n';
+  }
+  const mixPick = uid => state.picks[uid] || 'A';
+  function picksText() {
+    const lines = ['Orbital Sunrise, Russian lyrics: my picks', ''];
+    for (const u of UNITS) {
+      const k = state.picks[u.id];
+      lines.push(`${u.label}: ${k ? k + ' (' + OPTS[k].ru + ')' : 'no pick'}`);
+      const n = (state.notes[u.id] || '').trim();
+      if (n) lines.push('  ' + n.replace(/\n/g, '\n  '));
+    }
+    return lines.join('\n') + '\n';
+  }
+  let sheetMode = 'mix';
+  const sheetEl = $('#sheet');
+  function renderMix() {
+    const t = $('#mix-table'); t.textContent = '';
+    for (const u of UNITS) {
+      const k = state.picks[u.id];
+      t.append(h('div', {}, h('span', { class: 'u' }, u.label),
+        k ? h('span', { class: 'v', lang: 'ru', style: `color:${optColor(k)}` }, `${k} · ${OPTS[k].ru}`) : h('span', { class: 'v unset' }, 'A until you pick')));
+    }
+    sheetEl.value = sheetMode === 'mix' ? sheetFor(mixPick) : sheetMode === 'picks' ? picksText() : sheetFor(() => sheetMode);
+  }
+  document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+    sheetMode = b.dataset.sheet;
+    document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    renderMix();
+  }));
+  $('#copy').addEventListener('click', async () => {
+    const flash = $('#flash');
+    try { await navigator.clipboard.writeText(sheetEl.value); flash.textContent = 'Copied.'; }
+    catch (e) { sheetEl.focus(); sheetEl.select(); flash.textContent = 'Selected. Press Ctrl+C or ⌘C to copy.'; }
+    setTimeout(() => { flash.textContent = ''; }, 3500);
+  });
+
+  /* ---------- audio ---------- */
+  const audio = $('#song'), pp = $('#pp'), clock = $('#clock'), seek = $('#seek'), now = $('#now');
+  let stopAt = null, raf = 0, audioOk = true;
+  const srcs = audio.querySelectorAll('source');
+  srcs[srcs.length - 1].addEventListener('error', () => {
+    audioOk = false; pp.disabled = true; playButtons.forEach(b => { b.disabled = true; });
+    now.textContent = 'The song file did not load on this page.';
+  });
+  function playRange(t0, t1) {
+    if (!audioOk) return;
+    stopAt = t1 + 0.6;
+    const go = () => { audio.currentTime = Math.max(0, t0 - 0.25); audio.play().catch(() => {}); };
+    if (audio.readyState >= 1) go(); else { audio.addEventListener('loadedmetadata', go, { once: true }); audio.load(); }
+  }
+  pp.addEventListener('click', () => { if (audio.paused) { stopAt = null; audio.play().catch(() => {}); } else audio.pause(); });
+  seek.addEventListener('input', () => { stopAt = null; audio.currentTime = +seek.value; });
+  audio.addEventListener('loadedmetadata', () => { seek.max = String(audio.duration || 252); });
+  audio.addEventListener('play', () => { setIcon(true); loop(); });
+  audio.addEventListener('pause', () => { setIcon(false); cancelAnimationFrame(raf); tick(); });
+  function setIcon(playing) {
+    $('#pp-icon').innerHTML = playing ? '<path d="M2 1h2.2v8H2zM5.8 1H8v8H5.8z"/>' : '<path d="M2 1l7 4-7 4z"/>';
+    pp.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  }
+  let lastKey = '';
+  function tick() {
+    const t = audio.currentTime;
+    if (stopAt != null && t >= stopAt) { audio.pause(); stopAt = null; }
+    clock.textContent = `${fmt(t)} / ${fmt(audio.duration || 252)}`;
+    if (document.activeElement !== seek) seek.value = String(t);
+    const hit = ranges.find(r => t >= r.t0 - 0.1 && t <= r.t1 + 0.2);
+    const key = hit ? hit.u + ':' + hit.i : '';
+    if (key !== lastKey) {
+      lastKey = key;
+      document.querySelectorAll('.cell.hot').forEach(el => el.classList.remove('hot'));
+      if (hit) {
+        document.querySelectorAll(`.cell[data-u="${hit.u}"][data-row="${hit.i + 2}"]`).forEach(el => el.classList.add('hot'));
+        now.textContent = ''; now.append(h('small', {}, unitById[hit.u].label), unitById[hit.u].en[hit.i].t);
+      } else if (!audio.paused) { now.textContent = ''; now.append(h('small', {}, 'instrumental'), '…'); }
+    }
+  }
+  function loop() { tick(); if (!audio.paused) raf = requestAnimationFrame(loop); }
+
+  /* ---------- sharing (db) ---------- */
+  const statusEl = $('#status');
+  function renderStatus() {
+    statusEl.textContent = '';
+    if (state.mode === 'shared') statusEl.append(h('strong', {}, 'Your picks and notes are shared'), ' with everyone who opens this page, and you see theirs.');
+    else if (state.mode === 'readonly') statusEl.append(h('strong', {}, 'Your picks stay in this browser'), ' (this link lets you read but not save). When you are done, open "My picks as text" at the bottom, copy it and send it back.');
+    else statusEl.append(h('strong', {}, 'Your picks are saved in this browser.'), ' To send them, open "My picks as text" at the bottom and copy it.');
+  }
+  renderStatus();
+
+  let writing = false, dirty = false, timer = 0;
+  function schedulePush() { clearTimeout(timer); timer = setTimeout(flushPush, 900); }
+  function flushPush() { clearTimeout(timer); push(); }
+  async function push() {
+    if (state.mode !== 'shared' || !state.db || !state.uid) return;
+    if (writing) { dirty = true; return; }
+    writing = true;
+    try {
+      await state.db.doc('votes/' + state.uid).set({ picks: { ...state.picks }, notes: { ...state.notes }, updatedAt: Date.now() });
+    } catch (e) {
+      const code = e && e.code;
+      if (code === 'unavailable') setTimeout(push, 1200 + Math.random() * 1200);
+      else { state.mode = 'readonly'; renderStatus(); }
+    }
+    writing = false;
+    if (dirty) { dirty = false; push(); }
+  }
+
+  (async () => {
+    if (!window.claude || typeof window.claude.use !== 'function') return;
+    const [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]);
+    if (!db || !user) return;
+    const uid = await user.id();
+    if (!uid) return;
+    Object.assign(state, { db, user, uid, mode: 'shared' });
+    try {
+      const mine = await db.doc('votes/' + uid).get();
+      if (mine.exists) {
+        const d = mine.data() || {};
+        // the server copy wins for sections this browser has not touched
+        state.picks = { ...(d.picks || {}), ...state.picks };
+        state.notes = { ...(d.notes || {}), ...Object.fromEntries(Object.entries(state.notes).filter(([, v]) => v)) };
+        document.querySelectorAll('textarea[id^="note-"]').forEach(ta => { ta.value = state.notes[ta.id.slice(5)] || ''; });
+        saveLocal();
+      }
+      if (Object.keys(state.picks).length || Object.values(state.notes).some(Boolean)) await push();
+    } catch (e) { /* reading failed: keep local state */ }
+    renderStatus();
+    db.collection('votes').onSnapshot(snap => {
+      state.others = snap.docs.filter(d => d.id !== uid && d.exists).map(d => ({ id: d.id, ...(d.data() || {}) }));
+      renderPicks();
+    }, () => {});
+    renderPicks(); renderMix();
+  })();
+
+  renderPicks(); renderMix();
+})();
+</script>

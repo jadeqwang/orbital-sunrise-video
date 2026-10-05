@@ -1,0 +1,404 @@
+{
+  "about": "Source for the Russian lyric options. An apostrophe after a vowel marks the stressed vowel (ё is always stressed and is not marked). tools/ru_lyrics.py renders the Suno .txt files, SIDE_BY_SIDE.md and the data block of compare.html from this file.",
+  "audio": "release/extended/Orbital_Sunrise_extended.mp3",
+  "options": {
+    "A": {
+      "name": "Close to the English",
+      "ru": "Близко к тексту",
+      "file": "A_close.txt",
+      "concept": "Same images, same rhyme scheme and roughly the same syllable count, line by line. Keeps «Орбитальный восход», the red Cyrillic already on screen in the film."
+    },
+    "B": {
+      "name": "Leonov's voice",
+      "ru": "Голос Леонова",
+      "file": "B_leonov.txt",
+      "concept": "Built from the record and from Leonov's own words: the 5-metre tether (фал), the pressure he dropped without telling the ground, sweat to the knees, head first into the airlock, steering by eye, the extra orbit, two nights in the taiga. The hook doubles as a radio call to the ship, because «Восход» means sunrise and is also the ship's name."
+    },
+    "C": {
+      "name": "Russian song first",
+      "ru": "Песня",
+      "file": "C_song.txt",
+      "concept": "Written to sound like a Russian song rather than a translation: softer images, and words chosen so the stressed syllables land where the English stresses do. The hook «Вижу восход» echoes Gagarin's «Вижу Землю»."
+    },
+    "D": {
+      "name": "Hook only: Первый восход",
+      "ru": "Первый восход",
+      "hookOnly": true,
+      "concept": "C's hook with «Первый» ('first') in place of «Вижу», echoing «Первый человек» from the intro. Stressed on the first and fourth syllables, like 'Ór-bi-tal sun-ríse'."
+    },
+    "E": {
+      "name": "Hook only: Солнце встаёт",
+      "ru": "Солнце встаёт",
+      "hookOnly": true,
+      "concept": "A plain-speech hook ('the sun is rising'). Sings very easily, but loses the word «восход» and with it the ship's name."
+    }
+  },
+  "units": [
+    {
+      "id": "intro",
+      "label": "Intro",
+      "en": [
+        {"t": "First man floating in the void of space", "syl": 9, "t0": 7.97, "t1": 13.89},
+        {"t": "Tied to the ship by the slightest trace", "syl": 9, "t0": 13.89, "t1": 20.51},
+        {"t": "Pull him back to the ship's embrace", "syl": 8, "t0": 20.51, "t1": 26.26},
+        {"t": "Can't feel his hands, can't feel his face", "syl": 8, "t0": 26.26, "t1": 32.54}
+      ],
+      "A": {
+        "lines": [
+          ["Пе'рвый челове'к над пустото'й", "The first man, above the void"],
+          ["Свя'зан с кораблём струно'й одно'й", "Tied to the ship by a single string"],
+          ["Наза'д зовёт кора'бль родно'й", "His dear ship calls him back"],
+          ["Не чу'ет рук, лица' — едва' живо'й", "He can't feel his hands or his face; barely alive"]
+        ],
+        "note": "Keeps the English single rhyme (all four lines end in «-ой»). «Корабль родной» ('dear ship', literally 'native ship') is a warm, very Russian way to speak of a ship. «Едва живой» ('barely alive') is an everyday phrase for being utterly spent."
+      },
+      "B": {
+        "lines": [
+          ["Пе'рвый челове'к — и тишина'", "The first man, and silence"],
+          ["Пять ме'тров фа'ла — то'нкая струна'", "Five metres of tether, a thin string"],
+          ["Наза'д, к кораблю' — а дверь тесна'", "Back to the ship, but the door is too tight"],
+          ["В перча'тках па'льцам — пустота' одна'", "In the gloves, his fingers find only emptiness"]
+        ],
+        "note": "Leonov: «тишина такая, что звенит в ушах» (silence so deep it rang in his ears). «Фал» is the word Russian accounts use for his tether (5.35 m). As the suit ballooned, his fingertips no longer reached the glove tips.",
+        "ask": {
+          "3": "Does «пальцам — пустота одна» read as fingers lost inside ballooned gloves?"
+        }
+      },
+      "C": {
+        "lines": [
+          ["Пе'рвый челове'к в пустоте' пари'т", "The first man soars in the void"],
+          ["То'нкой ни'тью к кораблю' приши'т", "Sewn to the ship with a thin thread"],
+          ["Кора'бль к себе' его' мани'т", "The ship beckons him back to itself"],
+          ["Рук не слы'шит — лишь се'рдце стучи'т", "He can't feel his hands, only his heart beating"]
+        ],
+        "note": "Single rhyme on «-ит». «Не слышать рук» is the idiom for numb hands. Leonov said that outside he could hear his own heart: «я слышал, как работает моё сердце»."
+      }
+    },
+    {
+      "id": "hook",
+      "label": "Hook",
+      "en": [
+        {"t": "Orbital sunrise, burning gold", "syl": 8, "t0": 35.81, "t1": 40.99, "also": [[71.53, 76.76], [154.16, 159.24]]},
+        {"t": "Orbital sunrise, bring me home", "syl": 8, "t0": 41.46, "t1": 47.25, "also": [[76.76, 82.96]]},
+        {"t": "Fall through the skies, bring me home", "syl": 7, "t0": 159.83, "t1": 165.46, "role": "Final chorus, line 2"},
+        {"t": "Sun-rise… (bring me) home…", "syl": 5, "t0": 92.38, "t1": 100.47, "role": "Drop 1 chop", "also": [[105.77, 108.13], [108.13, 110.99], [110.99, 115.09]]}
+      ],
+      "A": {
+        "lines": [
+          ["Орбита'льный восхо'д — золото'й", "Orbital sunrise, golden"],
+          ["Орбита'льный восхо'д, верни' домо'й", "Orbital sunrise, bring me home"],
+          ["Вниз сквозь небеса' — верни' домо'й", "Down through the heavens, bring me home"],
+          ["Восхо'д… (верни') домо'й…", "Sunrise… (bring me) home…"]
+        ],
+        "note": "Matches the film's on-screen «ОРБИТАЛЬНЫЙ ВОСХОД». «Золотой / домой» is a full rhyme. The cost: «Орбитальный» is four syllables where the melody has three quick notes for 'Or-bi-tal', and its stress falls on the third syllable while the melody leans on the first. D is the singer's alternative.",
+        "ask": {
+          "0": "Does «Орбитальный» feel too long or too technical for a hook?"
+        }
+      },
+      "B": {
+        "lines": [
+          ["Над Землёй восхо'д золото'й", "A golden sunrise over the Earth"],
+          ["«Восхо'д», «Восхо'д», верни' домо'й", "Voskhod, Voskhod, bring me home"],
+          ["Сквозь ого'нь, «Восхо'д», верни' домо'й", "Through the fire, Voskhod, bring me home"],
+          ["Восхо'д… (верни') домо'й…", "Sunrise… (bring me) home…"]
+        ],
+        "note": "The first line is the sunrise; in the second, «Восход» is the ship, called like a radio call. (Not the real call sign: the crew were «Алмаз», the ground «Заря».) Five syllables before the comma, like 'Orbital sunrise'.",
+        "ask": {
+          "1": "Does «Восход, Восход» sound like a radio call to the ship?"
+        }
+      },
+      "C": {
+        "lines": [
+          ["Ви'жу восхо'д — ого'нь золото'й", "I see the sunrise, golden fire"],
+          ["Ви'жу восхо'д — верни' домо'й", "I see the sunrise, bring me home"],
+          ["Па'даю вниз — верни' домо'й", "I'm falling, bring me home"],
+          ["Восхо'д… (верни') домо'й…", "Sunrise… (bring me) home…"]
+        ],
+        "note": "«Ви́жу» puts the stress on the first note, as 'Ór-bi-tal' does, and the long note lands on «-хо́д». «Вижу…» echoes Gagarin's «Вижу Землю!».",
+        "ask": {
+          "0": "Does «Вижу восход» call Gagarin's «Вижу Землю» to mind?"
+        }
+      },
+      "D": {
+        "lines": [
+          ["Пе'рвый восхо'д — ого'нь золото'й", "The first sunrise, golden fire"],
+          ["Пе'рвый восхо'д, верни' домо'й", "The first sunrise, bring me home"],
+          ["Па'даю вниз — верни' домо'й", "I'm falling, bring me home"],
+          ["Восхо'д… (верни') домо'й…", "Sunrise… (bring me) home…"]
+        ],
+        "note": "The first sunrise anyone watched from open space. Stresses fall where the melody's do, and the long note lands on «-хо́д»."
+      },
+      "E": {
+        "lines": [
+          ["Со'лнце встаёт — ого'нь золото'й", "The sun is rising, golden fire"],
+          ["Со'лнце встаёт — верни' домо'й", "The sun is rising, bring me home"],
+          ["Па'даю вниз — верни' домо'й", "I'm falling, bring me home"],
+          ["Восхо'д… (верни') домо'й…", "Sunrise… (bring me) home…"]
+        ],
+        "note": "Everyday words, with the stress pattern of 'Orbital sunrise'."
+      }
+    },
+    {
+      "id": "pre",
+      "label": "Pre-chorus",
+      "sub": "Lines 1–2 come back at the start of the breakdown",
+      "en": [
+        {"t": "So he bleeds the air out, breath by breath", "syl": 9, "t0": 56.43, "t1": 60.25, "also": [[116.07, 119.54]]},
+        {"t": "Dancing on the edge of a quiet death", "syl": 10, "t0": 60.25, "t1": 63.13, "also": [[119.54, 122.32]]},
+        {"t": "Let his air out through the suit he wore", "syl": 9, "t0": 63.13, "t1": 66.39},
+        {"t": "Eternity inside the airlock door", "syl": 10, "t0": 66.14, "t1": 70.17}
+      ],
+      "A": {
+        "lines": [
+          ["Он стра'вливает во'здух не спеша'", "He bleeds out the air, slowly, carefully"],
+          ["Танцу'ет с ти'хой сме'ртью, чуть дыша'", "He dances with a quiet death, barely breathing"],
+          ["Сквозь скафа'ндр — на во'лю, на просто'р", "Through the suit, out to freedom, to open space"],
+          ["Ве'чность в шлю'зе — те'сный коридо'р", "Eternity in the airlock, a narrow corridor"]
+        ],
+        "note": "«Стравливать» is the engineer's verb for venting pressure; «не спеша» ('without hurrying') carries 'breath by breath'. «Простор / коридор» sets open space against the cramped airlock tube."
+      },
+      "B": {
+        "lines": [
+          ["Давле'нье вниз — и ни сло'ва Земле'", "Pressure down, and not a word to Earth"],
+          ["Танцу'ет с ти'хой сме'ртью во мгле", "He dances with a quiet death in the dark"],
+          ["В поту' по коле'но, се'рдце бьёт в наба'т", "Sweat up to his knees, his heart sounding the alarm"],
+          ["В шлюз голово'й вперёд — наза'д, наза'д", "Into the airlock head first, back, back"]
+        ],
+        "note": "Leonov dropped his suit from 0.40 to 0.27 atm without asking the ground. His words: «в скафандре воды было по колено» (water up to my knees in the suit). His memoir says he went in head first against the plan (his 1965 report says feet first)."
+      },
+      "C": {
+        "lines": [
+          ["Он во'здух из скафа'ндра го'нит прочь", "He drives the air out of the suit"],
+          ["Та'нец на краю', где смерть тиха', как ночь", "A dance on the edge, where death is quiet as night"],
+          ["Скафа'ндр всё мя'гче, се'рдце всё сильне'й", "The suit grows softer, his heart beats harder"],
+          ["И ве'чность в шлю'зе — ме'жду двух двере'й", "And eternity in the airlock, between two doors"]
+        ],
+        "note": "«Смерть тиха, как ночь» is the closest image to 'a quiet death'. As the pressure fell the suit went soft, and his pulse climbed."
+      }
+    },
+    {
+      "id": "brk",
+      "label": "Breakdown",
+      "sub": "After the two pre-chorus lines; the singer's own voice",
+      "en": [
+        {"t": "I'll never float where the sky turns red", "syl": 9, "t0": 122.32, "t1": 125.79},
+        {"t": "Never see what he saw ahead", "syl": 8, "t0": 125.79, "t1": 129.09}
+      ],
+      "A": {
+        "lines": [
+          ["Мне не плыть, где а'лый небосво'д", "I'm not meant to float where the sky is scarlet"],
+          ["Не уви'деть, как он, тот восхо'д", "Never to see that sunrise as he did"]
+        ],
+        "note": "«Тот восход» ('that sunrise') points back to the hook."
+      },
+      "B": {
+        "lines": [
+          ["Мне не плыть, где свет гори'т дуго'й", "I won't float where the light burns in an arc"],
+          ["Не уви'деть горизо'нт тако'й", "Never see a horizon like that"]
+        ],
+        "note": "His sunrise drawing is a single arc of colour bands."
+      },
+      "C": {
+        "lines": [
+          ["Мне не пари'ть, где але'ет край", "I won't soar where the edge of the world glows red"],
+          ["Не ви'деть то, что ви'дел он, — пуска'й", "Won't see what he saw. So be it."]
+        ],
+        "note": "«Пускай» ('so be it') makes the line an acceptance rather than a regret."
+      }
+    },
+    {
+      "id": "art",
+      "label": "Art",
+      "sub": "Labelled [Chorus / Hook] in the Suno sheet",
+      "en": [
+        {"t": "Art is a landing in the snow", "syl": 8, "t0": 130.86, "t1": 135.98},
+        {"t": "Can't think, can't write, but my hands still know", "syl": 9, "t0": 136.05, "t1": 140.88}
+      ],
+      "A": {
+        "lines": [
+          ["Иску'сство — э'то поса'дка в снегу'", "Art is a landing in the snow"],
+          ["Ни строки' — а ру'ки зна'ют: смогу'", "Not a line, but my hands know: I'll manage"]
+        ],
+        "note": "«Ни строки» ('not a line') stands in for 'can't think, can't write'; «смогу» is 'I'll manage'.",
+        "ask": {
+          "0": "«посадка в снегу» or «посадка в снег»? The rhyme with «смогу» needs «снегу»."
+        }
+      },
+      "B": {
+        "lines": [
+          ["Иску'сство — э'то поса'дка в снег", "Art is a landing in the snow"],
+          ["Ни слов, ни мы'слей — ру'ки по'мнят наве'к", "No words, no thoughts, but my hands remember, for good"]
+        ],
+        "note": "His coloured pencils flew tied to his wrist. Leonov on choosing them: «остаётся только одно — карандаш, хорошая бумага» (that leaves only one thing: a pencil and good paper). «Руки помнят» is how Russians say muscle memory."
+      },
+      "C": {
+        "lines": [
+          ["Иску'сство — поса'дка в снег, что не та'ет", "Art is a landing in snow that doesn't melt"],
+          ["Ни мы'слей, ни слов — а рука' зна'ет", "No thoughts, no words, but my hand knows"]
+        ],
+        "note": "Adds one idea: snow that doesn't melt, the way the drawing survived. Both lines end on an unstressed syllable, which suits this part of the melody, where 'snow' and 'know' are each a long note followed by a short one."
+      }
+    },
+    {
+      "id": "build",
+      "label": "Build",
+      "en": [
+        {"t": "Guidance failed and the capsule spun", "syl": 8, "t0": 140.88, "t1": 143.67},
+        {"t": "Doing the math with a spinning sun", "syl": 9, "t0": 143.67, "t1": 146.39},
+        {"t": "Hold on… hold on… hold on…", "syl": 6, "t0": 146.39, "t1": 151.29}
+      ],
+      "A": {
+        "lines": [
+          ["Сбой автома'тики — мы кувырко'м", "Guidance failure, we're tumbling head over heels"],
+          ["Счёт в уме' — а со'лнце колесо'м", "Doing sums in our heads, and the sun cartwheeling"],
+          ["Держи'сь… держи'сь… держи'сь…", "Hold on… hold on… hold on…"]
+        ],
+        "note": "The capsule tumbled until the cable to the instrument module burned through, and the sun wheeled past the porthole. «Держись» has the same stress shape as 'hold on'."
+      },
+      "B": {
+        "lines": [
+          ["Отка'з автома'тики — са'ми, на глаз", "The automatics fail; we do it ourselves, by eye"],
+          ["Со'лнце пля'шет — ещё вито'к, ещё раз", "The sun is dancing; one more orbit, one more time"],
+          ["Держи'сь… держу'… держи'сь…", "Hold on… I've got you… hold on…"]
+        ],
+        "note": "This was the first manual orientation, done through the Vzor sight, and the retrofire came one orbit late. Belyayev had to lie across both seats to use the sight while Leonov held him: «держу» means 'I've got you'."
+      },
+      "C": {
+        "lines": [
+          ["Курс поте'рян — ве'ртится мир", "Course lost, the world is spinning"],
+          ["В уме' расчёт, а со'лнце — ориенти'р", "Sums in my head, and the sun as my landmark"],
+          ["Держи'сь… держи'сь… держи'сь…", "Hold on… hold on… hold on…"]
+        ],
+        "note": "«Ориентир» is a landmark or reference point; manual orientation is literally «ручная ориентация»."
+      }
+    },
+    {
+      "id": "drop2",
+      "label": "Drop 2",
+      "en": [
+        {"t": "Off course… (but I'm) home…", "syl": 5, "t0": 176.49, "t1": 179.04, "also": [[179.4, 181.95], [182.32, 186.13]]}
+      ],
+      "A": {
+        "lines": [["Не туда'… (но я) до'ма…", "Wrong place… (but I'm) home…"]],
+        "note": "«Не туда» ('the wrong way') puts its stress on the long note, where 'course' sits."
+      },
+      "B": {
+        "lines": [["Тайга'… (но мы) до'ма…", "Taiga… (but we're) home…"]],
+        "note": "They came down in the taiga of Perm oblast, hundreds of kilometres from the target. «Тайга́» is stressed on its second syllable, like 'off course'."
+      },
+      "C": {
+        "lines": [["Не там… (зато') до'ма…", "Not where we meant… (but at least) home…"]],
+        "note": "«Зато» is a shrug of consolation ('but on the bright side')."
+      }
+    },
+    {
+      "id": "outro",
+      "label": "Strings",
+      "sub": "[Vocal led, orchestral strings]",
+      "en": [
+        {"t": "Fifteen hundred klicks, coming in hot", "syl": 9, "t0": 187.46, "t1": 193.36},
+        {"t": "Fifteen hundred klicks, we overshot", "syl": 9, "t0": 193.55, "t1": 197.81}
+      ],
+      "A": {
+        "lines": [
+          ["Полторы' ты'щи вёрст — гори'т восхо'д", "Fifteen hundred versts, the sunrise burning"],
+          ["Полторы' ты'щи вёрст — перелёт", "Fifteen hundred versts, overshot"]
+        ],
+        "note": "A «верста» is the old Russian mile (about 1.07 km). It sounds folksy, the way 'klicks' sounds slangy. «Перелёт» is the gunnery word for a shot that lands long (it also just means 'a long flight'). The song's own figure; the real overshoot was a few hundred kilometres.",
+        "ask": {
+          "0": "Is «вёрст» charming or odd for 1965? And «тыщи» (colloquial) or «тысячи»?"
+        }
+      },
+      "B": {
+        "lines": [
+          ["Со'тни вёрст — ми'мо це'ли, в огне'", "Hundreds of versts past the target, through fire"],
+          ["Две но'чи в тайге', в снегу', в тишине'", "Two nights in the taiga, in the snow, in the silence"]
+        ],
+        "note": "Uses the real figures: the overshoot was a few hundred kilometres (about 386 km by one count), and they spent two nights in the forest at around −25 °C."
+      },
+      "C": {
+        "lines": [
+          ["Полторы' ты'щи вёрст — горя'чий путь", "Fifteen hundred versts, a burning road"],
+          ["Полторы' ты'щи вёрст — ми'мо чуть-чу'ть", "Fifteen hundred versts: missed by just a little"]
+        ],
+        "note": "Deadpan understatement in the bard manner: fifteen hundred versts, «мимо чуть-чуть» (missed by a bit).",
+        "ask": {
+          "1": "Does the irony of «мимо чуть-чуть» land?"
+        }
+      }
+    },
+    {
+      "id": "end",
+      "label": "Ending",
+      "sub": "Sung twice",
+      "en": [
+        {"t": "Made it down —", "syl": 3, "t0": 198.12, "t1": 201.16, "also": [[209.09, 211.58]]},
+        {"t": "home.", "syl": 1, "t0": 204.79, "t1": 208.57, "also": [[211.58, 213.17]]}
+      ],
+      "A": {
+        "lines": [["На земле' —", "On the ground —"], ["до'ма.", "home."]],
+        "note": "«До́ма» means 'at home', as in arrived. The long final note sits on «до́-»."
+      },
+      "B": {
+        "lines": [["Мы смогли' —", "We made it —"], ["до'ма.", "home."]],
+        "note": "«Смогли» means 'we managed', 'we pulled it off'."
+      },
+      "C": {
+        "lines": [["Добрали'сь —", "We got there —"], ["до'ма.", "home."]],
+        "note": "«Добрались» means arriving after a hard journey.",
+        "ask": {
+          "0": "добрали́сь or добра́лись?"
+        }
+      }
+    }
+  ],
+  "sheet": [
+    ["tag", "[Intro — filtered, low-passed vocal, half-whispered]"],
+    ["line", "intro", 0],
+    ["line", "intro", 1],
+    ["line", "intro", 2],
+    ["line", "intro", 3],
+    ["tag", "[Chorus / Hook]"],
+    ["line", "hook", 0],
+    ["line", "hook", 1],
+    ["tag", "[Pre-Chorus — filter opens, snare roll builds]"],
+    ["line", "pre", 0],
+    ["line", "pre", 1],
+    ["line", "pre", 2],
+    ["line", "pre", 3],
+    ["tag", "[Chorus / Hook]"],
+    ["line", "hook", 0],
+    ["line", "hook", 1],
+    ["tag", "[Drop 1 — instrumental, chopped vocal]"],
+    ["line", "hook", 3],
+    ["line", "hook", 3],
+    ["tag", "[Breakdown — vocal-led, stripped to pads and your voice]"],
+    ["line", "pre", 0],
+    ["line", "pre", 1],
+    ["line", "brk", 0],
+    ["line", "brk", 1],
+    ["tag", "[Chorus / Hook]"],
+    ["line", "art", 0],
+    ["line", "art", 1],
+    ["tag", "[Build — rising riser, vocal repeats and stacks]"],
+    ["line", "build", 0],
+    ["line", "build", 1],
+    ["line", "build", 2],
+    ["tag", "[Final Chorus]"],
+    ["line", "hook", 0],
+    ["line", "hook", 2],
+    ["tag", "[Drop 2 — new counter-melody chop against the supersaws]"],
+    ["line", "drop2", 0],
+    ["line", "drop2", 0],
+    ["tag", "[Vocal led, orchestral strings]"],
+    ["line", "outro", 0],
+    ["line", "outro", 1],
+    ["tag", "[Outro — decisive ending]"],
+    ["line", "end", 0],
+    ["line", "end", 1],
+    ["line", "end", 0],
+    ["line", "end", 1],
+    ["tag", "[Instrumental Outro]"],
+    ["tag", "[Soft piano from intro, ritardando at the end]"]
+  ]
+}
