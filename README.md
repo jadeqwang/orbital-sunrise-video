@@ -1,28 +1,17 @@
 # ORBITAL SUNRISE — music video
 
+**▶ Watch on [YouTube](https://www.youtube.com/watch?v=GKVOH-Tjd2U) · [X / Twitter](https://x.com/qiqing/status/2106803533282787360)**
+
+For the best picture quality, watch the published uploads: **4K on YouTube** or **1080p on X**.
+The downloads in this repository are compressed to fit GitHub's 100 MB file limit.
+
 **Song and lyrics:** Jade Wang
 **Narrative arc:** inspired by John Green's essay *Orbital Sunrise* (*The Anthropocene Reviewed*)
-**Video:** every frame drawn in colored pencil by JavaScript
+**Video:** colored-pencil animation rendered in JavaScript, with Leonov's original sunrise drawing in the two card shots
 
-* ▶ **[`release/Orbital_Sunrise_1080p.mp4`](release/Orbital_Sunrise_1080p.mp4)** — 1920×1080, 24 fps, 4:02, HEVC
-* [`release/Orbital_Sunrise_720p_h264.mp4`](release/Orbital_Sunrise_720p_h264.mp4) — 1280×720, H.264, for players and sites that need H.264
-* **Extended cut** (this branch; the re-recorded extended mix, two new intro lines, her round 1–5 notes; 4:12, 252.28 s):
-  [`release/extended/Orbital_Sunrise_extended_1080p.mp4`](release/extended/Orbital_Sunrise_extended_1080p.mp4) (HEVC) and
-  [`release/extended/Orbital_Sunrise_extended_720p_h264.mp4`](release/extended/Orbital_Sunrise_extended_720p_h264.mp4) (H.264).
-  The renderer defaults to the supplied original artwork for the cards at 1:40 and 3:59.
-  The prepared PNG retains the approved crop, colors and pencil texture from the local artwork edit.
-  The committed releases and earlier exports still have the placeholder; use exports with `original_artwork` in their names.
-  Details: [`docs/ARTWORK_EXPORTS.md`](docs/ARTWORK_EXPORTS.md).
-  Leonov's drawing (1:40, 3:59) is shown as a colored-pencil redraw while permission to show the original is pending with the museum and his family.
-  Release of 2026-10-03: the montage names the people on each human mission (Savitskaya and Hayabusa in), the tether at
-  0:14–0:20 stays clear of the hull, and the singer's skin colour at 0:44 is warmer and more natural.
-  How it was retimed: [`docs/ALTERNATE_CUT.md`](docs/ALTERNATE_CUT.md)
-
-A colored-pencil drawing redrawn twelve times a second is about the hardest thing there is to
-compress (fine hatching everywhere, all of it changing), so both files are two-pass encodes sized
-to fit GitHub's 100 MB limit. `tools/encode_release.sh` re-encodes them from the rendered frames;
-`tools/package_hls.sh` builds a higher-bitrate (4.8 Mbps HEVC) stream for the private watch page
-(`release/web/index.html`).
+The current film is the **4:12 extended cut** (252.28 s), set to the re-recorded mix with two new intro lines.
+The legacy montage names the people on each human mission, the tether at 0:14–0:20 stays clear of the hull,
+and the singer's skin colour at 0:44 is warmer and more natural.
 
 > The first artwork ever made in space was a colored-pencil sketch of a sunrise,
 > drawn by a man who almost didn't make it home. This video is drawn the same way.
@@ -46,6 +35,28 @@ the singer's now, until at the landing they are the same drawing.
 | Shot list mapped to the beat grid | [`docs/SHOTLIST.md`](docs/SHOTLIST.md) |
 | Design boards (style frames, character and set sheets) | [`media/boards/`](media/boards/) |
 
+## Downloads
+
+These smaller files are useful for offline viewing. For the best picture quality and the current artwork,
+use the YouTube or X links above.
+
+* **Extended cut** (2026-10-03, 4:12, 24 fps):
+  [1080p HEVC](release/extended/Orbital_Sunrise_extended_1080p.mp4) ·
+  [720p H.264](release/extended/Orbital_Sunrise_extended_720p_h264.mp4).
+* **Earlier cut** (2026-09-30, 4:03, 24 fps):
+  [1080p HEVC](release/Orbital_Sunrise_1080p.mp4) ·
+  [720p H.264](release/Orbital_Sunrise_720p_h264.mp4).
+
+The committed downloads contain an earlier colored-pencil redraw of Leonov's sunrise card.
+The current renderer and published uploads use the supplied original artwork at 1:40 and 3:59,
+preserving its crop, colors, pencil texture and museum credit.
+See the [artwork and export notes](docs/ARTWORK_EXPORTS.md) and [timing and edit notes](docs/ALTERNATE_CUT.md).
+
+Fine hatching changes twelve times a second, so the film is particularly demanding to compress.
+The repository downloads are two-pass encodes sized to fit GitHub's limit;
+`tools/encode_release.sh` makes these copies from rendered frames.
+H.264 is available for players that cannot decode HEVC.
+
 ## How it was made
 
 ```
@@ -56,14 +67,15 @@ research ──► style frames, character + set sheets (Nano Banana)      │
                           └──► colored-pencil renderer (canvas, in headless Chromium) ──► frames ──► MP4
 ```
 
-1. **The song.** Vocal/instrumental stems (MDX-Net), a 162.33 BPM beat grid, and word-level
+1. **The song.** Vocal/instrumental stems, a beat grid, and word-level
    lyric timings (Whisper on the vocal stem, snapped to onsets): [`video/data/timing.json`](video/data/timing.json).
-   Every cut and every word on screen is keyed to these.
+   Every cut and every word on screen is keyed to these. The extended cut was retimed to the new recording
+   with `tools/retime.py`, including timings re-measured on its vocal stem.
 2. **Research and design.** Historical references for Voskhod‑2, the Berkut suit, the
    capsule, Leonov and Belyayev (Nano Banana 2 with search grounding), then style frames and
    character/set turnarounds (Nano Banana Pro). The singer's sheets come from
    `rare-earth-video` / `rare-earth-techno-remix`.
-3. **Performance plates.** 42 short shots generated with **Seedance 2.5** on Cloudflare
+3. **Performance plates.** Short shots generated with **Seedance 2.5** on Cloudflare
    (`tools/plates.py`, specs in `tools/plate_specs.py`), each conditioned on the character
    and set sheets and, for the singer, on the matching slice of the song as reference
    audio. Long jobs run in the background and report to a tiny relay Worker
@@ -72,11 +84,12 @@ research ──► style frames, character + set sheets (Nano Banana)      │
    sync was close but not frame-exact, so the singer's lips are **re-drawn from the vocal
    track** (`tools/mouth_track.py`) at the plate's own lip landmarks, and the plate's mouth
    is painted out with the surrounding skin tone.
-4. **Analysis, never display.** Each plate frame is read into fields — tone, color,
+4. **Plate analysis.** Each plate frame is read into fields — tone, color,
    structure-tensor flow, thinned edges — plus MediaPipe face landmarks
    (`tools/plate_meta.py`), rembg subject mattes (`tools/plate_masks.py`) and a per-plate
    exposure. The renderer only *reads* the plates; the footage itself never appears.
    [`docs/making_of.jpg`](docs/making_of.jpg) shows reference plates next to the frames drawn from them.
+   The original sunrise card is placed separately from the performance plates.
 5. **The pencil renderer** ([`video/src/`](video/src)). Every frame is a pure function of
    song time `t` (`renderAt(t)`), so frames render in any order and in parallel:
    * etching-style tonal hatching (four crossing layers), contours with overshoot, matte
@@ -89,27 +102,32 @@ research ──► style frames, character + set sheets (Nano Banana)      │
    * kinetic type: Anton for impact lyrics (with red Cyrillic echoes), Instrument Serif
      italic for the singer's own lines, JetBrains Mono for telemetry, pencil handwriting
      for "Art is a landing in the snow"; big words get a quiet clearing in the drawing.
-6. **The ending and one word.** The song's last chord is held and allowed to ring out (≈4.5 s longer)
+6. **The ending and the final mix.** The song's last chord is held and allowed to ring out
    with a spectral freeze of the sustained chord mixed under the original tail
-   (`tools/extend_ending.py`). The lyric "through the sleeve he wore" was changed to "through the
-   suit he wore" (the pressure valve was on the suit) by rebuilding that one word from Jade's own
-   recorded voice: her "s", the "oo" of "through", the "t" of "out" (`tools/suit_splice.py`).
-   The final mix is in [`release/audio/`](release/audio/).
+   (`tools/extend_ending.py`). The current recording sings "Eternity inside the airlock door" and
+   "through the suit he wore"; its piano outro already includes the ritardando.
+   The renderer uses [`media/audio/Orbital_Sunrise_alt2_extended.m4a`](media/audio/Orbital_Sunrise_alt2_extended.m4a),
+   with an identity time map. Earlier audio releases are in [`release/audio/`](release/audio/).
 
 ## Render it
 
+Requires Node.js, ffmpeg/ffprobe, Chromium and the restored plate frames and masks.
+Set `CHROME` to your Chromium or Chrome executable if it differs from the renderer's default.
+
 ```bash
-cd video && npm install
+cd video
+npm install
 node render.mjs --list                         # the shot table
 node render.mjs --sheet=23,24,25 --cols=3       # quick contact sheet
-node render.mjs --frames=0:242.2 --workers=4    # all frames → out/frames (resumable)
+node render.mjs --frames=0:252.28 --workers=4   # all 6055 frames → out/frames (resumable)
 node render.mjs --encode                        # frames + song → out/orbital_sunrise.mp4
 ```
 
 Open `video/studio.html` through any static server to scrub the film interactively.
 The analysis data (`video/plates/*/meta.json`, `index.json`) is in the repo; the plate
-frames and mattes are regenerated from the Seedance takes with `tools/pipeline.sh`
-(the takes themselves are not committed).
+frames and mattes are regenerated from the committed takes and stills with `tools/prepare_upload_assets.py`.
+Run it from the repository root in the Python environment described below; it preserves the current edit's
+take selection and metadata.
 
 ### High-quality 4K upload master
 
@@ -144,9 +162,9 @@ frames. Add `--sample=skin --start=44.375 --duration=4` to review a short sample
 18 March 1965 · Voskhod‑2 (*Восход* = "sunrise"), call sign Алмаз ("Diamond") · Leonov 30,
 Belyayev 39 · suit pressure lowered from 0.40 to ~0.27 atm to get back through the Volga
 airlock · automatic orientation failed, first manual re-entry · landed in the taiga near
-Perm, two nights in the snow · legacy: Ed White's spacewalk (June 1965), Apollo 11 (1969),
-Apollo–Soyuz handshake (1975), continuous crews on the ISS (since 2000), the first
-commercial spacewalk (Polaris Dawn, 2024), Artemis II around the Moon (2026).
-The lyric's "fifteen hundred klicks" is the song's own; the real overshoot was a few
-hundred kilometres.
-The math behind that number, for viewers: [`docs/THE_MATH.md`](docs/THE_MATH.md).
+Perm, two nights in the snow. The legacy montage spans Apollo 11 (1969), Apollo–Soyuz (1975),
+Savitskaya's spacewalk (1984), the ISS (2000), Shenzhou 7 (2008), Hayabusa (2010), Curiosity (2012),
+Rosetta/Philae (2014), Chang'e 4 (2019), Tiangong (2022), Chandrayaan-3 (2023) and Polaris Dawn (2024).
+
+The lyric's "fifteen hundred klicks" comes from Leonov's own forecast. It is distinct from the final landing miss;
+the sources and calculations are explained in [the math behind that number](docs/THE_MATH.md).
